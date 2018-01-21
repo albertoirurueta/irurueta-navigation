@@ -1,3 +1,3 @@
 # README #
 
-This repository contains classes related to GNSS/INS navigation systems.
+This repository contains classes related to GNSS (Global Navigation Satellite System) / INS (Inertial Navigation System) navigation systems.

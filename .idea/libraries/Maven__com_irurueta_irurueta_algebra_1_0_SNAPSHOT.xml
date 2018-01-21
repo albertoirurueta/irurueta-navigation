@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.irurueta:irurueta-algebra:1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-algebra/1.0-SNAPSHOT/irurueta-algebra-1.0-20171122.105750-4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-algebra/1.0-SNAPSHOT/irurueta-algebra-1.0-20171122.105750-4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-algebra/1.0-SNAPSHOT/irurueta-algebra-1.0-20171122.105750-4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
