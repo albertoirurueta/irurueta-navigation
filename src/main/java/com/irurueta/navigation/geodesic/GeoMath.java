@@ -112,7 +112,7 @@ public class GeoMath {
      * @return value with the magnitude of <i>x</i> and with the sign of <i>y</i>.
      */
     public static double copysign(double x, double y) {
-        return Math.abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
+        return Math.abs(x) * (y < 0 || (y == 0 && 1 / y < 0) ? -1 : 1);
     }
 
     /**
@@ -229,6 +229,7 @@ public class GeoMath {
     public static Pair angDiff(double x, double y) {
         double d, t;
 
+        //noinspection all
         Pair r = sum(angNormalize(-x), angNormalize(y));
         d = angNormalize(r.first);
         t = r.second;
@@ -297,6 +298,7 @@ public class GeoMath {
         if (Math.abs(y) > Math.abs(x)) {
             double t;
             t = x;
+            //noinspection all
             x = y;
             y = t;
             q = 2;

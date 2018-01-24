@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.geodesic;
+package com.irurueta.navigation.utils;
 
 import com.irurueta.navigation.NavigationException;
 
 /**
- * Exception raised for a geodesic operation.
+ * Base exception for utils package.
  */
-@SuppressWarnings("WeakerAccess")
-public class GeodesicException extends NavigationException {
+public class UtilsException extends NavigationException {
 
     /**
      * Constructor.
      */
-    public GeodesicException() {
+    public UtilsException() {
         super();
     }
 
@@ -34,7 +33,7 @@ public class GeodesicException extends NavigationException {
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
-    public GeodesicException(String message) {
+    public UtilsException(String message) {
         super(message);
     }
 
@@ -43,7 +42,7 @@ public class GeodesicException extends NavigationException {
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public GeodesicException(String message, Throwable cause) {
+    public UtilsException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -51,7 +50,7 @@ public class GeodesicException extends NavigationException {
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
-    public GeodesicException(Throwable cause) {
+    public UtilsException(Throwable cause) {
         super(cause);
     }
 }

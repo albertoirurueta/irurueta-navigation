@@ -41,6 +41,7 @@ public class PolygonResult {
      * @param perimeter the perimeter of the polygon or the length of the polyline (meters).
      * @param area the area of the polygon (meters<sup>2</sup>).
      */
+    @SuppressWarnings("WeakerAccess")
     public PolygonResult(int num, double perimeter, double area) {
         this.num = num;
         this.perimeter = perimeter;

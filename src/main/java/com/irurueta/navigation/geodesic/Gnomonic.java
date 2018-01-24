@@ -130,6 +130,7 @@ public class Gnomonic {
      * Constructor for Gnomonic.
      * @param earth the {@link Geodesic} object to use for geodesic calculations.
      */
+    @SuppressWarnings("WeakerAccess")
     public Gnomonic(Geodesic earth) {
         mEarth = earth;
         mA = mEarth.getMajorRadius();
@@ -194,6 +195,7 @@ public class Gnomonic {
         GnomonicData rev = new GnomonicData(lat0, lon0, Double.NaN, Double.NaN, x, y, Double.NaN,
                 Double.NaN);
 
+        //noinspection all
         double azi0 = GeoMath.atan2d(x, y);
         double rho = Math.hypot(x, y);
         double s = mA * Math.atan(rho / mA);

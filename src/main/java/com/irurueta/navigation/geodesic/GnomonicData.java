@@ -71,6 +71,7 @@ public class GnomonicData {
     /**
      * Initialize all the fields to Double.NaN.
      */
+    @SuppressWarnings("WeakerAccess")
     public GnomonicData() {
         lat0 = lon0 = lat = lon = x = y = azi = rk = Double.NaN;
     }
@@ -88,6 +89,7 @@ public class GnomonicData {
      * @param azi azimuth of geodesic at point (degrees).
      * @param rk reciprocal of azimuthal scale at point.
      */
+    @SuppressWarnings("WeakerAccess")
     public GnomonicData(double lat0, double lon0, double lat, double lon,
                         double x, double y, double azi, double rk) {
         this.lat0 = lat0;

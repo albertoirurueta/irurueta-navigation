@@ -22,14 +22,12 @@ package com.irurueta.navigation.geodesic;
  * {@link Geodesic#direct(double, double, double, double, int)} and
  * {@link Geodesic#inverse(double, double, double, double, int)} routines.
  * They also signify (via the <i>caps</i> parameter) to the
- * {@link GeodesicLine#geodesicLine(Geodesic, double, double, double, int)} constructor
+ * {@link GeodesicLine(Geodesic, double, double, double, int)} constructor
  * and to {@link Geodesic#line(double, double, double, int)} what capabilities
  * should be included in the {@link GeodesicLine} object.
  */
 public class GeodesicMask {
-    protected static final int CAP_NONE = 0;
-
-    protected static final int CAP_C1 = 1 << 0;
+    protected static final int CAP_C1 = 1;
 
     protected static final int CAP_C1P = 1 << 1;
 
@@ -39,14 +37,12 @@ public class GeodesicMask {
 
     protected static final int CAP_C4 = 1 << 4;
 
-    protected static final int CAP_ALL = 0x1F;
-
-    protected static final int CAP_MASK = CAP_ALL;
-
     protected static final int OUT_ALL = 0x7F80;
 
     //include LONG_UNROLL
     protected static final int OUT_MASK = 0xFF80;
+
+    private static final int CAP_ALL = 0x1F;
 
     /**
      * No capabilities, no output.
@@ -57,7 +53,7 @@ public class GeodesicMask {
      * Calculate latitude <i>lat2</i>. (It's not necessary to include this as a capability to
      * {@link GeodesicLine} because this is included by default.)
      */
-    public static final int LATITUDE = 1 << 7 | CAP_NONE;
+    public static final int LATITUDE = 1 << 7;
 
     /**
      * Calculate longitude <i>lon2</i>.
@@ -68,7 +64,7 @@ public class GeodesicMask {
      * Calculate azimuths <i>azi1</i> and <i>azi2</i>. (It's not necessary to include this
      * as a capability to {@link GeodesicLine} because this is included by default.)
      */
-    public static final int AZIMUTH = 1 << 9 | CAP_NONE;
+    public static final int AZIMUTH = 1 << 9;
 
     /**
      * Calculate distance <i>s12</i>.
@@ -109,4 +105,10 @@ public class GeodesicMask {
      * Unroll <i>lon2</i>.
      */
     public static final int LONG_UNROLL = 1 << 15;
+
+    /**
+     * Constructor.
+     * Prevents instantiation.
+     */
+    GeodesicMask() { }
 }

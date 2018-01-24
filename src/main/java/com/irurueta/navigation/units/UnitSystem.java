@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.geodesic;
+package com.irurueta.navigation.units;
 
 /**
- * Constants used for GNSS/INS navigation.
+ * Enumerator containing supported unit systems.
  */
-public class Constants {
+public enum UnitSystem {
+    /**
+     * Metric unit system (i.e., meters).
+     */
+    METRIC,
 
     /**
-     * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
+     * Imperial unit syste (i.e. miles).
      */
-    public static final double EARTH_EQUATORIAL_RADIUS_WGS84 = 6378137;
-
-    /**
-     * The flattening of WGS84 ellipsoid (1 / 298.257223563).
-     */
-    public static final double EARTH_FLATTENING_WGS84 = 1/298.257223563;
-
-    /**
-     * Constructor.
-     * Prevents instantiation.
-     */
-    Constants() { }
+    IMPERIAL
 }

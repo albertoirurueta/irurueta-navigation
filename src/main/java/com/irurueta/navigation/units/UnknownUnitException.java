@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.geodesic;
-
-import com.irurueta.navigation.NavigationException;
+package com.irurueta.navigation.units;
 
 /**
- * Exception raised for a geodesic operation.
+ * Exception raised when a unit cannot be determined.
  */
-@SuppressWarnings("WeakerAccess")
-public class GeodesicException extends NavigationException {
+public class UnknownUnitException extends UnitsException {
 
     /**
      * Constructor.
      */
-    public GeodesicException() {
+    public UnknownUnitException() {
         super();
     }
 
@@ -34,7 +31,7 @@ public class GeodesicException extends NavigationException {
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
-    public GeodesicException(String message) {
+    public UnknownUnitException(String message) {
         super(message);
     }
 
@@ -43,7 +40,7 @@ public class GeodesicException extends NavigationException {
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public GeodesicException(String message, Throwable cause) {
+    public UnknownUnitException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -51,7 +48,7 @@ public class GeodesicException extends NavigationException {
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
-    public GeodesicException(Throwable cause) {
+    public UnknownUnitException(Throwable cause) {
         super(cause);
     }
 }

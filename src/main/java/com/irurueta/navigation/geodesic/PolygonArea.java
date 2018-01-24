@@ -86,6 +86,7 @@ public class PolygonArea {
      * @param earth the Geodesic object to use for geodesic calculations.
      * @param polyline if true that treat the points as defining a polyline instead of a polygon.
      */
+    @SuppressWarnings("WeakerAccess")
     public PolygonArea(Geodesic earth, boolean polyline) {
         mEarth = earth;
         mArea0 = mEarth.getEllipsoidArea();
@@ -326,7 +327,6 @@ public class PolygonArea {
         double tempsum = mAreasum.getSum();
         int crossings = mCrossings;
 
-        double lat, lon, s12, S12, t;
         GeodesicData g = mEarth.direct(mLat1, mLon1, azi, false, s, mMask);
         tempsum += g.S12;
         crossings += transitDirect(mLon1, g.lon2);
@@ -398,9 +398,8 @@ public class PolygonArea {
         lon2 = GeoMath.angNormalize(lon2);
 
         double lon12 = GeoMath.angDiff(lon1, lon2).first;
-        int cross = lon1 <= 0 && lon2 > 0 && lon12 > 0 ?
+        return lon1 <= 0 && lon2 > 0 && lon12 > 0 ?
                 1 : (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
-        return cross;
     }
 
     //an alternate version of transit to deal with longitudes in the direct problem.

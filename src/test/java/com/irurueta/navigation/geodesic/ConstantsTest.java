@@ -15,24 +15,35 @@
  */
 package com.irurueta.navigation.geodesic;
 
-/**
- * Constants used for GNSS/INS navigation.
- */
-public class Constants {
+import org.junit.*;
 
-    /**
-     * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
-     */
-    public static final double EARTH_EQUATORIAL_RADIUS_WGS84 = 6378137;
+import static org.junit.Assert.*;
 
-    /**
-     * The flattening of WGS84 ellipsoid (1 / 298.257223563).
-     */
-    public static final double EARTH_FLATTENING_WGS84 = 1/298.257223563;
+public class ConstantsTest {
 
-    /**
-     * Constructor.
-     * Prevents instantiation.
-     */
-    Constants() { }
+    public ConstantsTest() { }
+
+    @BeforeClass
+    public static void setUpClass() { }
+
+    @AfterClass
+    public static void tearDownClass() { }
+
+    @Before
+    public void setUp() { }
+
+    @After
+    public void tearDown() { }
+
+    @Test
+    public void testConstructor() {
+        Constants c = new Constants();
+        assertNotNull(c);
+    }
+
+    @Test
+    public void testConstants() {
+        assertEquals(Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 6378137, 0.0);
+        assertEquals(Constants.EARTH_FLATTENING_WGS84, 1/298.257223563, 0.0);
+    }
 }

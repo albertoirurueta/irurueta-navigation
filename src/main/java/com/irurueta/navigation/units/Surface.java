@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.geodesic;
+package com.irurueta.navigation.units;
 
 /**
- * Constants used for GNSS/INS navigation.
+ * Contains a surface value and unit.
  */
-public class Constants {
+public class Surface extends Measurement<SurfaceUnit> {
 
     /**
-     * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
+     * Constructor with value and units.
+     * @param value surface value.
+     * @param unit unit of surface.
+     * @throws IllegalArgumentException if either value or unit is null.
      */
-    public static final double EARTH_EQUATORIAL_RADIUS_WGS84 = 6378137;
-
-    /**
-     * The flattening of WGS84 ellipsoid (1 / 298.257223563).
-     */
-    public static final double EARTH_FLATTENING_WGS84 = 1/298.257223563;
+    public Surface(Number value, SurfaceUnit unit) throws IllegalArgumentException {
+        super(value, unit);
+    }
 
     /**
      * Constructor.
-     * Prevents instantiation.
      */
-    Constants() { }
+    public Surface() {
+        super();
+    }
 }

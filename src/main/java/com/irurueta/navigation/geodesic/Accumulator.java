@@ -41,6 +41,7 @@ public class Accumulator {
      * Constructor from a double.
      * @param y set <i>sum</i> = <i>y</i>.
      */
+    @SuppressWarnings("WeakerAccess")
     public Accumulator(double y) {
         mS = y;
         mT = 0;
@@ -50,6 +51,7 @@ public class Accumulator {
      * Constructor from another Accumulator.
      * @param a set <i>sum</i> = <i>a</i>.
      */
+    @SuppressWarnings("WeakerAccess")
     public Accumulator(Accumulator a) {
         mS = a.mS;
         mT = a.mT;

@@ -38,7 +38,7 @@ public class GeodesicData {
     public double lon1;
 
     /**
-     * Aximuth at point 1 (degrees).
+     * Azimuth at point 1 (degrees).
      */
     public double azi1;
 
@@ -53,7 +53,7 @@ public class GeodesicData {
     public double lon2;
 
     /**
-     * Aximuth at point 2 (degrees).
+     * Azimuth at point 2 (degrees).
      */
     public double azi2;
 

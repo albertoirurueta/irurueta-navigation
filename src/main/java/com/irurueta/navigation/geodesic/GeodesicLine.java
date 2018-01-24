@@ -148,6 +148,7 @@ public class GeodesicLine {
      * @param lon1 longitude of point 1 (degrees).
      * @param azi1 azimuth at point 1 (degrees).
      */
+    @SuppressWarnings("WeakerAccess")
     public GeodesicLine(Geodesic g, double lat1, double lon1, double azi1) {
         this(g, lat1, lon1, azi1, GeodesicMask.ALL);
     }
@@ -199,6 +200,7 @@ public class GeodesicLine {
      *             the GeodesicLine object should possess, i.e., which quantities can be returned in
      *             calls to {@link #position}.
      */
+    @SuppressWarnings("WeakerAccess")
     public GeodesicLine(Geodesic g, double lat1, double lon1, double azi1, int caps) {
         azi1 = GeoMath.angNormalize(azi1);
 
@@ -211,21 +213,11 @@ public class GeodesicLine {
         lineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected GeodesicLine(Geodesic g, double lat1, double lon1, double azi1, double salp1,
                            double calp1, int caps, boolean arcmode, double s13A13) {
         lineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
         genSetDistance(arcmode, s13A13);
-    }
-
-    /**
-     * A default constructor.
-     * If GeodesicLine.position is called on the resulting object, it returns immediately (without doing
-     * any calculations).
-     * The object can be set with a call to {@link Geodesic#line}. User {@link #init()} to test whether
-     * object is still in this uninitialized state.
-     */
-    private GeodesicLine() {
-        mCaps = 0;
     }
 
     /**
@@ -446,8 +438,10 @@ public class GeodesicLine {
             //tan(omg2) = sin(alp0) * tan(sig2)
 
             //no need to normalize east or west going?
+            //noinspection all
             double somg2 = mSalp0 * ssig2,
-                    comg2 = csig2, e = GeoMath.copysign(1, mSalp0);
+                    comg2 = csig2,
+                    e = GeoMath.copysign(1, mSalp0);
 
             //omg12 = omg2 - omg1
             double omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ?

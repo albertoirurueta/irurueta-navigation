@@ -1,14 +1,18 @@
 /**
  * Contains geodesic algorithms.
  * Makes easy to do geodesic computations for an ellipsoid of revolution.
+ * The contents of this package are based on geographicLib implementation
+ * <a href="https://sourceforge.net/projects/geographiclib/">Geographiclib</a>
+ *
  * <p>
  * The important classes are:
  * <ul>
  *     <li>
- *         {@link Geodesic}, for direct and inverse geodesic calculations.
+ *         {@link com.irurueta.navigation.geodesic.Geodesic}, for direct and inverse geodesic calculations.
  *     </li>
  *     <li>
- *         {@link GeodesicLine}, an efficient way of calculating multiple points on a single geodesic.
+ *         {@link com.irurueta.navigation.geodesic.GeodesicLine}, an efficient way of calculating multiple points on a
+ *         single geodesic.
  *     </li>
  *     <li>
  *         {@link com.irurueta.navigation.geodesic.GeodesicData}, object containing the results of
@@ -17,14 +21,14 @@
  *     <li>
  *         {@link com.irurueta.navigation.geodesic.GeodesicMask} constants that let you specify
  *         the variables to return in {@link com.irurueta.navigation.geodesic.GeodesicData} and
- *         the capabilities of a {@link GeodesicLine}.
+ *         the capabilities of a {@link com.irurueta.navigation.geodesic.GeodesicLine}.
  *     </li>
  *     <li>
  *         {@link com.irurueta.navigation.geodesic.Constants} the parameters for the WGS84 ellipsoid.
  *     </li>
  *     <li>
- *         {@link PolygonArea}, a class to compute the perimeter and area of a geodesic polygon
- *         (returned as a {@link PolygonResult}).
+ *         {@link com.irurueta.navigation.geodesic.PolygonArea}, a class to compute the perimeter and area of a geodesic
+ *         polygon (returned as a {@link com.irurueta.navigation.geodesic.PolygonResult}).
  *     </li>
  * </ul>
  *
