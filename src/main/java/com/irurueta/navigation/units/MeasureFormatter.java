@@ -61,7 +61,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
     /**
      * Constructor.
      */
-    protected MeasureFormatter() {
+    MeasureFormatter() {
         mNumberFormat = NumberFormat.getInstance();
         mLocale = Locale.getDefault();
         mValueAndUnitFormatPattern = DEFAULT_VALUE_AND_UNIT_FORMAT_PATTERN;
@@ -72,7 +72,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * @param locale locale.
      * @throws IllegalArgumentException if locale is null.
      */
-    protected MeasureFormatter(Locale locale) throws IllegalArgumentException {
+    MeasureFormatter(Locale locale) throws IllegalArgumentException {
         if (locale == null) {
             throw new IllegalArgumentException();
         }
@@ -109,7 +109,8 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
 
         MeasureFormatter other = (MeasureFormatter) obj;
         return mNumberFormat.equals(other.mNumberFormat) &&
-                mLocale.equals(other.mLocale);
+                mLocale.equals(other.mLocale) &&
+                mValueAndUnitFormatPattern.equals(other.mValueAndUnitFormatPattern);
     }
 
     /**
@@ -120,9 +121,12 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 19 * hash + (this.mNumberFormat != null ?
-                this.mNumberFormat.hashCode() : 0);
-        hash = 19 * hash + (this.mFormat != null ? this.mFormat.hashCode() : 0);
+        hash = 19 * hash + (mNumberFormat != null ?
+                mNumberFormat.hashCode() : 0);
+        hash = 19 * hash + (mFormat != null ? mFormat.hashCode() : 0);
+        hash = 19 * hash + (mLocale != null ? mLocale.hashCode() : 0);
+        hash = 19 * hash + (mValueAndUnitFormatPattern != null ?
+                mValueAndUnitFormatPattern.hashCode() : 0);
         return hash;
     }
 
@@ -184,6 +188,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * @param measurement a measurement.
      * @return string representation of provided measurement.
      */
+    @SuppressWarnings("unchecked")
     public String format(M measurement) {
         return format(measurement.getValue(), (U)measurement.getUnit());
     }
@@ -196,6 +201,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * @param pos field position where result will be appended.
      * @return provided string buffer where result is appended.
      */
+    @SuppressWarnings("unchecked")
     public StringBuffer format(M measurement, StringBuffer toAppendTo,
                                FieldPosition pos) {
         return format(measurement.getValue(), (U)measurement.getUnit(),
@@ -203,11 +209,139 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
     }
 
     /**
-     * Returns available locales for this measurement.
+     * Formats and converts provided measurement value and unit using unit system
+     * assigned to locale of this instance (if no locale has been provided it
+     * is assumed that the system default locale is used).
+     * If provided value is too large for provided unit, this method will
+     * convert it to a more appropriate unit.
+     * @param value a measurement value.
+     * @param unit a measurement unit.
+     * @return a string representation of measurement value and unit.
+     */
+    public String formatAndConvert(Number value, U unit) {
+        return formatAndConvert(value, unit, getUnitSystem());
+    }
+
+    /**
+     * Formats and converts provided measurement value and unit using unit system
+     * assigned to locale of this instance (if no locale has been provided it
+     * is assumed that the system default locale is used).
+     * If provided value is too large for provided unit, this method will
+     * convert it to a more appropriate unit.
+     * @param value a measurement value.
+     * @param unit a measurement unit.
+     * @return a string representation of measurement value and unit.
+     */
+    public String formatAndConvert(double value, U unit) {
+        return formatAndConvert(new BigDecimal(value), unit);
+    }
+
+    /**
+     * Formats and converts provided measurement using unit system assigned to
+     * locale of this instance (if no locale has been provided it is assumed
+     * that the system default locale is used).
+     * If provided measurement value is too large for its unit, this method
+     * will convert it to a more appropriate unit.
+     * @param measurement measurement to be formatted.
+     * @return a string representation of measurement value and unit.
+     */
+    @SuppressWarnings("unchecked")
+    public String formatAndConvert(M measurement) {
+        return formatAndConvert(measurement.getValue(),
+                (U)measurement.getUnit());
+    }
+
+    /**
+     * Formats and converts provided measurement vlaue and unit using provided
+     * unit system.
+     * If provided value is too large for provided unit, this method will
+     * convert it to a more appropriate unit using provided unit system (either
+     * metric or imperial).
+     * @param value a measurment value.
+     * @param unit a measurement unit.
+     * @param system system unit to convert measurement to.
+     * @return a string representation of measurement value and unit.
+     */
+    public String formatAndConvert(Number value, U unit, UnitSystem system) {
+        switch (system) {
+            case IMPERIAL:
+                return formatAndConvertImperial(value, unit);
+            case METRIC:
+            default:
+                return formatAndConvertMetric(value, unit);
+        }
+    }
+
+    /**
+     * Formats and converts provided measurement value and unit using provided
+     * unit system.
+     * If provided value is too large for provided unit, this method will
+     * convert it to a more appropriate unit using provided unit system (either
+     * metric or imperial).
+     * @param value a measurement value.
+     * @param unit a measurement unit.
+     * @param system system unit to convert measurement to.
+     * @return a string representation of measurement value and unit.
+     */
+    public String formatAndConvert(double value, U unit, UnitSystem system) {
+        return formatAndConvert(new BigDecimal(value), unit, system);
+    }
+
+    /**
+     * Formats and converts provided measurement using provided unit system.
+     * If provided measurement value is too large for its unit, this method
+     * will convert it to a more appropriate unit using provided unit
+     * system.
+     * @param measurement a measurement to be formatted.
+     * @param unitSystem system unit to convert measurement to.
+     * @return a string representation of measurement value and unit.
+     */
+    @SuppressWarnings("unchecked")
+    public String formatAndConvert(M measurement, UnitSystem unitSystem) {
+        return formatAndConvert(measurement.getValue(),
+                (U)measurement.getUnit(), unitSystem);
+    }
+
+    /**
+     * Formats and converts provided measurement value and unit using
+     * metric unit system.
+     * If provided measurement value is too large for its unit, this method
+     * will convert it to a more appropriate unit.
+     * @param value a measurement value.
+     * @param unit a measurement unit.
+     * @return a string representation of measurement value and unit using
+     * metric unit system.
+     */
+    public abstract String formatAndConvertMetric(Number value, U unit);
+
+    /**
+     * Formats and converts provided measurement value and unit using
+     * imperial unit system.
+     * If provided measurement value is too large for its unit, this method
+     * will convert it to a more appropriate unit.
+     * @param value a measurement value.
+     * @param unit a measurement unit.
+     * @return a string representation of measurement value and unit using
+     * imperial unit system.
+     */
+    public abstract String formatAndConvertImperial(Number value, U unit);
+
+    /**
+     * Returns available locales for this formatter.
      * @return available locales.
      */
     public static Locale[] getAvailableLocales() {
         return NumberFormat.getAvailableLocales();
+    }
+
+    /**
+     * Gets locale assigned to this instance.
+     * Locale determines number format and unit system (metric or imperial)
+     * if not specified.
+     * @return a locale.
+     */
+    public Locale getLocale() {
+        return mLocale;
     }
 
     /**
@@ -336,8 +470,13 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * {0} corresponds to the value, {1} corresponds to the unit part.
      * @param valueAndUnitFormatPattern pattern to format values and unit
      * together.
+     * @throws IllegalArgumentException if provided pattern is null.
      */
-    public void setValueAndUnitFormatPattern(String valueAndUnitFormatPattern) {
+    public void setValueAndUnitFormatPattern(String valueAndUnitFormatPattern)
+            throws IllegalArgumentException {
+        if (valueAndUnitFormatPattern == null) {
+            throw new IllegalArgumentException();
+        }
         mValueAndUnitFormatPattern = valueAndUnitFormatPattern;
     }
 
@@ -427,6 +566,13 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
     public abstract U findUnit(String source);
 
     /**
+     * Obtains measure unit symbol.
+     * @param unit a measure unit.
+     * @return measure unit symbol.
+     */
+    public abstract String getUnitSymbol(U unit);
+
+    /**
      * Internal method to parse a string into a measure.
      * @param source text to be parsed.
      * @param measure a measure to be initialized with parsed contents.
@@ -434,7 +580,8 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * @throws ParseException if parsing failed.
      * @throws UnknownUnitException if unit cannot be determined.
      */
-    protected M internalParse(String source, M measure) throws ParseException,
+    @SuppressWarnings("unchecked")
+    M internalParse(String source, M measure) throws ParseException,
             UnknownUnitException {
         measure.setValue(mNumberFormat.parse(source));
         try {
@@ -450,7 +597,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * @param copy an instantiated copy of a measure formatter that needs to be initialized.
      * @return provided copy.
      */
-    protected MeasureFormatter<M, U> internalClone(MeasureFormatter<M, U> copy) {
+    MeasureFormatter<M, U> internalClone(MeasureFormatter<M, U> copy) {
         copy.mNumberFormat = (NumberFormat)mNumberFormat.clone();
         if (mFormat != null) {
             copy.mFormat = (MessageFormat)mFormat.clone();
@@ -460,11 +607,4 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
         }
         return copy;
     }
-
-    /**
-     * Obtains measure unit symbol.
-     * @param unit a measure unit.
-     * @return measure unit symbol.
-     */
-    protected abstract String getUnitSymbol(U unit);
 }

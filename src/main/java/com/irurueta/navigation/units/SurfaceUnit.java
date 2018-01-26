@@ -96,6 +96,12 @@ public enum SurfaceUnit {
         }
 
         switch (unit) {
+            case SQUARE_INCH:
+            case SQUARE_FOOT:
+            case SQUARE_YARD:
+            case SQUARE_MILE:
+            case ACRE:
+                return UnitSystem.IMPERIAL;
             case SQUARE_MILLIMETER:
             case SQUARE_CENTIMETER:
             case SQUARE_METER:
@@ -104,15 +110,8 @@ public enum SurfaceUnit {
             case ARE:
             case DECARE:
             case HECTARE:
-                return UnitSystem.METRIC;
-            case SQUARE_INCH:
-            case SQUARE_FOOT:
-            case SQUARE_YARD:
-            case SQUARE_MILE:
-            case ACRE:
-                return UnitSystem.IMPERIAL;
             default:
-                throw new IllegalArgumentException();
+                return UnitSystem.METRIC;
         }
     }
 
@@ -164,6 +163,6 @@ public enum SurfaceUnit {
      * @throws IllegalArgumentException if unit is null or not supported.
      */
     public static boolean isImperial(SurfaceUnit unit) throws IllegalArgumentException {
-        return getUnitSystem(unit) == UnitSystem.METRIC.IMPERIAL;
+        return getUnitSystem(unit) == UnitSystem.IMPERIAL;
     }
 }

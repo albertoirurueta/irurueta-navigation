@@ -15,7 +15,6 @@
  */
 package com.irurueta.navigation.units;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -88,6 +87,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
     /**
      * Constructor.
      */
+    @SuppressWarnings("WeakerAccess")
     public SurfaceFormatter() {
         super();
     }
@@ -97,6 +97,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
      * @param locale locale.
      * @throws IllegalArgumentException if locale is null.
      */
+    @SuppressWarnings("WeakerAccess")
     public SurfaceFormatter(Locale locale) throws IllegalArgumentException {
         super(locale);
     }
@@ -120,10 +121,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
     @Override
     public boolean equals(Object obj) {
         boolean equals = super.equals(obj);
-        if (equals && !(obj instanceof SurfaceFormatter)) {
-            return false;
-        }
-        return equals;
+        return (!equals || obj instanceof SurfaceFormatter) && equals;
     }
 
     /**
@@ -166,9 +164,6 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
         if (source.contains(SQUARE_CENTIMETER + " ") || source.endsWith(SQUARE_CENTIMETER)) {
             return SurfaceUnit.SQUARE_CENTIMETER;
         }
-        if (source.contains(SQUARE_METER + " ") || source.endsWith(SQUARE_METER)) {
-            return SurfaceUnit.SQUARE_METER;
-        }
         if (source.contains(SQUARE_KILOMETER + " ") || source.endsWith(SQUARE_KILOMETER)) {
             return SurfaceUnit.SQUARE_KILOMETER;
         }
@@ -196,104 +191,14 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
         if (source.contains(ACRE + " ") || source.endsWith(ACRE)) {
             return SurfaceUnit.ACRE;
         }
+
         if (source.contains(ARE + " ") || source.endsWith(ARE)) {
             return SurfaceUnit.ARE;
         }
-        return null;
-    }
-
-    /**
-     * Formats and converts provided surface value and unit using unit system
-     * assigned to locale of this instance (if no locale has been provided it
-     * is assumed that the system default locale is used).
-     * If provided value is too large for provided unit, this method will
-     * convert it to a more appropriate unit.
-     * @param value a surface value.
-     * @param unit a surface unit.
-     * @return a string representaion of surface value and unit.
-     */
-    public String formatAndConvert(Number value, SurfaceUnit unit) {
-        return formatAndConvert(value, unit, getUnitSystem());
-    }
-
-    /**
-     * Formats and converts provided surface value and unit using unit system
-     * assigned to locale of this instance (if no locale has been provided it
-     * is assumed that the system default locale is used).
-     * If provided value is too large for provided unit, this method will
-     * convert it to a more appropriate unit.
-     * @param value a surface value.
-     * @param unit a surface unit.
-     * @return a string representation of surface value and unit.
-     */
-    public String formatAndConvert(double value, SurfaceUnit unit) {
-        return formatAndConvert(new BigDecimal(value), unit);
-    }
-
-    /**
-     * Formats and converts provided surface value and unit using unit system
-     * assigned to locale of this instance (if no locale has been provided it is
-     * assumed that the system default locale is used).
-     * If provided value is too large for provided surface unit, this method
-     * will convert it to a more appropriate unit.
-     * @param surface a surface.
-     * @return a string representation of surface value and unit.
-     */
-    public String formatAndConvert(Surface surface) {
-        return formatAndConvert(surface.getValue(), surface.getUnit());
-    }
-
-    /**
-     * Formats and converts provided surface value and unit using provided
-     * unit system.
-     * If provided value is too large for provided surface unit, this method
-     * will convert it to a more appropriate unit and also using provided unit
-     * system.
-     * @param value a surface value.
-     * @param unit a surface unit.
-     * @param system system unit to convert surface to.
-     * @return a string representation of surface value and unit.
-     */
-    public String formatAndConvert(Number value, SurfaceUnit unit,
-                                   UnitSystem system) {
-        switch (system) {
-            case IMPERIAL:
-                return formatAndConvertImperial(value, unit);
-            case METRIC:
-            default:
-                return formatAndConvertMetric(value, unit);
+        if (source.contains(SQUARE_METER + " ") || source.endsWith(SQUARE_METER)) {
+            return SurfaceUnit.SQUARE_METER;
         }
-    }
-
-    /**
-     * Formats and converts provided surface value and unit using provided
-     * unit system.
-     * If provided value is too large for provided surface unit, this method
-     * will convert it to a more appropriate unit and also using provided
-     * unit system.
-     * @param value a surface value.
-     * @param unit a surface unit.
-     * @param system system unit to convert surface to.
-     * @return a string representation of surface value and unit.
-     */
-    public String formatAndConvert(double value, SurfaceUnit unit,
-                                   UnitSystem system) {
-        return formatAndConvert(new BigDecimal(value), unit, system);
-    }
-
-    /**
-     * Formats and converts provided surface value and unit using provided
-     * unit system.
-     * If provided surface value is too large for provided surface unit,
-     * this method will convert it to a more appropriate unit and also
-     * using provided unit system.
-     * @param surface a surface.
-     * @param system system unit to convert surface to.
-     * @return a string representation of surface value and unit.
-     */
-    public String formatAndConvert(Surface surface, UnitSystem system) {
-        return formatAndConvert(surface.getValue(), surface.getUnit(),
-                system);
+        return null;
     }
 
     /**
@@ -306,6 +211,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
      * @return a string representation of surface value and unit using metric
      * unit system.
      */
+    @Override
     public String formatAndConvertMetric(Number value, SurfaceUnit unit) {
         double v = value.doubleValue();
 
@@ -344,6 +250,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
      * @return a string representation of surface value and unit using imperial
      * unit system.
      */
+    @Override
     public String formatAndConvertImperial(Number value, SurfaceUnit unit) {
         double v = value.doubleValue();
 
@@ -363,7 +270,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
 
         double squareYards = SurfaceConverter.convert(v, unit,
                 SurfaceUnit.SQUARE_YARD);
-        if (Math.abs(squareYards) < (SurfaceConverter.SQUARE_METERS_PER_SQUARE_MILLIMETER /
+        if (Math.abs(squareYards) < (SurfaceConverter.SQUARE_METERS_PER_SQUARE_MILE/
                 SurfaceConverter.SQUARE_METERS_PER_SQUARE_YARD)) {
             return format(squareYards, SurfaceUnit.SQUARE_YARD);
         }
@@ -378,7 +285,7 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
      * @return its string representation.
      */
     @Override
-    protected String getUnitSymbol(SurfaceUnit unit) {
+    public String getUnitSymbol(SurfaceUnit unit) {
         String unitStr;
         switch(unit) {
             case SQUARE_MILLIMETER:

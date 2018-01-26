@@ -15,6 +15,8 @@
  */
 package com.irurueta.navigation.units;
 
+import java.math.BigDecimal;
+
 /**
  * Does surface conversions to different units.
  * To prevent loss of accuracy, conversion should only be done as a final step
@@ -94,6 +96,61 @@ public class SurfaceConverter {
      * Prevents instantiaton of helper class.
      */
     SurfaceConverter() { }
+
+    /**
+     * Converts a surface to provided output surface unit.
+     * @param input input surface to be converted.
+     * @param output output surface where result will be stored and
+     *               containing output unit.
+     */
+    public static void convert(Surface input, Surface output) {
+        convert(input, output.getUnit(), output);
+    }
+
+    /**
+     * Converts a surface to requested output unit.
+     * @param input input surface to be converted.
+     * @param outputUnit requested output unit.
+     * @return converted surface unit.
+     */
+    public static Surface convertAndReturnNew(Surface input, SurfaceUnit outputUnit) {
+        Surface result = new Surface();
+        convert(input, outputUnit, result);
+        return result;
+    }
+
+    /**
+     * Converts and updates a surface to requested output unit.
+     * @param surface input surface to be converted and updated.
+     * @param outputUnit requested output unit.
+     */
+    public static void convert(Surface surface, SurfaceUnit outputUnit) {
+        convert(surface, outputUnit, surface);
+    }
+
+    /**
+     * Converts a surface to requested output unit.
+     * @param input input surface to be converted.
+     * @param outputUnit requested output unit.
+     * @param result surface unit where result will be stored.
+     */
+    public static void convert(Surface input, SurfaceUnit outputUnit, Surface result) {
+        Number value = convert(input.getValue(), input.getUnit(), outputUnit);
+        result.setValue(value);
+        result.setUnit(outputUnit);
+    }
+
+    /**
+     * Converts a surface value from input unit to provided output unit.
+     * @param input surface value.
+     * @param inputUnit input surface unit.
+     * @param outputUnit output surface unit.
+     * @return converted surface value.
+     */
+    public static Number convert(Number input, SurfaceUnit inputUnit,
+                                 SurfaceUnit outputUnit) {
+        return new BigDecimal(convert(input.doubleValue(), inputUnit, outputUnit));
+    }
 
     /**
      * Converts a surface value from input unit to provided output unit.

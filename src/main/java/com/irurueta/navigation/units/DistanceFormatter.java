@@ -15,7 +15,6 @@
  */
 package com.irurueta.navigation.units;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -25,9 +24,9 @@ import java.util.Locale;
 public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> implements Cloneable {
 
     /**
-     * Milimeter symbol.
+     * Millimeter symbol.
      */
-    public static final String MILIMETER = "mm";
+    public static final String MILLIMETER = "mm";
 
     /**
      * Centimeter symbol.
@@ -67,6 +66,7 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
     /**
      * Constructor.
      */
+    @SuppressWarnings("WeakerAccess")
     public DistanceFormatter() {
         super();
     }
@@ -76,6 +76,7 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      * @param locale locale.
      * @throws IllegalArgumentException if locale is null.
      */
+    @SuppressWarnings("WeakerAccess")
     public DistanceFormatter(Locale locale) throws IllegalArgumentException {
         super(locale);
     }
@@ -98,10 +99,7 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
     @Override
     public boolean equals(Object obj) {
         boolean equals = super.equals(obj);
-        if (equals && !(obj instanceof DistanceFormatter)) {
-            return false;
-        }
-        return equals;
+        return (!equals || obj instanceof DistanceFormatter) && equals;
     }
 
     /**
@@ -138,7 +136,7 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      */
     @Override
     public DistanceUnit findUnit(String source) {
-        if (source.contains(MILIMETER + " ") || source.endsWith(MILIMETER)) {
+        if (source.contains(MILLIMETER + " ") || source.endsWith(MILLIMETER)) {
             return DistanceUnit.MILLIMETER;
         }
         if (source.contains(CENTIMETER + " ") || source.endsWith(CENTIMETER)) {
@@ -167,100 +165,6 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
     }
 
     /**
-     * Formats and converts provided distance value and unit using unit system
-     * assigned to locale of this instance (if no locale has been provided it
-     * is assumed that the system default locale is used).
-     * If provided value is too large for provided unit, this method will
-     * convert it to a more appropriate unit.
-     * @param value a distance value.
-     * @param unit a distance unit.
-     * @return a string representation of distance value and unit.
-     */
-    public String formatAndConvert(Number value, DistanceUnit unit) {
-        return formatAndConvert(value, unit, getUnitSystem());
-    }
-
-    /**
-     * Formats and converts provided distance value and unit using unit system
-     * assigned to locale of this instance (if no locale has been provided it
-     * is assumed that the system default locale is used).
-     * If provided value is too large for provided unit, this method will
-     * convert it to a more appropriate unit.
-     * @param value a distance value.
-     * @param unit a distance unit.
-     * @return a string representation of distance value and unit.
-     */
-    public String formatAndConvert(double value, DistanceUnit unit) {
-        return formatAndConvert(new BigDecimal(value), unit);
-    }
-
-    /**
-     * Formats and converts provided distance value and unit using unit system
-     * assigned to locale of this instance (if no locale has been provided it
-     * is assumed that the system default locale is used).
-     * If provided value is too large for provided distance unit, this method
-     * will convert it to a more appropriate unit.
-     * @param distance a distance.
-     * @return a string representation of distance value and unit.
-     */
-    public String formatAndConvert(Distance distance) {
-        return formatAndConvert(distance.getValue(), distance.getUnit());
-    }
-
-    /**
-     * Formats and converts provided distance value and unit using provided
-     * unit system.
-     * If provided value is too large for provided distance unit, this method
-     * will convert it to a more appropriate unit and also using provided unit
-     * system.
-     * @param value a distance value.
-     * @param unit a distance unit.
-     * @param system system unit to convert distance to.
-     * @return a string representation of distance value and unit.
-     */
-    public String formatAndConvert(Number value, DistanceUnit unit,
-                                   UnitSystem system) {
-        switch (system) {
-            case IMPERIAL:
-                return formatAndConvertImperial(value, unit);
-            case METRIC:
-            default:
-                return formatAndConvertMetric(value, unit);
-        }
-    }
-
-    /**
-     * Formats and converts provided distance value and unit using provided
-     * unit system.
-     * If provided value is too large for provided distance unit, this method
-     * will convert it to a more appropriate unit and also using provided unit
-     * system.
-     * @param value a distance value.
-     * @param unit a distance unit.
-     * @param system system unit to convert distance to.
-     * @return a string representation of distance value and unit.
-     */
-    public String formatAndConvert(double value, DistanceUnit unit,
-                                   UnitSystem system) {
-        return formatAndConvert(new BigDecimal(value), unit, system);
-    }
-
-    /**
-     * Formats and converts provided distance value and unit using provided
-     * unit system.
-     * If provided distance value is too large for provided distance unit,
-     * this method will convert it to a more appropriate unit and also using
-     * provided unit system.
-     * @param distance a distance.
-     * @param system system unit to convert distance to.
-     * @return a string representation of distance value and unit.
-     */
-    public String formatAndConvert(Distance distance, UnitSystem system) {
-        return formatAndConvert(distance.getValue(), distance.getUnit(),
-                system);
-    }
-
-    /**
      * Formats and converts provided distance value and unit using metric unit
      * system.
      * If provided distance value is too large for provided distance unit,
@@ -270,6 +174,7 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      * @return a string representation of distance value and unit using metric
      * unit system.
      */
+    @Override
     public String formatAndConvertMetric(Number value, DistanceUnit unit) {
         double v = value.doubleValue();
 
@@ -307,6 +212,7 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      * @return a string representation of distance value and unit using imperial
      * unit system.
      */
+    @Override
     public String formatAndConvertImperial(Number value, DistanceUnit unit) {
         double v = value.doubleValue();
 
@@ -338,11 +244,11 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      * @return its string representation.
      */
     @Override
-    protected String getUnitSymbol(DistanceUnit unit) {
+    public String getUnitSymbol(DistanceUnit unit) {
         String unitStr;
         switch (unit) {
             case MILLIMETER:
-                unitStr = MILIMETER;
+                unitStr = MILLIMETER;
                 break;
             case CENTIMETER:
                 unitStr = CENTIMETER;

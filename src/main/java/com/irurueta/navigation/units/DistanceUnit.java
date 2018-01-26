@@ -71,18 +71,17 @@ public enum DistanceUnit {
         }
 
         switch (unit) {
-            case MILLIMETER:
-            case CENTIMETER:
-            case METER:
-            case KILOMETER:
-                return UnitSystem.METRIC;
             case INCH:
             case FOOT:
             case YARD:
             case MILE:
                 return UnitSystem.IMPERIAL;
+            case MILLIMETER:
+            case CENTIMETER:
+            case METER:
+            case KILOMETER:
             default:
-                throw new IllegalArgumentException();
+                return UnitSystem.METRIC;
         }
     }
 

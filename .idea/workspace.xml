@@ -2,53 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitLocale.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitSystem.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitsException.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnknownUnitException.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/package-info.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/UtilsException.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/ConstantsTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeoMathTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicLineTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicMaskTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GnomonicDataTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GnomonicTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/PolygonAreaTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceUnitTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceUnitTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitLocaleTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceFormatterTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceFormatterTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitsExceptionTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnknownUnitExceptionTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/BuildInfo.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/BuildInfo.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Accumulator.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Accumulator.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Constants.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Constants.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeoMath.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeoMath.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicData.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicData.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicException.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicException.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicLine.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicLine.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Gnomonic.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Gnomonic.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonArea.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonArea.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonResult.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonResult.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/package-info.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/package-info.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/UtilsException.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -60,7 +30,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1516835609499" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1517003567617" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_geodesic_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation.geodesic in irurueta-navigation Coverage Results" MODIFIED="1516663063749" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -71,112 +41,7 @@
     <favorites_list name="irurueta-navigation" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="DistanceConverter.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="106">
-                  <caret line="71" column="44" lean-forward="false" selection-start-line="71" selection-start-column="44" selection-end-line="71" selection-end-column="44" />
-                  <folding>
-                    <element signature="e#0#9373#0" expanded="true" />
-                    <element signature="e#2087#2088#0" expanded="true" />
-                    <element signature="e#2143#2144#0" expanded="true" />
-                    <element signature="e#2829#2830#0" expanded="true" />
-                    <element signature="e#2884#2885#0" expanded="true" />
-                    <element signature="e#6270#6271#0" expanded="true" />
-                    <element signature="e#6327#6328#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SurfaceConverterTest.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="173">
-                  <caret line="285" column="24" lean-forward="false" selection-start-line="285" selection-start-column="24" selection-end-line="285" selection-end-column="24" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="DistanceConverterTest.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1471">
-                  <caret line="165" column="7" lean-forward="false" selection-start-line="165" selection-start-column="7" selection-end-line="165" selection-end-column="7" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SurfaceConverter.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1355">
-                  <caret line="105" column="37" lean-forward="false" selection-start-line="105" selection-start-column="37" selection-end-line="105" selection-end-column="37" />
-                  <folding>
-                    <element signature="e#0#13869#0" expanded="true" />
-                    <element signature="e#11234#11235#0" expanded="true" />
-                    <element signature="e#11297#11298#0" expanded="true" />
-                    <element signature="e#11820#11821#0" expanded="true" />
-                    <element signature="e#11878#11879#0" expanded="true" />
-                    <element signature="e#12089#12090#0" expanded="true" />
-                    <element signature="e#12139#12140#0" expanded="true" />
-                    <element signature="e#12375#12376#0" expanded="true" />
-                    <element signature="e#12436#12437#0" expanded="true" />
-                    <element signature="e#12957#12958#0" expanded="true" />
-                    <element signature="e#13019#13020#0" expanded="true" />
-                    <element signature="e#13538#13539#0" expanded="true" />
-                    <element signature="e#13597#13598#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SurfaceUnit.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="181">
-                  <caret line="20" column="12" lean-forward="false" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
-                  <folding>
-                    <element signature="e#0#4207#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="DistanceConverter.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-157">
-                  <caret line="66" column="0" lean-forward="true" selection-start-line="66" selection-start-column="0" selection-end-line="66" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#9373#0" expanded="true" />
-                    <element signature="e#2087#2088#0" expanded="true" />
-                    <element signature="e#2143#2144#0" expanded="true" />
-                    <element signature="e#2829#2830#0" expanded="true" />
-                    <element signature="e#2884#2885#0" expanded="true" />
-                    <element signature="e#6270#6271#0" expanded="true" />
-                    <element signature="e#6327#6328#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -203,6 +68,10 @@
       <find>mC2 =</find>
       <find>findUnit</find>
       <find>parse(</find>
+      <find>mValueAndUnitFormatPattern</find>
+      <find>mFormat</find>
+      <find>SQUARE_METERS_PER_SQUARE_YARD</find>
+      <find>testInvers</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -216,11 +85,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicLine.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/package-info.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Accumulator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonResult.java" />
@@ -247,13 +111,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnknownUnitException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitSystem.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/package-info.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceTest.java" />
@@ -261,12 +120,22 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceUnitTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitLocale.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitLocaleTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureConverter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitsExceptionTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnknownUnitExceptionTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceFormatterTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceFormatterTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
       </list>
     </option>
   </component>
@@ -300,7 +169,7 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="141" />
+    <option name="x" value="148" />
     <option name="y" value="23" />
     <option name="width" value="1292" />
     <option name="height" value="857" />
@@ -779,15 +648,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="geodesic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
               <item name="units" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -827,7 +687,7 @@
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="units" type="462c0819:PsiDirectoryNode" />
+              <item name="geodesic" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -880,18 +740,18 @@
       <module name="" />
       <envs />
     </configuration>
-    <configuration name="DistanceConverterTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="LocationUtilsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.units.*" />
+          <option name="PATTERN" value="com.irurueta.navigation.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <module name="irurueta-navigation" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.units" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.units.DistanceConverterTest" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.utils" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.utils.LocationUtilsTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -905,20 +765,20 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration name="SurfaceConverterTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="LocationUtilsTest.testConvert" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.units.*" />
+          <option name="PATTERN" value="com.irurueta.navigation.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <module name="irurueta-navigation" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.units" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.units.SurfaceConverterTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.utils" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.utils.LocationUtilsTest" />
+      <option name="METHOD_NAME" value="testConvert" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -930,20 +790,20 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration name="SurfaceUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="LocationUtilsTest.testConvertStringToDouble" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.units.*" />
+          <option name="PATTERN" value="com.irurueta.navigation.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <module name="irurueta-navigation" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.units" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.units.SurfaceUnitTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.utils" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.utils.LocationUtilsTest" />
+      <option name="METHOD_NAME" value="testConvertStringToDouble" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -955,7 +815,7 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration name="UnitLocaleTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SurfaceFormatterTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="com.irurueta.navigation.units.*" />
@@ -966,7 +826,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.units" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.units.UnitLocaleTest" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.units.SurfaceFormatterTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -1066,19 +926,19 @@
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.SurfaceUnitTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.UnitLocaleTest" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.DistanceConverterTest" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.SurfaceConverterTest" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.SurfaceFormatterTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.LocationUtilsTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.LocationUtilsTest.testConvert" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.LocationUtilsTest.testConvertStringToDouble" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.SurfaceConverterTest" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.DistanceConverterTest" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.UnitLocaleTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.SurfaceUnitTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.LocationUtilsTest" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.LocationUtilsTest.testConvertStringToDouble" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.LocationUtilsTest.testConvert" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.SurfaceFormatterTest" />
       </list>
     </recent_temporary>
   </component>
@@ -1107,48 +967,47 @@
       <workItem from="1516653587848" duration="7867000" />
       <workItem from="1516698256032" duration="5464000" />
       <workItem from="1516726698109" duration="3079000" />
-      <workItem from="1516730060408" duration="29161000" />
+      <workItem from="1516730060408" duration="80541000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 18m 19s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 15m 20s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 24m 24s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 16m 40s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 31m 08s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 23m 54s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 37m 27s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 25m 18s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 39m 41s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 25m 55s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 42m 20s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 48m 47s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 44m 46s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 51m 42s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 56m 19s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="LocationUtilsTest - 2018.01.26 at 22h 52m 35s.xml">
+      <configuration name="LocationUtilsTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="SurfaceConverterTest - 2018.01.24 at 23h 57m 23s.xml">
-      <configuration name="SurfaceConverterTest" configurationId="JUnit" />
+    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.01.26 at 22h 16m 51s.xml">
+      <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.01.25 at 00h 13m 30s.xml">
+    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.01.26 at 22h 52m 49s.xml">
       <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140544000" />
+    <option name="totallyTimeSpent" value="191924000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="141" y="23" width="1292" height="857" extended-state="0" />
-    <editor active="true" />
+    <frame x="148" y="23" width="1292" height="857" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1158,15 +1017,16 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2480315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2480315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.364" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1976" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2752" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2488" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1178,7 +1038,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1189,126 +1048,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="27" />
+      <option name="time" value="35" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Pair.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="25" column="7" lean-forward="true" selection-start-line="25" selection-start-column="7" selection-end-line="25" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonArea.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="281" column="8" lean-forward="false" selection-start-line="281" selection-start-column="8" selection-end-line="281" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#16054#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/PolygonResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="40" column="9" lean-forward="false" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
-          <folding>
-            <element signature="e#1321#1354#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Accumulator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#4858#0" expanded="false" />
-            <element signature="e#1766#1799#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicExceptionTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="36" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicLineTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="3" lean-forward="false" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#12593#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicMaskTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="3" lean-forward="false" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#2019#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="3" lean-forward="false" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#45468#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testDirect#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testArcDirect#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testDirectLine#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testInverse#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testInverseLine#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve0#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve1#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve2#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve4#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve5#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve6#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve9#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve10#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve11#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve12#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve14#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve15#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve17#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve26#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve28#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve29#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve33#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve55#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve59#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve61#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve65#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve69#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve73#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve74#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve76#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testGeodSolve78#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testPlanimeter0#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testPlanimeter5#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testPlanimeter6#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testPlanimeter12#0;class#GeodesicTest#0" expanded="false" />
-            <element signature="method#testPlanimeter13#0;class#GeodesicTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeoMathTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -1349,37 +1093,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/BuildInfoTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="25" column="13" lean-forward="false" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/NavigationExceptionTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="27" column="0" lean-forward="true" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/UtilsException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1620#0" expanded="false" />
-            <element signature="e#898#899#0" expanded="false" />
-            <element signature="e#921#922#0" expanded="false" />
-            <element signature="e#1102#1103#0" expanded="false" />
-            <element signature="e#1132#1133#0" expanded="false" />
-            <element signature="e#1390#1391#0" expanded="false" />
-            <element signature="e#1427#1428#0" expanded="false" />
-            <element signature="e#1588#1589#0" expanded="false" />
-            <element signature="e#1616#1617#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1443,40 +1161,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnknownUnitException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="16" lean-forward="true" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#1609#0" expanded="false" />
-            <element signature="e#869#870#0" expanded="false" />
-            <element signature="e#892#893#0" expanded="false" />
-            <element signature="e#1079#1080#0" expanded="false" />
-            <element signature="e#1109#1110#0" expanded="false" />
-            <element signature="e#1373#1374#0" expanded="false" />
-            <element signature="e#1410#1411#0" expanded="false" />
-            <element signature="e#1577#1578#0" expanded="false" />
-            <element signature="e#1605#1606#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/text/FieldPosition.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="509">
           <caret line="72" column="13" lean-forward="false" selection-start-line="72" selection-start-column="13" selection-end-line="72" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="27" column="3" lean-forward="true" selection-start-line="27" selection-start-column="3" selection-end-line="27" selection-end-column="3" />
-          <folding>
-            <element signature="e#14279#14280#0" expanded="false" />
-            <element signature="e#14353#14354#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1520,29 +1209,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8355">
-          <caret line="557" column="20" lean-forward="false" selection-start-line="557" selection-start-column="20" selection-end-line="557" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#87511#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1770">
-          <caret line="118" column="0" lean-forward="true" selection-start-line="106" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#12963#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#1672#1673#0" expanded="false" />
-            <element signature="e#1695#1696#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/package-info.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -1559,17 +1225,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="14" column="3" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="3" />
-          <folding>
-            <element signature="e#1158#1159#0" expanded="false" />
-            <element signature="e#1181#1182#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
@@ -1582,29 +1237,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-212">
-          <caret line="63" column="22" lean-forward="false" selection-start-line="63" selection-start-column="22" selection-end-line="63" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#2881#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
           <caret line="44" column="19" lean-forward="true" selection-start-line="44" selection-start-column="19" selection-end-line="44" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="112" column="5" lean-forward="true" selection-start-line="112" selection-start-column="5" selection-end-line="112" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -1629,14 +1265,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitLocale.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="44" column="46" lean-forward="false" selection-start-line="44" selection-start-column="46" selection-end-line="44" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceUnitTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
@@ -1658,22 +1286,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-61">
-          <caret line="313" column="59" lean-forward="false" selection-start-line="313" selection-start-column="59" selection-end-line="313" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5151">
-          <caret line="409" column="20" lean-forward="false" selection-start-line="409" selection-start-column="20" selection-end-line="409" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureConverter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1682,70 +1294,379 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="20" column="12" lean-forward="false" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#4207#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1355">
-          <caret line="105" column="37" lean-forward="false" selection-start-line="105" selection-start-column="37" selection-end-line="105" selection-end-column="37" />
+        <state relative-caret-position="110">
+          <caret line="55" column="0" lean-forward="true" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
           <folding>
-            <element signature="e#0#13869#0" expanded="true" />
-            <element signature="e#11234#11235#0" expanded="true" />
-            <element signature="e#11297#11298#0" expanded="true" />
-            <element signature="e#11820#11821#0" expanded="true" />
-            <element signature="e#11878#11879#0" expanded="true" />
-            <element signature="e#12089#12090#0" expanded="true" />
-            <element signature="e#12139#12140#0" expanded="true" />
-            <element signature="e#12375#12376#0" expanded="true" />
-            <element signature="e#12436#12437#0" expanded="true" />
-            <element signature="e#12957#12958#0" expanded="true" />
-            <element signature="e#13019#13020#0" expanded="true" />
-            <element signature="e#13538#13539#0" expanded="true" />
-            <element signature="e#13597#13598#0" expanded="true" />
+            <element signature="e#0#15933#0" expanded="true" />
+            <element signature="e#3470#3471#0" expanded="true" />
+            <element signature="e#3526#3527#0" expanded="true" />
+            <element signature="e#4201#4202#0" expanded="true" />
+            <element signature="e#4254#4255#0" expanded="true" />
+            <element signature="e#13298#13299#0" expanded="true" />
+            <element signature="e#13361#13362#0" expanded="true" />
+            <element signature="e#13884#13885#0" expanded="true" />
+            <element signature="e#13942#13943#0" expanded="true" />
+            <element signature="e#14153#14154#0" expanded="true" />
+            <element signature="e#14203#14204#0" expanded="true" />
+            <element signature="e#14439#14440#0" expanded="true" />
+            <element signature="e#14500#14501#0" expanded="true" />
+            <element signature="e#15021#15022#0" expanded="true" />
+            <element signature="e#15083#15084#0" expanded="true" />
+            <element signature="e#15602#15603#0" expanded="true" />
+            <element signature="e#15661#15662#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/NavigationExceptionTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="71" column="44" lean-forward="false" selection-start-line="71" selection-start-column="44" selection-end-line="71" selection-end-column="44" />
+        <state relative-caret-position="148">
+          <caret line="33" column="0" lean-forward="true" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
-            <element signature="e#0#9373#0" expanded="true" />
-            <element signature="e#2087#2088#0" expanded="true" />
-            <element signature="e#2143#2144#0" expanded="true" />
-            <element signature="e#2829#2830#0" expanded="true" />
-            <element signature="e#2884#2885#0" expanded="true" />
-            <element signature="e#6270#6271#0" expanded="true" />
-            <element signature="e#6327#6328#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnknownUnitException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="26" column="16" lean-forward="true" selection-start-line="26" selection-start-column="16" selection-end-line="26" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitsExceptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="36" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnknownUnitExceptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="49" column="26" lean-forward="false" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="35" column="4" lean-forward="false" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+          <folding>
+            <element signature="e#1158#1159#0" expanded="false" />
+            <element signature="e#1181#1182#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1471">
-          <caret line="165" column="7" lean-forward="false" selection-start-line="165" selection-start-column="7" selection-end-line="165" selection-end-column="7" />
+        <state relative-caret-position="478">
+          <caret line="477" column="56" lean-forward="false" selection-start-line="477" selection-start-column="56" selection-end-line="477" selection-end-column="56" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="285" column="24" lean-forward="false" selection-start-line="285" selection-start-column="24" selection-end-line="285" selection-end-column="24" />
+        <state relative-caret-position="88">
+          <caret line="1170" column="53" lean-forward="false" selection-start-line="1170" selection-start-column="53" selection-end-line="1170" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="method#testConvertDouble#0;class#SurfaceConverterTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="83" column="27" lean-forward="false" selection-start-line="83" selection-start-column="27" selection-end-line="83" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#9376#0" expanded="true" />
+            <element signature="e#2087#2088#0" expanded="true" />
+            <element signature="e#2143#2144#0" expanded="true" />
+            <element signature="e#2832#2833#0" expanded="true" />
+            <element signature="e#2887#2888#0" expanded="true" />
+            <element signature="e#6273#6274#0" expanded="true" />
+            <element signature="e#6330#6331#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="36" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/text/NumberFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="855" column="32" lean-forward="false" selection-start-line="855" selection-start-column="32" selection-end-line="855" selection-end-column="32" />
+          <folding>
+            <element signature="e#17589#17590#0" expanded="false" />
+            <element signature="e#17646#17647#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitLocale.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="52" column="29" lean-forward="false" selection-start-line="52" selection-start-column="29" selection-end-line="52" selection-end-column="29" />
+          <folding>
+            <element signature="e#1500#1501#0" expanded="false" />
+            <element signature="e#1551#1552#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/text/MessageFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="1100" column="19" lean-forward="false" selection-start-line="1100" selection-start-column="19" selection-end-line="1100" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="510" column="19" lean-forward="false" selection-start-line="510" selection-start-column="19" selection-end-line="510" selection-end-column="19" />
+          <folding>
+            <element signature="e#5712#5713#0" expanded="true" />
+            <element signature="e#5770#5771#0" expanded="true" />
+            <element signature="e#6588#6618#0" expanded="true" />
+            <element signature="e#6659#6660#0" expanded="true" />
+            <element signature="e#6738#6739#0" expanded="true" />
+            <element signature="e#7111#7141#0" expanded="true" />
+            <element signature="e#7940#7941#0" expanded="true" />
+            <element signature="e#8009#8010#0" expanded="true" />
+            <element signature="e#8574#8575#0" expanded="true" />
+            <element signature="e#8642#8643#0" expanded="true" />
+            <element signature="e#9121#9151#0" expanded="true" />
+            <element signature="e#11243#11273#0" expanded="true" />
+            <element signature="e#12895#12896#0" expanded="true" />
+            <element signature="e#12925#12926#0" expanded="true" />
+            <element signature="e#13104#13105#0" expanded="true" />
+            <element signature="e#13167#13168#0" expanded="true" />
+            <element signature="e#15385#15386#0" expanded="true" />
+            <element signature="e#15444#15445#0" expanded="true" />
+            <element signature="e#21009#21039#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceFormatterTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="1000" column="45" lean-forward="true" selection-start-line="1000" selection-start-column="8" selection-end-line="1000" selection-end-column="45" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="method#testFormatNumber#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatNumberAndStringBuffer#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatDouble#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatDoubleAndStringBuffer#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatDistanceAndStringBuffer#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertNumber#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertDouble#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertDistance#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAnConvertNumberAndUnitSystem#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertDoubleAndUnitSystem#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertMetric#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertImperial#0;class#DistanceFormatterTest#0" expanded="false" />
+            <element signature="method#testParse#0;class#DistanceFormatterTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceFormatterTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="1379" column="5" lean-forward="false" selection-start-line="1379" selection-start-column="5" selection-end-line="1379" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="method#testFormatNumber#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatNumberAndStringBuffer#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatDouble#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatDoubleAndStringBuffer#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatSurface#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatSurfaceAndStringBuffer#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertNumber#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertDouble#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertSurface#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertNumberAndUnitSystem#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertDoubleAndUnitSystem#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertSurfaceAndUnitSystem#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertMetric#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFormatAndConvertImperial#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetAvailableLocales#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetSetMaximumFractionDigits#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetSetMaximumIntegerDigits#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetSetMinimumFractionDigits#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetSetMinimumIntegerDigits#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetSetRoundingMode#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testIsSetGroupingUsed#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testIsSetParseIntegerOnly#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetSetValueAndUnitFormatPattern#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetUnitSystem#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testIsValidUnit#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testIsImperialUnit#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testGetUnitSystemFromSource#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testParse#0;class#SurfaceFormatterTest#0" expanded="false" />
+            <element signature="method#testFindUnit#0;class#SurfaceFormatterTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#2089#2122#0" expanded="true" />
+            <element signature="e#2319#2352#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="78" column="37" lean-forward="false" selection-start-line="78" selection-start-column="37" selection-end-line="78" selection-end-column="37" />
+          <folding>
+            <element signature="e#1618#1651#0" expanded="false" />
+            <element signature="e#1683#1684#0" expanded="false" />
+            <element signature="e#1706#1707#0" expanded="false" />
+            <element signature="e#1849#1882#0" expanded="false" />
+            <element signature="method#formatAndConvertMetric#0;class#DistanceFormatter#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="82" column="15" lean-forward="false" selection-start-line="82" selection-start-column="15" selection-end-line="82" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="98" column="29" lean-forward="true" selection-start-line="98" selection-start-column="29" selection-end-line="98" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/BuildInfoTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="458">
+          <caret line="40" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#2507#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="409">
+          <caret line="256" column="23" lean-forward="false" selection-start-line="256" selection-start-column="23" selection-end-line="256" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#10182#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="method#testConvertDoubleToString#0;class#LocationUtilsTest#0" expanded="false" />
+            <element signature="method#testBearingDistanceConstructor#0;class#LocationUtilsTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/geodesic/GeodesicTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="506" column="0" lean-forward="true" selection-start-line="504" selection-start-column="0" selection-end-line="506" selection-end-column="0" />
+          <folding>
+            <element signature="method#testConstructor#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testDirect#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testArcDirect#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testDirectLine#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testInverseLine#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve0#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve1#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve2#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve4#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve5#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve6#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve9#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve10#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve11#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve12#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve14#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve15#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve17#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve26#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve28#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve29#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve33#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve55#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve59#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve61#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve65#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve69#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve73#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve74#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve76#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testGeodSolve78#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testPlanimeter0#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testPlanimeter5#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testPlanimeter6#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testPlanimeter12#0;class#GeodesicTest#0" expanded="false" />
+            <element signature="method#testPlanimeter13#0;class#GeodesicTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1697">
+          <caret line="261" column="26" lean-forward="false" selection-start-line="261" selection-start-column="26" selection-end-line="261" selection-end-column="26" />
+          <folding>
+            <element signature="docComment;method#convert#0;class#LocationUtils#0" expanded="false" />
+            <element signature="docComment;method#convert#1;class#LocationUtils#0" expanded="false" />
+            <element signature="e#13187#13220#0" expanded="true" />
+            <element signature="e#14072#14073#0" expanded="true" />
+            <element signature="e#14116#14117#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10173">
+          <caret line="1231" column="19" lean-forward="true" selection-start-line="1231" selection-start-column="19" selection-end-line="1231" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#87511#0" expanded="true" />
           </folding>
         </state>
       </provider>

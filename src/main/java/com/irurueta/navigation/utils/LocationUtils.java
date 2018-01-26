@@ -49,6 +49,12 @@ public class LocationUtils {
     public static final int FORMAT_SECONDS = 2;
 
     /**
+     * Constructor.
+     * Prevents public instantiation.
+     */
+    LocationUtils() { }
+
+    /**
      * Converts a coordinate to a String representation. The outputType
      * may be one of FORMAT_DEGREES, FORMAT_MINUTES, or FORMAT_SECONDS.
      * The coordinate must be a valid double between -180.0 and 180.0.
@@ -189,6 +195,7 @@ public class LocationUtils {
      */
     public static void distanceAndBearing(double startLatitude, double startLongitude,
                                                   double endLatitude, double endLongitude, BearingDistance results) {
+        //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
         results.mStartLatitude = data.lat1;
         results.mStartLongitude = data.lon1;
@@ -231,14 +238,13 @@ public class LocationUtils {
         if (results.length == 0) {
             throw new IllegalArgumentException("results must have at least 1 element");
         }
+        //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
-        if (results.length > 0) {
-            results[0] = data.s12;
-            if (results.length > 1) {
-                results[1] = data.azi1;
-                if (results.length > 2) {
-                    results[2] = data.azi2;
-                }
+        results[0] = data.s12;
+        if (results.length > 1) {
+            results[1] = data.azi1;
+            if (results.length > 2) {
+                results[2] = data.azi2;
             }
         }
     }
@@ -253,6 +259,7 @@ public class LocationUtils {
      */
     public static double distanceBetweenMeters(double startLatitude, double startLongitude, double endLatitude,
                                          double endLongitude) {
+        //noinspection all
         return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).s12;
     }
 
@@ -329,6 +336,7 @@ public class LocationUtils {
         /**
          * Constructor.
          */
+        @SuppressWarnings("WeakerAccess")
         public BearingDistance() { }
 
         /**
