@@ -202,6 +202,28 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
     }
 
     /**
+     * Formats and converts provided surface value and unit using provided
+     * unit system.
+     * If provided value is too large for provided unit, this method will
+     * convert it to a more appropriate unit using provided unit system (either
+     * metric or imperial).
+     * @param value a surface value.
+     * @param unit a surface unit.
+     * @param system system unit to convert surface to.
+     * @return a string representation of surface value and unit.
+     */
+    @Override
+    public String formatAndConvert(Number value, SurfaceUnit unit, UnitSystem system) {
+        switch (system) {
+            case IMPERIAL:
+                return formatAndConvertImperial(value, unit);
+            case METRIC:
+            default:
+                return formatAndConvertMetric(value, unit);
+        }
+    }
+
+    /**
      * Formats and converts provided surface value and unit using metric unit
      * system.
      * If provided surface value is too large for provided surface unit,
@@ -211,7 +233,6 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
      * @return a string representation of surface value and unit using metric
      * unit system.
      */
-    @Override
     public String formatAndConvertMetric(Number value, SurfaceUnit unit) {
         double v = value.doubleValue();
 
@@ -250,7 +271,6 @@ public class SurfaceFormatter extends MeasureFormatter<Surface, SurfaceUnit> {
      * @return a string representation of surface value and unit using imperial
      * unit system.
      */
-    @Override
     public String formatAndConvertImperial(Number value, SurfaceUnit unit) {
         double v = value.doubleValue();
 

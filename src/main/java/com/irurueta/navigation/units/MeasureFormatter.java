@@ -40,7 +40,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
     /**
      * Internal string formatter.
      */
-    private NumberFormat mNumberFormat;
+    NumberFormat mNumberFormat;
 
     /**
      * Internal string formatter.
@@ -252,7 +252,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
     }
 
     /**
-     * Formats and converts provided measurement vlaue and unit using provided
+     * Formats and converts provided measurement value and unit using provided
      * unit system.
      * If provided value is too large for provided unit, this method will
      * convert it to a more appropriate unit using provided unit system (either
@@ -262,15 +262,7 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
      * @param system system unit to convert measurement to.
      * @return a string representation of measurement value and unit.
      */
-    public String formatAndConvert(Number value, U unit, UnitSystem system) {
-        switch (system) {
-            case IMPERIAL:
-                return formatAndConvertImperial(value, unit);
-            case METRIC:
-            default:
-                return formatAndConvertMetric(value, unit);
-        }
-    }
+    public abstract String formatAndConvert(Number value, U unit, UnitSystem system);
 
     /**
      * Formats and converts provided measurement value and unit using provided
@@ -301,30 +293,6 @@ public abstract class MeasureFormatter<M extends Measurement, U extends Enum> im
         return formatAndConvert(measurement.getValue(),
                 (U)measurement.getUnit(), unitSystem);
     }
-
-    /**
-     * Formats and converts provided measurement value and unit using
-     * metric unit system.
-     * If provided measurement value is too large for its unit, this method
-     * will convert it to a more appropriate unit.
-     * @param value a measurement value.
-     * @param unit a measurement unit.
-     * @return a string representation of measurement value and unit using
-     * metric unit system.
-     */
-    public abstract String formatAndConvertMetric(Number value, U unit);
-
-    /**
-     * Formats and converts provided measurement value and unit using
-     * imperial unit system.
-     * If provided measurement value is too large for its unit, this method
-     * will convert it to a more appropriate unit.
-     * @param value a measurement value.
-     * @param unit a measurement unit.
-     * @return a string representation of measurement value and unit using
-     * imperial unit system.
-     */
-    public abstract String formatAndConvertImperial(Number value, U unit);
 
     /**
      * Returns available locales for this formatter.

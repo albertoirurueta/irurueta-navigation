@@ -165,6 +165,28 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
     }
 
     /**
+     * Formats and converts provided distance value and unit using provided
+     * unit system.
+     * If provided value is too large for provided unit, this method will
+     * convert it to a more appropriate unit using provided unit system (either
+     * metric or imperial).
+     * @param value a distance value.
+     * @param unit a distance unit.
+     * @param system system unit to convert distance to.
+     * @return a string representation of distance value and unit.
+     */
+    @Override
+    public String formatAndConvert(Number value, DistanceUnit unit, UnitSystem system) {
+        switch (system) {
+            case IMPERIAL:
+                return formatAndConvertImperial(value, unit);
+            case METRIC:
+            default:
+                return formatAndConvertMetric(value, unit);
+        }
+    }
+
+    /**
      * Formats and converts provided distance value and unit using metric unit
      * system.
      * If provided distance value is too large for provided distance unit,
@@ -174,7 +196,6 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      * @return a string representation of distance value and unit using metric
      * unit system.
      */
-    @Override
     public String formatAndConvertMetric(Number value, DistanceUnit unit) {
         double v = value.doubleValue();
 
@@ -212,7 +233,6 @@ public class DistanceFormatter extends MeasureFormatter<Distance, DistanceUnit> 
      * @return a string representation of distance value and unit using imperial
      * unit system.
      */
-    @Override
     public String formatAndConvertImperial(Number value, DistanceUnit unit) {
         double v = value.doubleValue();
 

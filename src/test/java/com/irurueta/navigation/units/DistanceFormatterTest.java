@@ -996,7 +996,6 @@ public class DistanceFormatterTest {
         text = "5,5 mi";
         assertEquals(formatter.findUnit(text), DistanceUnit.MILE);
 
-        //Force UnknownUnitException
         text = "5,5 s";
         assertNull(formatter.findUnit(text));
     }

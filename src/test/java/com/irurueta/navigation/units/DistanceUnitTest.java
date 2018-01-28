@@ -100,6 +100,7 @@ public class DistanceUnitTest {
 
         //Force IllegalArgumentException
         try {
+            //noinspection all
             DistanceUnit.isMetric(null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -118,6 +119,7 @@ public class DistanceUnitTest {
 
         //Force IllegalArgumentException
         try {
+            //noinspection all
             DistanceUnit.isImperial(null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
