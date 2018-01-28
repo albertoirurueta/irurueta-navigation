@@ -79,7 +79,7 @@ public class DistanceConverter {
      * Converts a distance to requested output unit.
      * @param input input distance to be converted.
      * @param outputUnit requested output unit.
-     * @return converted distance unit.
+     * @return converted distance.
      */
     public static Distance convertAndReturnNew(Distance input, DistanceUnit outputUnit) {
         Distance result = new Distance();
