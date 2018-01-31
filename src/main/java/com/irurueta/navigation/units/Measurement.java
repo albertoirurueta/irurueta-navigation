@@ -37,6 +37,7 @@ public abstract class Measurement<T extends Enum> {
      * @param unit measurement unit.
      * @throws IllegalArgumentException if either value or unit is null.
      */
+    @SuppressWarnings("WeakerAccess")
     public Measurement(Number value, T unit) throws IllegalArgumentException {
         if (value == null || unit == null) {
             throw new IllegalArgumentException();
@@ -50,6 +51,59 @@ public abstract class Measurement<T extends Enum> {
      * Constructor.
      */
     Measurement() { }
+
+    /**
+     * Determines if two measurements are equal.
+     * @param obj another object to compare.
+     * @return true if provided object is assumed to be equal to this instance,
+     * false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Measurement)) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+
+        //noinspection unchecked
+        Measurement<T> other = (Measurement<T>) obj;
+        return mValue != null && mUnit != null &&
+                other.mValue != null && other.mUnit != null &&
+                mValue.equals(other.mValue) && mUnit == other.mUnit;
+    }
+
+    /**
+     * Hash code generated for this instance.
+     * Hash codes can be internally used by some collections to coarsely compare objects.
+     * @return hash code.
+     */
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + (mValue != null ? mValue.hashCode() : 0);
+        hash = 19 * hash + (mUnit != null ? mUnit.hashCode() : 0);
+        return hash;
+    }
+
+    /**
+     * Determines if two measurements are equal up to a certain tolerance.
+     * @param other another measurement to compare.
+     * @param tolerance true if provided measurement is assumed to be equal to this
+     *                  instance up to provided tolerance.
+     * @return true if provided measurement is assumed to be equal to this instance,
+     * false otherwise.
+     */
+    public boolean equals(Measurement<T> other, double tolerance) {
+        return mValue != null && mUnit != null && other != null &&
+                other.mValue != null && other.mUnit != null &&
+                mUnit == other.mUnit &&
+                (Math.abs(mValue.doubleValue() - other.mValue.doubleValue()) <= tolerance);
+    }
 
     /**
      * Returns measurement value.
