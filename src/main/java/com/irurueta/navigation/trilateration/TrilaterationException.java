@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.units;
+package com.irurueta.navigation.trilateration;
 
 import com.irurueta.navigation.NavigationException;
 
 /**
- * Base exception for units package.
+ * Exception raised if trilateration fails.
  */
-@SuppressWarnings("WeakerAccess")
-public class UnitsException extends NavigationException {
+public class TrilaterationException extends NavigationException {
 
     /**
      * Constructor.
      */
-    public UnitsException() {
+    public TrilaterationException() {
         super();
     }
 
@@ -34,7 +33,7 @@ public class UnitsException extends NavigationException {
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
-    public UnitsException(String message) {
+    public TrilaterationException(String message) {
         super(message);
     }
 
@@ -43,7 +42,7 @@ public class UnitsException extends NavigationException {
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public UnitsException(String message, Throwable cause) {
+    public TrilaterationException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -51,7 +50,7 @@ public class UnitsException extends NavigationException {
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
-    public UnitsException(Throwable cause) {
+    public TrilaterationException(Throwable cause) {
         super(cause);
     }
 }
