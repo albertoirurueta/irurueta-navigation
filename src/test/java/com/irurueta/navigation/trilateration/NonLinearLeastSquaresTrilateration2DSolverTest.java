@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
@@ -778,7 +779,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetCircles() {
+    public void testGetSetCircles() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         NonLinearLeastSquaresTrilateration2DSolver solver = new NonLinearLeastSquaresTrilateration2DSolver();
@@ -791,8 +792,8 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         double[] distances = new double[2];
-        distances[0] = randomizer.nextDouble();
-        distances[1] = randomizer.nextDouble();
+        distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
         Circle[] circles = new Circle[2];
         circles[0] = new Circle(positions[0], distances[0]);
@@ -819,7 +820,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetCirclesAndStandardDeviations() {
+    public void testGetSetCirclesAndStandardDeviations() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         NonLinearLeastSquaresTrilateration2DSolver solver = new NonLinearLeastSquaresTrilateration2DSolver();
@@ -833,8 +834,8 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         double[] distances = new double[2];
-        distances[0] = randomizer.nextDouble();
-        distances[1] = randomizer.nextDouble();
+        distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
         Circle[] circles = new Circle[2];
         circles[0] = new Circle(positions[0], distances[0]);
@@ -872,7 +873,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetListener() {
+    public void testGetSetListener() throws LockedException {
         NonLinearLeastSquaresTrilateration2DSolver solver = new NonLinearLeastSquaresTrilateration2DSolver();
 
         //initial value
@@ -888,7 +889,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() {
+    public void testGetSetPositionsAndDistances() throws LockedException {
         NonLinearLeastSquaresTrilateration2DSolver solver = new NonLinearLeastSquaresTrilateration2DSolver();
 
         //initial value
@@ -929,8 +930,68 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
     }
 
     @Test
+    public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
+        NonLinearLeastSquaresTrilateration2DSolver solver = new NonLinearLeastSquaresTrilateration2DSolver();
+
+        //initial value
+        assertNull(solver.getPositions());
+        assertNull(solver.getDistances());
+        assertNull(solver.getDistanceStandardDeviations());
+        assertFalse(solver.isReady());
+
+        //set new values
+        Point2D[] positions = new Point2D[2];
+        positions[0] = new InhomogeneousPoint2D();
+        positions[1] = new InhomogeneousPoint2D();
+        double[] distances = new double[2];
+        double[] standardDeviations = new double[2];
+
+        solver.setPositionsDistancesAndStandardDeviations(positions, distances,
+                standardDeviations);
+
+        //check
+        assertSame(solver.getPositions(), positions);
+        assertSame(solver.getDistances(), distances);
+        assertTrue(solver.isReady());
+        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+
+        //Force IllegalArgumentException
+        try {
+            solver.setPositionsAndDistances(null, distances);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            solver.setPositionsAndDistances(positions, null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            solver.setPositionsAndDistances(positions, new double[3]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            solver.setPositionsAndDistances(new Point2D[1], new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testGetSetInitialPosition() throws LockedException {
+        NonLinearLeastSquaresTrilateration2DSolver solver = new NonLinearLeastSquaresTrilateration2DSolver();
+
+        //check initial value
+        assertNull(solver.getInitialPosition());
+
+        //set new value
+        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D();
+        solver.setInitialPosition(initialPosition);
+
+        //check
+        assertSame(solver.getInitialPosition(), initialPosition);
+    }
+
+    @Test
     public void testSolveNoInitialPositionAndNoError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0, numInvalid = 0;
@@ -1000,7 +1061,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
 
     @Test
     public void testSolveWithInitialPositionAndNoError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //when an initial solution close to the real solution is provided, the algorithm
@@ -1046,7 +1107,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
 
     @Test
     public void testSolveNoInitialPositionAndError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0, numInvalid = 0;
@@ -1097,7 +1158,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
 
     @Test
     public void testSolveWithInitialPositionAndError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //when an initial solution close to the real solution is provided, the algorithm
@@ -1147,14 +1208,52 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
     @Override
     public void onSolveStart(TrilaterationSolver<Point2D> solver) {
         solveStart++;
+        checkLocked((NonLinearLeastSquaresTrilateration2DSolver)solver);
     }
 
     @Override
     public void onSolveEnd(TrilaterationSolver<Point2D> solver) {
         solveEnd++;
+        checkLocked((NonLinearLeastSquaresTrilateration2DSolver)solver);
     }
 
     private void reset() {
         solveStart = solveEnd = 0;
+    }
+
+    private void checkLocked(NonLinearLeastSquaresTrilateration2DSolver solver) {
+        try {
+            solver.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setPositionsAndDistances(null, null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setPositionsDistancesAndStandardDeviations(
+                    null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setInitialPosition(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setCircles(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setCirclesAndStandardDeviations(
+                    null, null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.solve();
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) {
+        } catch (Exception ignore) {
+            fail("LockedException expected but not thrown");
+        }
     }
 }

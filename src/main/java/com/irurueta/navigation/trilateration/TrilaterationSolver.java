@@ -16,11 +16,13 @@
 package com.irurueta.navigation.trilateration;
 
 import com.irurueta.geometry.Point;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 
 /**
  * Solves the trilateration problem.
  * This is a formulation for a nonlinear least squares optimizer.
+ * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class TrilaterationSolver<P extends Point> {
@@ -29,11 +31,6 @@ public abstract class TrilaterationSolver<P extends Point> {
      * Minimum allowed distance for a given circle or sphere.
      */
     public static final double EPSILON = 1e-7;
-
-    /**
-     * Minimum required number of points to solve trilateration.
-     */
-    public static final int MIN_POINTS = 2;
 
     /**
      * Known positions of static nodes.
@@ -56,6 +53,11 @@ public abstract class TrilaterationSolver<P extends Point> {
     protected double[] mEstimatedPositionCoordinates;
 
     /**
+     * Indicates if this instance is locked because trilateration is being solved.
+     */
+    protected boolean mLocked;
+
+    /**
      * Constructor.
      */
     public TrilaterationSolver() { }
@@ -69,7 +71,7 @@ public abstract class TrilaterationSolver<P extends Point> {
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */
     public TrilaterationSolver(P[] positions, double[] distances) throws IllegalArgumentException {
-        setPositionsAndDistances(positions, distances);
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -106,8 +108,12 @@ public abstract class TrilaterationSolver<P extends Point> {
     /**
      * Sets listener to be notified of events raised by this instance.
      * @param listener listener to be notified of events raised by this instance.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setListener(TrilaterationSolverListener<P> listener) {
+    public void setListener(TrilaterationSolverListener<P> listener) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
         mListener = listener;
     }
 
@@ -132,7 +138,17 @@ public abstract class TrilaterationSolver<P extends Point> {
      * @return true if solver is ready, false otherwise.
      */
     public boolean isReady() {
-        return mPositions != null && mDistances != null;
+        return mPositions != null && mDistances != null &&
+                mPositions.length >= getMinRequiredPositionsAndDistances();
+    }
+
+    /**
+     * Returns boolean indicating if solver is locked because estimation is under
+     * progress.
+     * @return true if solver is locked, false otherwise.
+     */
+    public boolean isLocked() {
+        return mLocked;
     }
 
     /**
@@ -142,29 +158,14 @@ public abstract class TrilaterationSolver<P extends Point> {
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException {
-        if(positions == null || distances == null) {
-            throw new IllegalArgumentException();
+    public void setPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException,
+            LockedException {
+        if (isLocked()) {
+            throw new LockedException();
         }
-
-        if (positions.length < MIN_POINTS) {
-            throw new IllegalArgumentException();
-        }
-
-        if (positions.length != distances.length) {
-            throw new IllegalArgumentException();
-        }
-
-        mPositions = positions;
-        mDistances = distances;
-
-        //fix distances if needed
-        for (int i = 0; i < mDistances.length; i++) {
-            if (mDistances[i] < EPSILON) {
-                mDistances[i] = EPSILON;
-            }
-        }
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -204,12 +205,53 @@ public abstract class TrilaterationSolver<P extends Point> {
      * Solves the trilateration problem.
      * @throws TrilaterationException if trilateration fails.
      * @throws NotReadyException is solver is not ready.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public abstract void solve() throws TrilaterationException, NotReadyException;
+    public abstract void solve() throws TrilaterationException, NotReadyException,
+            LockedException;
 
     /**
      * Gets trilateration solver type.
      * @return trilateration solver type.
      */
     public abstract TrilaterationSolverType getType();
+
+    /**
+     * Minimum required number of positions and distances.
+     * This value will depend on actual implementation and whether we are solving a 2D or 3D problem.
+     * @return minimum required number of positions and distances.
+     */
+    public abstract int getMinRequiredPositionsAndDistances();
+
+    /**
+     * Internally sets known positions and euclidean distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     * @param positions known positios of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     * length is smaller than required (2 points).
+     */
+    protected void internalSetPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException {
+        if(positions == null || distances == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (positions.length < getMinRequiredPositionsAndDistances()) {
+            throw new IllegalArgumentException();
+        }
+
+        if (positions.length != distances.length) {
+            throw new IllegalArgumentException();
+        }
+
+        mPositions = positions;
+        mDistances = distances;
+
+        //fix distances if needed
+        for (int i = 0; i < mDistances.length; i++) {
+            if (mDistances[i] < EPSILON) {
+                mDistances[i] = EPSILON;
+            }
+        }
+    }
 }

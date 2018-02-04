@@ -18,6 +18,7 @@ package com.irurueta.navigation.trilateration;
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
+import com.irurueta.navigation.LockedException;
 
 /**
  * Linearly solves the trilateration problem.
@@ -72,7 +73,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      */
     public LinearLeastSquaresTrilateration2DSolver(Circle[] circles) throws IllegalArgumentException {
         super();
-        setCircles(circles);
+        internalSetCircles(circles);
     }
 
     /**
@@ -84,7 +85,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
     public LinearLeastSquaresTrilateration2DSolver(Circle[] circles,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
         super(listener);
-        setCircles(circles);
+        internalSetCircles(circles);
     }
 
     /**
@@ -109,21 +110,14 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
      * is less than 2.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setCircles(Circle[] circles) throws IllegalArgumentException {
-        if (circles == null || circles.length < MIN_POINTS) {
-            throw new IllegalArgumentException();
+    public void setCircles(Circle[] circles) throws IllegalArgumentException,
+            LockedException {
+        if(isLocked()) {
+            throw new LockedException();
         }
-
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
-            positions[i] = circle.getCenter();
-            distances[i] = circle.getRadius();
-        }
-
-        setPositionsAndDistances(positions, distances);
+        internalSetCircles(circles);
     }
 
     /**
@@ -133,6 +127,16 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
     @Override
     public int getNumberOfDimensions() {
         return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
+    }
+
+    /**
+     * Minimum required number of positions and distances.
+     * At least 3 positions and distances will be required to linearly solve a 3D problem.
+     * @return minimum required number of positions and distances.
+     */
+    @Override
+    public int getMinRequiredPositionsAndDistances() {
+        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;
     }
 
     /**
@@ -149,5 +153,27 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
         //noinspection unchecked
         getEstimatedPosition(position);
         return position;
+    }
+
+    /**
+     * Internally sets circles defining positions and euclidean distances.
+     * @param circles circles defining positions and distances.
+     * @throws IllegalArgumentException if circles is null or length of array of circles
+     * is less than 2.
+     */
+    private void internalSetCircles(Circle[] circles) throws IllegalArgumentException {
+        if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
+            throw new IllegalArgumentException();
+        }
+
+        Point2D[] positions = new Point2D[circles.length];
+        double[] distances = new double[circles.length];
+        for (int i = 0; i < circles.length; i++) {
+            Circle circle = circles[i];
+            positions[i] = circle.getCenter();
+            distances[i] = circle.getRadius();
+        }
+
+        internalSetPositionsAndDistances(positions, distances);
     }
 }

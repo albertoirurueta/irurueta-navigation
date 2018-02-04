@@ -18,6 +18,7 @@ package com.irurueta.navigation.trilateration;
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.NumericalException;
 import com.irurueta.numerical.fitting.*;
@@ -30,6 +31,7 @@ import java.util.Arrays;
  * the covariance of estimated position.
  * To achieve better results, it is usually better to provide an initial coarse
  * solution.
+ * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -40,6 +42,11 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * explicitly provided.
      */
     public static final double DEFAULT_DISTANCE_STANDARD_DEVIATION = 1.0e-3;
+
+    /**
+     * Minimum required number of points to solve trilateration.
+     */
+    public static final int MIN_POINTS = 2;
 
     /**
      * Levenberg-Marquardt  fitter to find a non-linear solution.
@@ -84,7 +91,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) throws IllegalArgumentException {
         super();
-        setPositionsAndDistances(positions, distances);
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -108,7 +115,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances, P initialPosition)
             throws IllegalArgumentException {
         this(initialPosition);
-        setPositionsAndDistances(positions, distances);
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -132,7 +139,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
             TrilaterationSolverListener<P> listener) throws IllegalArgumentException {
         super(listener);
-        setPositionsAndDistances(positions, distances);
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -159,7 +166,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances, P initialPosition,
             TrilaterationSolverListener<P> listener) throws IllegalArgumentException {
         this(initialPosition, listener);
-        setPositionsAndDistances(positions, distances);
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -173,7 +180,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super();
-        setPositionsDistancesAndStandardDeviations(positions, distances,
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
                 distanceStandardDeviations);
     }
 
@@ -190,7 +197,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
             double[] distanceStandardDeviations, P initialPosition)
             throws IllegalArgumentException {
         this(initialPosition);
-        setPositionsDistancesAndStandardDeviations(positions, distances,
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
                 distanceStandardDeviations);
     }
 
@@ -207,7 +214,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
             double[] distanceStandardDeviations, TrilaterationSolverListener<P> listener)
             throws IllegalArgumentException {
         super(listener);
-        setPositionsDistancesAndStandardDeviations(positions, distances,
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
                 distanceStandardDeviations);
     }
 
@@ -225,7 +232,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
             double[] distanceStandardDeviations, P initialPosition,
             TrilaterationSolverListener<P> listener) throws IllegalArgumentException {
         this(initialPosition, listener);
-        setPositionsDistancesAndStandardDeviations(positions, distances,
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
                 distanceStandardDeviations);
     }
 
@@ -236,14 +243,15 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     @Override
-    public void setPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException {
-        super.setPositionsAndDistances(positions, distances);
-
-        //initialize distances standard deviations to default values
-        mDistanceStandardDeviations = new double[distances.length];
-        Arrays.fill(mDistanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);
+    public void setPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException,
+            LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        internalSetPositionsAndDistances(positions, distances);
     }
 
     /**
@@ -257,16 +265,12 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public void setPositionsDistancesAndStandardDeviations(P[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
-        if(distanceStandardDeviations == null || distances == null) {
-            throw new IllegalArgumentException();
+            double[] distanceStandardDeviations) throws IllegalArgumentException, LockedException {
+        if (isLocked()) {
+            throw new LockedException();
         }
-        if(distances.length != distanceStandardDeviations.length) {
-            throw new IllegalArgumentException();
-        }
-
-        super.setPositionsAndDistances(positions, distances);
-        mDistanceStandardDeviations = distanceStandardDeviations;
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
+                distanceStandardDeviations);
     }
 
     /**
@@ -303,18 +307,38 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     }
 
     /**
+     * Sets initial position to start trilateration solving.
+     * If not defined, centroid of provided position points will be used to start trilateration.
+     * @param initialPosition initial position to start trilateration.
+     * @throws LockedException if instance is busy solving the trilateration problem.
+     */
+    public void setInitialPosition(P initialPosition) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mInitialPosition = initialPosition;
+    }
+
+    /**
      * Solves the trilateration problem.
      * @throws TrilaterationException if trilateration fails.
      * @throws NotReadyException is solver is not ready.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     @Override
     @SuppressWarnings("unchecked")
-    public void solve() throws TrilaterationException, NotReadyException {
+    public void solve() throws TrilaterationException, NotReadyException,
+            LockedException {
         if (!isReady()) {
             throw new NotReadyException();
         }
+        if (isLocked()) {
+            throw new LockedException();
+        }
 
         try {
+            mLocked = true;
+
             if (mListener != null) {
                 mListener.onSolveStart(this);
             }
@@ -333,6 +357,8 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
             }
         } catch (NumericalException e) {
             throw new TrilaterationException(e);
+        } finally {
+            mLocked = false;
         }
     }
 
@@ -343,6 +369,57 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     @Override
     public TrilaterationSolverType getType() {
         return TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER;
+    }
+
+    /**
+     * Minimum required number of positions and distances.
+     * To find a solution at least two pairs of positions and distances must be provided, although
+     * larger number will help to converge to a proper solution.
+     * @return minimum required number of positions and distances.
+     */
+    @Override
+    public int getMinRequiredPositionsAndDistances() {
+        return MIN_POINTS;
+    }
+
+    /**
+     * Internally sets known positions and euclidean distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     * @param positions known positios of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
+     * length is smaller than required (2 points).
+     */
+    @Override
+    protected void internalSetPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException {
+        super.internalSetPositionsAndDistances(positions, distances);
+
+        //initialize distances standard deviations to default values
+        mDistanceStandardDeviations = new double[distances.length];
+        Arrays.fill(mDistanceStandardDeviations, DEFAULT_DISTANCE_STANDARD_DEVIATION);
+    }
+
+    /**
+     * Internally sets known positions, euclidean distances and the respective standard deviations of
+     * measured distances.
+     * If any distance value is zero or negative, it will be fixed assuming an EPSILON value.
+     * @param positions known positios of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @throws IllegalArgumentException if either positions, distances or standard deviations
+     * are null, don't have the same length of their length is smaller than required (2 points).
+     */
+    protected void internalSetPositionsDistancesAndStandardDeviations(P[] positions, double[] distances,
+            double[] distanceStandardDeviations) throws IllegalArgumentException {
+        if(distanceStandardDeviations == null || distances == null) {
+            throw new IllegalArgumentException();
+        }
+        if(distances.length != distanceStandardDeviations.length) {
+            throw new IllegalArgumentException();
+        }
+
+        super.internalSetPositionsAndDistances(positions, distances);
+        mDistanceStandardDeviations = distanceStandardDeviations;
     }
 
     /**

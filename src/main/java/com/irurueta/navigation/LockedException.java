@@ -16,15 +16,15 @@
 package com.irurueta.navigation;
 
 /**
- * Exception raised when attempting to perform an operation when not ready.
+ * Exception raised when attempting to perform an operation on a locked instance
+ * because instance is busy doing some other operation.
  */
-@SuppressWarnings("WeakerAccess")
-public class NotReadyException extends NavigationException {
+public class LockedException extends NavigationException {
 
     /**
      * Constructor.
      */
-    public NotReadyException() {
+    public LockedException() {
         super();
     }
 
@@ -32,7 +32,7 @@ public class NotReadyException extends NavigationException {
      * Constructor with String containing message.
      * @param message message indicating the cause of the exception.
      */
-    public NotReadyException(String message) {
+    public LockedException(String message) {
         super(message);
     }
 
@@ -41,7 +41,7 @@ public class NotReadyException extends NavigationException {
      * @param message message describing the cause of the exception.
      * @param cause instance containing the cause of the exception.
      */
-    public NotReadyException(String message, Throwable cause) {
+    public LockedException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -49,7 +49,7 @@ public class NotReadyException extends NavigationException {
      * Constructor with cause.
      * @param cause instance containing the cause of the exception.
      */
-    public NotReadyException(Throwable cause) {
+    public LockedException(Throwable cause) {
         super(cause);
     }
 }

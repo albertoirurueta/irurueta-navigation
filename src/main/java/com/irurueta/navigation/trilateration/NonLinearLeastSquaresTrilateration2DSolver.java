@@ -18,6 +18,7 @@ package com.irurueta.navigation.trilateration;
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
+import com.irurueta.navigation.LockedException;
 
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
@@ -117,7 +118,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles) throws IllegalArgumentException {
         super();
-        setCircles(circles);
+        internalSetCircles(circles);
     }
 
     /**
@@ -129,7 +130,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles, Point2D initialPosition)
             throws IllegalArgumentException {
         super(initialPosition);
-        setCircles(circles);
+        internalSetCircles(circles);
     }
 
     /**
@@ -141,7 +142,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
         super(listener);
-        setCircles(circles);
+        internalSetCircles(circles);
     }
 
     /**
@@ -154,7 +155,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles, Point2D initialPosition,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
         super(initialPosition, listener);
-        setCircles(circles);
+        internalSetCircles(circles);
     }
 
     /**
@@ -225,7 +226,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super();
-        setCirclesAndStandardDeviations(circles, distanceStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
@@ -239,7 +240,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
             double[] distanceStandardDeviations, Point2D initialPosition)
             throws IllegalArgumentException {
         super(initialPosition);
-        setCirclesAndStandardDeviations(circles, distanceStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
@@ -253,7 +254,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
             double[] distanceStandardDeviations,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
         super(listener);
-        setCirclesAndStandardDeviations(circles, distanceStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
@@ -268,7 +269,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
             double[] distanceStandardDeviations, Point2D initialPosition,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
         super(initialPosition, listener);
-        setCirclesAndStandardDeviations(circles, distanceStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
 
     /**
@@ -293,21 +294,13 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
      * is less than 2.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setCircles(Circle[] circles) throws IllegalArgumentException {
-        if (circles == null || circles.length < MIN_POINTS) {
-            throw new IllegalArgumentException();
+    public void setCircles(Circle[] circles) throws IllegalArgumentException, LockedException {
+        if(isLocked()) {
+            throw new LockedException();
         }
-
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
-            positions[i] = circle.getCenter();
-            distances[i] = circle.getRadius();
-        }
-
-        setPositionsAndDistances(positions, distances);
+        internalSetCircles(circles);
     }
 
     /**
@@ -317,31 +310,14 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
      * 2 or don't have the same length.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
-            throws IllegalArgumentException {
-        if (circles == null || circles.length < MIN_POINTS) {
-            throw new IllegalArgumentException();
+            throws IllegalArgumentException, LockedException {
+        if(isLocked()) {
+            throw new LockedException();
         }
-
-        if (radiusStandardDeviations == null) {
-            throw new IllegalArgumentException();
-        }
-
-        if (radiusStandardDeviations.length != circles.length) {
-            throw new IllegalArgumentException();
-        }
-
-        Point2D[] positions = new Point2D[circles.length];
-        double[] distances = new double[circles.length];
-        for (int i = 0; i < circles.length; i++) {
-            Circle circle = circles[i];
-            positions[i] = circle.getCenter();
-            distances[i] = circle.getRadius();
-        }
-
-        setPositionsDistancesAndStandardDeviations(positions, distances,
-                radiusStandardDeviations);
+        internalSetCirclesAndStandardDeviations(circles, radiusStandardDeviations);
     }
 
     /**
@@ -367,5 +343,61 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
         //noinspection unchecked
         getEstimatedPosition(position);
         return position;
+    }
+
+    /**
+     * Internally sets circles defining positions and euclidean distances.
+     * @param circles circles defining positions and distances.
+     * @throws IllegalArgumentException if circles is null or length of array of circles
+     * is less than 2.
+     */
+    private void internalSetCircles(Circle[] circles) throws IllegalArgumentException {
+        if (circles == null || circles.length < MIN_POINTS) {
+            throw new IllegalArgumentException();
+        }
+
+        Point2D[] positions = new Point2D[circles.length];
+        double[] distances = new double[circles.length];
+        for (int i = 0; i < circles.length; i++) {
+            Circle circle = circles[i];
+            positions[i] = circle.getCenter();
+            distances[i] = circle.getRadius();
+        }
+
+        internalSetPositionsAndDistances(positions, distances);
+    }
+
+    /**
+     * Internally sets circles defining positions and euclidean distances along with the standard
+     * deviations of provided circles radii.
+     * @param circles circles defining positions and distances.
+     * @param radiusStandardDeviations standard deviations of circles radii.
+     * @throws IllegalArgumentException if circles is null, length of arrays is less than
+     * 2 or don't have the same length.
+     */
+    private void internalSetCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
+            throws IllegalArgumentException {
+        if (circles == null || circles.length < MIN_POINTS) {
+            throw new IllegalArgumentException();
+        }
+
+        if (radiusStandardDeviations == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (radiusStandardDeviations.length != circles.length) {
+            throw new IllegalArgumentException();
+        }
+
+        Point2D[] positions = new Point2D[circles.length];
+        double[] distances = new double[circles.length];
+        for (int i = 0; i < circles.length; i++) {
+            Circle circle = circles[i];
+            positions[i] = circle.getCenter();
+            distances[i] = circle.getRadius();
+        }
+
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
+                radiusStandardDeviations);
     }
 }

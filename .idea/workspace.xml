@@ -2,19 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilaterationSolver.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolverType.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolverTest.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_algebra_1_0_SNAPSHOT.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_algebra_1_0_SNAPSHOT.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/LockedException.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration3DSolver.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolverListener.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/LockedExceptionTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NotReadyException.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NotReadyException.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilaterationSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilaterationSolver.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolver.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolver.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolver.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" afterPath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolverTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolverTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolverTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolverTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolverTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolverTest.java" />
     </list>
@@ -31,7 +37,7 @@
     <SUITE FILE_PATH="coverage/irurueta_navigation$DistanceTest.coverage" NAME="DistanceTest Coverage Results" MODIFIED="1517260039273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.units.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1517703941403" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1517746102087" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_geodesic_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation.geodesic in irurueta-navigation Coverage Results" MODIFIED="1516663063749" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -48,31 +54,29 @@
     <favorites_list name="irurueta-navigation" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="NonLinearLeastSquaresTrilateration2DSolverTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolverTest.java">
+    <leaf>
+      <file leaf-file-name="RANSACRobustTrilateration2DSolverTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="762" column="96" lean-forward="false" selection-start-line="762" selection-start-column="96" selection-end-line="762" selection-end-column="96" />
-              <folding>
-                <element signature="method#testSolveNoInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testSolveNoInitialPositionAndError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testSolveWithInitialPositionAndError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NonLinearLeastSquaresTrilateration3DSolverTest.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolverTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-134">
-              <caret line="762" column="96" lean-forward="false" selection-start-line="762" selection-start-column="96" selection-end-line="762" selection-end-column="96" />
+            <state relative-caret-position="949">
+              <caret line="1111" column="18" lean-forward="false" selection-start-line="1111" selection-start-column="18" selection-end-line="1111" selection-end-column="18" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#testSolveNoInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
-                <element signature="method#testSolveWithInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
-                <element signature="method#testSolveNoInitialPositionAndError#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
+                <element signature="method#testConstructor#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetThreshold#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetCircles#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetCirclesAndStandardDeviations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetListener#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetConfidence#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testIsSetResultRefined#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetQualityScores#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetPositionsAndDistances#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+                <element signature="method#testGetSetPositionsDistancesAndStandardDeviations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -85,15 +89,13 @@
       <list>
         <option value="Enum" />
         <option value="package-info" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>WGS84</find>
-      <find>lengths(</find>
-      <find>lambda12(</find>
       <find>setArc</find>
       <find>azi</find>
       <find>mSsig1</find>
@@ -121,6 +123,9 @@
       <find>findUnit</find>
       <find>params</find>
       <find>MIN_ERROR</find>
+      <find>isRead</find>
+      <find>mEstimatedPositionCoordinates</find>
+      <find>mDistanceStandardDeviations</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -134,14 +139,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitsExceptionTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnknownUnitExceptionTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceFormatterTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeConverter.java" />
@@ -170,21 +167,29 @@
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitsException.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/TrilaterationExceptionTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/NotReadyExceptionTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NotReadyException.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolverListener.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolverType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NotReadyException.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/LockedException.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/LockedExceptionTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilaterationSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolverListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration3DSolver.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolver.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolverTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolverTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolverTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java" />
       </list>
     </option>
   </component>
@@ -218,9 +223,9 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="16" />
+    <option name="x" value="147" />
     <option name="y" value="23" />
-    <option name="width" value="1411" />
+    <option name="width" value="1259" />
     <option name="height" value="857" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -767,7 +772,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.com.irurueta.navigation in irurueta-navigation">
+  <component name="RunManager" selected="JUnit.RANSACRobustTrilateration2DSolverTest">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -889,13 +894,18 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
+    <configuration name="RANSACRobustTrilateration2DSolverTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.irurueta.navigation.trilateration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="irurueta-navigation" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.trilateration" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.RANSACRobustTrilateration2DSolverTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -909,20 +919,15 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration name="com.irurueta.navigation in irurueta-navigation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="irurueta-navigation" />
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation" />
+      <option name="PACKAGE_NAME" />
       <option name="MAIN_CLASS_NAME" />
       <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="package" />
+      <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -975,7 +980,7 @@
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.RANSACRobustTrilateration2DSolverTest" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.LinearLeastSquaresTrilateration2DSolverTest" />
       <item index="2" class="java.lang.String" itemvalue="JUnit.LinearLeastSquaresTrilateration3DSolverTest" />
       <item index="3" class="java.lang.String" itemvalue="JUnit.NonLinearLeastSquaresTrilateration2DSolverTest" />
@@ -983,7 +988,7 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.RANSACRobustTrilateration2DSolverTest" />
         <item index="1" class="java.lang.String" itemvalue="JUnit.NonLinearLeastSquaresTrilateration3DSolverTest" />
         <item index="2" class="java.lang.String" itemvalue="JUnit.NonLinearLeastSquaresTrilateration2DSolverTest" />
         <item index="3" class="java.lang.String" itemvalue="JUnit.LinearLeastSquaresTrilateration3DSolverTest" />
@@ -1020,47 +1025,47 @@
       <workItem from="1517009775262" duration="88952000" />
       <workItem from="1517524404338" duration="4682000" />
       <workItem from="1517562790687" duration="59000" />
-      <workItem from="1517601189059" duration="54926000" />
+      <workItem from="1517601189059" duration="89279000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="LinearLeastSquaresTrilateration2DSolverTest - 2018.02.04 at 01h 30m 42s.xml">
-      <configuration name="LinearLeastSquaresTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.04 at 23h 56m 39s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LinearLeastSquaresTrilateration3DSolverTest - 2018.02.04 at 01h 23m 11s.xml">
-      <configuration name="LinearLeastSquaresTrilateration3DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 00m 51s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LinearLeastSquaresTrilateration3DSolverTest - 2018.02.04 at 01h 24m 31s.xml">
-      <configuration name="LinearLeastSquaresTrilateration3DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 02m 03s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LinearLeastSquaresTrilateration3DSolverTest - 2018.02.04 at 01h 24m 57s.xml">
-      <configuration name="LinearLeastSquaresTrilateration3DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 03m 56s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LinearLeastSquaresTrilateration3DSolverTest - 2018.02.04 at 01h 31m 32s.xml">
-      <configuration name="LinearLeastSquaresTrilateration3DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 06m 10s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="NonLinearLeastSquaresTrilateration2DSolverTest - 2018.02.04 at 01h 33m 18s.xml">
-      <configuration name="NonLinearLeastSquaresTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 10m 53s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="NonLinearLeastSquaresTrilateration3DSolverTest - 2018.02.04 at 01h 34m 49s.xml">
-      <configuration name="NonLinearLeastSquaresTrilateration3DSolverTest" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 24m 11s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.02.04 at 01h 25m 36s.xml">
-      <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 26m 24s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.02.04 at 01h 25m 43s.xml">
-      <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 27m 59s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.02.04 at 01h 34m 59s.xml">
-      <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
+    <history-entry file="RANSACRobustTrilateration2DSolverTest - 2018.02.05 at 00h 35m 18s.xml">
+      <configuration name="RANSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="345928000" />
+    <option name="totallyTimeSpent" value="380281000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="16" y="23" width="1411" height="857" extended-state="0" />
+    <frame x="147" y="23" width="1259" height="857" extended-state="0" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1071,12 +1076,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943755" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2480315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36376917" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2480315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36363637" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26150474" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25965488" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2488" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1109,107 +1114,11 @@
           <option name="timeStamp" value="37" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="124" />
+      <option name="time" value="126" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/util/regex/Matcher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="494" column="18" lean-forward="false" selection-start-line="494" selection-start-column="18" selection-end-line="494" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeUnit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="20" column="12" lean-forward="false" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/lang/AbstractStringBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="77" column="15" lean-forward="false" selection-start-line="77" selection-start-column="15" selection-end-line="77" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="109" column="23" lean-forward="false" selection-start-line="109" selection-start-column="23" selection-end-line="109" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11.jar!/org/junit/internal/runners/model/ReflectiveCallable.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="103" column="25" lean-forward="true" selection-start-line="103" selection-start-column="25" selection-end-line="103" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeFormatterTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="1711" column="30" lean-forward="false" selection-start-line="1711" selection-start-column="30" selection-end-line="1711" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="method#testFormatAndConvertNumberAndUnitSystem#0;class#TimeFormatterTest#0" expanded="false" />
-            <element signature="method#testFormatAndConvertDoubleAndUnitSystem#0;class#TimeFormatterTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3360">
-          <caret line="238" column="7" lean-forward="true" selection-start-line="238" selection-start-column="7" selection-end-line="238" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Time.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="79" lean-forward="false" selection-start-line="29" selection-start-column="79" selection-end-line="29" selection-end-column="79" />
-          <folding>
-            <element signature="e#561#562#0" expanded="false" />
-            <element signature="e#584#585#0" expanded="false" />
-            <element signature="e#5130#5131#0" expanded="false" />
-            <element signature="e#5183#5184#0" expanded="false" />
-            <element signature="e#5410#5411#0" expanded="false" />
-            <element signature="e#5486#5487#0" expanded="false" />
-            <element signature="e#5713#5714#0" expanded="false" />
-            <element signature="e#5789#5790#0" expanded="false" />
-            <element signature="e#5937#5938#0" expanded="false" />
-            <element signature="e#5974#5975#0" expanded="false" />
-            <element signature="e#6204#6205#0" expanded="false" />
-            <element signature="e#6240#6241#0" expanded="false" />
-            <element signature="e#9981#9982#0" expanded="false" />
-            <element signature="e#10039#10040#0" expanded="false" />
-            <element signature="e#10838#10839#0" expanded="false" />
-            <element signature="e#10880#10881#0" expanded="false" />
-            <element signature="e#11116#11117#0" expanded="false" />
-            <element signature="e#11157#11158#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-180">
-          <caret line="75" column="40" lean-forward="false" selection-start-line="75" selection-start-column="40" selection-end-line="75" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -1307,40 +1216,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/NotReadyExceptionTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="49" column="26" lean-forward="true" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#1404#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/NavigationExceptionTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NotReadyException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding>
-            <element signature="e#281#282#0" expanded="false" />
-            <element signature="e#304#305#0" expanded="false" />
-            <element signature="e#488#489#0" expanded="false" />
-            <element signature="e#518#519#0" expanded="false" />
-            <element signature="e#779#780#0" expanded="false" />
-            <element signature="e#816#817#0" expanded="false" />
-            <element signature="e#980#981#0" expanded="false" />
-            <element signature="e#1008#1009#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1408,14 +1289,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolverListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="23" column="17" lean-forward="false" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20171122.110611-2-sources.jar!/com/irurueta/numerical/fitting/MultiVariateFitter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
@@ -1472,59 +1345,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="370" column="5" lean-forward="false" selection-start-line="370" selection-start-column="5" selection-end-line="370" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1934#1935#0" expanded="false" />
-            <element signature="e#1972#1973#0" expanded="false" />
-            <element signature="e#15827#15828#0" expanded="false" />
-            <element signature="e#15898#15899#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-algebra/1.0-SNAPSHOT/irurueta-algebra-1.0-20171122.105750-4-sources.jar!/com/irurueta/algebra/QRDecomposer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="765">
           <caret line="58" column="4" lean-forward="false" selection-start-line="58" selection-start-column="4" selection-end-line="58" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="33" />
-          <folding>
-            <element signature="e#901#934#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#866#899#0" expanded="true" />
-            <element signature="e#1100#1101#0" expanded="true" />
-            <element signature="e#1123#1124#0" expanded="true" />
-            <element signature="e#1865#1866#0" expanded="true" />
-            <element signature="e#1896#1897#0" expanded="true" />
-            <element signature="e#4903#4904#0" expanded="true" />
-            <element signature="e#4974#4975#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="21" column="3" lean-forward="true" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="3" />
           <folding />
         </state>
       </provider>
@@ -1537,85 +1361,208 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolver.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NotReadyException.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="214" column="0" lean-forward="false" selection-start-line="209" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
+        <state relative-caret-position="315">
+          <caret line="39" column="42" lean-forward="true" selection-start-line="39" selection-start-column="42" selection-end-line="39" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilaterationSolver.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/NotReadyExceptionTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="283">
-          <caret line="125" column="0" lean-forward="true" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
+        <state relative-caret-position="193">
+          <caret line="36" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#979#1012#0" expanded="true" />
-            <element signature="e#1211#1212#0" expanded="true" />
-            <element signature="e#1234#1235#0" expanded="true" />
-            <element signature="e#1946#1947#0" expanded="true" />
-            <element signature="e#1977#1978#0" expanded="true" />
-            <element signature="e#4949#4950#0" expanded="true" />
-            <element signature="e#5023#5024#0" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/LockedExceptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="49" column="26" lean-forward="false" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/LockedException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="44" column="16" lean-forward="true" selection-start-line="44" selection-start-column="16" selection-end-line="44" selection-end-column="16" />
+          <folding>
+            <element signature="e#941#942#0" expanded="false" />
+            <element signature="e#964#965#0" expanded="false" />
+            <element signature="e#1146#1147#0" expanded="false" />
+            <element signature="e#1176#1177#0" expanded="false" />
+            <element signature="e#1435#1436#0" expanded="false" />
+            <element signature="e#1472#1473#0" expanded="false" />
+            <element signature="e#1634#1635#0" expanded="false" />
+            <element signature="e#1662#1663#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="120" column="17" lean-forward="false" selection-start-line="120" selection-start-column="17" selection-end-line="120" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="14" selection-end-column="3" />
+          <folding>
+            <element signature="e#4320#4321#0" expanded="false" />
+            <element signature="e#4353#4354#0" expanded="false" />
+            <element signature="e#4542#4543#0" expanded="false" />
+            <element signature="e#4575#4576#0" expanded="false" />
+            <element signature="e#5088#5089#0" expanded="false" />
+            <element signature="e#5118#5119#0" expanded="false" />
+            <element signature="e#6150#6151#0" expanded="false" />
+            <element signature="e#6202#6203#0" expanded="false" />
+            <element signature="docComment;method#internalSetPositionsAndDistances#0;class#TrilaterationSolver#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/TrilaterationSolverListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="36" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration3DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1080">
+          <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#3552#3553#0" expanded="false" />
+            <element signature="e#3623#3624#0" expanded="false" />
+            <element signature="e#3881#3882#0" expanded="false" />
+            <element signature="e#3956#3957#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolverListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="41" column="42" lean-forward="false" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="341" column="7" lean-forward="true" selection-start-line="341" selection-start-column="7" selection-end-line="341" selection-end-column="7" />
+        <state relative-caret-position="121">
+          <caret line="325" column="85" lean-forward="true" selection-start-line="325" selection-start-column="85" selection-end-line="325" selection-end-column="85" />
           <folding>
-            <element signature="e#14021#14022#0" expanded="true" />
-            <element signature="e#14099#14100#0" expanded="true" />
+            <element signature="e#12336#12337#0" expanded="true" />
+            <element signature="e#12386#12387#0" expanded="true" />
+            <element signature="e#12570#12571#0" expanded="true" />
+            <element signature="e#12604#12605#0" expanded="true" />
+            <element signature="e#12735#12736#0" expanded="true" />
+            <element signature="e#12764#12765#0" expanded="true" />
+            <element signature="e#13031#13032#0" expanded="true" />
+            <element signature="e#13070#13071#0" expanded="true" />
+            <element signature="e#14968#14969#0" expanded="true" />
+            <element signature="e#15046#15047#0" expanded="true" />
+            <element signature="e#15422#15423#0" expanded="true" />
+            <element signature="e#15455#15456#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilaterationSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2127">
-          <caret line="202" column="92" lean-forward="false" selection-start-line="202" selection-start-column="92" selection-end-line="202" selection-end-column="92" />
+        <state relative-caret-position="379">
+          <caret line="76" column="7" lean-forward="true" selection-start-line="76" selection-start-column="7" selection-end-line="76" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#testGetSetCircles#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-            <element signature="method#testGetSetPositionsAndDistances#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-            <element signature="method#testSolveNoError#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-            <element signature="method#testSolveWithError#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
-            <element signature="e#17508#17509#0" expanded="true" />
-            <element signature="e#17536#17537#0" expanded="true" />
-            <element signature="e#17617#17618#0" expanded="true" />
-            <element signature="e#17643#17644#0" expanded="true" />
-            <element signature="e#17671#17672#0" expanded="true" />
-            <element signature="e#17712#17713#0" expanded="true" />
+            <element signature="e#1358#1359#0" expanded="true" />
+            <element signature="e#1381#1382#0" expanded="true" />
+            <element signature="e#2093#2094#0" expanded="true" />
+            <element signature="e#2124#2125#0" expanded="true" />
+            <element signature="e#5366#5367#0" expanded="true" />
+            <element signature="e#5440#5441#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="295" column="22" lean-forward="true" selection-start-line="295" selection-start-column="22" selection-end-line="295" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-341">
+          <caret line="70" column="63" lean-forward="true" selection-start-line="70" selection-start-column="22" selection-end-line="70" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1148#1149#0" expanded="true" />
+            <element signature="e#1171#1172#0" expanded="true" />
+            <element signature="e#1913#1914#0" expanded="true" />
+            <element signature="e#1944#1945#0" expanded="true" />
+            <element signature="e#4704#4705#0" expanded="true" />
+            <element signature="e#4775#4776#0" expanded="true" />
+            <element signature="e#5078#5079#0" expanded="true" />
+            <element signature="e#5153#5154#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20171122.110611-2-sources.jar!/com/irurueta/numerical/LockedException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="13" column="13" lean-forward="false" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-42">
+          <caret line="28" column="7" lean-forward="true" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration3DSolverTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="220" column="0" lean-forward="true" selection-start-line="220" selection-start-column="0" selection-end-line="220" selection-end-column="0" />
+        <state relative-caret-position="207">
+          <caret line="230" column="0" lean-forward="true" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#17926#17927#0" expanded="true" />
-            <element signature="e#17954#17955#0" expanded="true" />
-            <element signature="e#18035#18036#0" expanded="true" />
-            <element signature="e#18061#18062#0" expanded="true" />
-            <element signature="e#18089#18090#0" expanded="true" />
-            <element signature="e#18130#18131#0" expanded="true" />
+            <element signature="e#19178#19179#0" expanded="true" />
+            <element signature="e#19219#19220#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration2DSolverTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="762" column="96" lean-forward="false" selection-start-line="762" selection-start-column="96" selection-end-line="762" selection-end-column="96" />
+        <state relative-caret-position="428">
+          <caret line="837" column="66" lean-forward="false" selection-start-line="837" selection-start-column="66" selection-end-line="837" selection-end-column="66" />
           <folding>
+            <element signature="method#testGetSetListener#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsAndDistances#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsDistancesAndStandardDeviations#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveWithInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInitialPositionAndError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveWithInitialPositionAndError#0;class#NonLinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
           </folding>
@@ -1624,13 +1571,157 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolverTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-134">
-          <caret line="762" column="96" lean-forward="false" selection-start-line="762" selection-start-column="96" selection-end-line="762" selection-end-column="96" />
+        <state relative-caret-position="378">
+          <caret line="841" column="66" lean-forward="false" selection-start-line="841" selection-start-column="66" selection-end-line="841" selection-end-column="66" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="method#testConstructor#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsAndDistances#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsDistancesAndStandardDeviations#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
             <element signature="method#testSolveWithInitialPositionAndNoError#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInitialPositionAndError#0;class#NonLinearLeastSquaresTrilateration3DSolverTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20171122.110611-2-sources.jar!/com/irurueta/numerical/robust/RANSACRobustEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="231" column="29" lean-forward="false" selection-start-line="231" selection-start-column="29" selection-end-line="231" selection-end-column="29" />
+          <folding>
+            <element signature="e#8050#8051#0" expanded="true" />
+            <element signature="e#8089#8090#0" expanded="true" />
+            <element signature="e#18279#18280#0" expanded="true" />
+            <element signature="e#18322#18323#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1461">
+          <caret line="386" column="25" lean-forward="false" selection-start-line="386" selection-start-column="25" selection-end-line="386" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1158#1191#0" expanded="true" />
+            <element signature="e#2660#2661#0" expanded="true" />
+            <element signature="e#2683#2684#0" expanded="true" />
+            <element signature="e#8682#8683#0" expanded="true" />
+            <element signature="e#8715#8716#0" expanded="true" />
+            <element signature="e#9777#9778#0" expanded="true" />
+            <element signature="e#9822#9823#0" expanded="true" />
+            <element signature="e#10635#10636#0" expanded="true" />
+            <element signature="e#10682#10683#0" expanded="true" />
+            <element signature="e#12133#12134#0" expanded="true" />
+            <element signature="e#12198#12199#0" expanded="true" />
+            <element signature="e#12280#12281#0" expanded="true" />
+            <element signature="e#12352#12353#0" expanded="true" />
+            <element signature="e#12432#12433#0" expanded="true" />
+            <element signature="e#12524#12525#0" expanded="true" />
+            <element signature="e#13828#13829#0" expanded="true" />
+            <element signature="e#13931#13932#0" expanded="true" />
+            <element signature="e#16453#16454#0" expanded="true" />
+            <element signature="e#16504#16505#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LinearLeastSquaresTrilateration2DSolverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-61">
+          <caret line="327" column="21" lean-forward="false" selection-start-line="327" selection-start-column="21" selection-end-line="327" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#testConstructor#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetCircles#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsAndDistances#0;class#LinearLeastSquaresTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="e#18293#18294#0" expanded="true" />
+            <element signature="e#18334#18335#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="619">
+          <caret line="274" column="22" lean-forward="false" selection-start-line="274" selection-start-column="22" selection-end-line="274" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1121#1154#0" expanded="true" />
+            <element signature="e#2070#2071#0" expanded="true" />
+            <element signature="e#2092#2093#0" expanded="true" />
+            <element signature="e#8084#8085#0" expanded="true" />
+            <element signature="e#8155#8156#0" expanded="true" />
+            <element signature="e#8413#8414#0" expanded="true" />
+            <element signature="e#8488#8489#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1508">
+          <caret line="478" column="47" lean-forward="true" selection-start-line="478" selection-start-column="47" selection-end-line="478" selection-end-column="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1345#1378#0" expanded="true" />
+            <element signature="e#6036#6037#0" expanded="true" />
+            <element signature="e#6072#6073#0" expanded="true" />
+            <element signature="e#9213#9214#0" expanded="true" />
+            <element signature="e#9245#9246#0" expanded="true" />
+            <element signature="e#9919#9920#0" expanded="true" />
+            <element signature="e#9949#9950#0" expanded="true" />
+            <element signature="e#10214#10215#0" expanded="true" />
+            <element signature="e#10251#10252#0" expanded="true" />
+            <element signature="e#11506#11507#0" expanded="true" />
+            <element signature="e#11540#11541#0" expanded="true" />
+            <element signature="e#12774#12775#0" expanded="true" />
+            <element signature="e#12811#12812#0" expanded="true" />
+            <element signature="e#13816#13817#0" expanded="true" />
+            <element signature="e#13851#13852#0" expanded="true" />
+            <element signature="e#14125#14126#0" expanded="true" />
+            <element signature="e#14161#14162#0" expanded="true" />
+            <element signature="e#14966#14967#0" expanded="true" />
+            <element signature="e#15004#15005#0" expanded="true" />
+            <element signature="e#15697#15698#0" expanded="true" />
+            <element signature="e#15730#15731#0" expanded="true" />
+            <element signature="e#15919#15920#0" expanded="true" />
+            <element signature="e#15952#15953#0" expanded="true" />
+            <element signature="e#16175#16176#0" expanded="true" />
+            <element signature="e#16225#16226#0" expanded="true" />
+            <element signature="e#16947#16948#0" expanded="true" />
+            <element signature="e#16974#16975#0" expanded="true" />
+            <element signature="e#18012#18013#0" expanded="true" />
+            <element signature="e#18046#18047#0" expanded="true" />
+            <element signature="e#20144#20145#0" expanded="true" />
+            <element signature="e#20185#20186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="949">
+          <caret line="1111" column="18" lean-forward="false" selection-start-line="1111" selection-start-column="18" selection-end-line="1111" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#testConstructor#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetCircles#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetCirclesAndStandardDeviations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsAndDistances#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetPositionsDistancesAndStandardDeviations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -18,6 +18,7 @@ package com.irurueta.navigation.trilateration;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Sphere;
+import com.irurueta.navigation.LockedException;
 
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
@@ -117,7 +118,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) throws IllegalArgumentException {
         super();
-        setSpheres(spheres);
+        internalSetSpheres(spheres);
     }
 
     /**
@@ -129,7 +130,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres, Point3D initialPosition)
             throws IllegalArgumentException {
         super(initialPosition);
-        setSpheres(spheres);
+        internalSetSpheres(spheres);
     }
 
     /**
@@ -141,7 +142,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
             TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
         super(listener);
-        setSpheres(spheres);
+        internalSetSpheres(spheres);
     }
 
     /**
@@ -154,7 +155,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres, Point3D initialPosition,
             TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
         super(initialPosition, listener);
-        setSpheres(spheres);
+        internalSetSpheres(spheres);
     }
 
     /**
@@ -225,7 +226,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super();
-        setSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
+        internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
@@ -239,7 +240,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
             double[] distanceStandardDeviations, Point3D initialPosition)
             throws IllegalArgumentException {
         super(initialPosition);
-        setSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
+        internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
@@ -253,7 +254,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
             double[] distanceStandardDeviations,
             TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
         super(listener);
-        setSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
+        internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
@@ -268,7 +269,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
             double[] distanceStandardDeviations, Point3D initialPosition,
             TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
         super(initialPosition, listener);
-        setSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
+        internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
 
     /**
@@ -293,21 +294,13 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
      * is less than 2.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws IllegalArgumentException {
-        if (spheres == null || spheres.length < MIN_POINTS) {
-            throw new IllegalArgumentException();
+    public void setSpheres(Sphere[] spheres) throws IllegalArgumentException, LockedException {
+        if (isLocked()) {
+            throw new LockedException();
         }
-
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
-            positions[i] = sphere.getCenter();
-            distances[i] = sphere.getRadius();
-        }
-
-        setPositionsAndDistances(positions, distances);
+        internalSetSpheres(spheres);
     }
 
     /**
@@ -317,32 +310,14 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
      * 2 or don't have the same length.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
-            throws IllegalArgumentException {
-        if (spheres == null || spheres.length < MIN_POINTS) {
-            throw new IllegalArgumentException();
+            throws IllegalArgumentException, LockedException {
+        if (isLocked()) {
+            throw new LockedException();
         }
-
-        if (radiusStandardDeviations == null) {
-            throw new IllegalArgumentException();
-        }
-
-        if (radiusStandardDeviations.length != spheres.length) {
-            throw new IllegalArgumentException();
-        }
-
-        Point3D[] positions = new Point3D[spheres.length];
-        double[] distances = new double[spheres.length];
-        for (int i = 0; i < spheres.length; i++) {
-            Sphere sphere = spheres[i];
-            positions[i] = sphere.getCenter();
-            distances[i] = sphere.getRadius();
-        }
-
-        setPositionsDistancesAndStandardDeviations(positions, distances,
-                radiusStandardDeviations);
-
+        internalSetSpheresAndStandardDeviations(spheres, radiusStandardDeviations);
     }
 
     /**
@@ -368,5 +343,62 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
         //noinspection unchecked
         getEstimatedPosition(position);
         return position;
+    }
+
+    /**
+     * Internally sets spheres defining positions and euclidean distances.
+     * @param spheres spheres defining positions and distances.
+     * @throws IllegalArgumentException if spheres is null or length of array of spheres
+     * is less than 2.
+     */
+    public void internalSetSpheres(Sphere[] spheres) throws IllegalArgumentException {
+        if (spheres == null || spheres.length < MIN_POINTS) {
+            throw new IllegalArgumentException();
+        }
+
+        Point3D[] positions = new Point3D[spheres.length];
+        double[] distances = new double[spheres.length];
+        for (int i = 0; i < spheres.length; i++) {
+            Sphere sphere = spheres[i];
+            positions[i] = sphere.getCenter();
+            distances[i] = sphere.getRadius();
+        }
+
+        internalSetPositionsAndDistances(positions, distances);
+    }
+
+    /**
+     * Internally sets spheres defining positions and euclidean distances along with the standard
+     * deviations of provided spheres radii.
+     * @param spheres spheres defining positions and distances.
+     * @param radiusStandardDeviations standard deviations of circles radii.
+     * @throws IllegalArgumentException if spheres is null, length of arrays is less than
+     * 2 or don't have the same length.
+     */
+    private void internalSetSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
+            throws IllegalArgumentException {
+        if (spheres == null || spheres.length < MIN_POINTS) {
+            throw new IllegalArgumentException();
+        }
+
+        if (radiusStandardDeviations == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (radiusStandardDeviations.length != spheres.length) {
+            throw new IllegalArgumentException();
+        }
+
+        Point3D[] positions = new Point3D[spheres.length];
+        double[] distances = new double[spheres.length];
+        for (int i = 0; i < spheres.length; i++) {
+            Sphere sphere = spheres[i];
+            positions[i] = sphere.getCenter();
+            distances[i] = sphere.getRadius();
+        }
+
+        internalSetPositionsDistancesAndStandardDeviations(positions, distances,
+                radiusStandardDeviations);
+
     }
 }

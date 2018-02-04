@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.irurueta.geometry.Sphere;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
@@ -23,8 +24,8 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     private static final double MIN_POSITION_ERROR = 1e-2;
     private static final double MAX_POSITION_ERROR = 1.0;
 
-    private static final double MIN_DISTANCE_ERROR = -1e-2;
-    private static final double MAX_DISTANCE_ERROR = 1e-2;
+    private static final double MIN_DISTANCE_ERROR = -1e-3;
+    private static final double MAX_DISTANCE_ERROR = 1e-3;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-1;
@@ -778,7 +779,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetSpheres() {
+    public void testGetSetSpheres() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
@@ -793,8 +794,8 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         double[] distances = new double[2];
-        distances[0] = randomizer.nextDouble();
-        distances[1] = randomizer.nextDouble();
+        distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
         Sphere[] spheres = new Sphere[2];
         spheres[0] = new Sphere(positions[0], distances[0]);
@@ -821,7 +822,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetSpheresAndStandardDeviations() {
+    public void testGetSetSpheresAndStandardDeviations() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
@@ -837,8 +838,8 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         double[] distances = new double[2];
-        distances[0] = randomizer.nextDouble();
-        distances[1] = randomizer.nextDouble();
+        distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
         Sphere[] spheres = new Sphere[2];
         spheres[0] = new Sphere(positions[0], distances[0]);
@@ -876,7 +877,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetListener() {
+    public void testGetSetListener() throws LockedException {
         NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
 
         //initial value
@@ -892,7 +893,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     }
 
     @Test
-    public void testGetSetPositionsAndDistances() {
+    public void testGetSetPositionsAndDistances() throws LockedException {
         NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
 
         //initial value
@@ -933,8 +934,68 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     }
 
     @Test
+    public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
+        NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
+
+        //initial value
+        assertNull(solver.getPositions());
+        assertNull(solver.getDistances());
+        assertNull(solver.getDistanceStandardDeviations());
+        assertFalse(solver.isReady());
+
+        //set new values
+        Point3D[] positions = new Point3D[2];
+        positions[0] = new InhomogeneousPoint3D();
+        positions[1] = new InhomogeneousPoint3D();
+        double[] distances = new double[2];
+        double[] standardDeviations = new double[2];
+
+        solver.setPositionsDistancesAndStandardDeviations(positions, distances,
+                standardDeviations);
+
+        //check
+        assertSame(solver.getPositions(), positions);
+        assertSame(solver.getDistances(), distances);
+        assertTrue(solver.isReady());
+        assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
+
+        //Force IllegalArgumentException
+        try {
+            solver.setPositionsAndDistances(null, distances);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            solver.setPositionsAndDistances(positions, null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            solver.setPositionsAndDistances(positions, new double[3]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            solver.setPositionsAndDistances(new Point3D[1], new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testGetSetInitialPosition() throws LockedException {
+        NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
+
+        //check initial value
+        assertNull(solver.getInitialPosition());
+
+        //set new value
+        InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D();
+        solver.setInitialPosition(initialPosition);
+
+        //check
+        assertSame(solver.getInitialPosition(), initialPosition);
+    }
+
+    @Test
     public void testSolveNoInitialPositionAndNoError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0, numInvalid = 0;
@@ -1006,7 +1067,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
 
     @Test
     public void testSolveWithInitialPositionAndNoError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //when an initial solution close to the real solution is provided, the algorithm
@@ -1056,7 +1117,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
 
     @Test
     public void testSolveNoInitialPositionAndError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numValid = 0, numInvalid = 0;
@@ -1109,7 +1170,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
 
     @Test
     public void testSolveWithInitialPositionAndError()
-            throws TrilaterationException, NotReadyException {
+            throws TrilaterationException, NotReadyException, LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //when an initial solution close to the real solution is provided, the algorithm
@@ -1163,14 +1224,52 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
     @Override
     public void onSolveStart(TrilaterationSolver<Point3D> solver) {
         solveStart++;
+        checkLocked((NonLinearLeastSquaresTrilateration3DSolver)solver);
     }
 
     @Override
     public void onSolveEnd(TrilaterationSolver<Point3D> solver) {
         solveEnd++;
+        checkLocked((NonLinearLeastSquaresTrilateration3DSolver)solver);
     }
 
     private void reset() {
         solveStart = solveEnd = 0;
+    }
+
+    private void checkLocked(NonLinearLeastSquaresTrilateration3DSolver solver) {
+        try {
+            solver.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setPositionsAndDistances(null, null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setPositionsDistancesAndStandardDeviations(
+                    null, null, null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setInitialPosition(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setSpheres(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setSpheresAndStandardDeviations(
+                    null, null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.solve();
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) {
+        } catch (Exception ignore) {
+            fail("LockedException expected but not thrown");
+        }
     }
 }

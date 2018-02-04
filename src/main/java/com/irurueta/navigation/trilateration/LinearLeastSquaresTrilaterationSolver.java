@@ -19,10 +19,12 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.geometry.Point;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 
 /**
  * Linearly solves the trilateration problem.
+ * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -71,14 +73,21 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * Solves the trilateration problem.
      * @throws TrilaterationException if trilateration fails.
      * @throws NotReadyException if solver is not ready.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     @Override
-    public void solve() throws TrilaterationException, NotReadyException {
+    public void solve() throws TrilaterationException, NotReadyException,
+            LockedException {
         if (!isReady()) {
             throw new NotReadyException();
         }
+        if (isLocked()) {
+            throw new LockedException();
+        }
 
         try {
+            mLocked = true;
+
             if (mListener != null) {
                 mListener.onSolveStart(this);
             }
@@ -121,6 +130,8 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
             }
         } catch (AlgebraException e) {
             throw new TrilaterationException(e);
+        } finally {
+            mLocked = false;
         }
     }
 
