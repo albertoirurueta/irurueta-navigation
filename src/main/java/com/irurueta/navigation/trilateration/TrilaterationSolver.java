@@ -206,4 +206,10 @@ public abstract class TrilaterationSolver<P extends Point> {
      * @throws NotReadyException is solver is not ready.
      */
     public abstract void solve() throws TrilaterationException, NotReadyException;
+
+    /**
+     * Gets trilateration solver type.
+     * @return trilateration solver type.
+     */
+    public abstract TrilaterationSolverType getType();
 }

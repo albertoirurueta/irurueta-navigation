@@ -37,7 +37,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     * length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances)
             throws IllegalArgumentException {
@@ -58,7 +58,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param distances euclidean distances from static nodes to mobile node.
      * @param initialPosition initial position to start trilateration solving.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     * length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances, Point2D initialPosition)
             throws IllegalArgumentException {
@@ -79,7 +79,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     * length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
@@ -103,7 +103,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param initialPosition initial position to start trilateration solving.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     * length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances, Point2D initialPosition,
             TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {

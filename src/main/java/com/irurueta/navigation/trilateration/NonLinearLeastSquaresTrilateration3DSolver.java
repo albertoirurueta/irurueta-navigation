@@ -22,6 +22,7 @@ import com.irurueta.geometry.Sphere;
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
  */
+@SuppressWarnings("WeakerAccess")
 public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSquaresTrilaterationSolver<Point3D> {
 
     /**
@@ -282,7 +283,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
         Sphere[] result = new Sphere[mPositions.length];
 
         for (int i = 0; i < mPositions.length; i++) {
-            result[i] = new Sphere((Point3D)mPositions[i], mDistances[i]);
+            result[i] = new Sphere(mPositions[i], mDistances[i]);
         }
         return result;
     }
@@ -368,5 +369,4 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
         getEstimatedPosition(position);
         return position;
     }
-
 }

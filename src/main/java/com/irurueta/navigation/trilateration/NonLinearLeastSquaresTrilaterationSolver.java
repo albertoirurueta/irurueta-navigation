@@ -26,6 +26,10 @@ import java.util.Arrays;
 
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
+ * By solving the trilateration problem linearly, this class is able to estimate
+ * the covariance of estimated position.
+ * To achieve better results, it is usually better to provide an initial coarse
+ * solution.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -75,7 +79,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     * length is smaller than required 2 points.
      */
     @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) throws IllegalArgumentException {
@@ -122,7 +126,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
+     * length is smaller than required 2 points.
      */
     @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
@@ -330,6 +334,15 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
         } catch (NumericalException e) {
             throw new TrilaterationException(e);
         }
+    }
+
+    /**
+     * Gets trilateration solver type.
+     * @return trilateration solver type.
+     */
+    @Override
+    public TrilaterationSolverType getType() {
+        return TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER;
     }
 
     /**

@@ -66,6 +66,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
 
         //constructor with positions and distances
@@ -88,6 +89,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         double[] wrong = new double[3];
@@ -130,6 +132,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
 
         //constructor with positions, distances and initial position
@@ -148,6 +151,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -188,6 +192,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
 
         //constructor with positions, distances and listener
@@ -206,6 +211,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -244,6 +250,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
 
         //constructor with positions, distances, initial position and listener
@@ -262,6 +269,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -306,6 +314,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         Circle[] shortCircles = new Circle[1];
@@ -338,6 +347,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -368,6 +378,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -398,6 +409,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -430,6 +442,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -483,6 +496,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -536,6 +550,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -589,6 +604,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -642,6 +658,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -675,6 +692,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -708,6 +726,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
@@ -741,6 +760,7 @@ public class NonLinearLeastSquaresTrilateration2DSolverTest implements Trilatera
         assertEquals(solver.getChiSq(), 0.0, 0.0);
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getCircles());
+        assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
 
         //Force IllegalArgumentException
         solver = null;
