@@ -26,7 +26,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
     private static final double MAX_DISTANCE_ERROR = 1e-2;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
-    private static final double LARGE_ABSOLUTE_ERROR = 1e-1;
+    private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
 
     private static final int TIMES = 50;
 
@@ -1047,11 +1047,12 @@ public class RANSACRobustTrilateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveNoInlierErrorNoRefinementAndNoInlierData() throws Exception {
+    public void testSolveNoInlierErrorNoRefinementNoInlierDataAndNoResiduals() throws Exception {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
+        int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
 
@@ -1083,6 +1084,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
                     new RANSACRobustTrilateration2DSolver(circles, this);
             solver.setResultRefined(false);
             solver.setComputeAndKeepInliersEnabled(false);
+            solver.setComputeAndKeepResidualsEnabled(false);
 
             reset();
             assertEquals(solveStart, 0);
@@ -1093,10 +1095,13 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertFalse(solver.isLocked());
             assertNull(solver.getEstimatedPosition());
 
-            Point2D estimatedPotision = solver.solve();
+            Point2D estimatedPosition = solver.solve();
 
             //check
-            assertTrue(position.equals(estimatedPotision, ABSOLUTE_ERROR));
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
             assertNull(solver.getCovariance());
             assertNull(solver.getInliersData());
 
@@ -1106,10 +1111,546 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
         }
+
+        assertTrue(numValid > 0);
     }
 
-    //TODO: finish
+    @Test
+    public void testSolveNoInlierErrorNoRefinementNoInlierDataAndWithResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(false);
+            solver.setComputeAndKeepInliersEnabled(false);
+            solver.setComputeAndKeepResidualsEnabled(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoInlierErrorNoRefinementWithInlierDataAndNoResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(false);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoInlierErrorNoRefinementWithInlierDataAndWithResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(false);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoInlierErrorWithRefinementNoInlierDataAndNoResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(false);
+            solver.setComputeAndKeepResidualsEnabled(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoInlierErrorWithRefinementNoInlierDataAndWithResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(false);
+            solver.setComputeAndKeepResidualsEnabled(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            RANSACRobustTrilateration2DSolver solver =
+                    new RANSACRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setCovarianceKept(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
 
     @Override
     public void onSolveStart(RobustTrilaterationSolver<Point2D> solver) {

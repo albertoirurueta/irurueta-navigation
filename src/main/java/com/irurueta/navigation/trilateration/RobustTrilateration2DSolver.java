@@ -275,12 +275,13 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     protected Point2D attemptRefine(Point2D position) {
         if (mRefineResult && mInliersData != null) {
             BitSet inliers = mInliersData.getInliers();
-            int nSamples = inliers.length();
-            Point2D[] inlierPositions = new Point2D[nSamples];
-            double[] inlierDistances = new double[nSamples];
+            int nSamples = mDistances.length;
+            int nInliers = mInliersData.getNumInliers();
+            Point2D[] inlierPositions = new Point2D[nInliers];
+            double[] inlierDistances = new double[nInliers];
             double[] inlierStandardDeviations = null;
             if (mDistanceStandardDeviations != null) {
-                inlierStandardDeviations = new double[nSamples];
+                inlierStandardDeviations = new double[nInliers];
             }
             int pos = 0;
             for (int i = 0; i < nSamples; i++) {
