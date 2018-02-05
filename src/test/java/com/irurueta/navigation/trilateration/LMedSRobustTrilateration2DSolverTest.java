@@ -13,7 +13,7 @@ import org.junit.*;
 
 import java.util.Random;
 
-public class RANSACRobustTrilateration2DSolverTest implements
+public class LMedSRobustTrilateration2DSolverTest implements
         RobustTrilaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 100;
@@ -26,7 +26,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
     private static final double MAX_DISTANCE_ERROR = 1e-2;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
-    private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
+    private static final double LARGE_ABSOLUTE_ERROR = 1e-2;
 
     private static final int TIMES = 50;
 
@@ -39,7 +39,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
     private int solveNextIteration;
     private int solveProgressChange;
 
-    public RANSACRobustTrilateration2DSolverTest() { }
+    public LMedSRobustTrilateration2DSolverTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -56,16 +56,12 @@ public class RANSACRobustTrilateration2DSolverTest implements
     @Test
     public void testConstructor() {
         //empty constructor
-        RANSACRobustTrilateration2DSolver solver = new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver = new LMedSRobustTrilateration2DSolver();
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
@@ -90,18 +86,13 @@ public class RANSACRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-
         //constructor with listener
-        solver = new RANSACRobustTrilateration2DSolver(this);
+        solver = new LMedSRobustTrilateration2DSolver(this);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
@@ -126,23 +117,18 @@ public class RANSACRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-
         //constructor with positions and distances
         Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
         positions[2] = new InhomogeneousPoint2D();
         double[] distances = new double[3];
-        solver = new RANSACRobustTrilateration2DSolver(positions, distances);
+        solver = new LMedSRobustTrilateration2DSolver(positions, distances);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -173,19 +159,19 @@ public class RANSACRobustTrilateration2DSolverTest implements
         double[] shortDistances = new double[1];
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver((Point2D[])null, distances);
+            solver = new LMedSRobustTrilateration2DSolver((Point2D[])null, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, null);
+            solver = new LMedSRobustTrilateration2DSolver(positions, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, wrong);
+            solver = new LMedSRobustTrilateration2DSolver(positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortPositions, shortDistances);
+            solver = new LMedSRobustTrilateration2DSolver(shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
@@ -193,17 +179,13 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
         //constructor with positions, distances and standard deviations
         double[] standardDeviations = new double[3];
-        solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+        solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                 standardDeviations);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -231,32 +213,32 @@ public class RANSACRobustTrilateration2DSolverTest implements
         //force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver(null, distances,
+            solver = new LMedSRobustTrilateration2DSolver(null, distances,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, null,
+            solver = new LMedSRobustTrilateration2DSolver(positions, null,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+            solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                     (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, wrong,
+            solver = new LMedSRobustTrilateration2DSolver(positions, wrong,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+            solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                     wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortPositions,
+            solver = new LMedSRobustTrilateration2DSolver(shortPositions,
                     shortDistances, standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -264,17 +246,13 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
 
         //constructor with positions, distances, standard deviations and listener
-        solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+        solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                 standardDeviations, this);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -302,32 +280,32 @@ public class RANSACRobustTrilateration2DSolverTest implements
         //force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver(null, distances,
+            solver = new LMedSRobustTrilateration2DSolver(null, distances,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, null,
+            solver = new LMedSRobustTrilateration2DSolver(positions, null,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+            solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, wrong,
+            solver = new LMedSRobustTrilateration2DSolver(positions, wrong,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+            solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                     wrong, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortPositions,
+            solver = new LMedSRobustTrilateration2DSolver(shortPositions,
                     shortDistances, standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -335,17 +313,13 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
 
         //constructor with positions, distances and listener
-        solver = new RANSACRobustTrilateration2DSolver(positions, distances,
+        solver = new LMedSRobustTrilateration2DSolver(positions, distances,
                 this);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -373,22 +347,22 @@ public class RANSACRobustTrilateration2DSolverTest implements
         //force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver((Point2D[])null, distances,
+            solver = new LMedSRobustTrilateration2DSolver((Point2D[])null, distances,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, null,
+            solver = new LMedSRobustTrilateration2DSolver(positions, null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(positions, wrong,
+            solver = new LMedSRobustTrilateration2DSolver(positions, wrong,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortPositions,
+            solver = new LMedSRobustTrilateration2DSolver(shortPositions,
                     shortDistances, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -400,16 +374,12 @@ public class RANSACRobustTrilateration2DSolverTest implements
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
-        solver = new RANSACRobustTrilateration2DSolver(circles);
+        solver = new LMedSRobustTrilateration2DSolver(circles);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -439,28 +409,24 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver((Circle[])null);
+            solver = new LMedSRobustTrilateration2DSolver((Circle[])null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortCircles);
+            solver = new LMedSRobustTrilateration2DSolver(shortCircles);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
 
 
         //constructor with circles and standard deviations
-        solver = new RANSACRobustTrilateration2DSolver(circles,
+        solver = new LMedSRobustTrilateration2DSolver(circles,
                 standardDeviations);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -489,38 +455,34 @@ public class RANSACRobustTrilateration2DSolverTest implements
         //force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver((Circle[])null,
+            solver = new LMedSRobustTrilateration2DSolver((Circle[])null,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(circles,
+            solver = new LMedSRobustTrilateration2DSolver(circles,
                     (double[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortCircles,
+            solver = new LMedSRobustTrilateration2DSolver(shortCircles,
                     standardDeviations);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(circles, wrong);
+            solver = new LMedSRobustTrilateration2DSolver(circles, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
 
 
         //constructor with circles and listener
-        solver = new RANSACRobustTrilateration2DSolver(circles, this);
+        solver = new LMedSRobustTrilateration2DSolver(circles, this);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -548,12 +510,12 @@ public class RANSACRobustTrilateration2DSolverTest implements
         //force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver(null,
+            solver = new LMedSRobustTrilateration2DSolver(null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortCircles,
+            solver = new LMedSRobustTrilateration2DSolver(shortCircles,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -561,17 +523,13 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
 
         //constructor with circles, standard deviation and listener
-        solver = new RANSACRobustTrilateration2DSolver(circles,
+        solver = new LMedSRobustTrilateration2DSolver(circles,
                 standardDeviations, this);
 
         //check correctness
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(solver.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(solver.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
@@ -600,22 +558,22 @@ public class RANSACRobustTrilateration2DSolverTest implements
         //force IllegalArgumentException
         solver = null;
         try {
-            solver = new RANSACRobustTrilateration2DSolver((Circle[])null,
+            solver = new LMedSRobustTrilateration2DSolver((Circle[])null,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(circles,
-                     null, this);
+            solver = new LMedSRobustTrilateration2DSolver(circles,
+                    null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(shortCircles,
+            solver = new LMedSRobustTrilateration2DSolver(shortCircles,
                     standardDeviations, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new RANSACRobustTrilateration2DSolver(circles, wrong,
+            solver = new LMedSRobustTrilateration2DSolver(circles, wrong,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -623,69 +581,33 @@ public class RANSACRobustTrilateration2DSolverTest implements
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+    public void testGetSetStopThreshold() throws LockedException {
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check initial value
-        assertEquals(solver.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(solver.getStopThreshold(),
+                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
 
         //set new value
-        solver.setThreshold(1.0);
+        solver.setStopThreshold(1.0);
 
         //check
-        assertEquals(solver.getThreshold(), 1.0, 0.0);
+        assertEquals(solver.getStopThreshold(), 1.0, 0.0);
 
         //force IllegalArgumentException
         try {
-            solver.setThreshold(0.0);
+            solver.setStopThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
-    }
-
-    @Test
-    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
-
-        //check initial value
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-
-        //set new value
-        solver.setComputeAndKeepInliersEnabled(
-                !RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-
-        //check
-        assertEquals(solver.isComputeAndKeepInliersEnabled(),
-                !RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-    }
-
-    @Test
-    public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
-
-        //check initial value
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-
-        //set new value
-        solver.setComputeAndKeepResidualsEnabled(
-                !RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-
-        //check
-        assertEquals(solver.isComputeAndKeepResiduals(),
-                !RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
     }
 
     @Test
     public void testGetSetCircles() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check initial value
         assertNull(solver.getCircles());
@@ -728,8 +650,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
     public void testGetSetCirclesAndStandardDeviations() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check initial value
         assertNull(solver.getCircles());
@@ -788,8 +710,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertNull(solver.getListener());
@@ -803,8 +725,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertEquals(solver.getProgressDelta(),
@@ -829,8 +751,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertEquals(solver.getConfidence(),
@@ -855,8 +777,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertEquals(solver.getMaxIterations(),
@@ -877,8 +799,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertEquals(solver.isResultRefined(),
@@ -895,8 +817,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertEquals(solver.isCovarianceKept(),
@@ -913,8 +835,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertNull(solver.getQualityScores());
@@ -930,8 +852,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
     public void testGetSetPositionsAndDistances() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertNull(solver.getPositions());
@@ -979,8 +901,8 @@ public class RANSACRobustTrilateration2DSolverTest implements
     public void testGetSetPositionsDistancesAndStandardDeviations() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        RANSACRobustTrilateration2DSolver solver =
-                new RANSACRobustTrilateration2DSolver();
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
 
         //check default value
         assertNull(solver.getPositions());
@@ -1047,7 +969,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveNoInlierErrorNoRefinementNoInlierDataAndNoResiduals() throws Exception {
+    public void testSolveNoInlierErrorNoRefinement() throws Exception {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
@@ -1080,311 +1002,9 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
+            LMedSRobustTrilateration2DSolver solver =
+                    new LMedSRobustTrilateration2DSolver(circles, this);
             solver.setResultRefined(false);
-            solver.setComputeAndKeepInliersEnabled(false);
-            solver.setComputeAndKeepResidualsEnabled(false);
-
-            reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-            assertNull(solver.getEstimatedPosition());
-
-            Point2D estimatedPosition = solver.solve();
-
-            //check
-            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
-            assertNull(solver.getInliersData());
-
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
-            assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-
-            numValid++;
-
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testSolveNoInlierErrorNoRefinementNoInlierDataAndWithResiduals() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
-
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius, error;
-            Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
-
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-                radius = Math.max(RobustTrilaterationSolver.EPSILON,
-                        radius + error);
-                circles[i] = new Circle(center, radius);
-            }
-
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
-            solver.setResultRefined(false);
-            solver.setComputeAndKeepInliersEnabled(false);
-            solver.setComputeAndKeepResidualsEnabled(true);
-
-            reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-            assertNull(solver.getEstimatedPosition());
-
-            Point2D estimatedPosition = solver.solve();
-
-            //check
-            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
-            assertNotNull(solver.getInliersData());
-            assertNull(solver.getInliersData().getInliers());
-            assertNotNull(solver.getInliersData().getResiduals());
-
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
-            assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-
-            numValid++;
-
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testSolveNoInlierErrorNoRefinementWithInlierDataAndNoResiduals() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
-
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius, error;
-            Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
-
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-                radius = Math.max(RobustTrilaterationSolver.EPSILON,
-                        radius + error);
-                circles[i] = new Circle(center, radius);
-            }
-
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
-            solver.setResultRefined(false);
-            solver.setComputeAndKeepInliersEnabled(true);
-            solver.setComputeAndKeepResidualsEnabled(false);
-
-            reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-            assertNull(solver.getEstimatedPosition());
-
-            Point2D estimatedPosition = solver.solve();
-
-            //check
-            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
-            assertNotNull(solver.getInliersData());
-            assertNull(solver.getInliersData().getResiduals());
-
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
-            assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-
-            numValid++;
-
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testSolveNoInlierErrorNoRefinementWithInlierDataAndWithResiduals() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
-
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius, error;
-            Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
-
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-                radius = Math.max(RobustTrilaterationSolver.EPSILON,
-                        radius + error);
-                circles[i] = new Circle(center, radius);
-            }
-
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
-            solver.setResultRefined(false);
-            solver.setComputeAndKeepInliersEnabled(true);
-            solver.setComputeAndKeepResidualsEnabled(true);
-
-            reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-            assertNull(solver.getEstimatedPosition());
-
-            Point2D estimatedPosition = solver.solve();
-
-            //check
-            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
-            assertNotNull(solver.getInliersData());
-            assertNotNull(solver.getInliersData().getResiduals());
-
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
-            assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-
-            numValid++;
-
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testSolveNoInlierErrorWithRefinementNoInlierDataAndNoResiduals() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
-
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius, error;
-            Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
-
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-                radius = Math.max(RobustTrilaterationSolver.EPSILON,
-                        radius + error);
-                circles[i] = new Circle(center, radius);
-            }
-
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
-            solver.setResultRefined(true);
-            solver.setComputeAndKeepInliersEnabled(false);
-            solver.setComputeAndKeepResidualsEnabled(false);
 
             reset();
             assertEquals(solveStart, 0);
@@ -1423,7 +1043,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveNoInlierErrorWithRefinementNoInlierDataAndWithResiduals() throws Exception {
+    public void testSolveNoInlierErrorWithRefinement() throws Exception {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
@@ -1456,11 +1076,9 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
+            LMedSRobustTrilateration2DSolver solver =
+                    new LMedSRobustTrilateration2DSolver(circles, this);
             solver.setResultRefined(true);
-            solver.setComputeAndKeepInliersEnabled(false);
-            solver.setComputeAndKeepResidualsEnabled(true);
 
             reset();
             assertEquals(solveStart, 0);
@@ -1486,7 +1104,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertEquals(solveStart, 1);
             assertEquals(solveEnd, 1);
             assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
+            assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
@@ -1499,83 +1117,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
     }
 
     @Test
-    public void testSolveNoInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
-
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-            InhomogeneousPoint2D center;
-            double radius, error;
-            Circle[] circles = new Circle[numCircles];
-            for (int i = 0; i < numCircles; i++) {
-                center = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
-                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
-                radius = center.distanceTo(position);
-
-                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-                radius = Math.max(RobustTrilaterationSolver.EPSILON,
-                        radius + error);
-                circles[i] = new Circle(center, radius);
-            }
-
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
-            solver.setResultRefined(true);
-            solver.setComputeAndKeepInliersEnabled(true);
-            solver.setComputeAndKeepResidualsEnabled(true);
-
-            reset();
-            assertEquals(solveStart, 0);
-            assertEquals(solveEnd, 0);
-            assertEquals(solveNextIteration, 0);
-            assertEquals(solveProgressChange, 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-            assertNull(solver.getEstimatedPosition());
-
-            Point2D estimatedPosition = solver.solve();
-
-            //check
-            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
-                continue;
-            }
-            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
-            assertNotNull(solver.getInliersData());
-            assertNotNull(solver.getInliersData().getInliers());
-            assertNotNull(solver.getInliersData().getResiduals());
-
-            assertEquals(solveStart, 1);
-            assertEquals(solveEnd, 1);
-            assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
-            assertTrue(solver.isReady());
-            assertFalse(solver.isLocked());
-
-            numValid++;
-
-            break;
-        }
-
-        assertTrue(numValid > 0);
-    }
-
-    @Test
-    public void testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals() throws Exception {
+    public void testSolveWithInlierErrorWithRefinement() throws Exception {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
@@ -1609,12 +1151,9 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 circles[i] = new Circle(center, radius);
             }
 
-            RANSACRobustTrilateration2DSolver solver =
-                    new RANSACRobustTrilateration2DSolver(circles, this);
+            LMedSRobustTrilateration2DSolver solver =
+                    new LMedSRobustTrilateration2DSolver(circles, this);
             solver.setResultRefined(true);
-            solver.setComputeAndKeepInliersEnabled(true);
-            solver.setComputeAndKeepResidualsEnabled(true);
-            solver.setCovarianceKept(true);
 
             reset();
             assertEquals(solveStart, 0);
@@ -1632,7 +1171,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-            assertNotNull(solver.getCovariance());
+            assertNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
@@ -1640,7 +1179,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertEquals(solveStart, 1);
             assertEquals(solveEnd, 1);
             assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
+            assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
@@ -1652,28 +1191,29 @@ public class RANSACRobustTrilateration2DSolverTest implements
         assertTrue(numValid > 0);
     }
 
+
     @Override
     public void onSolveStart(RobustTrilaterationSolver<Point2D> solver) {
         solveStart++;
-        checkLocked((RANSACRobustTrilateration2DSolver)solver);
+        checkLocked((LMedSRobustTrilateration2DSolver)solver);
     }
 
     @Override
     public void onSolveEnd(RobustTrilaterationSolver<Point2D> solver) {
         solveEnd++;
-        checkLocked((RANSACRobustTrilateration2DSolver)solver);
+        checkLocked((LMedSRobustTrilateration2DSolver)solver);
     }
 
     @Override
     public void onSolveNextIteration(RobustTrilaterationSolver<Point2D> solver, int iteration) {
         solveNextIteration++;
-        checkLocked((RANSACRobustTrilateration2DSolver)solver);
+        checkLocked((LMedSRobustTrilateration2DSolver)solver);
     }
 
     @Override
     public void onSolveProgressChange(RobustTrilaterationSolver<Point2D> solver, float progress) {
         solveProgressChange++;
-        checkLocked((RANSACRobustTrilateration2DSolver)solver);
+        checkLocked((LMedSRobustTrilateration2DSolver)solver);
     }
 
     private void reset() {
@@ -1681,7 +1221,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 solveProgressChange = 0;
     }
 
-    private void checkLocked(RANSACRobustTrilateration2DSolver solver) {
+    private void checkLocked(LMedSRobustTrilateration2DSolver solver) {
         try {
             solver.setListener(null);
             fail("LockedException expected but not thrown");
@@ -1725,15 +1265,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {
-            solver.setThreshold(0.5);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
-        try {
-            solver.setComputeAndKeepInliersEnabled(false);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
-        try {
-            solver.setComputeAndKeepResidualsEnabled(false);
+            solver.setStopThreshold(0.5);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

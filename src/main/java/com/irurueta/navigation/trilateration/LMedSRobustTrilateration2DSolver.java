@@ -18,7 +18,6 @@ package com.irurueta.navigation.trilateration;
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.NavigationException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.*;
 
@@ -26,54 +25,57 @@ import java.util.List;
 
 /**
  * Robustly solves the trilateration problem by finding the best pairs of 2D
- * positions and distances among the provided ones using RANSAC algorithm to
+ * positions and distances among the provided ones using LMedS algorithm to
  * discard outliers.
  */
-@SuppressWarnings("WeakerAccess")
-public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver {
+public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolver {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 1e-2;
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-5;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Constructor.
      */
-    public RANSACRobustTrilateration2DSolver() {
+    public LMedSRobustTrilateration2DSolver() {
         super();
     }
 
@@ -82,20 +84,18 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public RANSACRobustTrilateration2DSolver(
-            RobustTrilaterationSolverListener<Point2D> listener) {
+    public LMedSRobustTrilateration2DSolver(RobustTrilaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
      * @param positions known positions of static nodes.
-     * @param distances euclidean distances from static nodes to mobile node to be
-     *                  estimated.
+     * @param distances euclidean distances from static nodes to mobile node to be estimated.
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public RANSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
+    public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
             throws IllegalArgumentException {
         super(positions, distances);
     }
@@ -109,13 +109,12 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public RANSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
+    public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super(positions, distances, distanceStandardDeviations);
     }
 
     /**
-     /**
      * Constructor.
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
@@ -126,13 +125,12 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * standard deviations are null, don't have the same length or their length is smaller
      * than required (3 points).
      */
-    public RANSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
+    public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
         super(positions, distances, distanceStandardDeviations, listener);
     }
-
 
     /**
      * Constructor.
@@ -143,7 +141,7 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public RANSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
+    public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
         super(positions, distances, listener);
@@ -155,7 +153,7 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null or if length of circles array
      * is less than required (3 points).
      */
-    public RANSACRobustTrilateration2DSolver(Circle[] circles)
+    public LMedSRobustTrilateration2DSolver(Circle[] circles)
             throws IllegalArgumentException {
         super(circles);
     }
@@ -167,7 +165,7 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      * than required (3 points) or don't have the same length.
      */
-    public RANSACRobustTrilateration2DSolver(Circle[] circles,
+    public LMedSRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super(circles, distanceStandardDeviations);
     }
@@ -180,7 +178,7 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null or if length of circles array
      * is less than required (3 points).
      */
-    public RANSACRobustTrilateration2DSolver(Circle[] circles,
+    public LMedSRobustTrilateration2DSolver(Circle[] circles,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
         super(circles, listener);
@@ -190,12 +188,12 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * Constructor.
      * @param circles circles defining positions and distances.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
-     * @param listener listener to be notified of events such as when estimation starts,
+     * @param listener listener to be notified of events such as when estimation stats,
      *                 ends or its progress significantly changes.
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      * than required (3 points) or don't have the same length.
      */
-    public RANSACRobustTrilateration2DSolver(Circle[] circles,
+    public LMedSRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -203,78 +201,57 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and distances
-     * provided for each sample.
-     * @return threshold to determine whether samples are inliers or not.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and distances
-     * provided for each sample.
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setThreshold(double threshold)
+    public void setStopThreshold(double stopThreshold)
             throws IllegalArgumentException, LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
-    }
 
-    /**
-     * Indicates whether inliers must be computed and kept.
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if this solver is locked.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if this solver is locked.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
+        mStopThreshold = stopThreshold;
     }
 
     /**
@@ -294,14 +271,8 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
             throw new NotReadyException();
         }
 
-        RANSACRobustEstimator<Point2D> innerEstimator =
-                new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<Point2D>() {
-
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
-
+        LMedSRobustEstimator<Point2D> innerEstimator =
+                new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<Point2D>() {
                     @Override
                     public int getTotalSamples() {
                         return mDistances.length;
@@ -324,27 +295,27 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
 
                     @Override
                     public boolean isReady() {
-                        return RANSACRobustTrilateration2DSolver.this.isReady();
+                        return LMedSRobustTrilateration2DSolver.this.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(RobustEstimator<Point2D> estimator) {
                         if (mListener != null) {
-                            mListener.onSolveStart(RANSACRobustTrilateration2DSolver.this);
+                            mListener.onSolveStart(LMedSRobustTrilateration2DSolver.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(RobustEstimator<Point2D> estimator) {
                         if (mListener != null) {
-                            mListener.onSolveEnd(RANSACRobustTrilateration2DSolver.this);
+                            mListener.onSolveEnd(LMedSRobustTrilateration2DSolver.this);
                         }
                     }
 
                     @Override
                     public void onEstimateNextIteration(RobustEstimator<Point2D> estimator, int iteration) {
                         if (mListener != null) {
-                            mListener.onSolveNextIteration(RANSACRobustTrilateration2DSolver.this,
+                            mListener.onSolveNextIteration(LMedSRobustTrilateration2DSolver.this,
                                     iteration);
                         }
                     }
@@ -352,7 +323,7 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
                     @Override
                     public void onEstimateProgressChange(RobustEstimator<Point2D> estimator, float progress) {
                         if (mListener != null) {
-                            mListener.onSolveProgressChange(RANSACRobustTrilateration2DSolver.this,
+                            mListener.onSolveProgressChange(LMedSRobustTrilateration2DSolver.this,
                                     progress);
                         }
                     }
@@ -361,10 +332,6 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
         try {
             mLocked = true;
             mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -386,6 +353,6 @@ public class RANSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.RANSAC;
+        return RobustEstimatorMethod.LMedS;
     }
 }

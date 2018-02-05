@@ -18,8 +18,10 @@ package com.irurueta.navigation.trilateration;
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NavigationException;
 
 import java.util.BitSet;
+import java.util.List;
 
 /**
  * This is an abstract class to robustly solve the trilateration problem by
@@ -319,6 +321,29 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
             }
         } else {
             return mEstimatedPosition = position;
+        }
+    }
+
+    /**
+     * Solves a preliminar solution for a subset of samples picked by a robust estimator.
+     * @param samplesIndices indices of samples picked by the robust estimator.
+     * @param solutions list where estimated preliminar solution will be stored.
+     */
+    protected void solvePreliminarSolutions(int[] samplesIndices, List<Point2D> solutions) {
+        try {
+            int length = samplesIndices.length;
+            int index;
+            for (int i = 0; i < length; i++) {
+                index = samplesIndices[i];
+                mInnerPositions[i] = mPositions[index];
+                mInnerDistances[i] = mDistances[index];
+            }
+
+            mLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+            mLinearSolver.solve();
+            solutions.add(mLinearSolver.getEstimatedPosition());
+        } catch (NavigationException ignore) {
+            //if anything fails, no solution is added
         }
     }
 
