@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolverTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolverTest.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolverTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolverTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -22,7 +23,7 @@
     <SUITE FILE_PATH="coverage/irurueta_navigation$DistanceTest.coverage" NAME="DistanceTest Coverage Results" MODIFIED="1517260039273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.units.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1517853601336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1517868368591" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_geodesic_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation.geodesic in irurueta-navigation Coverage Results" MODIFIED="1516663063749" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -40,53 +41,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="LMedSRobustTrilateration2DSolver.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java">
+      <file leaf-file-name="RANSACRobustTrilateration2DSolver.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4157">
-              <caret line="52" column="17" lean-forward="false" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="17" />
+            <state relative-caret-position="225">
+              <caret line="29" column="3" lean-forward="true" selection-start-line="29" selection-start-column="3" selection-end-line="29" selection-end-column="3" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3566#3567#0" expanded="true" />
-                <element signature="e#3589#3590#0" expanded="true" />
-                <element signature="e#3881#3882#0" expanded="true" />
-                <element signature="e#3912#3913#0" expanded="true" />
-                <element signature="e#10311#10312#0" expanded="true" />
-                <element signature="e#10348#10349#0" expanded="true" />
-                <element signature="e#12845#12846#0" expanded="true" />
-                <element signature="e#12917#12918#0" expanded="true" />
-                <element signature="e#12997#12998#0" expanded="true" />
-                <element signature="e#13089#13090#0" expanded="true" />
-                <element signature="e#13647#13648#0" expanded="true" />
-                <element signature="e#13749#13750#0" expanded="true" />
-                <element signature="e#16019#16020#0" expanded="true" />
-                <element signature="e#16069#16070#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LMedSRobustTrilateration2DSolverTest.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolverTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="47" lean-forward="true" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
-              <folding>
-                <element signature="method#testConstructor#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetStopThreshold#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetCircles#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetCirclesAndStandardDeviations#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetListener#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetConfidence#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testIsSetResultRefined#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetQualityScores#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetPositionsAndDistances#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testGetSetPositionsDistancesAndStandardDeviations#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testSolveNoInlierErrorNoRefinement#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
-                <element signature="method#testSolveNoInlierErrorWithRefinement#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -149,8 +110,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeConverter.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeConverterTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeUnitTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceUnitTest.java" />
@@ -196,10 +155,12 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilateration3DSolverTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolverTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolverTest.java" />
       </list>
     </option>
   </component>
@@ -233,7 +194,7 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="77" />
+    <option name="x" value="68" />
     <option name="y" value="23" />
     <option name="width" value="1259" />
     <option name="height" value="857" />
@@ -804,7 +765,7 @@
       <module name="" />
       <envs />
     </configuration>
-    <configuration name="LMedSRobustTrilateration2DSolverTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="com.irurueta.navigation.trilateration.*" />
@@ -815,32 +776,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.trilateration" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.LMedSRobustTrilateration2DSolverTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="LMedSRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.trilateration.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="irurueta-navigation" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.trilateration" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.LMedSRobustTrilateration2DSolverTest" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.MSACRobustTrilateration2DSolverTest" />
       <option name="METHOD_NAME" value="testSolveNoInlierErrorNoRefinement" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -854,7 +790,7 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration name="RANSACRobustTrilateration2DSolverTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorWithRefinement" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="com.irurueta.navigation.trilateration.*" />
@@ -865,9 +801,9 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.trilateration" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.RANSACRobustTrilateration2DSolverTest" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.MSACRobustTrilateration2DSolverTest" />
+      <option name="METHOD_NAME" value="testSolveNoInlierErrorWithRefinement" />
+      <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -879,7 +815,7 @@
       <envs />
       <patterns />
     </configuration>
-    <configuration name="RANSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinement" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
           <option name="PATTERN" value="com.irurueta.navigation.trilateration.*" />
@@ -890,8 +826,33 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.trilateration" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.RANSACRobustTrilateration2DSolverTest" />
-      <option name="METHOD_NAME" value="testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.MSACRobustTrilateration2DSolverTest" />
+      <option name="METHOD_NAME" value="testSolveWithInlierErrorWithRefinement" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration name="MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementAndStandardDeviatons" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.irurueta.navigation.trilateration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="irurueta-navigation" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.trilateration" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.trilateration.MSACRobustTrilateration2DSolverTest" />
+      <option name="METHOD_NAME" value="testSolveWithInlierErrorWithRefinementAndStandardDeviatons" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
@@ -990,19 +951,19 @@
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.RANSACRobustTrilateration2DSolverTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.RANSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.LMedSRobustTrilateration2DSolverTest" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.LMedSRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorWithRefinement" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinement" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementAndStandardDeviatons" />
       <item index="4" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.LMedSRobustTrilateration2DSolverTest" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.LMedSRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.RANSACRobustTrilateration2DSolverTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.RANSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementAndStandardDeviatons" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinement" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorWithRefinement" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" />
       </list>
     </recent_temporary>
   </component>
@@ -1037,47 +998,47 @@
       <workItem from="1517562790687" duration="59000" />
       <workItem from="1517601189059" duration="89279000" />
       <workItem from="1517820917573" duration="7318000" />
-      <workItem from="1517839692218" duration="4006000" />
+      <workItem from="1517839692218" duration="9166000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 54m 56s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest - 2018.02.05 at 22h 52m 27s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 55m 14s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest - 2018.02.05 at 23h 00m 14s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 55m 26s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest - 2018.02.05 at 23h 00m 29s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 56m 40s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest - 2018.02.05 at 23h 03m 52s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 57m 11s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest_testSolveNoInlierErrorNoRefinement - 2018.02.05 at 23h 04m 46s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 57m 20s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest_testSolveNoInlierErrorWithRefinement - 2018.02.05 at 23h 05m 08s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest.testSolveNoInlierErrorWithRefinement" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 57m 27s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest_testSolveWithInlierErrorWithRefinement - 2018.02.05 at 23h 05m 37s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinement" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest - 2018.02.05 at 18h 57m 45s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustTrilateration2DSolverTest_testSolveWithInlierErrorWithRefinementAndStandardDeviatons - 2018.02.05 at 23h 05m 55s.xml">
+      <configuration name="MSACRobustTrilateration2DSolverTest.testSolveWithInlierErrorWithRefinementAndStandardDeviatons" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustTrilateration2DSolverTest_testSolveNoInlierErrorNoRefinement - 2018.02.05 at 18h 48m 58s.xml">
-      <configuration name="LMedSRobustTrilateration2DSolverTest.testSolveNoInlierErrorNoRefinement" configurationId="JUnit" />
+    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.02.05 at 22h 01m 16s.xml">
+      <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.02.05 at 19h 00m 03s.xml">
+    <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.02.05 at 23h 06m 11s.xml">
       <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="391605000" />
+    <option name="totallyTimeSpent" value="396765000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="77" y="23" width="1259" height="857" extended-state="0" />
+    <frame x="68" y="23" width="1259" height="857" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1090,7 +1051,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943755" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2480315" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36318818" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36318818" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1132,20 +1093,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="116" column="32" lean-forward="false" selection-start-line="116" selection-start-column="32" selection-end-line="116" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="84" column="26" lean-forward="false" selection-start-line="84" selection-start-column="26" selection-end-line="84" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1428,6 +1375,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="379">
           <caret line="76" column="7" lean-forward="true" selection-start-line="76" selection-start-column="7" selection-end-line="76" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1358#1359#0" expanded="false" />
+            <element signature="e#1381#1382#0" expanded="false" />
+            <element signature="e#2093#2094#0" expanded="false" />
+            <element signature="e#2124#2125#0" expanded="false" />
+            <element signature="e#5366#5367#0" expanded="false" />
+            <element signature="e#5440#5441#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1443,6 +1399,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-341">
           <caret line="70" column="63" lean-forward="true" selection-start-line="70" selection-start-column="22" selection-end-line="70" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1148#1149#0" expanded="false" />
+            <element signature="e#1171#1172#0" expanded="false" />
+            <element signature="e#1913#1914#0" expanded="false" />
+            <element signature="e#1944#1945#0" expanded="false" />
+            <element signature="e#4704#4705#0" expanded="false" />
+            <element signature="e#4775#4776#0" expanded="false" />
+            <element signature="e#5078#5079#0" expanded="false" />
+            <element signature="e#5153#5154#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1543,26 +1510,47 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4305">
-          <caret line="313" column="32" lean-forward="false" selection-start-line="313" selection-start-column="32" selection-end-line="313" selection-end-column="32" />
+        <state relative-caret-position="-119">
+          <caret line="286" column="13" lean-forward="true" selection-start-line="286" selection-start-column="13" selection-end-line="286" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="41" column="42" lean-forward="false" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2145#2146#0" expanded="false" />
-            <element signature="e#2167#2168#0" expanded="false" />
-            <element signature="e#8159#8160#0" expanded="false" />
-            <element signature="e#8230#8231#0" expanded="false" />
-            <element signature="e#8488#8489#0" expanded="false" />
-            <element signature="e#8563#8564#0" expanded="false" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1105#1138#0" expanded="true" />
+            <element signature="e#3600#3601#0" expanded="true" />
+            <element signature="e#3623#3624#0" expanded="true" />
+            <element signature="e#3915#3916#0" expanded="true" />
+            <element signature="e#3946#3947#0" expanded="true" />
+            <element signature="e#10345#10346#0" expanded="true" />
+            <element signature="e#10382#10383#0" expanded="true" />
+            <element signature="e#12879#12880#0" expanded="true" />
+            <element signature="e#12951#12952#0" expanded="true" />
+            <element signature="e#13031#13032#0" expanded="true" />
+            <element signature="e#13123#13124#0" expanded="true" />
+            <element signature="e#13681#13682#0" expanded="true" />
+            <element signature="e#13783#13784#0" expanded="true" />
+            <element signature="e#16053#16054#0" expanded="true" />
+            <element signature="e#16103#16104#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="1588" column="25" lean-forward="true" selection-start-line="1588" selection-start-column="25" selection-end-line="1588" selection-end-column="25" />
+        <state relative-caret-position="103">
+          <caret line="804" column="12" lean-forward="true" selection-start-line="804" selection-start-column="12" selection-end-line="804" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#testGetSetThreshold#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testGetSetCircles#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testGetSetCirclesAndStandardDeviations#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testGetSetListener#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
@@ -1580,47 +1568,17 @@
             <element signature="method#testSolveNoInlierErrorWithRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInlierErrorWithRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveWithInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustTrilateration2DSolverTest#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4157">
-          <caret line="52" column="17" lean-forward="false" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3566#3567#0" expanded="true" />
-            <element signature="e#3589#3590#0" expanded="true" />
-            <element signature="e#3881#3882#0" expanded="true" />
-            <element signature="e#3912#3913#0" expanded="true" />
-            <element signature="e#10311#10312#0" expanded="true" />
-            <element signature="e#10348#10349#0" expanded="true" />
-            <element signature="e#12845#12846#0" expanded="true" />
-            <element signature="e#12917#12918#0" expanded="true" />
-            <element signature="e#12997#12998#0" expanded="true" />
-            <element signature="e#13089#13090#0" expanded="true" />
-            <element signature="e#13647#13648#0" expanded="true" />
-            <element signature="e#13749#13750#0" expanded="true" />
-            <element signature="e#16019#16020#0" expanded="true" />
-            <element signature="e#16069#16070#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-122">
-          <caret line="352" column="18" lean-forward="true" selection-start-line="352" selection-start-column="18" selection-end-line="352" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolverTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="47" lean-forward="true" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
+        <state relative-caret-position="338">
+          <caret line="1274" column="0" lean-forward="false" selection-start-line="1274" selection-start-column="0" selection-end-line="1274" selection-end-column="0" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="method#testConstructor#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testGetSetStopThreshold#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testGetSetCircles#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
@@ -1636,6 +1594,55 @@
             <element signature="method#testGetSetPositionsDistancesAndStandardDeviations#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInlierErrorNoRefinement#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
             <element signature="method#testSolveNoInlierErrorWithRefinement#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveWithInlierErrorWithRefinement#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveWithInlierErrorWithRefinementAndStandardDeviatons#0;class#LMedSRobustTrilateration2DSolverTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="1195" column="31" lean-forward="true" selection-start-line="1195" selection-start-column="31" selection-end-line="1195" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#testSolveNoInlierErrorNoRefinement#0;class#MSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveNoInlierErrorWithRefinement#0;class#MSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveWithInlierErrorWithRefinement#0;class#MSACRobustTrilateration2DSolverTest#0" expanded="false" />
+            <element signature="method#testSolveWithInlierErrorWithRefinementAndStandardDeviatons#0;class#MSACRobustTrilateration2DSolverTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="155" column="39" lean-forward="true" selection-start-line="155" selection-start-column="39" selection-end-line="155" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1104#1137#0" expanded="true" />
+            <element signature="e#1832#1833#0" expanded="true" />
+            <element signature="e#1855#1856#0" expanded="true" />
+            <element signature="e#9226#9227#0" expanded="true" />
+            <element signature="e#9291#9292#0" expanded="true" />
+            <element signature="e#9373#9374#0" expanded="true" />
+            <element signature="e#9445#9446#0" expanded="true" />
+            <element signature="e#9525#9526#0" expanded="true" />
+            <element signature="e#9617#9618#0" expanded="true" />
+            <element signature="e#10175#10176#0" expanded="true" />
+            <element signature="e#10276#10277#0" expanded="true" />
+            <element signature="e#12542#12543#0" expanded="true" />
+            <element signature="e#12591#12592#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="29" column="3" lean-forward="true" selection-start-line="29" selection-start-column="3" selection-end-line="29" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

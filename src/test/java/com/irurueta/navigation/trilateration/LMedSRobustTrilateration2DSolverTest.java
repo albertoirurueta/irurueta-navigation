@@ -1030,7 +1030,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
             assertEquals(solveStart, 1);
             assertEquals(solveEnd, 1);
             assertTrue(solveNextIteration > 0);
-            assertTrue(solveProgressChange > 0);
+            assertTrue(solveProgressChange >= 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
@@ -1191,6 +1191,87 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertTrue(numValid > 0);
     }
 
+    @Test
+    public void testSolveWithInlierErrorWithRefinementAndStandardDeviatons() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] standardDeviations = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                    standardDeviations[i] = STD_OUTLIER_ERROR;
+                } else {
+                    //inlier
+                    error = 0.0;
+                    standardDeviations[i] = 0.0;
+                }
+                //add variance of uniform distribution containing inlier error
+                standardDeviations[i] += Math.pow(MAX_DISTANCE_ERROR - MIN_DISTANCE_ERROR, 2.0) / 12.0;
+                standardDeviations[i] = Math.sqrt(standardDeviations[i]);
+                //add inlier error
+                error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            LMedSRobustTrilateration2DSolver solver =
+                    new LMedSRobustTrilateration2DSolver(circles, this);
+            solver.setResultRefined(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            assertNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
 
     @Override
     public void onSolveStart(RobustTrilaterationSolver<Point2D> solver) {
