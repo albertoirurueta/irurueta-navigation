@@ -236,7 +236,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * Sets circles defining positions and euclidean distances.
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 2.
+     * is less than 3.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setCircles(Circle[] circles) throws IllegalArgumentException,
@@ -253,12 +253,12 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @param circles circles defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
-     * 2 or don't have the same length.
+     * 3 or don't have the same length.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
             throws IllegalArgumentException, LockedException {
-        if(isLocked()) {
+        if (isLocked()) {
             throw new LockedException();
         }
         internalSetCirclesAndStandardDeviations(circles, radiusStandardDeviations);
@@ -375,7 +375,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @param circles circles defining positions and distances.
      * @param radiusStandardDeviations standard deviations of circles radii.
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
-     * 2 or don't have the same length.
+     * 3 or don't have the same length.
      */
     private void internalSetCirclesAndStandardDeviations(Circle[] circles,
             double[] radiusStandardDeviations) throws IllegalArgumentException {
