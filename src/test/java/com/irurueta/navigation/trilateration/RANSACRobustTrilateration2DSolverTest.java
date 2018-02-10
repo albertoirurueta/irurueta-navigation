@@ -6,6 +6,7 @@ import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
@@ -1112,6 +1113,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
             numValid++;
 
             break;
@@ -1188,6 +1197,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
             numValid++;
 
             break;
@@ -1263,6 +1280,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
             numValid++;
 
             break;
@@ -1337,6 +1362,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
+
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
 
             numValid++;
 
@@ -1414,6 +1447,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
             numValid++;
 
             break;
@@ -1490,6 +1531,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
             numValid++;
 
             break;
@@ -1565,6 +1614,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
+
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
 
             numValid++;
 
@@ -1643,6 +1700,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
+
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
 
             numValid++;
 
@@ -1729,6 +1794,14 @@ public class RANSACRobustTrilateration2DSolverTest implements
             assertTrue(solveProgressChange > 0);
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
+
+            //force NotReadyException
+            solver = new RANSACRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
 
             numValid++;
 

@@ -25,49 +25,52 @@ import java.util.List;
 
 /**
  * Robustly solves the trilateration problem by finding the best pairs of 2D
- * positions and distances among the provided ones using PROSAC algorithm to
+ * positions and distances among the provided ones using PROMedS algorithm to
  * discard outliers.
  */
-@SuppressWarnings("WeakerAccess")
-public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver {
+public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolver {
 
     /**
-     * Constant defining default threshold to determine whether samples are inliers or not.
+     * Default value to be used for stop threshold. Stop threshold can be used to
+     * avoid keeping the algorithm unnecessarily iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once a
+     * solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final double DEFAULT_THRESHOLD = 1e-2;
+    public static final double DEFAULT_STOP_THRESHOLD = 1e-5;
 
     /**
-     * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.
+     * Minimum allowed stop threshold value.
      */
-    public static final double MIN_THRESHOLD = 0.0;
+    public static final double MIN_STOP_THRESHOLD = 0.0;
 
     /**
-     * Indicates that by default inliers will only be computed but not kept.
+     * Threshold to be used to keep the algorithm iterating in case that best
+     * estimated threshold using median of residuals is not small enough. Once
+     * a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm iterating
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
      */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
-
-    /**
-     * Indicates that by default residuals will only be computed but not kept.
-     */
-    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
-
-    /**
-     * Threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and
-     * distances provided for each sample.
-     */
-    private double mThreshold = DEFAULT_THRESHOLD;
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     */
-    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     */
-    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
+    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
 
     /**
      * Quality scores corresponding to each provided sample.
@@ -78,7 +81,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
     /**
      * Constructor.
      */
-    public PROSACRobustTrilateration2DSolver() {
+    public PROMedSRobustTrilateration2DSolver() {
         super();
     }
 
@@ -87,7 +90,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
      */
-    public PROSACRobustTrilateration2DSolver(
+    public PROMedSRobustTrilateration2DSolver(
             RobustTrilaterationSolverListener<Point2D> listener) {
         super(listener);
     }
@@ -100,7 +103,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length of their length is smaller than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
+    public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
             throws IllegalArgumentException {
         super(positions, distances);
     }
@@ -114,7 +117,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
+    public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super(positions, distances, distanceStandardDeviations);
     }
@@ -130,7 +133,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * standard deviations are null, don't have the same length or their length is smaller
      * than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
+    public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -146,7 +149,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
+    public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
         super(positions, distances, listener);
@@ -158,7 +161,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null or if length or circles array
      * is less than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(Circle[] circles)
+    public PROMedSRobustTrilateration2DSolver(Circle[] circles)
             throws IllegalArgumentException {
         super(circles);
     }
@@ -170,7 +173,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      * than required (3 points) or don't have the same length.
      */
-    public PROSACRobustTrilateration2DSolver(Circle[] circles,
+    public PROMedSRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations) throws IllegalArgumentException {
         super(circles, distanceStandardDeviations);
     }
@@ -183,7 +186,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null or if length of circles array
      * is less than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(Circle[] circles,
+    public PROMedSRobustTrilateration2DSolver(Circle[] circles,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
         super(circles, listener);
@@ -198,7 +201,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if circles is null, length of circles array is less
      * than required (3 points) or don't have the same length.
      */
-    public PROSACRobustTrilateration2DSolver(Circle[] circles,
+    public PROMedSRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -213,7 +216,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if quality scores is null, length
      * of quality scores is less than required minimum (3 samples).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores)
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores)
             throws IllegalArgumentException {
         super();
         internalSetQualityScores(qualityScores);
@@ -229,7 +232,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws IllegalArgumentException if quality scores is null, length
      * of quality scores is less than required minimum (3 samples).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
         super(listener);
@@ -248,7 +251,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * scores are null, don't have the same length of their length is smaller
      * than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances)
             throws IllegalArgumentException {
         super(positions, distances);
@@ -268,7 +271,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * standard deviations are null, don't have the same length or their length is
      * smaller than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations)
             throws IllegalArgumentException {
@@ -290,7 +293,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * standard deviations are null, don't have the same length or their length is smaller
      * than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener)
@@ -312,7 +315,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * quality scores or standard deviations are null, don't have the same
      * length or their length is smaller than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -330,7 +333,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * are null don't have the same length or their length is less than
      * required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Circle[] circles) throws IllegalArgumentException {
         super(circles);
         internalSetQualityScores(qualityScores);
@@ -347,7 +350,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * standard deviations are null, don't have the same length or their
      * length is less than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Circle[] circles, double[] distanceStandardDeviations)
             throws IllegalArgumentException {
         super(circles, distanceStandardDeviations);
@@ -366,7 +369,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * are null, don't have the same length or their length is less than
      * required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Circle[] circles,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -387,7 +390,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * or standard deviations are null, don't have the same length or their
      * length is less than required (3 points).
      */
-    public PROSACRobustTrilateration2DSolver(double[] qualityScores,
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Circle[] circles, double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -396,32 +399,57 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and distances
-     * provided for each sample.
-     * @return threshold to determine whether samples are inliers or not.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return mThreshold;
+    public double getStopThreshold() {
+        return mStopThreshold;
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and distances
-     * provided for each sample.
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setThreshold(double threshold)
+    public void setStopThreshold(double stopThreshold)
             throws IllegalArgumentException, LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (threshold <= MIN_THRESHOLD) {
+        if (stopThreshold <= MIN_STOP_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-        mThreshold = threshold;
+
+        mStopThreshold = stopThreshold;
     }
 
     /**
@@ -469,52 +497,6 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
     }
 
     /**
-     * Indicates whether inliers must be computed and kept.
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return mComputeAndKeepInliers;
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if this solver is locked.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        mComputeAndKeepInliers = computeAndKeepInliers;
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return mComputeAndKeepResiduals;
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if this solver is locked.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        mComputeAndKeepResiduals = computeAndKeepResiduals;
-    }
-
-    /**
      * Solves the trilateration problem.
      * @return estimated position.
      * @throws LockedException if instance is busy solving the trilateration problem.
@@ -532,8 +514,8 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
             throw new NotReadyException();
         }
 
-        PROSACRobustEstimator<Point2D> innerEstimator =
-                new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<Point2D>() {
+        PROMedSRobustEstimator<Point2D> innerEstimator =
+                new PROMedSRobustEstimator<>(new PROMedSRobustEstimatorListener<Point2D>() {
                     @Override
                     public double[] getQualityScores() {
                         return mQualityScores;
@@ -541,7 +523,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
 
                     @Override
                     public double getThreshold() {
-                        return mThreshold;
+                        return mStopThreshold;
                     }
 
                     @Override
@@ -566,27 +548,27 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
 
                     @Override
                     public boolean isReady() {
-                        return PROSACRobustTrilateration2DSolver.this.isReady();
+                        return PROMedSRobustTrilateration2DSolver.this.isReady();
                     }
 
                     @Override
                     public void onEstimateStart(RobustEstimator<Point2D> estimator) {
                         if (mListener != null) {
-                            mListener.onSolveStart(PROSACRobustTrilateration2DSolver.this);
+                            mListener.onSolveStart(PROMedSRobustTrilateration2DSolver.this);
                         }
                     }
 
                     @Override
                     public void onEstimateEnd(RobustEstimator<Point2D> estimator) {
                         if (mListener != null) {
-                            mListener.onSolveEnd(PROSACRobustTrilateration2DSolver.this);
+                            mListener.onSolveEnd(PROMedSRobustTrilateration2DSolver.this);
                         }
                     }
 
                     @Override
                     public void onEstimateNextIteration(RobustEstimator<Point2D> estimator, int iteration) {
                         if (mListener != null) {
-                            mListener.onSolveNextIteration(PROSACRobustTrilateration2DSolver.this,
+                            mListener.onSolveNextIteration(PROMedSRobustTrilateration2DSolver.this,
                                     iteration);
                         }
                     }
@@ -594,7 +576,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
                     @Override
                     public void onEstimateProgressChange(RobustEstimator<Point2D> estimator, float progress) {
                         if (mListener != null) {
-                            mListener.onSolveProgressChange(PROSACRobustTrilateration2DSolver.this,
+                            mListener.onSolveProgressChange(PROMedSRobustTrilateration2DSolver.this,
                                     progress);
                         }
                     }
@@ -603,10 +585,6 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
         try {
             mLocked = true;
             mInliersData = null;
-            innerEstimator.setComputeAndKeepInliersEnabled(
-                    mComputeAndKeepInliers || mRefineResult);
-            innerEstimator.setComputeAndKeepResidualsEnabled(
-                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -628,7 +606,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROSAC;
+        return RobustEstimatorMethod.PROMedS;
     }
 
     /**
