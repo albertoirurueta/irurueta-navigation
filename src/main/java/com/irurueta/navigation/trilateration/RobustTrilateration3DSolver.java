@@ -15,7 +15,6 @@
  */
 package com.irurueta.navigation.trilateration;
 
-import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
@@ -31,6 +30,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers
  * in order to find the best solution.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSolver<Point3D> {
 
     /**
