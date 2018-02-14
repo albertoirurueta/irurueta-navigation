@@ -19,6 +19,7 @@ import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
+import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.BitSet;
 import java.util.List;
@@ -262,6 +263,971 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
             throw new LockedException();
         }
         internalSetCirclesAndStandardDeviations(circles, radiusStandardDeviations);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     */
+    public static RobustTrilateration2DSolver create(RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver();
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver();
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver();
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver();
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver();
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     */
+    public static RobustTrilateration2DSolver create(
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     * don't have the same length or their length is smaller than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(positions, distances);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(positions, distances);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param distanceStandardDeviations if either positions or distances are null,
+     *                                   don't have the same length or their length
+     *                                   is smaller than required (3 points).
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     * don't have the same length or their length is smaler than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, double[] distanceStandardDeviations,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     * don't have the same length or their length is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(positions, distances,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances or
+     * standard deviations are null, don't have the same length or their length
+     * is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param circles circles defining positions and distances.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null, length of circles array
+     * is less than required (3 points) or don't have the same length.
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(circles);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(circles);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null, length of circles array
+     * is less than required (3 points) or don't have the same length.
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            double[] distanceStandardDeviations, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param circles circles defining positions and distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null or if length of circles
+     * array is less than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles, listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles, listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles, listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(circles, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(circles, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null, length of circles array
+     * is less than required (3 points) or don't have the same length.
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if quality scores is null, length of
+     * quality scores is less than required minimum (3 samples).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver();
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver();
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver();
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if quality scores is null, length of
+     * quality scores is less than required minimum (3 samples).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances or quality
+     * scores are null, don't have the same length or their length is smaller than
+     * required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        positions, distances);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        positions, distances);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances, quality
+     * scores or standard deviations are null, don't have the same length or the
+     * length is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances,
+            double[] distanceStandardDeviations, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        positions, distances, distanceStandardDeviations);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        positions, distances, distanceStandardDeviations);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances or standard
+     * deviations are null, don't have the same length or their length is smaller
+     * than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances,
+            double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances,
+                        distanceStandardDeviations, listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        positions, distances, distanceStandardDeviations, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        positions, distances, distanceStandardDeviations, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances, quality
+     * scores or standard deviations are null, don't have the same length or their
+     * length is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(positions, distances,
+                        listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        positions, distances, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        positions, distances, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param circles circles defining positions and distances.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either circles or quality scores are
+     * null don't have the same length or their length is less than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Circle[] circles, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        circles);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        circles);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either circles, quality scores or
+     * standard deviations are null, don't have the same length or their length
+     * is less than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Circle[] circles, double[] distanceStandardDeviations,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        circles, distanceStandardDeviations);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        circles, distanceStandardDeviations);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @param method robust estimator method.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either circles, quality scores or
+     * standard deviations are null, don't have the same length or their length
+     * is less than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Circle[] circles, double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case LMedS:
+                return new LMedSRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case MSAC:
+                return new MSACRobustTrilateration2DSolver(circles,
+                        distanceStandardDeviations, listener);
+            case PROSAC:
+                return new PROSACRobustTrilateration2DSolver(qualityScores,
+                        circles, distanceStandardDeviations, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustTrilateration2DSolver(qualityScores,
+                        circles, distanceStandardDeviations, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @return a new robust 2D trilateration solver.
+     */
+    public static RobustTrilateration2DSolver create() {
+        return create(DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     */
+    public static RobustTrilateration2DSolver create(
+            RobustTrilaterationSolverListener<Point2D> listener) {
+        return create(listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     * don't have the same length or their length is smaller than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances) throws IllegalArgumentException {
+        return create(positions, distances, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param distanceStandardDeviations if either positions or distances are null,
+     *                                   don't have the same length or their length
+     *                                   is smaller than required (3 points).
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     * don't have the same length or their length is smaller than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, double[] distanceStandardDeviations)
+            throws IllegalArgumentException {
+        return create(positions, distances, distanceStandardDeviations,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions or distances are null,
+     * don't have the same length or their length is smaller than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(positions, distances, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances or
+     * standard deviations are null, don't have the same length or their length
+     * is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Point2D[] positions,
+            double[] distances, double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(positions, distances, distanceStandardDeviations,
+                listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param circles circles defining positions and distances.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null, length of circles array
+     * is less than required (3 points) or don't have the same length.
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles)
+            throws IllegalArgumentException {
+        return create(circles, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null, length of circles array
+     * is less than required (3 points) or don't have the same length.
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            double[] distanceStandardDeviations) throws IllegalArgumentException {
+        return create(circles, distanceStandardDeviations,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param circles circles defining positions and distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null or if length of circles
+     * array is less than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(circles, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if circles is null, length of circles array
+     * is less than required (3 points) or don't have the same length.
+     */
+    public static RobustTrilateration2DSolver create(Circle[] circles,
+            double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(circles, distanceStandardDeviations, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if quality scores is null, length of
+     * quality scores is less than required (3 samples).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores)
+            throws IllegalArgumentException {
+        return create(qualityScores, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if quality scores is null, length of
+     * quality scores is less than required minimum (3 samples).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node to be
+     *                  estimated.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances or quality
+     * scores are null, don't have the same length or their length is smaller
+     * than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances)
+            throws IllegalArgumentException {
+        return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distance from static nodes to mobile node to be
+     *                  estimated.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances, quality
+     * scores or standard deviations are null, don't have the same length or their
+     * length is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances,
+            double[] distanceStandardDeviations)
+            throws IllegalArgumentException {
+        return create(qualityScores, positions, distances,
+                distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static nodes to mobile node.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 3D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances or standard
+     * deviations are null, don't have the same length or their length is smaller
+     * than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances,
+            double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create (qualityScores, positions, distances,
+                distanceStandardDeviations,listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param positions known positions of static nodes.
+     * @param distances euclidean distances from static ndoes to mobile node.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either positions, distances, quality
+     * scores or standard deviations are null, don't have the same length or their
+     * length is smaller than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Point2D[] positions, double[] distances,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(qualityScores, positions, distances, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param circles circles defining positions and distances.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either circles or quality scores are
+     * null, don't have the same length or their length is less than required
+     * (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Circle[] circles) throws IllegalArgumentException {
+        return create(qualityScores, circles, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either circles, quality scores or
+     * standard deviations are null, don't have the same length or their length
+     * is less than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Circle[] circles, double[] distanceStandardDeviations)
+            throws IllegalArgumentException {
+        return create(qualityScores, circles, distanceStandardDeviations,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D trilateration solver using default robust method.
+     * @param qualityScores quality scores corresponding to each provided sample.
+     *                      The larger the score value the better the quality of
+     *                      the sample.
+     * @param circles circles defining positions and distances.
+     * @param distanceStandardDeviations standard deviations of provided measured
+     *                                   distances.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a new robust 2D trilateration solver.
+     * @throws IllegalArgumentException if either circles, quality scores or
+     * standard deviations are null, don't have the same length or their length
+     * is less than required (3 points).
+     */
+    public static RobustTrilateration2DSolver create(double[] qualityScores,
+            Circle[] circles, double[] distanceStandardDeviations,
+            RobustTrilaterationSolverListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(qualityScores, circles, distanceStandardDeviations,
+                listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**

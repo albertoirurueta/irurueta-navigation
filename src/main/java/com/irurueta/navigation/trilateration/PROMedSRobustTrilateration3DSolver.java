@@ -249,7 +249,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * @param distances euclidean distances from static nodes to mobile node to be
      *                  estimated.
      * @throws IllegalArgumentException if either positions, distances or quality
-     * scores are null, don't have the same length of their length is smaller
+     * scores are null, don't have the same length or their length is smaller
      * than required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
