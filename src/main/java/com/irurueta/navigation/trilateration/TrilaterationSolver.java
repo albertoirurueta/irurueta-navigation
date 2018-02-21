@@ -23,6 +23,7 @@ import com.irurueta.navigation.NotReadyException;
  * Solves the trilateration problem.
  * This is a formulation for a nonlinear least squares optimizer.
  * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
+ * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class TrilaterationSolver<P extends Point> {
@@ -177,8 +178,8 @@ public abstract class TrilaterationSolver<P extends Point> {
     }
 
     /**
-     * Gets estimated estimatedPosition and stores result into provided instance.
-     * @param estimatedPosition instance where estimated estimatedPosition will be stored.
+     * Gets estimated estimated position and stores result into provided instance.
+     * @param estimatedPosition instance where estimated estimated position will be stored.
      */
     public void getEstimatedPosition(P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
