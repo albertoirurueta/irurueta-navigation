@@ -44,10 +44,14 @@ public class WifiAccessPoint implements Serializable {
      * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
      *              xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
-     * @throws IllegalArgumentException if BSSID is null.
+     * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPoint(String bssid, double frequency) throws IllegalArgumentException {
         if (bssid == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (frequency < 0.0) {
             throw new IllegalArgumentException();
         }
 
@@ -61,7 +65,7 @@ public class WifiAccessPoint implements Serializable {
      *              xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @param ssid service set identifier (SSID) of this 802.11 network.
-     * @throws IllegalArgumentException if BSSID is null.
+     * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPoint(String bssid, double frequency, String ssid) throws IllegalArgumentException {
         this(bssid, frequency);

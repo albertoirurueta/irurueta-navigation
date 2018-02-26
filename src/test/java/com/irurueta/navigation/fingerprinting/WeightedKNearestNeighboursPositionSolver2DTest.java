@@ -32,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
+import static com.irurueta.navigation.fingerprinting.Utils.*;
 
 public class WeightedKNearestNeighboursPositionSolver2DTest implements
         WeightedKNearestNeighboursPositionSolverListener<Point2D> {
@@ -51,15 +52,20 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
     private static final double MIN_POS = -50.0;
     private static final double MAX_POS = 50.0;
 
-    private static final double ERROR_STD = 1.0;
+    private static final double SEPARATION_POS = 2.0;
+
+    private static final double ERROR_STD = 0.5;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
-    private static final int TIMES = 1000; //50;
+    private static final int TIMES = 1000;
+    private static final int SHORT_TIMES = 25;
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
     private static final double SPEED_OF_LIGHT = 3e8; //(m/s)
+
+    private static final int MAX_K = 10;
 
     private int solveStart;
     private int solveEnd;
@@ -392,14 +398,14 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
 
     @Test
     public void testSolveKFingerprints() throws NotReadyException, LockedException {
-        for (int k = 2; k < 50; k++) {
+        for (int k = 2; k < MAX_K; k++) {
             solveKFingerprints(k, 0.0);
         }
     }
 
     @Test
     public void testSolveKFingerprintsWithError() throws NotReadyException, LockedException {
-        for (int k = 2; k < 50; k++) {
+        for (int k = 2; k < MAX_K; k++) {
             solveKFingerprints(k, ERROR_STD);
         }
     }
@@ -412,6 +418,30 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
     @Test
     public void testFindBestKWithError() throws NotReadyException, LockedException {
         findBestK(ERROR_STD);
+    }
+
+    @Test
+    public void testSolveKFingerprintsUniformFingerprints() throws NotReadyException, LockedException {
+        for (int k = 2; k < MAX_K; k++) {
+            solveKFingerprintsUniformFingerprints(k, 0.0);
+        }
+    }
+
+    @Test
+    public void testSolveKFingerprintsWithErrorUniformFingerprints() throws NotReadyException, LockedException {
+        for (int k = 2; k < MAX_K; k++) {
+            solveKFingerprintsUniformFingerprints(k, ERROR_STD);
+        }
+    }
+
+    @Test
+    public void testFindBestKUniformFingerprints() throws NotReadyException, LockedException {
+        findBestKUniformFingerprints(0.0);
+    }
+
+    @Test
+    public void testFindBestKWithErrorUniformFingerprints() throws NotReadyException, LockedException {
+        findBestKUniformFingerprints(ERROR_STD);
     }
 
     @Override
@@ -620,7 +650,8 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
 
             int bestK = 0;
             double bestDistance = Double.MAX_VALUE;
-            for (int k = 1; k < numFingerprints; k++) {
+            int maxK = Math.min(numFingerprints, MAX_K);
+            for (int k = 1; k < maxK; k++) {
                 List<WifiFingerprintLocated<Point2D>> nearestFingerprintsList =
                         new ArrayList<>();
                 List<Double> nearestDistancesList = new ArrayList<>();
@@ -657,7 +688,245 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
 
         avgBestK /= TIMES;
         avgBestDistance /= TIMES;
-        LOGGER.log(Level.INFO, "Best number of neighbours: {0}, Average error distance: {1}",
+        LOGGER.log(Level.INFO, "Best number of neighbours: {0}, Average error distance: {1} meters",
+                new Object[]{avgBestK, avgBestDistance});
+    }
+
+    private void solveKFingerprintsUniformFingerprints(int k, double errorStd) throws NotReadyException, LockedException {
+        GaussianRandomizer errorRandomizer = null;
+        if (errorStd > 0.0) {
+            errorRandomizer = new GaussianRandomizer(new Random(), 0.0, errorStd);
+        }
+
+        int numValid = 0;
+        double avgDistance = 0.0;
+        double avgImprovedDistance = 0.0;
+        for (int t = 0; t < SHORT_TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            int numAccessPoints = randomizer.nextInt(MIN_AP, MAX_AP);
+            Point2D[] accessPointPositions = new Point2D[numAccessPoints];
+            double[] transmittedPower = new double[numAccessPoints];
+            WifiAccessPoint[] accessPoints = new WifiAccessPoint[numAccessPoints];
+            for (int i = 0; i < numAccessPoints; i++) {
+                accessPointPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+                transmittedPower[i] = randomizer.nextDouble(
+                        dBmToPower(MIN_RSSI),
+                        dBmToPower(MAX_RSSI));
+                accessPoints[i] = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
+            }
+
+            //setup uniform fingerprint readings
+            List<Point2D> fingerprintsPositionsList = new ArrayList<>();
+            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            for (double x = MIN_POS; x < MAX_POS; x+= SEPARATION_POS) {
+                for (double y = MIN_POS; y < MAX_POS; y+= SEPARATION_POS) {
+                    InhomogeneousPoint2D fingerprintPosition =
+                            new InhomogeneousPoint2D(x, y);
+                    fingerprintsPositionsList.add(fingerprintPosition);
+
+                    List<WifiReading> readings = new ArrayList<>();
+                    for (int j = 0; j < numAccessPoints; j++) {
+                        double distance = fingerprintPosition.distanceTo(
+                                accessPointPositions[j]);
+                        double error = errorRandomizer != null ? errorRandomizer.nextDouble() : 0.0;
+                        double rssi = powerTodBm(receivedPower(
+                                transmittedPower[j], distance, accessPoints[j].getFrequency())) + error;
+                        readings.add(new WifiReading(
+                                accessPoints[j], rssi));
+                    }
+
+                    fingerprints.add(new WifiFingerprintLocated2D(
+                            readings, fingerprintPosition));
+                }
+            }
+
+            WifiKNearestFinder<Point2D> finder =
+                    new WifiKNearestFinder<>(fingerprints);
+
+            //build tree of fingerprint positions
+            KDTree2D tree = new KDTree2D(fingerprintsPositionsList);
+
+            //generate measurement at random position
+            Point2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            List<WifiReading> readings = new ArrayList<>();
+            for (int i = 0; i < numAccessPoints; i++) {
+                double distance = position.distanceTo(accessPointPositions[i]);
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower[i], distance, accessPoints[i].getFrequency()));
+                readings.add(new WifiReading(accessPoints[i], rssi));
+            }
+            WifiFingerprint fingerprint = new WifiFingerprint(readings);
+
+            //find nearest fingerprints
+            List<WifiFingerprintLocated<Point2D>> nearestFingerprintsList =
+                    new ArrayList<>();
+            List<Double> nearestDistancesList = new ArrayList<>();
+            finder.findKNearestTo(fingerprint, k,
+                    nearestFingerprintsList, nearestDistancesList);
+
+            //noinspection all
+            WifiFingerprintLocated<Point2D>[] nearestFingerprints =
+                    new WifiFingerprintLocated[k];
+            double[] nearestDistances = new double[k];
+            for(int i = 0; i < k; i++) {
+                nearestFingerprints[i] = nearestFingerprintsList.get(i);
+                nearestDistances[i] = nearestDistancesList.get(i);
+            }
+
+            WeightedKNearestNeighboursPositionSolver2D solver =
+                    new WeightedKNearestNeighboursPositionSolver2D(
+                            nearestFingerprints, nearestDistances, this);
+
+            //solve
+            reset();
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+
+            solver.solve();
+
+            //check
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+
+            Point2D nearestPosition = tree.nearestPoint(position);
+            Point2D estimatedPosition = solver.getEstimatedPosition();
+
+            //check if estimated position is closer to the actual position than
+            //nearest fingerprint
+            double distance = estimatedPosition.distanceTo(position);
+            avgDistance += distance;
+
+            if(distance <= nearestPosition.distanceTo(position)) {
+                avgImprovedDistance += distance;
+                numValid++;
+            }
+        }
+
+        if (numValid > 0) {
+            avgImprovedDistance /= numValid;
+            avgDistance /= SHORT_TIMES;
+            LOGGER.log(Level.INFO, "{0} of {1} estimated positions have improved with {2} neighbours",
+                    new Object[]{numValid, SHORT_TIMES, k});
+            LOGGER.log(Level.INFO, "Average error distance: {0} meters, Average improved error distance: {1} meters",
+                    new Object[]{avgDistance, avgImprovedDistance});
+        }
+    }
+
+    private void findBestKUniformFingerprints(double errorStd) throws NotReadyException, LockedException {
+        GaussianRandomizer errorRandomizer = null;
+        if (errorStd > 0.0) {
+            errorRandomizer = new GaussianRandomizer(new Random(), 0.0, errorStd);
+        }
+
+        double avgBestK = 0.0;
+        double avgBestDistance = 0.0;
+        for (int t = 0; t < SHORT_TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            int numAccessPoints = randomizer.nextInt(MIN_AP, MAX_AP);
+            Point2D[] accessPointPositions = new Point2D[numAccessPoints];
+            double[] transmittedPower = new double[numAccessPoints];
+            WifiAccessPoint[] accessPoints = new WifiAccessPoint[numAccessPoints];
+            for (int i = 0; i < numAccessPoints; i++) {
+                accessPointPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+                transmittedPower[i] = randomizer.nextDouble(
+                        dBmToPower(MIN_RSSI),
+                        dBmToPower(MAX_RSSI));
+                accessPoints[i] = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
+            }
+
+            //setup uniform fingerprint readings
+            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            for (double x = MIN_POS; x < MAX_POS; x+= SEPARATION_POS) {
+                for (double y = MIN_POS; y < MAX_POS; y+= SEPARATION_POS) {
+                    InhomogeneousPoint2D fingerprintPosition =
+                            new InhomogeneousPoint2D(x, y);
+
+                    List<WifiReading> readings = new ArrayList<>();
+                    for (int j = 0; j < numAccessPoints; j++) {
+                        double distance = fingerprintPosition.distanceTo(
+                                accessPointPositions[j]);
+                        double error = errorRandomizer != null ? errorRandomizer.nextDouble() : 0.0;
+                        double rssi = powerTodBm(receivedPower(
+                                transmittedPower[j], distance, accessPoints[j].getFrequency())) + error;
+                        readings.add(new WifiReading(
+                                accessPoints[j], rssi));
+                    }
+
+                    fingerprints.add(new WifiFingerprintLocated2D(
+                            readings, fingerprintPosition));
+                }
+            }
+
+            WifiKNearestFinder<Point2D> finder =
+                    new WifiKNearestFinder<>(fingerprints);
+
+            //generate measurement at random position
+            Point2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            List<WifiReading> readings = new ArrayList<>();
+            for (int i = 0; i < numAccessPoints; i++) {
+                double distance = position.distanceTo(accessPointPositions[i]);
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower[i], distance, accessPoints[i].getFrequency()));
+                readings.add(new WifiReading(accessPoints[i], rssi));
+            }
+            WifiFingerprint fingerprint = new WifiFingerprint(readings);
+
+            int bestK = 0;
+            double bestDistance = Double.MAX_VALUE;
+            int numFingerprints = fingerprints.size();
+            int maxK = Math.min(numFingerprints, MAX_K);
+            for (int k = 1; k < maxK; k++) {
+                List<WifiFingerprintLocated<Point2D>> nearestFingerprintsList =
+                        new ArrayList<>();
+                List<Double> nearestDistancesList = new ArrayList<>();
+                finder.findKNearestTo(fingerprint, k,
+                        nearestFingerprintsList, nearestDistancesList);
+
+                //noinspection all
+                WifiFingerprintLocated<Point2D>[] nearestFingerprints =
+                        new WifiFingerprintLocated[k];
+                double[] nearestDistances = new double[k];
+                for (int i = 0; i < k; i++) {
+                    nearestFingerprints[i] = nearestFingerprintsList.get(i);
+                    nearestDistances[i] = nearestDistancesList.get(i);
+                }
+
+                WeightedKNearestNeighboursPositionSolver2D solver =
+                        new WeightedKNearestNeighboursPositionSolver2D(
+                                nearestFingerprints, nearestDistances);
+
+                solver.solve();
+
+                Point2D estimatedPosition = solver.getEstimatedPosition();
+
+                double distance = estimatedPosition.distanceTo(position);
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    bestK = k;
+                }
+            }
+
+            avgBestK += bestK;
+            avgBestDistance += bestDistance;
+        }
+
+        avgBestK /= SHORT_TIMES;
+        avgBestDistance /= SHORT_TIMES;
+        LOGGER.log(Level.INFO, "Best number of neighbours: {0}, Average error distance: {1} meters",
                 new Object[]{avgBestK, avgBestDistance});
     }
 
@@ -694,13 +963,5 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
         //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
         double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), 2.0);
         return equivalentTransmittedPower * k / (distance * distance);
-    }
-
-    private double dBmToPower(double dBm) {
-        return Math.pow(10.0, dBm / 10.0);
-    }
-
-    private double powerTodBm(double mW) {
-        return 10.0 * Math.log10(mW);
     }
 }

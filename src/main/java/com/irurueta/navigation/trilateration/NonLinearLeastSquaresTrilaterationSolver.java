@@ -426,7 +426,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * Setups fitter to solve trilateration problem.
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
-    private void setupFitter() throws FittingException{
+    private void setupFitter() throws FittingException {
         mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
             @Override
             public int getNumberOfDimensions() {
