@@ -62,6 +62,18 @@ public class WifiFingerprintLocated2DTest {
         assertSame(f.getPosition(), position);
         assertNull(f.getPositionCovariance());
 
+        //force IllegalArgumentException
+        f = null;
+        try {
+            f = new WifiFingerprintLocated2D(null, position);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            f = new WifiFingerprintLocated2D(readings, null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(f);
+
 
         //test with readings, position and covariance
         Matrix cov = new Matrix(2, 2);
@@ -71,5 +83,16 @@ public class WifiFingerprintLocated2DTest {
         assertSame(f.getReadings(), readings);
         assertSame(f.getPosition(), position);
         assertSame(f.getPositionCovariance(), cov);
+
+        f = null;
+        try {
+            f = new WifiFingerprintLocated2D(null, position, cov);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            f = new WifiFingerprintLocated2D(readings, null, cov);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(f);
     }
 }

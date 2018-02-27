@@ -201,6 +201,16 @@ public class WifiKNearestFinderTest {
             avgValidSignalDistance += nearestSqrDistances.get(0);
             avgValidDistance += closestFingerprint1.getPosition().distanceTo(position);
             numValid++;
+
+            //force IllegalArgumentException
+            try {
+                WifiKNearestFinder.findNearestTo(null, fingerprints);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
+            try {
+                WifiKNearestFinder.findNearestTo(fingerprint, null);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
         }
 
         assertTrue(numValid > 0);
@@ -339,6 +349,28 @@ public class WifiKNearestFinderTest {
             if(found) {
                 numValid++;
             }
+
+            //force IllegalArgumentException
+            try {
+                WifiKNearestFinder.findKNearestTo(null, fingerprints, k,
+                        kClosestFingerprints4, nearestSqrDistances4);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
+            try {
+                WifiKNearestFinder.findKNearestTo(fingerprint, null, k,
+                        kClosestFingerprints4, nearestSqrDistances4);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
+            try {
+                WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
+                        null, nearestSqrDistances4);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
+            try {
+                WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
+                        kClosestFingerprints4, null);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
         }
 
         assertTrue(numValid > 0);

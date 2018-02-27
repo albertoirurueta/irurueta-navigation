@@ -397,6 +397,14 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
         }
 
         assertTrue(numValid > 0);
+
+        //force NotReadyException
+        WeightedKNearestNeighboursPositionSolver3D solver =
+                new WeightedKNearestNeighboursPositionSolver3D();
+        try {
+            solver.solve();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
     }
 
     @Test

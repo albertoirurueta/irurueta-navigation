@@ -101,6 +101,10 @@ public class WifiAccessPointTest {
         assertTrue(ap1.equals(ap1));
         assertTrue(ap1.equals(ap2));
         assertFalse(ap1.equals(ap3));
+
+        //noinspection all
+        assertFalse(ap1.equals(null));
+        assertFalse(ap1.equals(new Object()));
     }
 
     @Test

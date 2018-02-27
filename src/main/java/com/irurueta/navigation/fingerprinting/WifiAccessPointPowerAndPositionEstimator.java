@@ -55,7 +55,6 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Default standard deviations assumed for parameters being fitted.
      */
-    private static final double DEFAULT_POSITION_STANDARD_DEVIATION = 1e-3;
     private static final double DEFAULT_POWER_STANDARD_DEVIATION = 50.0;
 
     /**
@@ -838,29 +837,20 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
         try {
             Matrix x = new Matrix(numFingerprints, numParams);
             double[] y = new double[numFingerprints];
-//TODO: provide standard deviations externally with a defaul value of 50.0 dB's (DEFAULT_POWER_STANDARD_DEVIATION)
             double[] standardDeviations = new double[numFingerprints];
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprint = mFingerprints.get(i);
                 P position = fingerprint.getPosition();
-                Matrix positionCovariance = fingerprint.getPositionCovariance();
-                double positionVariance = positionCovariance != null ?
-                        com.irurueta.algebra.Utils.trace(positionCovariance) :
-                        DEFAULT_POSITION_STANDARD_DEVIATION;
 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
                 }
 
                 WifiReading reading = fingerprint.getReadings().get(0);
-                double rssi = reading.getRssi();
-                double rssiStandardDeviation = reading.getRssiStandardDeviation() != null ?
+                standardDeviations[i] = reading.getRssiStandardDeviation() != null ?
                         reading.getRssiStandardDeviation() :
                         DEFAULT_POWER_STANDARD_DEVIATION;
-                double standardDeviation = Math.sqrt(positionVariance +
-                        rssiStandardDeviation * rssiStandardDeviation);
-                standardDeviations[i] = standardDeviation;
-                y[i] = rssi;
+                y[i] = reading.getRssi();
             }
 
             mFitter.setInputData(x, y, standardDeviations);

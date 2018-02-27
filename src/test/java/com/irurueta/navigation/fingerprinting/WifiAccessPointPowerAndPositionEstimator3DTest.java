@@ -15,8 +15,10 @@
  */
 package com.irurueta.navigation.fingerprinting;
 
-import com.irurueta.geometry.InhomogeneousPoint2D;
-import com.irurueta.geometry.Point2D;
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -32,11 +34,11 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 import static com.irurueta.navigation.fingerprinting.Utils.*;
 
-public class WifiAccessPointPowerAndPositionEstimator2DTest implements
-        WifiAccessPointPowerAndPositionEstimatorListener<Point2D> {
+public class WifiAccessPointPowerAndPositionEstimator3DTest implements
+        WifiAccessPointPowerAndPositionEstimatorListener<Point3D> {
 
     private static Logger LOGGER = Logger.getLogger(
-            WifiAccessPointPowerAndPositionEstimator2DTest.class.getName());
+            WifiAccessPointPowerAndPositionEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
@@ -62,7 +64,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
     private int estimateStart;
     private int estimateEnd;
 
-    public WifiAccessPointPowerAndPositionEstimator2DTest() { }
+    public WifiAccessPointPowerAndPositionEstimator3DTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -81,12 +83,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //test empty constructor
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -107,26 +109,27 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with fingerprints
-        List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+        List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 3; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+        for (int i = 0; i < 4; i++) {
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             List<WifiReading> readings = new ArrayList<>();
             readings.add(new WifiReading(accessPoint, 0.0));
 
-            WifiFingerprintLocated2D fingerprint = new WifiFingerprintLocated2D(
+            WifiFingerprintLocated3D fingerprint = new WifiFingerprintLocated3D(
                     readings, position);
 
             fingerprints.add(fingerprint);
         }
 
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints);
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -149,24 +152,24 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiFingerprintLocated2D>)null);
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    (List<WifiFingerprintLocated3D>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>());
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(this);
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -188,12 +191,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with fingerprints and listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -216,27 +219,28 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiFingerprintLocated2D>)null, this);
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    (List<WifiFingerprintLocated3D>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), this);
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial position
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(initialPosition);
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(initialPosition);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -258,12 +262,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with fingerprints and initial position
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 initialPosition);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -285,25 +289,25 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
                     null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), initialPosition);
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial position and listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(initialPosition,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(initialPosition,
                 this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -325,12 +329,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with fingerprints, initial position and listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 initialPosition, this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -353,14 +357,14 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
                     null, initialPosition,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), initialPosition,
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), initialPosition,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -368,11 +372,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with initial transmitted power
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(MAX_RSSI);
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -395,12 +399,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with fingerprints and initial transmitted power
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -424,25 +428,25 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiFingerprintLocated2D>)null, MAX_RSSI);
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    (List<WifiFingerprintLocated3D>)null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), MAX_RSSI);
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial transmitted power and listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(MAX_RSSI,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(MAX_RSSI,
                 this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -465,12 +469,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with fingerprints, initial transmitted power and listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 MAX_RSSI, this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -494,14 +498,14 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiFingerprintLocated2D>)null, MAX_RSSI,
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    (List<WifiFingerprintLocated3D>)null, MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), MAX_RSSI,
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -510,12 +514,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
         //test constructor with fingerprints, initial position and
         //initial transmitted power
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 initialPosition, MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -539,13 +543,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
                     null, initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), initialPosition,
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), initialPosition,
                     MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -553,12 +557,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with initial position and initial transmitted power
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(
                 initialPosition, MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -582,12 +586,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
         //test constructor with initial position, initial transmitted power and
         //listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(
                 initialPosition, MAX_RSSI, this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -611,12 +615,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
         //test constructor with fingerprints, initial position, initial
         //transmitted power and listener
-        estimator = new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        estimator = new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                 initialPosition, MAX_RSSI, this);
 
         //check default values
-        assertEquals(estimator.getMinFingerprintReadings(), 3);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinFingerprintReadings(), 4);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -640,13 +644,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
                     null, initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiFingerprintLocated2D>(), initialPosition,
+            estimator = new WifiAccessPointPowerAndPositionEstimator3D(
+                    new ArrayList<WifiFingerprintLocated3D>(), initialPosition,
                     MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -655,8 +659,8 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testGetSetInitialTransmittedPowerdBm() throws LockedException {
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getInitialTransmittedPowerdBm());
@@ -672,8 +676,8 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testGetSetInitialTransmittedPower() throws LockedException {
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getInitialTransmittedPower());
@@ -703,15 +707,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getInitialPosition());
 
         //set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator.setInitialPosition(initialPosition);
@@ -724,32 +729,33 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
     public void testAreValidFingerprints() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+        List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 3; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+        for (int i = 0; i < 4; i++) {
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             List<WifiReading> readings = new ArrayList<>();
             readings.add(new WifiReading(accessPoint, 0.0));
 
-            WifiFingerprintLocated2D fingerprint = new WifiFingerprintLocated2D(
+            WifiFingerprintLocated3D fingerprint = new WifiFingerprintLocated3D(
                     readings, position);
 
             fingerprints.add(fingerprint);
         }
 
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         assertTrue(estimator.areValidFingerprints(fingerprints));
 
         assertFalse(estimator.areValidFingerprints(null));
         assertFalse(estimator.areValidFingerprints(
-                new ArrayList<WifiFingerprintLocated<Point2D>>()));
+                new ArrayList<WifiFingerprintLocated<Point3D>>()));
 
-        List<WifiFingerprintLocated2D> fingerprints2 = new ArrayList<>();
-        WifiFingerprintLocated2D fingerprint = new WifiFingerprintLocated2D();
+        List<WifiFingerprintLocated3D> fingerprints2 = new ArrayList<>();
+        WifiFingerprintLocated3D fingerprint = new WifiFingerprintLocated3D();
         fingerprints2.add(fingerprint);
         assertFalse(estimator.areValidFingerprints(fingerprints2));
 
@@ -772,7 +778,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         reading = new WifiReading(accessPoint2, MAX_RSSI);
         readings.add(reading);
 
-        WifiFingerprintLocated2D fingerprint2 = new WifiFingerprintLocated2D();
+        WifiFingerprintLocated3D fingerprint2 = new WifiFingerprintLocated3D();
         WifiAccessPoint accessPoint3 = new WifiAccessPoint("bssid2",
                 FREQUENCY);
         WifiReading reading2 = new WifiReading(accessPoint3, MAX_RSSI);
@@ -792,23 +798,24 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
     public void testGetSetFingerprints() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+        List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 3; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+        for (int i = 0; i < 4; i++) {
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             List<WifiReading> readings = new ArrayList<>();
             readings.add(new WifiReading(accessPoint, 0.0));
 
-            WifiFingerprintLocated2D fingerprint = new WifiFingerprintLocated2D(
+            WifiFingerprintLocated3D fingerprint = new WifiFingerprintLocated3D(
                     readings, position);
 
             fingerprints.add(fingerprint);
         }
 
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         //initial value
         assertNull(estimator.getFingerprins());
@@ -830,8 +837,8 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getListener());
@@ -845,18 +852,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
-            avgInvalidPositionError = 0.0;
+                avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -865,10 +877,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -882,12 +895,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             this);
 
             reset();
@@ -908,6 +921,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -918,13 +948,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -938,13 +971,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -964,9 +1000,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -982,6 +1026,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -989,9 +1040,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1000,18 +1058,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithInitialPositionWithoutError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1020,10 +1083,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -1037,18 +1101,19 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+                    accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             initialPosition, this);
 
             reset();
@@ -1069,6 +1134,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -1079,13 +1161,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -1099,13 +1184,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -1125,9 +1213,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1143,6 +1239,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -1150,9 +1253,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1161,18 +1271,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithInitialTransmittedPowerWithoutError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1181,10 +1296,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -1198,7 +1314,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
@@ -1207,8 +1323,8 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             initialTransmittedPowerdBm, this);
 
             reset();
@@ -1229,6 +1345,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -1239,13 +1372,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -1259,13 +1395,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -1285,9 +1424,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1303,6 +1450,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -1310,9 +1464,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1321,18 +1482,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithInitialPositionAndInitialTransmittedPowerWithoutError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1341,10 +1507,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -1358,20 +1525,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+                    accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
                     accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             initialPosition, initialTransmittedPowerdBm,
                             this);
 
@@ -1393,6 +1561,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -1403,13 +1588,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -1423,13 +1611,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -1449,9 +1640,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1467,6 +1666,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -1474,9 +1680,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1485,20 +1698,25 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1507,10 +1725,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -1525,12 +1744,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             this);
 
             reset();
@@ -1551,6 +1770,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -1561,13 +1797,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -1579,13 +1818,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -1605,9 +1847,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1623,6 +1873,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -1630,9 +1887,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1641,20 +1905,25 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithInitialPositionAndWithError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1663,10 +1932,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -1681,16 +1951,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
-                    accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
+                    accessPointPosition.getInhomY() + errorRandomizer.nextDouble(),
+                    accessPointPosition.getInhomZ() + errorRandomizer.nextDouble());
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             initialPosition, this);
 
             reset();
@@ -1711,6 +1982,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -1721,13 +2009,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -1739,13 +2030,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -1765,9 +2059,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1783,6 +2085,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -1790,9 +2099,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1801,20 +2117,25 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithInitialTransmittedPowerAndWithError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1823,10 +2144,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -1841,15 +2163,15 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             initialTransmittedPowerdBm, this);
 
             reset();
@@ -1870,6 +2192,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -1880,13 +2219,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -1898,13 +2240,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -1924,9 +2269,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1942,6 +2295,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -1949,9 +2309,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1960,20 +2327,25 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
     @Test
     public void testEstimateWithInitialPositionAndInitialTransmittedPowerAndWithError() throws LockedException,
-            NotReadyException, FingerprintingException {
+            NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -1982,10 +2354,11 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+            Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+            List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprintsPositions[i] = new InhomogeneousPoint2D(
+                fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
                 List<WifiReading> readings = new ArrayList<>();
@@ -2000,18 +2373,19 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
                 readings.add(new WifiReading(accessPoint, rssi));
 
-                fingerprints.add(new WifiFingerprintLocated2D(
+                fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
             }
 
-            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
                     accessPointPosition.getInhomX() + errorRandomizer.nextDouble(),
-                    accessPointPosition.getInhomY() + errorRandomizer.nextDouble());
+                    accessPointPosition.getInhomY() + errorRandomizer.nextDouble(),
+                    accessPointPosition.getInhomZ() + errorRandomizer.nextDouble());
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     errorRandomizer.nextDouble();
 
-            WifiAccessPointPowerAndPositionEstimator2D estimator =
-                    new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+            WifiAccessPointPowerAndPositionEstimator3D estimator =
+                    new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                             initialPosition, initialTransmittedPowerdBm, this);
 
             reset();
@@ -2032,6 +2406,23 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                    estimator.getEstimatedPositionCovariance());
+            decomposer.decompose();
+            double[] v = decomposer.getSingularValues();
+            double positionStd = 0.0;
+            for (double aV : v) {
+                positionStd += Math.sqrt(aV);
+            }
+            positionStd /= v.length;
+            double powerStd = Math.sqrt(powerVariance);
+
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
@@ -2042,13 +2433,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
             }
 
             avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -2060,13 +2454,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -2086,9 +2483,17 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPosition;
-        avgInvalidPowerError /= (TIMES - numValidPosition);
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -2104,6 +2509,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
+        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
+                avgPositionStd);
+
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
         LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
@@ -2111,9 +2523,16 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
                 avgPowerError);
 
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
         //force NotReadyException
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D();
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -2130,21 +2549,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
         int numFingerprints = randomizer.nextInt(
                 MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-        Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-        List<WifiFingerprintLocated2D> fingerprints = new ArrayList<>();
+        Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
+        List<WifiFingerprintLocated3D> fingerprints = new ArrayList<>();
         for (int i = 0; i < numFingerprints; i++) {
-            fingerprintsPositions[i] = new InhomogeneousPoint2D(
-                    0.0, 0.0);
+            fingerprintsPositions[i] = new InhomogeneousPoint3D(
+                    0.0, 0.0, 0.0);
             List<WifiReading> readings = new ArrayList<>();
 
             readings.add(new WifiReading(accessPoint, 0.0));
 
-            fingerprints.add(new WifiFingerprintLocated2D(
+            fingerprints.add(new WifiFingerprintLocated3D(
                     readings, fingerprintsPositions[i]));
         }
 
-        WifiAccessPointPowerAndPositionEstimator2D estimator =
-                new WifiAccessPointPowerAndPositionEstimator2D(fingerprints,
+        WifiAccessPointPowerAndPositionEstimator3D estimator =
+                new WifiAccessPointPowerAndPositionEstimator3D(fingerprints,
                         this);
 
         reset();
@@ -2166,15 +2585,15 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
     }
 
     @Override
-    public void onEstimateStart(WifiAccessPointPowerAndPositionEstimator<Point2D> estimator) {
+    public void onEstimateStart(WifiAccessPointPowerAndPositionEstimator<Point3D> estimator) {
         estimateStart++;
-        checkLocked((WifiAccessPointPowerAndPositionEstimator2D)estimator);
+        checkLocked((WifiAccessPointPowerAndPositionEstimator3D)estimator);
     }
 
     @Override
-    public void onEstimateEnd(WifiAccessPointPowerAndPositionEstimator<Point2D> estimator) {
+    public void onEstimateEnd(WifiAccessPointPowerAndPositionEstimator<Point3D> estimator) {
         estimateEnd++;
-        checkLocked((WifiAccessPointPowerAndPositionEstimator2D)estimator);
+        checkLocked((WifiAccessPointPowerAndPositionEstimator3D)estimator);
     }
 
     private void reset() {
@@ -2191,7 +2610,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                 (distance * distance);
     }
 
-    private void checkLocked(WifiAccessPointPowerAndPositionEstimator2D estimator) {
+    private void checkLocked(WifiAccessPointPowerAndPositionEstimator3D estimator) {
         try {
             estimator.setInitialTransmittedPowerdBm(null);
             fail("LockedException expected but not thrown");

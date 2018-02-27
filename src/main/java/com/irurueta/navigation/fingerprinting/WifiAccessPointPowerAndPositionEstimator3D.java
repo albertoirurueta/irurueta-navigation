@@ -36,6 +36,7 @@ import java.util.List;
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  */
+@SuppressWarnings("WeakerAccess")
 public class WifiAccessPointPowerAndPositionEstimator3D extends
         WifiAccessPointPowerAndPositionEstimator<Point3D> {
 
