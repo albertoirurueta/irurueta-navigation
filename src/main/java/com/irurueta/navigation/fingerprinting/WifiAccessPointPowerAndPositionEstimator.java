@@ -42,6 +42,8 @@ import java.util.List;
  * retrieved (because many measurements are made on unkown access points where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
+ * If WifiReadings contain RSSI standard deviations, those values will be used,
+ * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -53,9 +55,9 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
     /**
-     * Default standard deviations assumed for parameters being fitted.
+     * Default standard deviations assumed for RSSI readings being fitted.
      */
-    private static final double DEFAULT_POWER_STANDARD_DEVIATION = 50.0;
+    private static final double DEFAULT_POWER_STANDARD_DEVIATION = 1.0;
 
     /**
      * Estimated position.
@@ -777,18 +779,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                     }
                 }
 
-                if (mInitialTransmittedPowerdBm == null) {
-                    //compute average transmitted power (in mW)
-                    initial[dims] = 0.0;
-                    for (WifiFingerprintLocated<P> fingerprint : mFingerprints) {
-                        WifiReading reading = fingerprint.getReadings().get(0);
-                        double rssi = reading.getRssi();
-                        initial[dims] += rssi / (double)num;
-                    }
-                } else {
-                    //convert initial value
-                    initial[dims] = mInitialTransmittedPowerdBm;
-                }
+                initial[dims] = computeInitialTransmittedPowerdBm();
 
                 return initial;
             }
@@ -834,6 +825,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
         int dims = getNumberOfDimensions();
         int numParams = dims + 1;
         int numFingerprints = mFingerprints.size();
+        double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
         try {
             Matrix x = new Matrix(numFingerprints, numParams);
             double[] y = new double[numFingerprints];
@@ -845,6 +837,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
                 }
+                x.setElementAt(i, dims, initialTransmittedPowerdBm);
 
                 WifiReading reading = fingerprint.getReadings().get(0);
                 standardDeviations[i] = reading.getRssiStandardDeviation() != null ?
@@ -855,5 +848,29 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
 
             mFitter.setInputData(x, y, standardDeviations);
         } catch (AlgebraException ignore) { }
+    }
+
+    /**
+     * Computes initial transmitted power expressed in dBm's.
+     * If no initial transmitted power is provided, the average of all measures
+     * is used, otherwise provided value is used.
+     * @return initial transmitted power.
+     */
+    private double computeInitialTransmittedPowerdBm() {
+        if (mInitialTransmittedPowerdBm == null) {
+            //compute average transmitted power (in mW)
+            int num = mFingerprints.size();
+            double result = 0.0;
+            for (WifiFingerprintLocated<P> fingerprint : mFingerprints) {
+                WifiReading reading = fingerprint.getReadings().get(0);
+                double rssi = reading.getRssi();
+                result += rssi / (double)num;
+            }
+            return result;
+        } else {
+            //convert initial value
+            return mInitialTransmittedPowerdBm;
+        }
+
     }
 }

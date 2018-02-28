@@ -1742,7 +1742,7 @@ public class WifiAccessPointPowerAndPositionEstimator3DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReading(accessPoint, rssi));
+                readings.add(new WifiReading(accessPoint, rssi, ERROR_STD));
 
                 fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
@@ -1949,7 +1949,7 @@ public class WifiAccessPointPowerAndPositionEstimator3DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReading(accessPoint, rssi));
+                readings.add(new WifiReading(accessPoint, rssi, ERROR_STD));
 
                 fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
@@ -2161,7 +2161,7 @@ public class WifiAccessPointPowerAndPositionEstimator3DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReading(accessPoint, rssi));
+                readings.add(new WifiReading(accessPoint, rssi, ERROR_STD));
 
                 fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
@@ -2371,7 +2371,7 @@ public class WifiAccessPointPowerAndPositionEstimator3DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReading(accessPoint, rssi));
+                readings.add(new WifiReading(accessPoint, rssi, ERROR_STD));
 
                 fingerprints.add(new WifiFingerprintLocated3D(
                         readings, fingerprintsPositions[i]));
