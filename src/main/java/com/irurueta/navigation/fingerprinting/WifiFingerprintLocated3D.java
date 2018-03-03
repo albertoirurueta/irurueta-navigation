@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * Contains 3D located WiFi fingerprint.
  */
+@SuppressWarnings("WeakerAccess")
 public class WifiFingerprintLocated3D extends WifiFingerprintLocated<Point3D> {
 
     /**

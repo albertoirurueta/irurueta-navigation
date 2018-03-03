@@ -1121,7 +1121,7 @@ public class MSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
@@ -1204,7 +1204,7 @@ public class MSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
@@ -1294,7 +1294,7 @@ public class MSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());

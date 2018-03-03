@@ -48,14 +48,14 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints)
+            List<? extends WifiReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
-        super(fingerprints);
+        super(readings);
     }
 
     /**
@@ -70,16 +70,16 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, listener);
+        super(readings, listener);
     }
 
     /**
@@ -94,17 +94,17 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             Point3D initialPosition)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition);
+        super(readings, initialPosition);
     }
 
     /**
@@ -121,19 +121,19 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition, listener);
+        super(readings, initialPosition, listener);
     }
 
     /**
@@ -150,18 +150,18 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        super(fingerprints, initialTransmittedPowerdBm);
+        super(readings, initialTransmittedPowerdBm);
     }
 
     /**
@@ -180,8 +180,8 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
@@ -189,18 +189,18 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, initialTransmittedPowerdBm, listener);
+        super(readings, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -209,10 +209,10 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition, initialTransmittedPowerdBm);
+        super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
@@ -246,8 +246,8 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -257,22 +257,22 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiFingerprintLocated<Point3D>> fingerprints,
+            List<? extends WifiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition, initialTransmittedPowerdBm,
+        super(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
     }
 
     /**
-     * Gets minimum required number of fingerprint readings to estimate power
+     * Gets minimum required number of readings to estimate power
      * and position.
      * This is always 4 readings.
      * @return minimum required number of readings.
      */
     @Override
-    public int getMinFingerprintReadings() {
+    public int getMinReadings() {
         return Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;
     }
 

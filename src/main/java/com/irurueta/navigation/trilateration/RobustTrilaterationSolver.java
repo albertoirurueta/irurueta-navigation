@@ -46,12 +46,12 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
     public static final boolean DEFAULT_REFINE_RESULT = true;
 
     /**
-     * Indicates that covariance is not kept by default after refining result.
+     * Indicates that covariance is kept by default after refining result.
      */
-    public static final boolean DEFAULT_KEEP_COVARIANCE = false;
+    public static final boolean DEFAULT_KEEP_COVARIANCE = true;
 
     /**
-     * Default amounf of progress variation before notifying a change in estimation progress.
+     * Default amount of progress variation before notifying a change in estimation progress.
      * By default this is set to 5%.
      */
     public static final float DEFAULT_PROGRESS_DELTA = 0.05f;
@@ -550,7 +550,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * Solves the trilateration problem.
      * @return estimated position.
      * @throws LockedException if instance is busy solving the trilateration problem.
-     * @throws NotReadyException is solver is not ready.
+     * @throws NotReadyException if solver is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
      * (i.e. numerical instability, no solution available, etc).
      */

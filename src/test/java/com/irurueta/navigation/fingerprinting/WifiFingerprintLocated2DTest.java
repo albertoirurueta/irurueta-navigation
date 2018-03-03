@@ -93,6 +93,11 @@ public class WifiFingerprintLocated2DTest {
             f = new WifiFingerprintLocated2D(readings, null, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
+        try {
+            f = new WifiFingerprintLocated2D(readings, position,
+                    new Matrix(1,1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
         assertNull(f);
     }
 }

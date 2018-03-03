@@ -1278,14 +1278,18 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
                 if (mKeepCovariance) {
                     //keep covariance
                     mCovariance = mNonLinearSolver.getCovariance();
+                } else {
+                    mCovariance = null;
                 }
 
                 return mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
             } catch (Exception e) {
                 //refinement failed, so we return input value
+                mCovariance = null;
                 return mEstimatedPosition = position;
             }
         } else {
+            mCovariance = null;
             return mEstimatedPosition = position;
         }
     }

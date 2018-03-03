@@ -87,4 +87,19 @@ public class WifiReadingTest {
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
     }
+
+    @Test
+    public void testHasSameAccessPoint() {
+        WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
+        WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
+
+        WifiReading reading1 = new WifiReading(ap1, -50.0);
+        WifiReading reading2 = new WifiReading(ap1, -50.0);
+        WifiReading reading3 = new WifiReading(ap2, -50.0);
+
+        //check
+        assertTrue(reading1.hasSameAccessPoint(reading1));
+        assertTrue(reading1.hasSameAccessPoint(reading2));
+        assertFalse(reading1.hasSameAccessPoint(reading3));
+    }
 }

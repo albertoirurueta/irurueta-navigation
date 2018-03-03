@@ -92,10 +92,12 @@ public abstract class WifiAccessPointLocated<P extends Point>
             Matrix positionCovariance) throws IllegalArgumentException {
         this(bssid, frequency, position);
 
-        if(positionCovariance != null &&
-                (positionCovariance.getRows() != position.getDimensions() ||
-                positionCovariance.getColumns() != position.getDimensions())) {
-            throw new IllegalArgumentException();
+        if (positionCovariance != null) {
+            int dims = position.getDimensions();
+            if (positionCovariance.getRows() != dims ||
+                    positionCovariance.getColumns() != dims) {
+                throw new IllegalArgumentException();
+            }
         }
         mPositionCovariance = positionCovariance;
     }
@@ -115,10 +117,12 @@ public abstract class WifiAccessPointLocated<P extends Point>
             throws IllegalArgumentException {
         this(bssid, frequency, ssid, position);
 
-        if(positionCovariance != null &&
-                (positionCovariance.getRows() != position.getDimensions() ||
-                        positionCovariance.getColumns() != position.getDimensions())) {
-            throw new IllegalArgumentException();
+        if (positionCovariance != null) {
+            int dims = position.getDimensions();
+            if (positionCovariance.getRows() != dims ||
+                    positionCovariance.getColumns() != dims) {
+                throw new IllegalArgumentException();
+            }
         }
         mPositionCovariance = positionCovariance;
     }

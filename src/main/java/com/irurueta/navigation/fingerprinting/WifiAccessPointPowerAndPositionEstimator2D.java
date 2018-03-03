@@ -48,14 +48,14 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints)
+            List<? extends WifiReadingLocated<Point2D>> readings)
             throws IllegalArgumentException {
-        super(fingerprints);
+        super(readings);
     }
 
     /**
@@ -70,16 +70,16 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param listener listener in charge of attending events raised by this instance.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             WifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, listener);
+        super(readings, listener);
     }
 
     /**
@@ -94,17 +94,17 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition);
+        super(readings, initialPosition);
     }
 
     /**
@@ -121,19 +121,19 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             Point2D initialPosition,
             WifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition, listener);
+        super(readings, initialPosition, listener);
     }
 
     /**
@@ -150,18 +150,18 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        super(fingerprints, initialTransmittedPowerdBm);
+        super(readings, initialTransmittedPowerdBm);
     }
 
     /**
@@ -180,39 +180,39 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, initialTransmittedPowerdBm, listener);
+        super(readings, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition, initialTransmittedPowerdBm);
+        super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
@@ -246,33 +246,33 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiFingerprintLocated<Point2D>> fingerprints,
+            List<? extends WifiReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
-        super(fingerprints, initialPosition, initialTransmittedPowerdBm,
+        super(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
     }
 
     /**
-     * Gets minimum required number of fingerprint readings to estimate power
+     * Gets minimum required number of readings to estimate power
      * and position.
      * This is always 3 readings.
      * @return minimum required number of readings.
      */
     @Override
-    public int getMinFingerprintReadings() {
+    public int getMinReadings() {
         return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;
     }
 

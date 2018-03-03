@@ -63,11 +63,20 @@ public abstract class WifiFingerprintLocated<P extends Point>
      * @param position position where readings were made.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
-     * @throws IllegalArgumentException if either readings or position are null.
+     * @throws IllegalArgumentException if either readings or position are null, or
+     * covariance has invalid size.
      */
     public WifiFingerprintLocated(List<WifiReading> readings, P position,
             Matrix positionCovariance) throws IllegalArgumentException {
         this(readings, position);
+
+        if (positionCovariance != null) {
+            int dims = position.getDimensions();
+            if (positionCovariance.getRows() != dims ||
+                    positionCovariance.getColumns() != dims) {
+                throw new IllegalArgumentException();
+            }
+        }
         mPositionCovariance = positionCovariance;
     }
 

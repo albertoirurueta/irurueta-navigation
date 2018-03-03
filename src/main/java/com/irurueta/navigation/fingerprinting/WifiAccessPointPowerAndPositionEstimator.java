@@ -52,12 +52,12 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Speed of light expressed in meters per second (m/s).
      */
-    private static final double SPEED_OF_LIGHT = 299792458.0;
+    public static final double SPEED_OF_LIGHT = 299792458.0;
 
     /**
      * Default standard deviations assumed for RSSI readings being fitted.
      */
-    private static final double DEFAULT_POWER_STANDARD_DEVIATION = 1.0;
+    public static final double DEFAULT_POWER_STANDARD_DEVIATION = 1.0;
 
     /**
      * Estimated position.
@@ -93,10 +93,9 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     private P mInitialPosition;
 
     /**
-     * WiFi signal fingerprints containing readings belonging to the same access
-     * point.
+     * WiFi signal readings belonging to the same access point to be estimated.
      */
-    private List<? extends WifiFingerprintLocated<P>> mFingerprints;
+    private List<? extends WifiReadingLocated<P>> mReadings;
 
     /**
      * Indicates whether estimator is locked during estimation.
@@ -122,14 +121,14 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints)
+            List<? extends WifiReadingLocated<P>> readings)
             throws IllegalArgumentException {
-        internalSetFingerprints(fingerprints);
+        internalSetReadings(readings);
     }
 
     /**
@@ -144,16 +143,16 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
-        this(fingerprints);
+        this(readings);
         mListener = listener;
     }
 
@@ -169,17 +168,17 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             P initialPosition)
             throws IllegalArgumentException {
-        internalSetFingerprints(fingerprints);
+        internalSetReadings(readings);
         mInitialPosition = initialPosition;
     }
 
@@ -198,19 +197,19 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             P initialPosition,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
-        this(fingerprints, initialPosition);
+        this(readings, initialPosition);
         mListener = listener;
     }
 
@@ -228,18 +227,18 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        internalSetFingerprints(fingerprints);
+        internalSetReadings(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
@@ -260,8 +259,8 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
@@ -269,19 +268,19 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
-        this(fingerprints, initialTransmittedPowerdBm);
+        this(readings, initialTransmittedPowerdBm);
         mListener = listener;
     }
 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -290,10 +289,10 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        internalSetFingerprints(fingerprints);
+        internalSetReadings(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -332,8 +331,8 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -343,11 +342,11 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiFingerprintLocated<P>> fingerprints,
+            List<? extends WifiReadingLocated<P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
-        this(fingerprints, initialPosition, initialTransmittedPowerdBm);
+        this(readings, initialPosition, initialTransmittedPowerdBm);
         mListener = listener;
     }
 
@@ -448,75 +447,38 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     }
 
     /**
-     * Indicates whether fingerprints are valid or not.
-     * Readings are considered valid when there are enough readings and they belong
-     * to the same access point.
-     * @param fingerprints fingerprints to be validates.
-     * @return true if fingerprints are valid, false otherwise.
+     * Indicates whether readings are valid or not.
+     * Readings are considered valid when there are enough readings.
+     * @param readings readings to be validated.
+     * @return true if readings are valid, false otherwise.
      */
-    public boolean areValidFingerprints(
-            List<? extends WifiFingerprintLocated<P>> fingerprints) {
-        if (fingerprints == null || fingerprints.isEmpty() ||
-                fingerprints.size() < getMinFingerprintReadings()) {
-            return false;
-        }
+    public boolean areValidReadings(
+            List<? extends WifiReadingLocated<P>> readings) {
 
-        if (fingerprints.get(0).getReadings() == null ||
-                fingerprints.get(0).getReadings().size() != 1) {
-            return false;
-        }
-
-        WifiReading firstReading = fingerprints.get(0).getReadings().get(0);
-        WifiAccessPoint firstAccessPoint = firstReading.getAccessPoint();
-        if (firstAccessPoint == null) {
-            return false;
-        }
-
-        int numReadings = 1;
-        int size = fingerprints.size();
-        for (int i = 1; i < size; i++) {
-            WifiFingerprintLocated<P> otherFingerprint = fingerprints.get(i);
-            List<WifiReading> otherReadings = otherFingerprint.getReadings();
-            if (otherReadings.size() != 1) {
-                return false;
-            }
-            WifiReading otherReading = otherReadings.get(0);
-            WifiAccessPoint otherAccessPoint = otherReading.getAccessPoint();
-            if(!firstAccessPoint.equals(otherAccessPoint)) {
-                return false;
-            }
-
-            numReadings++;
-        }
-
-        return numReadings >= getMinFingerprintReadings();
+        return readings != null && readings.size() >= getMinReadings();
     }
 
     /**
-     * Gets WiFi signal fingerprints containing readings belonging to the same
-     * access point.
-     * @return WiFi signal fingerprints containing readings belonging to the
-     * same access point.
+     * Gets WiFi signal readings belonging to the same access point to be estimated.
+     * @return WiFi signal readings belonging to the same access point.
      */
-    public List<? extends WifiFingerprintLocated<P>> getFingerprins() {
-        return mFingerprints;
+    public List<? extends WifiReadingLocated<P>> getReadings() {
+        return mReadings;
     }
 
     /**
-     * Sets WiFi signal fingerprints containing readings belonging to the same
-     * access point.
-     * @param fingerprints WiFi signal fingerprints containing readings belonging
-     *                     to the same access point.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public void setFingerprints(List<? extends WifiFingerprintLocated<P>> fingerprints)
+    public void setReadings(List<? extends WifiReadingLocated<P>> readings)
             throws LockedException, IllegalArgumentException {
         if (isLocked()) {
             throw new LockedException();
         }
 
-        internalSetFingerprints(fingerprints);
+        internalSetReadings(readings);
     }
 
     /**
@@ -548,7 +510,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @return true if this instance is ready, false otherwise.
      */
     public boolean isReady() {
-        return areValidFingerprints(mFingerprints);
+        return areValidReadings(mReadings);
     }
 
     /**
@@ -680,12 +642,12 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     }
 
     /**
-     * Gets minimum required number of fingerprint readings to estimate
+     * Gets minimum required number of readings to estimate
      * power and position.
      * This is 3 readings for 2D, and 4 readings for 3D.
      * @return minimum required number of readings.
      */
-    public abstract int getMinFingerprintReadings();
+    public abstract int getMinReadings();
 
     /**
      * Gets number of dimensions of position points.
@@ -700,20 +662,19 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     public abstract P getEstimatedPosition();
 
     /**
-     * Internally sets WiFi signal fingerprints containing readings belonging to
-     * the same access point.
-     * @param fingerprints WiFi signal readings belonging to the same access point.
+     * Internally sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @throws IllegalArgumentException if readings are null, not enough readings
      * are available, or readings do not belong to the same access point.
      */
-    protected void internalSetFingerprints(
-            List<? extends WifiFingerprintLocated<P>> fingerprints)
+    protected void internalSetReadings(
+            List<? extends WifiReadingLocated<P>> readings)
             throws IllegalArgumentException {
-        if (!areValidFingerprints(fingerprints)) {
+        if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
         }
 
-        mFingerprints = fingerprints;
+        mReadings = readings;
     }
 
     /**
@@ -724,9 +685,8 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
         //because all fingerprints must belong to the same access point, we
         //obtain the frequency of the first access point on the first fingerprint
         //reading
-        WifiFingerprintLocated<P> fingerprint = mFingerprints.get(0);
-        double frequency = fingerprint.getReadings().get(0).
-                getAccessPoint().getFrequency();
+        WifiReadingLocated<P> reading = mReadings.get(0);
+        double frequency = reading.getAccessPoint().getFrequency();
 
         //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
@@ -756,7 +716,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                 int dims = WifiAccessPointPowerAndPositionEstimator.this.
                         getNumberOfDimensions();
                 double[] initial = new double[dims + 1];
-                int num = mFingerprints.size();
+                int num = mReadings.size();
 
                 if (mInitialPosition == null) {
                     //initialize
@@ -765,8 +725,8 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                     }
 
                     //compute average centroid of fingerprint positions
-                    for (WifiFingerprintLocated<P> fingerprint : mFingerprints) {
-                        P position = fingerprint.getPosition();
+                    for (WifiReadingLocated<P> reading : mReadings) {
+                        P position = reading.getPosition();
                         for (int i = 0; i < dims; i++) {
                             initial[i] += position.getInhomogeneousCoordinate(i) /
                                     (double) num;
@@ -824,22 +784,21 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
 
         int dims = getNumberOfDimensions();
         int numParams = dims + 1;
-        int numFingerprints = mFingerprints.size();
+        int numFingerprints = mReadings.size();
         double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
         try {
             Matrix x = new Matrix(numFingerprints, numParams);
             double[] y = new double[numFingerprints];
             double[] standardDeviations = new double[numFingerprints];
             for (int i = 0; i < numFingerprints; i++) {
-                fingerprint = mFingerprints.get(i);
-                P position = fingerprint.getPosition();
+                reading = mReadings.get(i);
+                P position = reading.getPosition();
 
                 for (int j = 0; j < dims; j++) {
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
                 }
                 x.setElementAt(i, dims, initialTransmittedPowerdBm);
 
-                WifiReading reading = fingerprint.getReadings().get(0);
                 standardDeviations[i] = reading.getRssiStandardDeviation() != null ?
                         reading.getRssiStandardDeviation() :
                         DEFAULT_POWER_STANDARD_DEVIATION;
@@ -859,10 +818,9 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     private double computeInitialTransmittedPowerdBm() {
         if (mInitialTransmittedPowerdBm == null) {
             //compute average transmitted power (in mW)
-            int num = mFingerprints.size();
+            int num = mReadings.size();
             double result = 0.0;
-            for (WifiFingerprintLocated<P> fingerprint : mFingerprints) {
-                WifiReading reading = fingerprint.getReadings().get(0);
+            for (WifiReadingLocated<P> reading : mReadings) {
                 double rssi = reading.getRssi();
                 result += rssi / (double)num;
             }

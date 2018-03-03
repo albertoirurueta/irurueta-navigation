@@ -76,7 +76,7 @@ public class WifiFingerprintLocated3DTest {
 
 
         //test with readings, position and covariance
-        Matrix cov = new Matrix(2, 2);
+        Matrix cov = new Matrix(3, 3);
         f = new WifiFingerprintLocated3D(readings, position, cov);
 
         //check
@@ -91,6 +91,11 @@ public class WifiFingerprintLocated3DTest {
         } catch (IllegalArgumentException ignore) { }
         try {
             f = new WifiFingerprintLocated3D(readings, null, cov);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            f = new WifiFingerprintLocated3D(readings, position,
+                    new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(f);

@@ -1435,7 +1435,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
@@ -1519,7 +1519,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
@@ -1603,7 +1603,7 @@ public class RANSACRobustTrilateration2DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             assertNotNull(solver.getInliersData());
             assertNotNull(solver.getInliersData().getInliers());
             assertNotNull(solver.getInliersData().getResiduals());
