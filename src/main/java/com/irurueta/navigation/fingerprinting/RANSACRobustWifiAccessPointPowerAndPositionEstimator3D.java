@@ -364,7 +364,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
-    public boolean isComputeAndKeepResiduals() {
+    public boolean isComputeAndKeepResidualsEnabled() {
         return mComputeAndKeepResiduals;
     }
 
