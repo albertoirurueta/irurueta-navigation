@@ -151,6 +151,15 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * Constructor.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(Point3D initialPosition) {
+        super(initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(Point3D initialPosition,
@@ -386,6 +395,20 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
             Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            double[] qualityScores, Point3D initialPosition) {
+        super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
 

@@ -43,6 +43,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
  */
+@SuppressWarnings("WeakerAccess")
 public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
         RobustWifiAccessPointPowerAndPositionEstimator2D {
 
@@ -141,6 +142,15 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition) {
+        super(initialPosition);
     }
 
     /**
@@ -355,7 +365,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
-    public boolean isComputeAndKeepResiduals() {
+    public boolean isComputeAndKeepResidualsEnabled() {
         return mComputeAndKeepResiduals;
     }
 

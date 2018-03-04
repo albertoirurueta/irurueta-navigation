@@ -37,7 +37,7 @@ import static com.irurueta.navigation.fingerprinting.Utils.*;
 public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         WifiAccessPointPowerAndPositionEstimatorListener<Point2D> {
 
-    private static Logger LOGGER = Logger.getLogger(
+    private static final Logger LOGGER = Logger.getLogger(
             WifiAccessPointPowerAndPositionEstimator2DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)

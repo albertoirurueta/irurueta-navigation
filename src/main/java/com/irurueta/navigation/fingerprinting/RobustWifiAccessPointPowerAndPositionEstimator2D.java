@@ -44,6 +44,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
         RobustWifiAccessPointPowerAndPositionEstimator<Point2D> {
 
@@ -83,7 +84,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
-        mListener = listener;
+        super(listener);
     }
 
     /**
@@ -113,6 +114,16 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator2D(
+            Point2D initialPosition) {
+        super(initialPosition);
     }
 
     /**
@@ -410,6 +421,35 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             default:
                 return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
                         readings, initialPosition);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            Point2D initialPosition, RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
         }
     }
 
@@ -930,6 +970,39 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      *                      the quality of the sample.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
+     * @param method robust estimator method.
+     * @return
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores, Point2D initialPosition,
+            RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, initialPosition);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, initialPosition);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      * @param method robust estimator method.
      * @return a new robust 2D wifi access point power and position estimator.
@@ -1376,6 +1449,18 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * default method.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            Point2D initialPosition) {
+        return create(initialPosition, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      * @return a new robust 2D wifi access point power and position estimator.
      */
@@ -1625,6 +1710,21 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             Point2D initialPosition) throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
                 DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores, Point2D initialPosition) {
+        return create(qualityScores, initialPosition, DEFAULT_ROBUST_METHOD);
     }
 
     /**

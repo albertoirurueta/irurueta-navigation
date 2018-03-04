@@ -46,6 +46,7 @@ import java.util.List;
  * order to find the best solution.
  * @param <P> a {@link Point} type.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends Point> {
 
     /**
@@ -242,6 +243,15 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
             P initialPosition)
             throws IllegalArgumentException {
         internalSetReadings(readings);
+        mInitialPosition = initialPosition;
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
@@ -887,9 +897,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
         //get distance from estimated access point position and fingerprint position
         P fingerprintPosition = reading.getPosition();
         P accessPointPosition = currentEstimation.getEstimatedPosition();
+
+        //noinspection unchecked
         double sqrDistance = accessPointPosition.sqrDistanceTo(fingerprintPosition);
 
-        int dims = getNumberOfDimensions();
         double transmittedPowerdBm = currentEstimation.
                 getEstimatedTransmittedPowerdBm();
 

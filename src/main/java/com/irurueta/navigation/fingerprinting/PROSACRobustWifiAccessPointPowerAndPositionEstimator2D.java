@@ -151,10 +151,19 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * Constructor.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition) {
+        super(initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
-                                                                  RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -260,7 +269,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
      *                                   (expressed in dBm's).
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
-                                                                  Double initialTransmittedPowerdBm) {
+            Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -274,8 +283,8 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param listener in charge of attending events raised by this instance.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
-                                                                  Double initialTransmittedPowerdBm,
-                                                                  RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            Double initialTransmittedPowerdBm,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -386,6 +395,20 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+            double[] qualityScores, Point2D initialPosition) {
+        super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
 

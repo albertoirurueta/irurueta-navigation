@@ -155,6 +155,15 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * Constructor.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
+     */
+    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition) {
+        super(initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
@@ -390,6 +399,20 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+            double[] qualityScores, Point2D initialPosition) {
+        super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
 

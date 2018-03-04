@@ -83,7 +83,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener) {
-        mListener = listener;
+        super(listener);
     }
 
     /**
@@ -113,6 +113,16 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
             Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator3D(
+            Point3D initialPosition) {
+        super(initialPosition);
     }
 
     /**
@@ -410,6 +420,35 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
             default:
                 return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
                         readings, initialPosition);
+        }
+    }
+
+    /**
+     * Creates a robust 3D wifi access point power and position estimator.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param method robust estimator method.
+     * @return a new robust 3D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
+            Point3D initialPosition, RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
         }
     }
 
@@ -923,6 +962,29 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
         }
     }
 
+    public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
+            double[] qualityScores, Point3D initialPosition,
+            RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        initialPosition);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        qualityScores, initialPosition);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
+                        qualityScores, initialPosition);
+        }
+    }
+
     /**
      * Creates a robust 3D wifi access point power and position estimator.
      * @param qualityScores quality scores corresponding to each provided
@@ -1368,7 +1430,19 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             List<? extends WifiReadingLocated<Point3D>> readings,
             Point3D initialPosition) throws IllegalArgumentException {
-        return create(readings, initialPosition);
+        return create(readings, initialPosition, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 3D wifi access point power and position estimator using
+     * default method.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @return a new robust 3D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
+            Point3D initialPosition) {
+        return create(initialPosition, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1625,6 +1699,21 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
             Point3D initialPosition) throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
                 DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 3D wifi access point power and position estimator using
+     * default method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @return a new robust 3D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
+            double[] qualityScores, Point3D initialPosition) {
+        return create(qualityScores, initialPosition, DEFAULT_ROBUST_METHOD);
     }
 
     /**

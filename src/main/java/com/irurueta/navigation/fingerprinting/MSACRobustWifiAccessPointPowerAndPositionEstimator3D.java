@@ -125,6 +125,15 @@ public class MSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * Constructor.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
+     */
+    public MSACRobustWifiAccessPointPowerAndPositionEstimator3D(Point3D initialPosition) {
+        super(initialPosition);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
      */
     public MSACRobustWifiAccessPointPowerAndPositionEstimator3D(Point3D initialPosition,
