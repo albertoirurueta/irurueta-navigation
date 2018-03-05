@@ -43,6 +43,7 @@ import java.util.List;
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
  */
+@SuppressWarnings("WeakerAccess")
 public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
         RobustWifiAccessPointPowerAndPositionEstimator2D {
 

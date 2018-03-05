@@ -2042,7 +2042,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
                 mEstimatedPosition = mInnerEstimator.getEstimatedPosition();
                 mEstimatedTransmittedPowerdBm =
                         mInnerEstimator.getEstimatedTransmittedPowerdBm();
-            } catch (NavigationException e) {
+            } catch (Exception e) {
                 //refinement failed, so we return input value
                 mCovariance = null;
                 mEstimatedPosition = initialPosition;
