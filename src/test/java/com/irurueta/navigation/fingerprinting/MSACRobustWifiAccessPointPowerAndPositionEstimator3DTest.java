@@ -1542,6 +1542,7 @@ public class MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implements
                     new MSACRobustWifiAccessPointPowerAndPositionEstimator3D(
                             readings, this);
             estimator.setResultRefined(false);
+            estimator.setThreshold(LARGE_POSITION_ERROR);
 
             reset();
             assertTrue(estimator.isReady());

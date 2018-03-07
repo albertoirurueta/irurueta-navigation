@@ -971,7 +971,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param method robust estimator method.
-     * @return
+     * @return a new robust 2D wifi access point power and position estimator.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores, Point2D initialPosition,
@@ -1441,7 +1441,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             List<? extends WifiReadingLocated<Point2D>> readings,
             Point2D initialPosition) throws IllegalArgumentException {
-        return create(readings, initialPosition);
+        return create(readings, initialPosition, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1969,12 +1969,11 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
                                             List<Solution<Point2D>> solutions) {
 
         try {
-            int length = samplesIndices.length;
             int index;
 
             mInnerReadings.clear();
-            for (int i = 0; i < length; i++) {
-                index = samplesIndices[i];
+            for (int samplesIndice : samplesIndices) {
+                index = samplesIndice;
                 mInnerReadings.add(mReadings.get(index));
             }
 
@@ -2004,7 +2003,6 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * result if refinement is not requested or has failed.
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined result.
-     * @return solution after refinement (if requested) or provided non-refined
      * solution if not requested or refinement failed.
      */
     protected void attemptRefine(Solution<Point2D> result) {

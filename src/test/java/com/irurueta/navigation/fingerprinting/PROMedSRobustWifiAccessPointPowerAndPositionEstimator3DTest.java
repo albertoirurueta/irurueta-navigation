@@ -3448,11 +3448,11 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest impleme
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            assertNotNull(estimator.getInliersData());
-
             double positionStd = 0.0;
             double powerStd = 0.0;
             if (estimator.getCovariance() != null) {
+                assertNotNull(estimator.getInliersData());
+
                 numCov++;
                 assertNotNull(estimator.getCovariance());
                 assertNotNull(estimator.getEstimatedPositionCovariance());

@@ -1959,12 +1959,11 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
                                             List<Solution<Point3D>> solutions) {
 
         try {
-            int length = samplesIndices.length;
             int index;
 
             mInnerReadings.clear();
-            for (int i = 0; i < length; i++) {
-                index = samplesIndices[i];
+            for (int samplesIndice : samplesIndices) {
+                index = samplesIndice;
                 mInnerReadings.add(mReadings.get(index));
             }
 
@@ -1994,7 +1993,6 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * result if refinement is not requested or has failed.
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined result.
-     * @return solution after refinement (if requested) or provided non-refined
      * solution if not requested or refinement failed.
      */
     protected void attemptRefine(Solution<Point3D> result) {
