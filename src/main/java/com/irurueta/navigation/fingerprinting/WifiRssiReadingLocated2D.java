@@ -23,8 +23,8 @@ import com.irurueta.geometry.Point2D;
  * access point.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiReadingLocated2D extends
-        WifiReadingLocated<Point2D> {
+public class WifiRssiReadingLocated2D extends
+        WifiRssiReadingLocated<Point2D> {
 
     /**
      * Constructor.
@@ -34,7 +34,7 @@ public class WifiReadingLocated2D extends
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
             Point2D position) throws IllegalArgumentException {
         super(accessPoint, rssi, position);
     }
@@ -48,7 +48,7 @@ public class WifiReadingLocated2D extends
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
             Point2D position, Double rssiStandardDeviation)
             throws IllegalArgumentException {
         super(accessPoint, rssi, position, rssiStandardDeviation);
@@ -64,7 +64,7 @@ public class WifiReadingLocated2D extends
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
             Point2D position, Matrix positionCovariance)
             throws IllegalArgumentException {
         super(accessPoint, rssi, position, positionCovariance);
@@ -81,7 +81,7 @@ public class WifiReadingLocated2D extends
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated2D(WifiAccessPoint accessPoint, double rssi,
             Point2D position, Double rssiStandardDeviation,
             Matrix positionCovariance) throws IllegalArgumentException {
         super(accessPoint, rssi, position, rssiStandardDeviation,
@@ -91,7 +91,7 @@ public class WifiReadingLocated2D extends
     /**
      * Empty constructor.
      */
-    protected WifiReadingLocated2D() {
+    protected WifiRssiReadingLocated2D() {
         super();
     }
 }

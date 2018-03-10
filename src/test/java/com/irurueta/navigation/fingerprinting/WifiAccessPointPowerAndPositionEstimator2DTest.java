@@ -90,6 +90,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
@@ -109,13 +110,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //test constructor with readings
-        List<WifiReadingLocated2D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 3; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiReadingLocated2D(accessPoint, 0.0, position));
+            readings.add(new WifiRssiReadingLocated2D(accessPoint, 0.0, position));
         }
 
         estimator = new WifiAccessPointPowerAndPositionEstimator2D(readings);
@@ -124,6 +125,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
@@ -146,12 +148,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiReadingLocated2D>)null);
+                    (List<WifiRssiReadingLocated2D>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>());
+                    new ArrayList<WifiRssiReadingLocated2D>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -164,6 +166,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
@@ -191,6 +194,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
@@ -213,12 +217,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiReadingLocated2D>)null, this);
+                    (List<WifiRssiReadingLocated2D>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), this);
+                    new ArrayList<WifiRssiReadingLocated2D>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -234,6 +238,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -261,6 +266,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -287,7 +293,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), initialPosition);
+                    new ArrayList<WifiRssiReadingLocated2D>(), initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -301,6 +307,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -328,6 +335,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -356,7 +364,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated2D>(), initialPosition,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -370,6 +378,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -398,6 +407,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -421,12 +431,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiReadingLocated2D>)null, MAX_RSSI);
+                    (List<WifiRssiReadingLocated2D>)null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), MAX_RSSI);
+                    new ArrayList<WifiRssiReadingLocated2D>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -440,6 +450,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -468,6 +479,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -491,13 +503,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         estimator = null;
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    (List<WifiReadingLocated2D>)null, MAX_RSSI,
+                    (List<WifiRssiReadingLocated2D>)null, MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), MAX_RSSI,
+                    new ArrayList<WifiRssiReadingLocated2D>(), MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -513,6 +525,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -541,7 +554,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated2D>(), initialPosition,
                     MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -556,6 +569,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -585,6 +599,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -614,6 +629,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getMinReadings(), 3);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -642,7 +658,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new WifiAccessPointPowerAndPositionEstimator2D(
-                    new ArrayList<WifiReadingLocated2D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated2D>(), initialPosition,
                     MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -720,13 +736,13 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
     public void testAreValidReadings() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<WifiReadingLocated2D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 3; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiReadingLocated2D(accessPoint, 0.0, position));
+            readings.add(new WifiRssiReadingLocated2D(accessPoint, 0.0, position));
         }
 
         WifiAccessPointPowerAndPositionEstimator2D estimator =
@@ -736,20 +752,20 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
         assertFalse(estimator.areValidReadings(null));
         assertFalse(estimator.areValidReadings(
-                new ArrayList<WifiReadingLocated<Point2D>>()));
+                new ArrayList<WifiRssiReadingLocated<Point2D>>()));
     }
 
     @Test
     public void testGetSetReadings() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<WifiReadingLocated2D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 3; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiReadingLocated2D(accessPoint, 0.0,
+            readings.add(new WifiRssiReadingLocated2D(accessPoint, 0.0,
                     position));
         }
 
@@ -816,7 +832,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -829,7 +845,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency()));
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i]));
             }
 
@@ -857,6 +873,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -1017,7 +1048,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1030,7 +1061,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency()));
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i]));
             }
 
@@ -1064,6 +1095,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -1224,7 +1270,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1237,7 +1283,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency()));
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i]));
             }
 
@@ -1270,6 +1316,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -1430,7 +1491,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1443,7 +1504,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency()));
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i]));
             }
 
@@ -1480,6 +1541,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -1642,7 +1718,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1656,7 +1732,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i], ERROR_STD));
             }
 
@@ -1684,6 +1760,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -1844,7 +1935,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1858,7 +1949,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i], ERROR_STD));
             }
 
@@ -1890,6 +1981,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -2050,7 +2156,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2064,7 +2170,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i], ERROR_STD));
             }
 
@@ -2095,6 +2201,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -2255,7 +2376,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point2D[] readingsPositions = new Point2D[numReadings];
-            List<WifiReadingLocated2D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2269,7 +2390,7 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
                         transmittedPower, distance,
                         accessPoint.getFrequency())) + error;
 
-                readings.add(new WifiReadingLocated2D(accessPoint, rssi,
+                readings.add(new WifiRssiReadingLocated2D(accessPoint, rssi,
                         readingsPositions[i], ERROR_STD));
             }
 
@@ -2303,6 +2424,21 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
 
             assertNotNull(estimator.getEstimatedCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    estimator.getEstimatedAccessPoint();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -2444,12 +2580,12 @@ public class WifiAccessPointPowerAndPositionEstimator2DTest implements
         int numReadings = randomizer.nextInt(
                 MIN_READINGS, MAX_READINGS);
         Point2D[] readingsPositions = new Point2D[numReadings];
-        List<WifiReadingLocated2D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated2D> readings = new ArrayList<>();
         for (int i = 0; i < numReadings; i++) {
             readingsPositions[i] = new InhomogeneousPoint2D(
                     0.0, 0.0);
 
-            readings.add(new WifiReadingLocated2D(accessPoint, 0.0,
+            readings.add(new WifiRssiReadingLocated2D(accessPoint, 0.0,
                     readingsPositions[i]));
         }
 

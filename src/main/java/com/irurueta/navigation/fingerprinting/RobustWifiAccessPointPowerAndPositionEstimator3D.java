@@ -57,7 +57,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
     /**
      * Subset of readings used by inner estimator.
      */
-    private List<WifiReadingLocated<Point3D>> mInnerReadings = new ArrayList<>();
+    private List<WifiRssiReadingLocated<Point3D>> mInnerReadings = new ArrayList<>();
 
     /**
      * Constructor.
@@ -73,7 +73,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings)
+            List<? extends WifiRssiReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -95,7 +95,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -110,7 +110,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -147,7 +147,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -175,7 +175,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -205,7 +205,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -224,7 +224,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -271,7 +271,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -308,7 +308,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
             case RANSAC:
@@ -368,7 +368,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -401,7 +401,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -496,7 +496,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -561,7 +561,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -629,7 +629,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -666,7 +666,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -771,7 +771,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -835,7 +835,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
             case RANSAC:
@@ -903,7 +903,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -940,7 +940,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -1036,7 +1036,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -1109,7 +1109,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -1184,7 +1184,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -1225,7 +1225,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -1345,7 +1345,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -1388,7 +1388,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings)
+            List<? extends WifiRssiReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         return create(readings, DEFAULT_ROBUST_METHOD);
     }
@@ -1413,7 +1413,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         return create(readings, listener, DEFAULT_ROBUST_METHOD);
@@ -1429,7 +1429,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition) throws IllegalArgumentException {
         return create(readings, initialPosition, DEFAULT_ROBUST_METHOD);
     }
@@ -1471,7 +1471,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -1502,7 +1502,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         return create(readings, initialTransmittedPowerdBm, DEFAULT_ROBUST_METHOD);
     }
@@ -1534,7 +1534,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -1555,7 +1555,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         return create(readings, initialPosition, initialTransmittedPowerdBm,
@@ -1610,7 +1610,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -1644,7 +1644,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings)
+            List<? extends WifiRssiReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         return create(qualityScores, readings, DEFAULT_ROBUST_METHOD);
     }
@@ -1677,7 +1677,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         return create(qualityScores, readings, listener, DEFAULT_ROBUST_METHOD);
@@ -1696,7 +1696,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition) throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
                 DEFAULT_ROBUST_METHOD);
@@ -1749,7 +1749,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -1789,7 +1789,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         return create(qualityScores, readings, initialTransmittedPowerdBm,
                 DEFAULT_ROBUST_METHOD);
@@ -1830,7 +1830,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -1855,7 +1855,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
@@ -1922,7 +1922,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator3D create(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {

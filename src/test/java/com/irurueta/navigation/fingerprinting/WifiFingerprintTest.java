@@ -60,7 +60,7 @@ public class WifiFingerprintTest {
 
 
         //test constructor with readings
-        List<WifiReading> readings = new ArrayList<>();
+        List<WifiRssiReading> readings = new ArrayList<>();
         f = new WifiFingerprint(readings);
 
         //check
@@ -83,7 +83,7 @@ public class WifiFingerprintTest {
         assertTrue(f.getReadings().isEmpty());
 
         //set new value
-        List<WifiReading> readings = new ArrayList<>();
+        List<WifiRssiReading> readings = new ArrayList<>();
         f.setReadings(readings);
 
         //check
@@ -107,11 +107,11 @@ public class WifiFingerprintTest {
 
         //test equal fingerprints
         int numReadings = randomizer.nextInt(MIN_READINGS, MAX_READINGS);
-        List<WifiReading> readings = new ArrayList<>();
+        List<WifiRssiReading> readings = new ArrayList<>();
         for (int i = 0; i < numReadings; i++) {
             WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
             int rssi = randomizer.nextInt(MIN_RSSI, MAX_RSSI);
-            WifiReading reading = new WifiReading(ap, rssi);
+            WifiRssiReading reading = new WifiRssiReading(ap, rssi);
             readings.add(reading);
         }
 
@@ -121,11 +121,11 @@ public class WifiFingerprintTest {
         assertEquals(f.distanceTo(f), 0.0, ABSOLUTE_ERROR);
 
         //test different fingerprint RSSI values
-        List<WifiReading> readings2 = new ArrayList<>();
+        List<WifiRssiReading> readings2 = new ArrayList<>();
         for (int i = 0; i < numReadings; i++) {
             WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
             double rssi = readings.get(i).getRssi() + 1.0;
-            WifiReading reading = new WifiReading(ap, rssi);
+            WifiRssiReading reading = new WifiRssiReading(ap, rssi);
             readings2.add(reading);
         }
 
@@ -135,7 +135,7 @@ public class WifiFingerprintTest {
         assertEquals(f.distanceTo(f2), Math.sqrt(numReadings), ABSOLUTE_ERROR);
 
         //test different fingerprint access points
-        List<WifiReading> readings3 = new ArrayList<>();
+        List<WifiRssiReading> readings3 = new ArrayList<>();
         for (int i = 0; i < numReadings + 1; i++) {
             WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
             double rssi;
@@ -144,7 +144,7 @@ public class WifiFingerprintTest {
             } else {
                 rssi = randomizer.nextInt(MIN_RSSI, MAX_RSSI);
             }
-            WifiReading reading = new WifiReading(ap, rssi);
+            WifiRssiReading reading = new WifiRssiReading(ap, rssi);
             readings3.add(reading);
         }
 

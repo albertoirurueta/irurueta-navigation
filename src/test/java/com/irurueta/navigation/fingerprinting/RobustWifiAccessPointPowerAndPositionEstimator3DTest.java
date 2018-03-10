@@ -71,11 +71,11 @@ public class RobustWifiAccessPointPowerAndPositionEstimator3DTest implements
 
 
         //create with readings and method
-        List<WifiReadingLocated3D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
             InhomogeneousPoint3D position = new InhomogeneousPoint3D();
-            readings.add(new WifiReadingLocated3D(accessPoint, 0.0, position));
+            readings.add(new WifiRssiReadingLocated3D(accessPoint, 0.0, position));
         }
 
         //RANSAC

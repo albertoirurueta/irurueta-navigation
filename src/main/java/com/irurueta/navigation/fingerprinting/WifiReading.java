@@ -18,11 +18,10 @@ package com.irurueta.navigation.fingerprinting;
 import java.io.Serializable;
 
 /**
- * Contains a signal strength reading associated to a given WiFi
- * access point.
+ * Contains a reading related to a given WiFi access point.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiReading implements Serializable {
+public abstract class WifiReading implements Serializable {
 
     /**
      * Access point associated to this reading.
@@ -30,47 +29,16 @@ public class WifiReading implements Serializable {
     private WifiAccessPoint mAccessPoint;
 
     /**
-     * Received signal strength indicator of this 802.11 network, in dBm.
-     */
-    private double mRssi;
-
-    /**
-     * Standard deviation of RSSI, if available.
-     */
-    private Double mRssiStandardDeviation;
-
-    /**
      * Constructor.
      * @param accessPoint access point associated to this reading.
-     * @param rssi received signal strength indicator in dBm.
      * @throws IllegalArgumentException if access point data is null.
      */
-    public WifiReading(WifiAccessPoint accessPoint, double rssi)
+    public WifiReading(WifiAccessPoint accessPoint)
             throws IllegalArgumentException {
         if (accessPoint == null) {
             throw new IllegalArgumentException();
         }
         mAccessPoint = accessPoint;
-        mRssi = rssi;
-    }
-
-    /**
-     * Constructor.
-     * @param accessPoint access point associated to this reading.
-     * @param rssi received signal strength indicator in dBm.
-     * @param rssiStandardDeviation standard deviation of RSSI, if available.
-     * @throws IllegalArgumentException if access point data is null or
-     * standard deviation is zero or negative.
-     */
-    public WifiReading(WifiAccessPoint accessPoint, double rssi,
-            Double rssiStandardDeviation) throws IllegalArgumentException {
-        this(accessPoint, rssi);
-
-        if (rssiStandardDeviation != null && rssiStandardDeviation <= 0.0) {
-            throw new IllegalArgumentException();
-        }
-
-        mRssiStandardDeviation = rssiStandardDeviation;
     }
 
     /**
@@ -84,22 +52,6 @@ public class WifiReading implements Serializable {
      */
     public WifiAccessPoint getAccessPoint() {
         return mAccessPoint;
-    }
-
-    /**
-     * Gets received signal strength indicator of this 802.11 network, in dBm.
-     * @return received signal strength indicator.
-     */
-    public double getRssi() {
-        return mRssi;
-    }
-
-    /**
-     * Gets standard deviation of RSSI, if available.
-     * @return standard deviation of RSSI, if available.
-     */
-    public Double getRssiStandardDeviation() {
-        return mRssiStandardDeviation;
     }
 
     /**

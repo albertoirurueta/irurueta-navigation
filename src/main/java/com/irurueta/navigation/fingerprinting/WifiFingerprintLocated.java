@@ -46,7 +46,7 @@ public abstract class WifiFingerprintLocated<P extends Point>
      * @throws IllegalArgumentException if either readings or position are
      * null.
      */
-    public WifiFingerprintLocated(List<WifiReading> readings, P position)
+    public WifiFingerprintLocated(List<WifiRssiReading> readings, P position)
             throws IllegalArgumentException {
         super(readings);
 
@@ -66,8 +66,8 @@ public abstract class WifiFingerprintLocated<P extends Point>
      * @throws IllegalArgumentException if either readings or position are null, or
      * covariance has invalid size.
      */
-    public WifiFingerprintLocated(List<WifiReading> readings, P position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+    public WifiFingerprintLocated(List<WifiRssiReading> readings, P position,
+                                  Matrix positionCovariance) throws IllegalArgumentException {
         this(readings, position);
 
         if (positionCovariance != null) {

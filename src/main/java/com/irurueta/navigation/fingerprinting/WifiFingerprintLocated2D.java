@@ -32,7 +32,7 @@ public class WifiFingerprintLocated2D extends WifiFingerprintLocated<Point2D> {
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated2D(List<WifiReading> readings, Point2D position)
+    public WifiFingerprintLocated2D(List<WifiRssiReading> readings, Point2D position)
             throws IllegalArgumentException {
         super(readings, position);
     }
@@ -45,8 +45,8 @@ public class WifiFingerprintLocated2D extends WifiFingerprintLocated<Point2D> {
      *                           current position (if available).
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated2D(List<WifiReading> readings, Point2D position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+    public WifiFingerprintLocated2D(List<WifiRssiReading> readings, Point2D position,
+                                    Matrix positionCovariance) throws IllegalArgumentException {
         super(readings, position, positionCovariance);
     }
 

@@ -105,7 +105,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings)
+            List<? extends WifiRssiReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -127,7 +127,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -142,7 +142,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -178,7 +178,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -206,7 +206,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -236,7 +236,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -255,7 +255,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -302,7 +302,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -335,7 +335,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings)
+            List<? extends WifiRssiReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         super(readings);
         internalSetQualityScores(qualityScores);
@@ -371,7 +371,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -392,7 +392,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -446,7 +446,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -487,7 +487,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -531,7 +531,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -556,7 +556,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -625,7 +625,7 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
      */
     public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
             double[] qualityScores,
-            List<? extends WifiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {

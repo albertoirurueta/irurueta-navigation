@@ -53,7 +53,7 @@ public class WifiFingerprintLocated2DTest {
 
 
         //test with readings and position
-        List<WifiReading> readings = new ArrayList<>();
+        List<WifiRssiReading> readings = new ArrayList<>();
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
         f = new WifiFingerprintLocated2D(readings, position);
 

@@ -28,7 +28,7 @@ public class WifiFingerprint implements Serializable {
     /**
      * Non-located WiFi readings.
      */
-    private List<WifiReading> mReadings = new ArrayList<>();
+    private List<WifiRssiReading> mReadings = new ArrayList<>();
 
     /**
      * Constructor.
@@ -40,7 +40,7 @@ public class WifiFingerprint implements Serializable {
      * @param readings non-located WiFi readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public WifiFingerprint(List<WifiReading> readings)
+    public WifiFingerprint(List<WifiRssiReading> readings)
             throws IllegalArgumentException {
         if (readings == null) {
             throw new IllegalArgumentException();
@@ -52,7 +52,7 @@ public class WifiFingerprint implements Serializable {
      * Gets non-located WiFi readings.
      * @return non-located WiFi readings.
      */
-    public List<WifiReading> getReadings() {
+    public List<WifiRssiReading> getReadings() {
         return mReadings;
     }
 
@@ -61,7 +61,7 @@ public class WifiFingerprint implements Serializable {
      * @param readings non-located WiFi readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public void setReadings(List<WifiReading> readings)
+    public void setReadings(List<WifiRssiReading> readings)
             throws IllegalArgumentException {
         if (readings == null) {
             throw new IllegalArgumentException();
@@ -89,11 +89,11 @@ public class WifiFingerprint implements Serializable {
             return Double.MAX_VALUE;
         }
 
-        List<WifiReading> otherReadings = otherFingerprint.getReadings();
+        List<WifiRssiReading> otherReadings = otherFingerprint.getReadings();
         int numAccessPoints = 0;
         double result = 0.0, diff;
-        for (WifiReading reading : mReadings) {
-            for (WifiReading otherReading : otherReadings) {
+        for (WifiRssiReading reading : mReadings) {
+            for (WifiRssiReading otherReading : otherReadings) {
                 if (reading.hasSameAccessPoint(otherReading)) {
                     diff = reading.getRssi() - otherReading.getRssi();
                     result += diff * diff;

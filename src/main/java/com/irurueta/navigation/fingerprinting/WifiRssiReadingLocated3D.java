@@ -23,8 +23,8 @@ import com.irurueta.geometry.Point3D;
  * access point.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiReadingLocated3D extends
-        WifiReadingLocated<Point3D> {
+public class WifiRssiReadingLocated3D extends
+        WifiRssiReadingLocated<Point3D> {
 
     /**
      * Constructor.
@@ -34,7 +34,7 @@ public class WifiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
             Point3D position) throws IllegalArgumentException {
         super(accessPoint, rssi, position);
     }
@@ -48,7 +48,7 @@ public class WifiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
             Point3D position, Double rssiStandardDeviation)
             throws IllegalArgumentException {
         super(accessPoint, rssi, position, rssiStandardDeviation);
@@ -64,7 +64,7 @@ public class WifiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
             Point3D position, Matrix positionCovariance)
             throws IllegalArgumentException {
         super(accessPoint, rssi, position, positionCovariance);
@@ -81,7 +81,7 @@ public class WifiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
             Point3D position, Double rssiStandardDeviation,
             Matrix positionCovariance) throws IllegalArgumentException {
         super(accessPoint, rssi, position, rssiStandardDeviation,
@@ -91,7 +91,7 @@ public class WifiReadingLocated3D extends
     /**
      * Empty constructor.
      */
-    protected WifiReadingLocated3D() {
+    protected WifiRssiReadingLocated3D() {
         super();
     }
 
