@@ -55,7 +55,7 @@ public class MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implements
     private static final double INLIER_ERROR_STD = 0.5;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
-    private static final double LARGE_POSITION_ERROR = 4.0;
+    private static final double LARGE_POSITION_ERROR = 5.0;
     private static final double LARGE_POWER_ERROR = 2.0;
 
     private static final double SPEED_OF_LIGHT = 299792458.0;

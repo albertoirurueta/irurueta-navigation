@@ -61,7 +61,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
 
     /**
      * Default exponent typically used on free space for path loss propagation in
-     * terms of distance.
+     * terms of distance. This value is used for free space environments.
      */
     public static final double DEFAULT_PATH_LOSS_EXPONENT = 2.0;
 
@@ -86,12 +86,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * If path loss exponent estimation is not enabled, this value will always be equal to
      * {@link #DEFAULT_PATH_LOSS_EXPONENT}
      */
-    private double mEstimatedPathLossExponent;
-
-    /**
-     * Indicates whether path loss estimation is enabled or not.
-     */
-    private boolean mPathLossEstimationEnabled;
+    private double mEstimatedPathLossExponent = DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Covariance of estimated position and power (and path loss exponent if its estimation is enabled).
@@ -125,10 +120,18 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
      *
-     * Initial path loss exponent is only taken into account if path loss exponent
-     * estimation is enabled. Otherwise it is assumed a free space environment
+     * If path loss exponent estimation is enabled, estimation will start at this
+     * value and will converge to the most appropriate value.
+     * If path loss exponent estimation is disabled, this value will be assumed
+     * to be exact and the estimated path loss exponent will be equal to this
+     * value.
      */
     private double mInitialPathLossExponent = DEFAULT_PATH_LOSS_EXPONENT;
+
+    /**
+     * Indicates whether path loss estimation is enabled or not.
+     */
+    private boolean mPathLossEstimationEnabled;
 
     /**
      * WiFi signal readings belonging to the same access point to be estimated.
@@ -389,6 +392,84 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     }
 
     /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public WifiAccessPointPowerAndPositionEstimator(
+            List<? extends WifiRssiReadingLocated<P>> readings,
+            P initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent)
+            throws IllegalArgumentException {
+        this(readings, initialPosition, initialTransmittedPowerdBm);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's)
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     */
+    public WifiAccessPointPowerAndPositionEstimator(P initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+        this(initialPosition, initialTransmittedPowerdBm);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's)
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     */
+    public WifiAccessPointPowerAndPositionEstimator(P initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            WifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+        this(initialPosition, initialTransmittedPowerdBm, listener);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's)
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public WifiAccessPointPowerAndPositionEstimator(
+            List<? extends WifiRssiReadingLocated<P>> readings,
+            P initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            throws IllegalArgumentException {
+        this(readings, initialPosition, initialTransmittedPowerdBm, listener);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
      * Gets initial transmitted power to start the estimation of access point
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
@@ -474,6 +555,73 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
             throw new LockedException();
         }
         mInitialPosition = initialPosition;
+    }
+
+    /**
+     * Gets initial exponent typically used on free space for path loss propagation
+     * in terms of distance.
+     * On different environments path loss exponent might have different value:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     *
+     * If path loss exponent estimation is enabled, estimation will start at this
+     * value and will converge to the most appropriate value.
+     * If path loss exponent estimation is disabled, this value will be assumed
+     * to be exact and the estimated path loss exponent will be equal to this
+     * value.
+     * @return initial path loss exponent.
+     */
+    public double getInitialPathLossExponent() {
+        return mInitialPathLossExponent;
+    }
+
+    /**
+     * Sets initial exponent typically used on free space for path loss propagation
+     * in terms of distance.
+     * On different environments path loss exponent might have different value:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     *
+     * If path loss exponent estimation is enabled, estimation will start at this
+     * value and will converge to the most appropriate value.
+     * If path loss exponent estimation is disabled, this value will be assumed
+     * to be exact and the estimated path loss exponent will be equal to this
+     * value.
+     * @param initialPathLossExponent initial path loss exponent.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setInitialPathLossExponent(double initialPathLossExponent)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Indicates whether path loss estimation is enabled or not.
+     * @return true if path loss estimation is enabled, false otherwise.
+     */
+    public boolean isPathLossEstimationEnabled() {
+        return mPathLossEstimationEnabled;
+    }
+
+    /**
+     * Specifies whether path loss estimation is enabled or not.
+     * @param pathLossEstimationEnabled true if path loss estimation is enabled,
+     *                                  false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPathLossEstimationEnabled(boolean pathLossEstimationEnabled)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPathLossEstimationEnabled = pathLossEstimationEnabled;
     }
 
     /**
@@ -573,7 +721,11 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                 mListener.onEstimateStart(this);
             }
 
-            setupFitter();
+            if (mPathLossEstimationEnabled) {
+                setupFitterWithPathLossExponentEnabled();
+            } else {
+                setupFitterWithPathLossExponentDisabled();
+            }
 
             mFitter.fit();
 
@@ -586,6 +738,12 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
             mEstimatedTransmittedPowerdBm = a[dims];
             mEstimatedCovariance = mFitter.getCovar();
             mChiSq = mFitter.getChisq();
+
+            if (mPathLossEstimationEnabled) {
+                mEstimatedPathLossExponent = a[dims + 1];
+            } else {
+                mEstimatedPathLossExponent = mInitialPathLossExponent;
+            }
 
             if (mListener != null) {
                 mListener.onEstimateEnd(this);
@@ -635,6 +793,22 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     }
 
     /**
+     * Gets estimated exponent typically used on free space for path loss propagation in
+     * terms of distance.
+     * On different environments path loss exponent might have different values:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     * If path loss exponent estimation is not enabled, this value will always be equal to
+     * {@link #DEFAULT_PATH_LOSS_EXPONENT}
+     * @return estimated path loss exponent.
+     */
+    public double getEstimatedPathLossExponent() {
+        return mEstimatedPathLossExponent;
+    }
+
+    /**
      * Gets covariance for estimated position and power.
      * Top-left submatrix contains covariance of position, and last diagonal element
      * contains variance of estimated transmitted power.
@@ -668,6 +842,19 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
         }
 
         int d = getNumberOfDimensions();
+        return mEstimatedCovariance.getElementAt(d, d);
+    }
+
+    /**
+     * Gets estimated path loss exponent variance.
+     * @return estimated path loss exponent variance.
+     */
+    public double getEstimatedPathLossExponentVariance() {
+        if (mEstimatedCovariance == null) {
+            return 0.0;
+        }
+
+        int d = getNumberOfDimensions() + 1;
         return mEstimatedCovariance.getElementAt(d, d);
     }
 
@@ -723,51 +910,51 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     }
 
     /**
-     * Setups fitter to estimate transmitted power and position.
+     * Setups fitter to estimate transmitted power and position with path
+     * loss exponent estimation disabled.
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
-    private void setupFitter() throws FittingException {
+    private void setupFitterWithPathLossExponentDisabled() throws FittingException {
         //because all fingerprints must belong to the same access point, we
         //obtain the frequency of the first access point on the first fingerprint
         //reading
         WifiRssiReadingLocated<P> reading = mReadings.get(0);
         double frequency = reading.getAccessPoint().getFrequency();
 
-        //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
+        //n = 2.0, is the path loss exponent
+
+        //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
-        //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
+        //Pr = Pte*c^n/((4*pi*f)^n * d^n)
 
 
         //compute k as the constant part of the isotropic received power formula
-        //so that: Pr = Pte*k/d^2
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), 2.0);
+        //so that: Pr = Pte*k/d^n
+        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency),
+                mInitialPathLossExponent);
         final double kdB = 10.0 * Math.log10(k);
+
+        final int dims = getNumberOfDimensions();
+        final int dimsPlus1 = dims + 1;
 
         //for numerical accuracy reasons, a logarithmic version of the previous
         //formula will be used instead
-        //Pr (dBm) = 10 * log(Pte * k / d^2) = 10*log(k) + 10*log(Pte) - 20*log(d)
+        //Pr (dBm) = 10 * log(Pte * k / d^n) = 10*log(k) + 10*log(Pte) - 10*n*log(d)
 
         mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
 
             @Override
             public int getNumberOfDimensions() {
-                return WifiAccessPointPowerAndPositionEstimator.this.
-                        getNumberOfDimensions() + 1;
+                return dimsPlus1;
             }
 
             @Override
             public double[] createInitialParametersArray() {
-                int dims = WifiAccessPointPowerAndPositionEstimator.this.
-                        getNumberOfDimensions();
-                double[] initial = new double[dims + 1];
+                double[] initial = new double[dimsPlus1];
                 int num = mReadings.size();
 
                 if (mInitialPosition == null) {
-                    //initialize
-                    for(int i = 0; i < dims; i++) {
-                        initial[i] = 0.0;
-                    }
 
                     //compute average centroid of fingerprint positions
                     for (WifiRssiReadingLocated<P> reading : mReadings) {
@@ -784,6 +971,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                     }
                 }
 
+                //initial transmitted power
                 initial[dims] = computeInitialTransmittedPowerdBm();
 
                 return initial;
@@ -792,22 +980,21 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
             @Override
             public double evaluate(int i, double[] point, double[] params,
                                    double[] derivatives) {
-                int dims = WifiAccessPointPowerAndPositionEstimator.this.
-                        getNumberOfDimensions();
                 double sqrDistance = 0.0, diff;
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
                     sqrDistance += diff * diff;
 
-                    derivatives[j] = -20.0 * diff;
+                    //n is mInitialPathLossExponent, which is typically 2.0
+                    derivatives[j] = -10.0 * mInitialPathLossExponent * diff;
                 }
 
                 double transmittedPowerdBm = params[dims];
 
                 //derivatives respect position coordinates are (2D case):
-                //f(x,y) = -10*log((x - xap)^2 + (y - yap)^2)
-                //df/dx = -10*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -20*diffX/(ln(10)*sqrDistance)
-                //df/dy = -10*2*(y - yap)/((x - xap)^2 + (y - yap)^2) = -20*diffY/(ln(10)*sqrDistance)
+                //f(x,y) = -5*n*log((x - xap)^2 + (y - yap)^2)
+                //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
+                //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
                 for (int j = 0; j < dims; j++) {
                     derivatives[j] /= ln10PerSqrDistance;
@@ -816,23 +1003,27 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                 //derivative respect transmitted power
                 derivatives[dims] = 1.0;
 
-                //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
-                // lambda = c/f, where lambda is wavelength,
-                // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
-                //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-                //Pr (dBm) = 10*log(k) + 10*log(Pte) - 20*log(d) =
-                //  10*log(k) + 10*log(Pte) - 10*log(d^2)
+                //d^2 = (x - xap)^2 + (y - yap)^2
+                //d^n = (d^2)^n/2
+
+                //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
+                //n is the path loss exponent
+                //lambda = c/f, where lambda is wavelength,
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pr = Pte*c^n/((4*pi*f)^n * d^n)
+                //Pr (dBm) = 10*log(k) + 10*log(Pte) - 10*log(d^n) =
+                //10*log(k) + 10*log(Pte) - 10*log((d^2)^n/2) =
+                //10*log(k) + 10*log(Pte) - 10*n/2*log(d^2) =
+                //10*log(k) + 10*log(Pte) - 5*n*log(d^2) =
                 return kdB + transmittedPowerdBm
-                        - 10.0 * Math.log10(sqrDistance);
+                        - 5.0 * mInitialPathLossExponent * Math.log10(sqrDistance);
             }
         });
 
-        int dims = getNumberOfDimensions();
-        int numParams = dims + 1;
         int numFingerprints = mReadings.size();
         double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
         try {
-            Matrix x = new Matrix(numFingerprints, numParams);
+            Matrix x = new Matrix(numFingerprints, dimsPlus1);
             double[] y = new double[numFingerprints];
             double[] standardDeviations = new double[numFingerprints];
             for (int i = 0; i < numFingerprints; i++) {
@@ -843,6 +1034,153 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                     x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
                 }
                 x.setElementAt(i, dims, initialTransmittedPowerdBm);
+
+                standardDeviations[i] = reading.getRssiStandardDeviation() != null ?
+                        reading.getRssiStandardDeviation() :
+                        DEFAULT_POWER_STANDARD_DEVIATION;
+                y[i] = reading.getRssi();
+            }
+
+            mFitter.setInputData(x, y, standardDeviations);
+        } catch (AlgebraException ignore) { }
+    }
+
+    /**
+     * Setups fitter to estimate transmitted power and position with path
+     * loss exponent estimation enabled.
+     * @throws FittingException if Levenberg-Marquardt fitting fails.
+     */
+    private void setupFitterWithPathLossExponentEnabled() throws FittingException {
+        //because all fingerprints must belong to the same access point, we
+        //obtain the frequency of the first access point on the first fingerprint
+        //reading
+        WifiRssiReadingLocated<P> reading = mReadings.get(0);
+        double frequency = reading.getAccessPoint().getFrequency();
+
+        //n = 2.0, is the path loss exponent
+
+        //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
+        // lambda = c/f, where lambda is wavelength,
+        // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+        //Pr = Pte*c^n/((4*pi*f)^n * d^n)
+
+
+        //k is defined so that: Pr = Pte * k^n / d^n so that
+        //k = (c/(4*pi*f))
+        double k = SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
+        final double kdB = 10.0 * Math.log10(k);
+
+        final int dims = getNumberOfDimensions();
+        final int dimsPlus1 = dims + 1;
+        final int dimsPlus2 = dims + 2;
+
+        //for numerical accuracy reasons, a logarithmic version of the previous
+        //formula will be used instead
+        //Pr (dBm) = 10 * log(Pte * k^n / d^n) = 10*n*log(k) + 10*log(Pte) - 10*n*log(d)
+
+        mFitter.setFunctionEvaluator(new LevenbergMarquardtMultiDimensionFunctionEvaluator() {
+
+            @Override
+            public int getNumberOfDimensions() {
+                return dimsPlus2;
+            }
+
+            @Override
+            public double[] createInitialParametersArray() {
+                double[] initial = new double[dimsPlus2];
+                int num = mReadings.size();
+
+                if (mInitialPosition == null) {
+
+                    //compute average centroid of fingerprint positions
+                    for (WifiRssiReadingLocated<P> reading : mReadings) {
+                        P position = reading.getPosition();
+                        for (int i = 0; i < dims; i++) {
+                            initial[i] += position.getInhomogeneousCoordinate(i) /
+                                    (double) num;
+                        }
+                    }
+                } else {
+                    //copy initial position
+                    for(int i = 0; i < dims; i++) {
+                        initial[i] = mInitialPosition.getInhomogeneousCoordinate(i);
+                    }
+                }
+
+                //initial transmitted power
+                initial[dims] = computeInitialTransmittedPowerdBm();
+
+                //initial path loss exponent
+                initial[dimsPlus1] = mInitialPathLossExponent;
+
+                return initial;
+            }
+
+            @Override
+            public double evaluate(int i, double[] point, double[] params,
+                                   double[] derivatives) {
+                double sqrDistance = 0.0, diff;
+                for (int j = 0; j < dims; j++) {
+                    diff = params[j] - point[j];
+                    sqrDistance += diff * diff;
+
+                    //n is mInitialPathLossExponent, which is typically 2.0
+                    derivatives[j] = -10.0 * mInitialPathLossExponent * diff;
+                }
+
+                double transmittedPowerdBm = params[dims];
+
+                //derivatives respect position coordinates are (2D case):
+                //f(x,y,n) = n*kdB -5*n*log((x - xap)^2 + (y - yap)^2)
+                //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
+                //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
+                //df/dn = kdB -5*log((x - xap)^2 + (y - yap)^2) = kdB - 5*log(sqrDistance)
+                double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
+                for (int j = 0; j < dims; j++) {
+                    derivatives[j] /= ln10PerSqrDistance;
+                }
+
+                //derivative respect transmitted power
+                derivatives[dims] = 1.0;
+
+                //derivative respect to path loss exponent
+                double logSqrDistance = Math.log10(sqrDistance);
+                derivatives[dimsPlus1] = kdB - 5 * logSqrDistance;
+
+                //d^2 = (x - xap)^2 + (y - yap)^2
+                //d^n = (d^2)^n/2
+                //k = (c/(4*pi*f))^n
+
+                //Pr = Pt*Gt*Gr*lambda^n/(4*pi*d)^n,    where Pr is the received power
+                //n is the path loss exponent
+                //lambda = c/f, where lambda is wavelength,
+                //Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
+                //Pr = Pte*c^n/((4*pi*f)^n * d^n)
+                //Pr (dBm) = 10*log(k^n) + 10*log(Pte) - 10*log(d^n) =
+                //10*log(k^n) + 10*log(Pte) - 10*log((d^2)^n/2) =
+                //10*n*log(k) + 10*log(Pte) - 10*n/2*log(d^2) =
+                //10*n*log(k) + 10*log(Pte) - 5*n*log(d^2) =
+
+                return mInitialPathLossExponent * kdB + transmittedPowerdBm
+                        - 5.0 * mInitialPathLossExponent * logSqrDistance;
+            }
+        });
+
+        int numFingerprints = mReadings.size();
+        double initialTransmittedPowerdBm = computeInitialTransmittedPowerdBm();
+        try {
+            Matrix x = new Matrix(numFingerprints, dimsPlus2);
+            double[] y = new double[numFingerprints];
+            double[] standardDeviations = new double[numFingerprints];
+            for (int i = 0; i < numFingerprints; i++) {
+                reading = mReadings.get(i);
+                P position = reading.getPosition();
+
+                for (int j = 0; j < dims; j++) {
+                    x.setElementAt(i, j, position.getInhomogeneousCoordinate(j));
+                }
+                x.setElementAt(i, dims, initialTransmittedPowerdBm);
+                x.setElementAt(i, dimsPlus1, mInitialPathLossExponent);
 
                 standardDeviations[i] = reading.getRssiStandardDeviation() != null ?
                         reading.getRssiStandardDeviation() :

@@ -267,6 +267,86 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public WifiAccessPointPowerAndPositionEstimator2D(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's)
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     */
+    public WifiAccessPointPowerAndPositionEstimator2D(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's)
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     */
+    public WifiAccessPointPowerAndPositionEstimator2D(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            WifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings containing belonging to
+     *                 the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                estimation of access point transmitted power
+     *                                (expressed in dBm's)
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public WifiAccessPointPowerAndPositionEstimator2D(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            WifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
+    }
+
+    /**
      * Gets minimum required number of readings to estimate power
      * and position.
      * This is always 3 readings.
