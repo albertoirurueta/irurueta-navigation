@@ -121,6 +121,29 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     protected P mInitialPosition;
 
     /**
+     * Initial exponent typically used on free space for path loss propagation in
+     * terms of distance.
+     * On different environments path loss exponent might have different values:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     *
+     * If path loss exponent estimation is enabled, estimation will start at this
+     * value and will converge to the most appropriate value.
+     * If path loss exponent estimation is disabled, this value will be assumed
+     * to be exact and the estimated path loss exponent will be equal to this
+     * value.
+     */
+    protected double mInitialPathLossExponent =
+            WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT;
+
+    /**
+     * Indicates whether path loss estimation is enabled or not.
+     */
+    protected boolean mPathLossEstimationEnabled;
+
+    /**
      * WiFi signal readings belonging to the same access point to be estimated.
      */
     protected List<? extends WifiRssiReadingLocated<P>> mReadings;
@@ -140,6 +163,20 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * Estimated transmitted power expressed in dBm's.
      */
     protected double mEstimatedTransmittedPowerdBm;
+
+    /**
+     * Estimated exponent typically used on free space for path loss propagation in
+     * terms of distance.
+     * On different environments path loss exponent might have different values:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     * If path loss exponent estimation is not enabled, this value will always be equal to
+     * {@link WifiAccessPointPowerAndPositionEstimator#DEFAULT_PATH_LOSS_EXPONENT}
+     */
+    protected double mEstimatedPathLossExponent =
+            WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Indicates if this instance is locked because estimation is being executed.
@@ -419,6 +456,83 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator(
+            List<? extends WifiRssiReadingLocated<P>> readings,
+            P initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent)
+            throws IllegalArgumentException {
+        this(readings, initialPosition, initialTransmittedPowerdBm);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+        this(initialPosition, initialTransmittedPowerdBm);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+        this(initialPosition, initialTransmittedPowerdBm, listener);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator(
+            List<? extends WifiRssiReadingLocated<P>> readings,
+            P initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            throws IllegalArgumentException {
+        this(readings, initialPosition, initialTransmittedPowerdBm,
+                listener);
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
      * Gets initial transmitted power to start the estimation of access point
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
@@ -504,6 +618,73 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
             throw new LockedException();
         }
         mInitialPosition = initialPosition;
+    }
+
+    /**
+     * Gets initial exponent typically used on free space for path loss propagation
+     * in terms of distance.
+     * On different environments path loss exponent might have different value:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     *
+     * If path loss exponent estimation is enabled, estimation will start at this
+     * value and will converge to the most appropriate value.
+     * If path loss exponent estimation is disabled, this value will be assumed
+     * to be exact and the estimated path loss exponent will be equal to this
+     * value.
+     * @return initial path loss exponent.
+     */
+    public double getInitialPathLossExponent() {
+        return mInitialPathLossExponent;
+    }
+
+    /**
+     * Sets initial exponent typically used on free space for path loss propagation
+     * in terms of distance.
+     * On different environments path loss exponent might have different value:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     *
+     * If path loss exponent estimation is enabled, estimation will start at this
+     * value and will converge to the most appropriate value.
+     * If path loss exponent estimation is disabled, this value will be assumed
+     * to be exact and the estimated path loss exponent will be equal to this
+     * value.
+     * @param initialPathLossExponent initial path loss exponent.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setInitialPathLossExponent(double initialPathLossExponent)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Indicates whether path loss estimation is enabled or not.
+     * @return true if path loss estimation is enabled, false otherwise.
+     */
+    public boolean isPathLossEstimationEnabled() {
+        return mPathLossEstimationEnabled;
+    }
+
+    /**
+     * Specifies whether path loss estimation is enabled or not.
+     * @param pathLossEstimationEnabled true if path loss estimation is enabled,
+     *                                  false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPathLossEstimationEnabled(boolean pathLossEstimationEnabled)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPathLossEstimationEnabled = pathLossEstimationEnabled;
     }
 
     /**
@@ -789,8 +970,22 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
             return 0.0;
         }
 
-        int last = mCovariance.getRows() - 1;
-        return mCovariance.getElementAt(last, last);
+        int d = getNumberOfDimensions();
+        return mCovariance.getElementAt(d, d);
+    }
+
+    /**
+     * Gets estimated path loss exponent variance.
+     * @return estimated path loss exponent variance.
+     */
+    public double getEstimatedPathLossExponentVariance() {
+        int d = getNumberOfDimensions() + 1;
+        if (mCovariance == null ||
+                mCovariance.getRows() == d) {
+            return 0.0;
+        }
+
+        return mCovariance.getElementAt(d, d);
     }
 
     /**
@@ -818,6 +1013,22 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
+     * Gets estimated exponent typically used on free space for path loss propagation in
+     * terms of distance.
+     * On different environments path loss exponent might have different values:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     * If path loss exponent estimation is not enabled, this value will always be equal to
+     * {@link WifiAccessPointPowerAndPositionEstimator#DEFAULT_PATH_LOSS_EXPONENT}
+     * @return estimated path loss exponent.
+     */
+    public double getEstimatedPathLossExponent() {
+        return mEstimatedPathLossExponent;
+    }
+
+    /**
      * Gets minimum required number of readings to estimate
      * power and position.
      * This is 3 readings for 2D, and 4 readings for 3D.
@@ -840,6 +1051,13 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      */
     public abstract void estimate() throws LockedException, NotReadyException,
             RobustEstimatorException;
+
+    /**
+     * Gets estimated located access point with estimated transmitted power.
+     * @param <AP> type of located access point with transmitted power.
+     * @return estimasted located access point with estimated transmitted power.
+     */
+    public abstract <AP extends WifiAccessPointWithPowerAndLocated<P>> AP getEstimatedAccessPoint();
 
     /**
      * Returns method being used for robust estimation.
@@ -879,7 +1097,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      */
     protected double residual(Solution<P> currentEstimation, int i) {
         //Model fitted internally is equal to:
-        //Pr (dBm) = 10 * log(Pte * k / d^2) = 10*log(k) + 10*log(Pte) - 20*log(d)
+        //Pr (dBm) = 10 * log(Pte * k^n / d^n) = 10*n*log(k) + 10*log(Pte) - 5*n*log(d^2)
         //where;
         //Pr is received, expressed in dBm
         //Pte is equivalent transmitted power, expressed in dBm
@@ -889,10 +1107,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
         double frequency = reading.getAccessPoint().getFrequency();
 
         //compute k as the constant part of the isotropic received power formula
-        //so that: Pr = Pte*k/d^2
-        double k = Math.pow(WifiAccessPointPowerAndPositionEstimator.SPEED_OF_LIGHT /
-                (4.0 * Math.PI * frequency), 2.0);
-        final double kdB = 10.0 * Math.log10(k);
+        //so that: Pr = Pte*k^n/d^n
+        double k = WifiAccessPointPowerAndPositionEstimator.SPEED_OF_LIGHT /
+                (4.0 * Math.PI * frequency);
+        final double kdB = 10.0 * mInitialPathLossExponent * Math.log10(k);
 
         //get distance from estimated access point position and fingerprint position
         P fingerprintPosition = reading.getPosition();
@@ -906,7 +1124,8 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
         //compute expected received power assuming isotropic transmission
         //and compare agains measured RSSI at fingerprint location
-        double expectedRSSI = kdB + transmittedPowerdBm - 10.0 * Math.log10(sqrDistance);
+        double expectedRSSI = kdB + transmittedPowerdBm -
+                5.0 * mInitialPathLossExponent * Math.log10(sqrDistance);
         double rssi = reading.getRssi();
 
         return Math.abs(expectedRSSI - rssi);
@@ -929,14 +1148,22 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
         private double mEstimatedTransmittedPowerdBm;
 
         /**
+         * Estimated path loss exponent for a subset of samples.
+         */
+        private double mEstimatedPathLossExponent;
+
+        /**
          * Constructor.
          * @param estimatedPosition estimated position for a subset of samples.
          * @param estimatedTransmittedPowerdBm estimated transmitted power expressed
          *                                     in dBm's for a subset of samples.
+         * @param estimatedPathLossExponent estimated path loss exponent.
          */
-        public Solution(P estimatedPosition, double estimatedTransmittedPowerdBm) {
+        public Solution(P estimatedPosition, double estimatedTransmittedPowerdBm,
+                        double estimatedPathLossExponent) {
             mEstimatedPosition = estimatedPosition;
             mEstimatedTransmittedPowerdBm = estimatedTransmittedPowerdBm;
+            mEstimatedPathLossExponent = estimatedPathLossExponent;
         }
 
         /**
@@ -955,6 +1182,14 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
          */
         public double getEstimatedTransmittedPowerdBm() {
             return mEstimatedTransmittedPowerdBm;
+        }
+
+        /**
+         * Gets estimated path loss exponent.
+         * @return estimated path loss exponent.
+         */
+        public double getEstimatedPathLossExponent() {
+            return mEstimatedPathLossExponent;
         }
     }
 }

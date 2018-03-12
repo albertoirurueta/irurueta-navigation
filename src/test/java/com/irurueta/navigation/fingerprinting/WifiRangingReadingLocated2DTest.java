@@ -162,6 +162,11 @@ public class WifiRangingReadingLocated2DTest {
                     position, new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new WifiRangingReadingLocated2D(ap, 2.0,
+                    position, new Matrix(2,1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
 
 
@@ -205,6 +210,16 @@ public class WifiRangingReadingLocated2DTest {
         try {
             reading = new WifiRangingReadingLocated2D(ap, 2.5, position,
                     0.0, cov);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new WifiRangingReadingLocated2D(ap, 2.5, position,
+                    0.2, new Matrix(1,1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new WifiRangingReadingLocated2D(ap, 2.5, position,
+                    0.2, new Matrix(2,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);

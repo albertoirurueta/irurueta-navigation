@@ -22,6 +22,12 @@ package com.irurueta.navigation.fingerprinting;
 public class WifiAccessPointWithPower extends WifiAccessPoint {
 
     /**
+     * Default exponent typically used on free space for path loss propagation in
+     * terms of distance. This value is used for free space environments.
+     */
+    public static final double DEFAULT_PATH_LOSS_EXPONENT = 2.0;
+
+    /**
      * Transmitted power expressed in dBm's.
      */
     private double mTransmittedPower;
@@ -30,6 +36,19 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      * Standard deviation of transmitted power value.
      */
     private double mTransmittedPowerStandardDeviation;
+
+    /**
+     * Exponent typically used on free space for path loss propagation in
+     * terms of distance.
+     * On different environments path loss exponent might have different values:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     * If path loss exponent estimation is not enabled, this value will always be equal to
+     * {@link #DEFAULT_PATH_LOSS_EXPONENT}
+     */
+    private double mPathLossExponent = DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Constructor.
@@ -104,6 +123,45 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
     }
 
     /**
+     * Constructor.
+     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
+     *              xx:xx:xx:xx:xx:xx.
+     * @param frequency frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
+     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @throws IllegalArgumentException if either BSSID is null, frequency is negative
+     * or transmitted power standard deviation is negative.
+     */
+    public WifiAccessPointWithPower(String bssid, double frequency,
+            double transmittedPower, double transmittedPowerStandardDeviation,
+            double pathLossExponent) throws IllegalArgumentException {
+        this(bssid, frequency, transmittedPower,
+                transmittedPowerStandardDeviation);
+        mPathLossExponent = pathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
+     *              xx:xx:xx:xx:xx:xx.
+     * @param frequency frequency used by this Access Point (expressed in Hz).
+     * @param ssid service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
+     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
+     * or transmitted power standard deviation is negative.
+     */
+    public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
+            double transmittedPower, double transmittedPowerStandardDeviation,
+            double pathLossExponent) throws IllegalArgumentException {
+        this(bssid, frequency, ssid, transmittedPower,
+                transmittedPowerStandardDeviation);
+        mPathLossExponent = pathLossExponent;
+    }
+
+    /**
      * Empty constructor.
      */
     protected WifiAccessPointWithPower() {
@@ -124,5 +182,21 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      */
     public double getTransmittedPowerStandardDeviation() {
         return mTransmittedPowerStandardDeviation;
+    }
+
+    /**
+     * Gets exponent typically used on free space for path loss propagation in
+     * terms of distance.
+     * On different environments path loss exponent might have different values:
+     * - Free space: 2.0
+     * - Urban Area: 2.7 to 3.5
+     * - Suburban Area: 3 to 5
+     * - Indoor (line-of-sight): 1.6 to 1.8
+     * If path loss exponent estimation is not enabled, this value will always be equal to
+     * {@link #DEFAULT_PATH_LOSS_EXPONENT}
+     * @return path loss exponent.
+     */
+    public double getPathLossExponent() {
+        return mPathLossExponent;
     }
 }

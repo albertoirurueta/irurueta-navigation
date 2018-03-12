@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.fingerprinting;
 
+import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -276,6 +277,84 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator2D(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator2D(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator2D(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public RobustWifiAccessPointPowerAndPositionEstimator2D(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
     }
 
     /**
@@ -792,6 +871,175 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             default:
                 return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
                         readings, initialPosition, initialTransmittedPowerdBm, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent, RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
+            RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
         }
     }
 
@@ -1382,6 +1630,194 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores,
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent, RobustEstimatorMethod method)
+            throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, readings, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, readings, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores, Point2D initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores, Point2D initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
+            RobustEstimatorMethod method) {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @param method robust estimator method.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores,
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
+            RobustEstimatorMethod method) throws IllegalArgumentException {
+        switch (method) {
+            case RANSAC:
+                return new RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case LMedS:
+                return new LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case MSAC:
+                return new MSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        readings, initialPosition, initialTransmittedPowerdBm,
+                        initialPathLossExponent, listener);
+            case PROSAC:
+                return new PROSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, readings, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent,
+                        listener);
+            case PROMedS:
+            default:
+                return new PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+                        qualityScores, readings, initialPosition,
+                        initialTransmittedPowerdBm, initialPathLossExponent,
+                        listener);
+        }
+    }
+
+    /**
      * Creates a robust 2D wifi access point power and position estimator using
      * default method.
      * @return a new robust 2D wifi access point power and position estimator.
@@ -1626,6 +2062,89 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             throws IllegalArgumentException {
         return create(readings, initialPosition, initialTransmittedPowerdBm, listener,
                 DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent) throws IllegalArgumentException {
+        return create(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent) {
+        return create(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+        return create(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener, DEFAULT_ROBUST_METHOD);
     }
 
     /**
@@ -1941,6 +2460,106 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores,
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent) throws IllegalArgumentException {
+        return create(qualityScores, readings, initialPosition,
+                initialTransmittedPowerdBm, initialPathLossExponent,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores, Point2D initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+        return create(qualityScores, initialPosition,
+                initialTransmittedPowerdBm, initialPathLossExponent,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @return a new robust 2D wifi access point power and position estimator.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores, Point2D initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+        return create(qualityScores, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust 2D wifi access point power and position estimator using
+     * default method.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @return a new robust 2D wifi access point power and position estimator.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
+            double[] qualityScores,
+            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            Point2D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            throws IllegalArgumentException {
+        return create(qualityScores, readings, initialPosition,
+                initialTransmittedPowerdBm, initialPathLossExponent, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
      * Gets minimum required number of fingerprint readings to estimate
      * power and position.
      * This is 3 readings for 2D.
@@ -1958,6 +2577,44 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
     @Override
     public int getNumberOfDimensions() {
         return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH;
+    }
+
+    /**
+     * Gets estimated located access point with estimated transmitted power.
+     * @return estimasted located access point with estimated transmitted power or null.
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public WifiAccessPointWithPowerAndLocated2D getEstimatedAccessPoint() {
+        List<? extends WifiRssiReadingLocated<Point2D>> readings = getReadings();
+        if (readings == null || readings.isEmpty()) {
+            return null;
+        }
+        WifiAccessPoint accessPoint = readings.get(0).getAccessPoint();
+
+        Point2D estimatedPosition = getEstimatedPosition();
+        if (estimatedPosition == null) {
+            return null;
+        }
+
+        Matrix estimatedPositionCovariance = getEstimatedPositionCovariance();
+        if (estimatedPositionCovariance == null) {
+            //covariance not available
+            return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
+                    accessPoint.getFrequency(), accessPoint.getSsid(),
+                    getEstimatedTransmittedPowerdBm(), 0.0,
+                    getEstimatedPathLossExponent(), estimatedPosition,
+                    null);
+        } else {
+            //covariance is available
+            return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
+                    accessPoint.getFrequency(), accessPoint.getSsid(),
+                    getEstimatedTransmittedPowerdBm(),
+                    Math.sqrt(getEstimatedTransmittedPowerVariance()),
+                    getEstimatedPathLossExponent(),
+                    estimatedPosition,
+                    estimatedPositionCovariance);
+        }
     }
 
     /**
@@ -1981,6 +2638,8 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             mInnerEstimator.setInitialTransmittedPowerdBm(
                     mInitialTransmittedPowerdBm);
             mInnerEstimator.setInitialPosition(mInitialPosition);
+            mInnerEstimator.setInitialPathLossExponent(mInitialPathLossExponent);
+            mInnerEstimator.setPathLossEstimationEnabled(mPathLossEstimationEnabled);
 
             mInnerEstimator.setReadings(mInnerReadings);
 
@@ -1989,8 +2648,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             Point2D estimatedPosition = mInnerEstimator.getEstimatedPosition();
             double estimatedTransmittedPowerdBm =
                     mInnerEstimator.getEstimatedTransmittedPowerdBm();
+            double estimatedPathLossExponent =
+                    mInnerEstimator.getEstimatedPathLossExponent();
             solutions.add(new Solution<>(estimatedPosition,
-                    estimatedTransmittedPowerdBm));
+                    estimatedTransmittedPowerdBm, estimatedPathLossExponent));
         } catch(NavigationException ignore) {
             //if anything fails, no solution is added
         }
@@ -2009,6 +2670,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
         Point2D initialPosition = result.getEstimatedPosition();
         double initialTransmittedPowerdBm =
                 result.getEstimatedTransmittedPowerdBm();
+        double initialPathLossExponent = result.getEstimatedPathLossExponent();
 
         if (mRefineResult && mInliersData != null) {
             BitSet inliers = mInliersData.getInliers();
@@ -2026,6 +2688,8 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
             try {
                 mInnerEstimator.setInitialPosition(initialPosition);
                 mInnerEstimator.setInitialTransmittedPowerdBm(initialTransmittedPowerdBm);
+                mInnerEstimator.setInitialPathLossExponent(initialPathLossExponent);
+                mInnerEstimator.setPathLossEstimationEnabled(mPathLossEstimationEnabled);
                 mInnerEstimator.setReadings(mInnerReadings);
 
                 mInnerEstimator.estimate();
@@ -2040,16 +2704,20 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
                 mEstimatedPosition = mInnerEstimator.getEstimatedPosition();
                 mEstimatedTransmittedPowerdBm =
                         mInnerEstimator.getEstimatedTransmittedPowerdBm();
+                mEstimatedPathLossExponent =
+                        mInnerEstimator.getEstimatedPathLossExponent();
             } catch (Exception e) {
                 //refinement failed, so we return input value
                 mCovariance = null;
                 mEstimatedPosition = initialPosition;
                 mEstimatedTransmittedPowerdBm = initialTransmittedPowerdBm;
+                mEstimatedPathLossExponent = initialPathLossExponent;
             }
         } else {
             mCovariance = null;
             mEstimatedPosition = initialPosition;
             mEstimatedTransmittedPowerdBm = initialTransmittedPowerdBm;
+            mEstimatedPathLossExponent = initialPathLossExponent;
         }
     }
 }

@@ -32,6 +32,8 @@ public class RobustWifiAccessPointPowerAndPositionEstimator2DTest implements
 
     private static final double MAX_RSSI = -50.0;
 
+    private static final double MIN_PATH_LOSS_EXPONENT = 1.6;
+
     @BeforeClass
     public static void setUpClass() { }
 
@@ -901,6 +903,321 @@ public class RobustWifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with readings, initial position, initial transmitted power,
+        // initial path loss exponent and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.LMedS);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.MSAC);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with initial position, initial transmitted power,
+        // initial path loss exponent and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.LMedS);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.MSAC);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with initial position, initial transmitted power, listener and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.LMedS);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.MSAC);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this,
+                RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with readings, initial position, initial transmitted power,
+        // initial path loss exponent, listener and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.LMedS);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.MSAC);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
         assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
 
 
@@ -1827,6 +2144,338 @@ public class RobustWifiAccessPointPowerAndPositionEstimator2DTest implements
         assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
 
 
+        //create with quality scores, readings, initial position,
+        // initial transmitted power, initial path loss exponent and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getReadings(), readings);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.LMedS);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getReadings(), readings);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.MSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getReadings(), readings);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getReadings(), readings);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getReadings(), readings);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with quality scores, initial position, initial transmitted power,
+        //initial path loss exponent and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.LMedS);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.MSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with quality scores, initial position, initial transmitted power,
+        // initial path loss exponent, listener and method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.LMedS);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.MSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this,
+                RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
+        //create with quality scores, readings, initial position,
+        // initial transmitted power, initial path loss exponent, listener and
+        // method
+
+        //RANSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.RANSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof RANSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //LMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.LMedS);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof LMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //MSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.MSAC);
+
+        //check
+        assertNull(estimator.getQualityScores());
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof MSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROSAC
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.PROSAC);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof PROSACRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+        //PROMedS
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(qualityScores,
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this, RobustEstimatorMethod.PROMedS);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertTrue(estimator instanceof PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D);
+
+
         //create with default method
         estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create();
 
@@ -2009,6 +2658,71 @@ public class RobustWifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with readings, initial position, initial transmitted power and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(readings,
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with initial position, initial transmitted power and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with initial position, initial transmitted power, listener and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
+
+        //check
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with readings, initial position, initial transmitted power, listener and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
+                this);
+
+        //check
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
         assertSame(estimator.getListener(), this);
         assertEquals(estimator.getMethod(),
                 RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
@@ -2217,6 +2931,76 @@ public class RobustWifiAccessPointPowerAndPositionEstimator2DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with quality scores, readings, initial position, initial transmitted power and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                qualityScores, readings, initialPosition, MAX_RSSI,
+                MIN_PATH_LOSS_EXPONENT);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with quality scores, initial position, initial transmitted power and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                qualityScores, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with quality scores, initial position, initial transmitted power, listener and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                qualityScores, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getMethod(),
+                RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);
+
+
+        //create with quality scores, readings, initial position, initial transmitted power, listener and default method
+        estimator = RobustWifiAccessPointPowerAndPositionEstimator2D.create(
+                qualityScores, readings, initialPosition, MAX_RSSI,
+                MIN_PATH_LOSS_EXPONENT, this);
+
+        //check
+        assertSame(estimator.getQualityScores(), qualityScores);
+        assertSame(estimator.getReadings(), readings);
+        assertSame(estimator.getInitialPosition(), initialPosition);
+        assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
+        assertEquals(estimator.getInitialTransmittedPower(),
+                Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertEquals(estimator.getInitialPathLossExponent(),
+                MIN_PATH_LOSS_EXPONENT, 0.0);
         assertSame(estimator.getListener(), this);
         assertEquals(estimator.getMethod(),
                 RobustWifiAccessPointPowerAndPositionEstimator.DEFAULT_ROBUST_METHOD);

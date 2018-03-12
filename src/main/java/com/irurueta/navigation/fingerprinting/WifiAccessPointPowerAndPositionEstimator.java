@@ -184,8 +184,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
@@ -209,8 +208,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @throws IllegalArgumentException if fingerprints are not valid.
@@ -238,8 +236,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param listener listener in charge of attending events raised by this instance.
@@ -268,8 +265,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
@@ -300,8 +296,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
      *                                (expressed in dBm's)
@@ -320,8 +315,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -372,8 +366,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -394,8 +387,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -419,7 +411,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of access point transmitted power
-     *                                (expressed in dBm's)
+     *                                (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
     public WifiAccessPointPowerAndPositionEstimator(P initialPosition,
@@ -448,8 +440,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * Constructor.
      * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings containing belonging to
-     *                 the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
      * @param initialPosition initial position to start the estimation of access
      *                        point position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
@@ -850,11 +841,12 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @return estimated path loss exponent variance.
      */
     public double getEstimatedPathLossExponentVariance() {
-        if (mEstimatedCovariance == null) {
+        int d = getNumberOfDimensions() + 1;
+        if (mEstimatedCovariance == null ||
+                mEstimatedCovariance.getRows() == d) {
             return 0.0;
         }
 
-        int d = getNumberOfDimensions() + 1;
         return mEstimatedCovariance.getElementAt(d, d);
     }
 

@@ -311,6 +311,84 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
 
     /**
      * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+    }
+
+    /**
+     * Constructor.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @throws IllegalArgumentException if readings are not valid.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
+    }
+
+    /**
+     * Constructor.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
@@ -630,6 +708,104 @@ public class PROSACRobustWifiAccessPointPowerAndPositionEstimator3D extends
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @throws IllegalArgumentException if readings are not valid, quality scores
+     * is null, or length of quality scores is less than required minimum.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            double[] qualityScores,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            double[] qualityScores, Point3D initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            double[] qualityScores, Point3D initialPosition,
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener) {
+        super(initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
+        internalSetQualityScores(qualityScores);
+    }
+
+    /**
+     * Constructor.
+     * Sets WiFi signal readings belonging to the same access point.
+     * @param qualityScores quality scores corresponding to each provided
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings WiFi signal readings belonging to the same access point.
+     * @param initialPosition initial position to start the estimation of access
+     *                        point position.
+     * @param initialTransmittedPowerdBm initial transmitted power to start the
+     *                                   estimation of access point transmitted power
+     *                                   (expressed in dBm's).
+     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     * @param listener listener in charge of attending events raised by this instance.
+     * @throws IllegalArgumentException if readings are not valid, quality scores
+     * is null, or length of quality scores is less than required minimum.
+     */
+    public PROSACRobustWifiAccessPointPowerAndPositionEstimator3D(
+            double[] qualityScores,
+            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            double initialPathLossExponent,
+            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
+            throws IllegalArgumentException {
+        super(readings, initialPosition, initialTransmittedPowerdBm,
+                initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
     }
 

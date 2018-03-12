@@ -402,19 +402,12 @@ public class WifiAccessPointPowerAndPositionEstimator2D extends
         }
 
         Matrix estimatedPositionCovariance = getEstimatedPositionCovariance();
-        if (estimatedPositionCovariance == null) {
-            //covariance not available
-            return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
-                    accessPoint.getFrequency(), accessPoint.getSsid(),
-                    getEstimatedTransmittedPowerdBm(), estimatedPosition);
-        } else {
-            //covariance is available
-            return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
-                    accessPoint.getFrequency(), accessPoint.getSsid(),
-                    getEstimatedTransmittedPowerdBm(),
-                    Math.sqrt(getEstimatedTransmittedPowerVariance()),
-                    estimatedPosition,
-                    estimatedPositionCovariance);
-        }
+        return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
+                accessPoint.getFrequency(), accessPoint.getSsid(),
+                getEstimatedTransmittedPowerdBm(),
+                Math.sqrt(getEstimatedTransmittedPowerVariance()),
+                getEstimatedPathLossExponent(),
+                estimatedPosition,
+                estimatedPositionCovariance);
     }
 }
