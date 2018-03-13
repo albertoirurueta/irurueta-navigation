@@ -21,14 +21,17 @@ import java.util.List;
 
 /**
  * Contains WiFi readings for an unknown location to be determined.
+ * @param <R> a {@link WifiRssiReading} type.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiFingerprint implements Serializable {
+public class WifiFingerprint<AP extends WifiAccessPoint, R extends WifiRssiReading<AP>>
+        implements Serializable {
 
     /**
      * Non-located WiFi readings.
      */
-    private List<WifiRssiReading> mReadings = new ArrayList<>();
+    private List<R> mReadings = new ArrayList<>();
 
     /**
      * Constructor.
@@ -40,7 +43,7 @@ public class WifiFingerprint implements Serializable {
      * @param readings non-located WiFi readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public WifiFingerprint(List<WifiRssiReading> readings)
+    public WifiFingerprint(List<R> readings)
             throws IllegalArgumentException {
         if (readings == null) {
             throw new IllegalArgumentException();
@@ -52,7 +55,7 @@ public class WifiFingerprint implements Serializable {
      * Gets non-located WiFi readings.
      * @return non-located WiFi readings.
      */
-    public List<WifiRssiReading> getReadings() {
+    public List<R> getReadings() {
         return mReadings;
     }
 
@@ -61,7 +64,7 @@ public class WifiFingerprint implements Serializable {
      * @param readings non-located WiFi readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public void setReadings(List<WifiRssiReading> readings)
+    public void setReadings(List<R> readings)
             throws IllegalArgumentException {
         if (readings == null) {
             throw new IllegalArgumentException();
@@ -74,7 +77,7 @@ public class WifiFingerprint implements Serializable {
      * @param otherFingerprint other fingerprint to compare.
      * @return euclidean distance of signal readings from another fingerprint.
      */
-    public double distanceTo(WifiFingerprint otherFingerprint) {
+    public double distanceTo(WifiFingerprint<AP, R> otherFingerprint) {
         return Math.sqrt(sqrDistanceTo(otherFingerprint));
     }
 
@@ -84,16 +87,16 @@ public class WifiFingerprint implements Serializable {
      * @return squared euclidean distance of signal readings from another
      * fingerprint.
      */
-    public double sqrDistanceTo(WifiFingerprint otherFingerprint) {
+    public double sqrDistanceTo(WifiFingerprint<AP, R> otherFingerprint) {
         if (otherFingerprint == null) {
             return Double.MAX_VALUE;
         }
 
-        List<WifiRssiReading> otherReadings = otherFingerprint.getReadings();
+        List<R> otherReadings = otherFingerprint.getReadings();
         int numAccessPoints = 0;
         double result = 0.0, diff;
-        for (WifiRssiReading reading : mReadings) {
-            for (WifiRssiReading otherReading : otherReadings) {
+        for (R reading : mReadings) {
+            for (R otherReading : otherReadings) {
                 if (reading.hasSameAccessPoint(otherReading)) {
                     diff = reading.getRssi() - otherReading.getRssi();
                     result += diff * diff;

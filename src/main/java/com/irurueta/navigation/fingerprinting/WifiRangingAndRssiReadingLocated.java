@@ -21,11 +21,12 @@ import com.irurueta.geometry.Point;
 /**
  * Contains a located reading associated to a given WiFi access point containing
  * signal strength and distance to associated access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRangingAndRssiReadingLocated<P extends Point> extends
-        WifiRangingAndRssiReading {
+public class WifiRangingAndRssiReadingLocated<AP extends WifiAccessPoint, P extends Point> extends
+        WifiRangingAndRssiReading<AP> {
 
     /**
      * Position where WiFi reading was made.
@@ -47,7 +48,7 @@ public class WifiRangingAndRssiReadingLocated<P extends Point> extends
      * @throws IllegalArgumentException if access point data is null, distance is negative
      * or position is null.
      */
-    public WifiRangingAndRssiReadingLocated(WifiAccessPoint accessPoint, double distance,
+    public WifiRangingAndRssiReadingLocated(AP accessPoint, double distance,
             double rssi, P position) throws IllegalArgumentException {
         super(accessPoint, distance, rssi);
 
@@ -69,7 +70,7 @@ public class WifiRangingAndRssiReadingLocated<P extends Point> extends
      * @throws IllegalArgumentException if access point data is null, distance is negative,
      * position is null or any of the standard deviations is zero or negative.
      */
-    public WifiRangingAndRssiReadingLocated(WifiAccessPoint accessPoint, double distance,
+    public WifiRangingAndRssiReadingLocated(AP accessPoint, double distance,
             double rssi, P position, Double distanceStandardDeviation,
             Double rssiStandardDeviation) throws IllegalArgumentException {
         super(accessPoint, distance, rssi, distanceStandardDeviation,
@@ -93,7 +94,7 @@ public class WifiRangingAndRssiReadingLocated<P extends Point> extends
      * @throws IllegalArgumentException if access point data is null, distance is negative
      * or position is null.
      */
-    public WifiRangingAndRssiReadingLocated(WifiAccessPoint accessPoint, double distance,
+    public WifiRangingAndRssiReadingLocated(AP accessPoint, double distance,
             double rssi, P position, Matrix positionCovariance)
             throws IllegalArgumentException {
         this(accessPoint, distance, rssi, position);
@@ -117,7 +118,7 @@ public class WifiRangingAndRssiReadingLocated<P extends Point> extends
      * @throws IllegalArgumentException if access point data is null, distance is negative,
      * position is null or standard deviation is zero or negative.
      */
-    public WifiRangingAndRssiReadingLocated(WifiAccessPoint accessPoint, double distance,
+    public WifiRangingAndRssiReadingLocated(AP accessPoint, double distance,
             double rssi, P position, Double distanceStandardDeviation,
             Double rssiStandardDeviation, Matrix positionCovariance)
             throws IllegalArgumentException {

@@ -21,9 +21,11 @@ import com.irurueta.geometry.Point3D;
 /**
  * Contains a 3D located reading associated to a given WiFi access point containing
  * signal strength and distance to associated access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRangingAndRssiReadingLocated3D extends WifiRangingAndRssiReadingLocated<Point3D> {
+public class WifiRangingAndRssiReadingLocated3D<AP extends WifiAccessPoint> extends
+        WifiRangingAndRssiReadingLocated<AP, Point3D> {
 
     /**
      * Constructor.
@@ -34,7 +36,7 @@ public class WifiRangingAndRssiReadingLocated3D extends WifiRangingAndRssiReadin
      * @throws IllegalArgumentException if access point data is null, distance is negative
      * or position is null.
      */
-    public WifiRangingAndRssiReadingLocated3D(WifiAccessPoint accessPoint,
+    public WifiRangingAndRssiReadingLocated3D(AP accessPoint,
             double distance, double rssi, Point3D position)
             throws IllegalArgumentException {
         super(accessPoint, distance, rssi, position);
@@ -51,7 +53,7 @@ public class WifiRangingAndRssiReadingLocated3D extends WifiRangingAndRssiReadin
      * @throws IllegalArgumentException if access point data is null, distance is negative,
      * position is null or any of the standard deviations is zero or negative.
      */
-    public WifiRangingAndRssiReadingLocated3D(WifiAccessPoint accessPoint,
+    public WifiRangingAndRssiReadingLocated3D(AP accessPoint,
             double distance, double rssi, Point3D position,
             Double distanceStandardDeviation, Double rssiStandardDeviation)
             throws IllegalArgumentException {
@@ -70,7 +72,7 @@ public class WifiRangingAndRssiReadingLocated3D extends WifiRangingAndRssiReadin
      * @throws IllegalArgumentException if access point data is null, distance is negative
      * or position is null.
      */
-    public WifiRangingAndRssiReadingLocated3D(WifiAccessPoint accessPoint,
+    public WifiRangingAndRssiReadingLocated3D(AP accessPoint,
             double distance, double rssi, Point3D position,
             Matrix positionCovariance) throws IllegalArgumentException {
         super(accessPoint, distance, rssi, position, positionCovariance);
@@ -85,7 +87,7 @@ public class WifiRangingAndRssiReadingLocated3D extends WifiRangingAndRssiReadin
      * @throws IllegalArgumentException if access point data is null, distance is negative,
      * position is null or standard deviation is zero or negative.
      */
-    public WifiRangingAndRssiReadingLocated3D(WifiAccessPoint accessPoint,
+    public WifiRangingAndRssiReadingLocated3D(AP accessPoint,
             double distance, double rssi, Point3D position,
             Double distanceStandardDeviation, Double rssiStandardDeviation,
             Matrix positionCovariance)

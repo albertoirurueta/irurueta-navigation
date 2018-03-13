@@ -23,6 +23,7 @@ import com.irurueta.geometry.Point3D;
  * Neighbours (WkNN) algorithm.
  * WkNN algorithm is based on https://github.com/ajnas/WiFiPS.
  */
+@SuppressWarnings("WeakerAccess")
 public class WeightedKNearestNeighboursPositionSolver3D extends
         WeightedKNearestNeighboursPositionSolver<Point3D> {
 
@@ -44,8 +45,8 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            WifiFingerprintLocated<Point3D>[] fingerprints, double[] distances)
-            throws IllegalArgumentException {
+            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
+            double[] distances) throws IllegalArgumentException {
         super(fingerprints, distances);
     }
 
@@ -70,8 +71,8 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            WifiFingerprintLocated<Point3D>[] fingerprints, double[] distances,
-            WeightedKNearestNeighboursPositionSolverListener<Point3D> listener)
+            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
+            double[] distances, WeightedKNearestNeighboursPositionSolverListener<Point3D> listener)
             throws IllegalArgumentException {
         super(fingerprints, distances, listener);
     }

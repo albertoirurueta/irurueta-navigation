@@ -15,13 +15,31 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2D.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3D.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2D.java" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3D.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2D.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprint.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprint.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinder.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinder.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReading.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReading.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReading.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReading.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiReading.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiReading.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReading.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReading.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/package-info.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/package-info.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
@@ -34,13 +52,23 @@
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3DTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2DTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3DTest.java" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated3DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinderTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinderTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2DTest.java" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -58,7 +86,7 @@
     <SUITE FILE_PATH="coverage/irurueta_navigation$DistanceTest.coverage" NAME="DistanceTest Coverage Results" MODIFIED="1517260039273" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.units.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_fingerprinting_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation.fingerprinting in irurueta-navigation Coverage Results" MODIFIED="1520875577037" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_fingerprinting_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation.fingerprinting in irurueta-navigation Coverage Results" MODIFIED="1520953747072" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.irurueta.navigation.fingerprinting.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/irurueta_navigation$com_irurueta_navigation_in_irurueta_navigation.coverage" NAME="com.irurueta.navigation in irurueta-navigation Coverage Results" MODIFIED="1520874307684" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -85,26 +113,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="WifiRangingReading.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReading.java">
+      <file leaf-file-name="WifiRssiReadingTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+            <state relative-caret-position="97">
+              <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WifiRangingReadingLocated.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated.java">
+      <file leaf-file-name="WifiAccessPointWithPower.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+            <state relative-caret-position="280">
+              <caret line="37" column="26" lean-forward="false" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#5015#5016#0" expanded="true" />
-                <element signature="e#5038#5039#0" expanded="true" />
+                <element signature="e#8747#8748#0" expanded="true" />
+                <element signature="e#8787#8788#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WifiAccessPoint.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPoint.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-202">
+              <caret line="33" column="7" lean-forward="true" selection-start-line="33" selection-start-column="7" selection-end-line="33" selection-end-column="7" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,7 +160,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>areValidFingerprints</find>
       <find>mFitter</find>
       <find>mDistanceStandardDeviations</find>
       <find>quality</find>
@@ -153,6 +189,7 @@
       <find>qualit</find>
       <find>quali</find>
       <find>getEstimatedAcc</find>
+      <find>testEstimateWithInitialPathLoss</find>
     </findStrings>
     <replaceStrings>
       <replace>MSAC</replace>
@@ -172,57 +209,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3D.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReading.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3D.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3D.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/package-info.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiFingerprint.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiReading.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReading.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReading.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3D.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinderTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2D.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingTest.java" />
       </list>
     </option>
   </component>
@@ -256,7 +293,7 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="4" />
+    <option name="x" value="37" />
     <option name="y" value="23" />
     <option name="width" value="1358" />
     <option name="height" value="857" />
@@ -390,6 +427,15 @@
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="navigation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="navigation" type="462c0819:PsiDirectoryNode" />
+              <item name="fingerprinting" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -714,7 +760,7 @@
       <workItem from="1520128518249" duration="3621000" />
       <workItem from="1520177170575" duration="32169000" />
       <workItem from="1520411722110" duration="13591000" />
-      <workItem from="1520501782358" duration="90599000" />
+      <workItem from="1520501782358" duration="115177000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -727,9 +773,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest - 2018.03.12 at 17h 55m 04s.xml">
-      <configuration name="MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest - 2018.03.12 at 17h 56m 56s.xml">
       <configuration name="MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest" configurationId="JUnit" />
     </history-entry>
@@ -754,15 +797,18 @@
     <history-entry file="com_irurueta_navigation_fingerprinting_in_irurueta-navigation - 2018.03.12 at 18h 30m 48s.xml">
       <configuration name="com.irurueta.navigation.fingerprinting in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="com_irurueta_navigation_fingerprinting_in_irurueta-navigation - 2018.03.13 at 16h 13m 59s.xml">
+      <configuration name="com.irurueta.navigation.fingerprinting in irurueta-navigation" configurationId="JUnit" />
+    </history-entry>
     <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.03.12 at 18h 10m 00s.xml">
       <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="801839000" />
+    <option name="totallyTimeSpent" value="826417000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="23" width="1358" height="857" extended-state="0" />
+    <frame x="37" y="23" width="1358" height="857" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -781,6 +827,7 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27963525" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24848025" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -793,20 +840,19 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30971128" sideWeight="0.50303954" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943755" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2488" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24848025" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38451442" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -817,12 +863,12 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30971128" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.362462" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30971128" sideWeight="0.4969605" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.362462" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27583587" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27963525" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295711" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
     </layout-to-restore>
@@ -853,588 +899,198 @@
           <option name="timeStamp" value="224" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="482" />
+      <option name="time" value="485" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3DTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiReading.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="148" column="36" lean-forward="false" selection-start-line="148" selection-start-column="36" selection-end-line="148" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+        <state relative-caret-position="75">
+          <caret line="21" column="3" lean-forward="false" selection-start-line="21" selection-start-column="3" selection-end-line="21" selection-end-column="46" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3D.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReading.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="915">
-          <caret line="75" column="26" lean-forward="false" selection-start-line="75" selection-start-column="26" selection-end-line="75" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#913#946#0" expanded="false" />
-            <element signature="e#4533#4534#0" expanded="false" />
-            <element signature="e#4556#4557#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="162">
+          <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="261" column="50" lean-forward="true" selection-start-line="261" selection-start-column="50" selection-end-line="261" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20171122.110611-2-sources.jar!/com/irurueta/numerical/fitting/LevenbergMarquardtMultiDimensionFunctionEvaluator.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="16" column="17" lean-forward="false" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.11/junit-4.11-sources.jar!/org/junit/internal/runners/model/ReflectiveCallable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5370">
-          <caret line="381" column="18" lean-forward="false" selection-start-line="381" selection-start-column="18" selection-end-line="381" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3606">
-          <caret line="45" column="31" lean-forward="false" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="357" column="85" lean-forward="true" selection-start-line="357" selection-start-column="85" selection-end-line="357" selection-end-column="85" />
+          <caret line="23" column="3" lean-forward="false" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="46" />
           <folding>
-            <element signature="e#2050#2083#0" expanded="false" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#5042#5043#0" expanded="true" />
+            <element signature="e#5065#5066#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator3D.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="804" column="85" lean-forward="true" selection-start-line="804" selection-start-column="85" selection-end-line="804" selection-end-column="85" />
+        <state relative-caret-position="442">
+          <caret line="80" column="71" lean-forward="true" selection-start-line="80" selection-start-column="71" selection-end-line="80" selection-end-column="71" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator3D.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="791" column="25" lean-forward="true" selection-start-line="791" selection-start-column="25" selection-end-line="791" selection-end-column="25" />
+        <state relative-caret-position="2153">
+          <caret line="405" column="50" lean-forward="true" selection-start-line="405" selection-start-column="50" selection-end-line="405" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="87">
+          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+          <folding>
+            <element signature="e#4999#5000#0" expanded="true" />
+            <element signature="e#5022#5023#0" expanded="true" />
+            <element signature="e#5161#5162#0" expanded="true" />
+            <element signature="e#5193#5194#0" expanded="true" />
+            <element signature="e#5389#5390#0" expanded="true" />
+            <element signature="e#5431#5432#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="429">
+          <caret line="169" column="38" lean-forward="true" selection-start-line="169" selection-start-column="38" selection-end-line="169" selection-end-column="38" />
+          <folding>
+            <element signature="e#20498#20499#0" expanded="true" />
+            <element signature="e#20548#20549#0" expanded="true" />
+            <element signature="e#23155#23156#0" expanded="true" />
+            <element signature="e#23194#23195#0" expanded="true" />
+            <element signature="e#24506#24507#0" expanded="true" />
+            <element signature="e#24553#24554#0" expanded="true" />
+            <element signature="e#25800#25801#0" expanded="true" />
+            <element signature="e#25849#25850#0" expanded="true" />
+            <element signature="e#26562#26563#0" expanded="true" />
+            <element signature="e#26592#26593#0" expanded="true" />
+            <element signature="e#27298#27299#0" expanded="true" />
+            <element signature="e#27330#27331#0" expanded="true" />
+            <element signature="e#28152#28153#0" expanded="true" />
+            <element signature="e#28184#28185#0" expanded="true" />
+            <element signature="e#28881#28882#0" expanded="true" />
+            <element signature="e#28931#28932#0" expanded="true" />
+            <element signature="e#30913#30914#0" expanded="true" />
+            <element signature="e#30983#30984#0" expanded="true" />
+            <element signature="e#31177#31178#0" expanded="true" />
+            <element signature="e#31229#31230#0" expanded="true" />
+            <element signature="e#31421#31422#0" expanded="true" />
+            <element signature="e#31473#31474#0" expanded="true" />
+            <element signature="e#32583#32584#0" expanded="true" />
+            <element signature="e#32632#32633#0" expanded="true" />
+            <element signature="e#32953#32954#0" expanded="true" />
+            <element signature="e#32996#32997#0" expanded="true" />
+            <element signature="e#34279#34280#0" expanded="true" />
+            <element signature="e#34308#34309#0" expanded="true" />
+            <element signature="e#37580#37581#0" expanded="true" />
+            <element signature="e#37628#37629#0" expanded="true" />
+            <element signature="e#43586#43587#0" expanded="true" />
+            <element signature="e#43634#43635#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="80" column="71" lean-forward="true" selection-start-line="80" selection-start-column="71" selection-end-line="80" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/FingerprintingExceptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="298" column="31" lean-forward="false" selection-start-line="298" selection-start-column="31" selection-end-line="298" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="709" column="16" lean-forward="true" selection-start-line="709" selection-start-column="16" selection-end-line="709" selection-end-column="16" />
+        <state relative-caret-position="237">
+          <caret line="254" column="11" lean-forward="false" selection-start-line="254" selection-start-column="11" selection-end-line="254" selection-end-column="11" />
           <folding>
-            <element signature="e#3811#3812#0" expanded="true" />
-            <element signature="e#3834#3835#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="924" column="0" lean-forward="false" selection-start-line="922" selection-start-column="0" selection-end-line="924" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="2986" column="45" lean-forward="false" selection-start-line="2986" selection-start-column="45" selection-end-line="2986" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="256" column="56" lean-forward="true" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPoint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="23" column="13" lean-forward="false" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="50" column="0" lean-forward="true" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="27" column="13" lean-forward="false" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="40" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="94" column="0" lean-forward="true" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="674" column="57" lean-forward="false" selection-start-line="674" selection-start-column="57" selection-end-line="674" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="176" column="108" lean-forward="true" selection-start-line="176" selection-start-column="108" selection-end-line="176" selection-end-column="108" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="248" column="10" lean-forward="true" selection-start-line="248" selection-start-column="10" selection-end-line="248" selection-end-column="10" />
-          <folding>
-            <element signature="e#16905#16906#0" expanded="true" />
-            <element signature="e#16928#16929#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="3390" column="0" lean-forward="true" selection-start-line="3390" selection-start-column="0" selection-end-line="3390" selection-end-column="0" />
-          <folding>
-            <element signature="method#WifiAccessPointPowerAndPositionEstimator3DTest#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#29458#29512#0" expanded="false" />
-            <element signature="e#33984#34055#0" expanded="false" />
-            <element signature="e#35918#35977#0" expanded="false" />
-            <element signature="e#43061#43132#0" expanded="false" />
-            <element signature="e#44974#45033#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testAreValidReadings#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialTransmittedPowerWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionAndInitialTransmittedPowerWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialTransmittedPowerAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionAndInitialTransmittedPowerAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithPathLossEstimationEnabled#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateFingerprintingException#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#161295#161365#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#WifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="2592" column="39" lean-forward="false" selection-start-line="2592" selection-start-column="39" selection-end-line="2592" selection-end-column="39" />
-          <folding>
-            <element signature="method#create#17;class#RobustWifiAccessPointPowerAndPositionEstimator3D#0" expanded="false" />
-            <element signature="method#create#18;class#RobustWifiAccessPointPowerAndPositionEstimator3D#0" expanded="false" />
-            <element signature="method#create#76;class#RobustWifiAccessPointPowerAndPositionEstimator3D#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Utils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="23" column="25" lean-forward="false" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRssiReading.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
-          <folding>
-            <element signature="e#2326#2327#0" expanded="true" />
-            <element signature="e#2349#2350#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-342">
-          <caret line="91" column="11" lean-forward="false" selection-start-line="91" selection-start-column="11" selection-end-line="91" selection-end-column="11" />
-          <folding>
-            <element signature="e#8747#8748#0" expanded="true" />
-            <element signature="e#8787#8788#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4800">
-          <caret line="377" column="24" lean-forward="false" selection-start-line="377" selection-start-column="24" selection-end-line="377" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12936">
-          <caret line="967" column="18" lean-forward="false" selection-start-line="967" selection-start-column="18" selection-end-line="967" selection-end-column="18" />
-          <folding>
-            <element signature="docComment;method#RobustWifiAccessPointPowerAndPositionEstimator#17;class#RobustWifiAccessPointPowerAndPositionEstimator#0" expanded="false" />
-            <element signature="e#27084#27085#0" expanded="true" />
-            <element signature="e#27131#27132#0" expanded="true" />
-            <element signature="e#28378#28379#0" expanded="true" />
-            <element signature="e#28427#28428#0" expanded="true" />
-            <element signature="e#40083#40084#0" expanded="true" />
-            <element signature="e#40153#40154#0" expanded="true" />
-            <element signature="e#40347#40348#0" expanded="true" />
-            <element signature="e#40399#40400#0" expanded="true" />
-            <element signature="e#40521#40522#0" expanded="true" />
-            <element signature="e#40562#40563#0" expanded="true" />
-            <element signature="e#41177#41178#0" expanded="true" />
-            <element signature="e#41226#41227#0" expanded="true" />
-            <element signature="e#47736#47737#0" expanded="true" />
-            <element signature="e#47793#47794#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="44" column="3" lean-forward="true" selection-start-line="44" selection-start-column="3" selection-end-line="44" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="894">
-          <caret line="4880" column="0" lean-forward="true" selection-start-line="4870" selection-start-column="0" selection-end-line="4880" selection-end-column="0" />
-          <folding>
-            <element signature="method#testConstructor#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetThreshold#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementWithInlierDataAndNoResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPosition#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPositionAndPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInlierErrorWithInitialPositionAndPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="4867" column="13" lean-forward="true" selection-start-line="4867" selection-start-column="13" selection-end-line="4867" selection-end-column="13" />
-          <folding>
-            <element signature="method#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#53304#53375#0" expanded="false" />
-            <element signature="e#57082#57159#0" expanded="false" />
-            <element signature="e#60938#61009#0" expanded="false" />
-            <element signature="e#63989#64057#0" expanded="false" />
-            <element signature="e#67063#67140#0" expanded="false" />
-            <element signature="method#testGetSetThreshold#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementWithInlierDataAndNoResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPosition#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPositionAndPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#232326#232396#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="3656" column="61" lean-forward="false" selection-start-line="3656" selection-start-column="61" selection-end-line="3656" selection-end-column="61" />
-          <folding>
-            <element signature="method#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#48441#48518#0" expanded="false" />
-            <element signature="e#60802#60879#0" expanded="false" />
-            <element signature="method#testGetSetStopThreshold#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="e#4617#4618#0" expanded="false" />
+            <element signature="e#4640#4641#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="3682" column="73" lean-forward="false" selection-start-line="3682" selection-start-column="73" selection-end-line="3682" selection-end-column="73" />
-          <folding>
-            <element signature="method#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#48559#48636#0" expanded="false" />
-            <element signature="e#60920#60997#0" expanded="false" />
-            <element signature="method#testGetSetStopThreshold#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#175085#175155#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="252">
+          <caret line="3444" column="34" lean-forward="true" selection-start-line="3444" selection-start-column="34" selection-end-line="3444" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="3568" column="60" lean-forward="false" selection-start-line="3568" selection-start-column="60" selection-end-line="3568" selection-end-column="60" />
-          <folding>
-            <element signature="method#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#48243#48320#0" expanded="false" />
-            <element signature="e#60552#60629#0" expanded="false" />
-            <element signature="method#testGetSetStopThreshold#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="10">
+          <caret line="3332" column="47" lean-forward="false" selection-start-line="3332" selection-start-column="16" selection-end-line="3332" selection-end-column="47" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="3602" column="13" lean-forward="true" selection-start-line="3602" selection-start-column="13" selection-end-line="3602" selection-end-column="13" />
-          <folding>
-            <element signature="method#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#48361#48438#0" expanded="false" />
-            <element signature="e#60690#60767#0" expanded="false" />
-            <element signature="method#testGetSetStopThreshold#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#170871#170941#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#MSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="3356" column="47" lean-forward="false" selection-start-line="3356" selection-start-column="16" selection-end-line="3356" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-163">
+          <caret line="4790" column="47" lean-forward="false" selection-start-line="4790" selection-start-column="16" selection-end-line="4790" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="4814" column="0" lean-forward="true" selection-start-line="4814" selection-start-column="0" selection-end-line="4814" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="6239" column="28" lean-forward="true" selection-start-line="6239" selection-start-column="28" selection-end-line="6239" selection-end-column="28" />
+        <state relative-caret-position="270">
+          <caret line="6014" column="44" lean-forward="true" selection-start-line="6014" selection-start-column="44" selection-end-line="6014" selection-end-column="44" />
           <folding>
             <element signature="method#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#setUpClass#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#tearDownClass#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#setUp#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#tearDown#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#53290#53361#0" expanded="false" />
-            <element signature="e#66953#67024#0" expanded="false" />
+            <element signature="e#53547#53618#0" expanded="false" />
+            <element signature="e#67278#67349#0" expanded="false" />
             <element signature="method#testGetSetThreshold#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
@@ -1448,8 +1104,6 @@
             <element signature="method#testGetSetMaxIterations#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#testIsSetResultRefined#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#testIsSetCovarianceKept#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#testGetSetQualityScores#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#onEstimateStart#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#onEstimateEnd#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
@@ -1462,301 +1116,306 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="6290" column="0" lean-forward="true" selection-start-line="6290" selection-start-column="0" selection-end-line="6290" selection-end-column="0" />
-          <folding>
-            <element signature="method#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#53408#53479#0" expanded="false" />
-            <element signature="e#67071#67142#0" expanded="false" />
-            <element signature="method#testGetSetThreshold#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#315602#315672#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#PROSACRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="5026" column="0" lean-forward="true" selection-start-line="5026" selection-start-column="0" selection-end-line="5026" selection-end-column="0" />
-          <folding>
-            <element signature="method#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#48537#48608#0" expanded="false" />
-            <element signature="e#60932#61003#0" expanded="false" />
-            <element signature="method#testGetSetStopThreshold#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#251611#251681#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13701">
-          <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
+        <state relative-caret-position="351">
+          <caret line="6056" column="22" lean-forward="true" selection-start-line="6056" selection-start-column="22" selection-end-line="6056" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="5069" column="49" lean-forward="true" selection-start-line="5069" selection-start-column="49" selection-end-line="5069" selection-end-column="49" />
+        <state relative-caret-position="468">
+          <caret line="4823" column="0" lean-forward="true" selection-start-line="4823" selection-start-column="0" selection-end-line="4823" selection-end-column="0" />
           <folding>
-            <element signature="method#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUpClass#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDownClass#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#setUp#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#tearDown#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#48655#48726#0" expanded="false" />
-            <element signature="e#61050#61121#0" expanded="false" />
-            <element signature="method#testGetSetStopThreshold#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#PROMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialTransmittedPower#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialPosition#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialPathLossExponent#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustWifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2D.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-778">
-          <caret line="2608" column="37" lean-forward="true" selection-start-line="2608" selection-start-column="37" selection-end-line="2608" selection-end-column="37" />
-          <folding>
-            <element signature="docComment;method#create#16;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#16;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#17;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#17;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#18;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#18;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#19;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#19;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#36;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#36;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#37;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#37;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#38;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#38;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#39;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#39;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="e#93969#93970#0" expanded="true" />
-            <element signature="e#94021#94022#0" expanded="true" />
-            <element signature="docComment;method#create#56;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#56;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#57;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#57;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#58;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#58;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#59;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#59;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#76;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="method#create#76;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#77;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#78;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="docComment;method#create#79;class#RobustWifiAccessPointPowerAndPositionEstimator2D#0" expanded="false" />
-            <element signature="e#134153#134154#0" expanded="true" />
-            <element signature="e#134228#134229#0" expanded="true" />
-            <element signature="e#134397#134398#0" expanded="true" />
-            <element signature="e#134468#134469#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="170" column="0" lean-forward="true" selection-start-line="170" selection-start-column="0" selection-end-line="170" selection-end-column="0" />
+        <state relative-caret-position="439">
+          <caret line="4708" column="33" lean-forward="true" selection-start-line="4708" selection-start-column="33" selection-end-line="4708" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3D.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="401" column="0" lean-forward="true" selection-start-line="401" selection-start-column="0" selection-end-line="401" selection-end-column="0" />
+        <state relative-caret-position="342">
+          <caret line="97" column="16" lean-forward="true" selection-start-line="97" selection-start-column="16" selection-end-line="97" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2D.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustWifiAccessPointPowerAndPositionEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="411" column="0" lean-forward="false" selection-start-line="411" selection-start-column="0" selection-end-line="411" selection-end-column="0" />
+        <state relative-caret-position="417">
+          <caret line="81" column="0" lean-forward="true" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-106">
+          <caret line="46" column="11" lean-forward="false" selection-start-line="46" selection-start-column="11" selection-end-line="46" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="244">
+          <caret line="84" column="16" lean-forward="false" selection-start-line="84" selection-start-column="16" selection-end-line="84" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="801" column="67" lean-forward="true" selection-start-line="801" selection-start-column="67" selection-end-line="801" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-203">
+          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2149">
-          <caret line="1228" column="25" lean-forward="true" selection-start-line="1228" selection-start-column="25" selection-end-line="1228" selection-end-column="25" />
+        <state relative-caret-position="397">
+          <caret line="3544" column="13" lean-forward="true" selection-start-line="3544" selection-start-column="13" selection-end-line="3544" selection-end-column="13" />
           <folding>
             <element signature="method#WifiAccessPointPowerAndPositionEstimator2DTest#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#setUpClass#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#tearDownClass#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#setUp#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
             <element signature="method#tearDown#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testConstructor#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#29402#29456#0" expanded="false" />
-            <element signature="e#33866#33937#0" expanded="false" />
-            <element signature="e#35800#35859#0" expanded="false" />
-            <element signature="e#42944#43015#0" expanded="false" />
-            <element signature="e#44857#44916#0" expanded="false" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPosition#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testAreValidReadings#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetReadings#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialTransmittedPowerWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionAndInitialTransmittedPowerWithoutError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialTransmittedPowerAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPositionAndInitialTransmittedPowerAndWithError#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithPathLossEstimationEnabled#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInitialPathLoss#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateFingerprintingException#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
+            <element signature="e#29591#29645#0" expanded="false" />
+            <element signature="e#34072#34143#0" expanded="false" />
+            <element signature="e#36006#36065#0" expanded="false" />
+            <element signature="e#43184#43255#0" expanded="false" />
+            <element signature="e#45097#45156#0" expanded="false" />
             <element signature="method#onEstimateEnd#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#159269#159339#0" expanded="false" />
+            <element signature="e#159790#159860#0" expanded="false" />
             <element signature="method#checkLocked#0;class#WifiAccessPointPowerAndPositionEstimator2DTest#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/UtilsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-204">
+          <caret line="3560" column="0" lean-forward="true" selection-start-line="3560" selection-start-column="0" selection-end-line="3560" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="929" column="13" lean-forward="true" selection-start-line="929" selection-start-column="13" selection-end-line="929" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustWifiAccessPointPowerAndPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="3439" column="58" lean-forward="true" selection-start-line="3439" selection-start-column="58" selection-end-line="3439" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1185">
+          <caret line="101" column="22" lean-forward="true" selection-start-line="101" selection-start-column="22" selection-end-line="101" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintLocated3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="554">
+          <caret line="97" column="45" lean-forward="false" selection-start-line="97" selection-start-column="45" selection-end-line="97" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiFingerprintTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="153" column="36" lean-forward="false" selection-start-line="153" selection-start-column="36" selection-end-line="153" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="464">
+          <caret line="1095" column="34" lean-forward="true" selection-start-line="1095" selection-start-column="34" selection-end-line="1095" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="397">
+          <caret line="255" column="9" lean-forward="true" selection-start-line="255" selection-start-column="9" selection-end-line="255" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingLocated3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="487">
+          <caret line="260" column="110" lean-forward="false" selection-start-line="260" selection-start-column="110" selection-end-line="260" selection-end-column="110" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingAndRssiReadingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="487">
+          <caret line="122" column="92" lean-forward="false" selection-start-line="122" selection-start-column="92" selection-end-line="122" selection-end-column="92" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="487">
+          <caret line="237" column="96" lean-forward="false" selection-start-line="237" selection-start-column="96" selection-end-line="237" selection-end-column="96" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="203" column="13" lean-forward="true" selection-start-line="203" selection-start-column="13" selection-end-line="203" selection-end-column="13" />
+        <state relative-caret-position="487">
+          <caret line="236" column="96" lean-forward="false" selection-start-line="236" selection-start-column="96" selection-end-line="236" selection-end-column="96" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointPowerAndPositionEstimator.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1419">
-          <caret line="829" column="18" lean-forward="false" selection-start-line="829" selection-start-column="18" selection-end-line="829" selection-end-column="18" />
-          <folding>
-            <element signature="e#20311#20312#0" expanded="true" />
-            <element signature="e#20361#20362#0" expanded="true" />
-            <element signature="e#22968#22969#0" expanded="true" />
-            <element signature="e#23007#23008#0" expanded="true" />
-            <element signature="e#24319#24320#0" expanded="true" />
-            <element signature="e#24366#24367#0" expanded="true" />
-            <element signature="e#25613#25614#0" expanded="true" />
-            <element signature="e#25662#25663#0" expanded="true" />
-            <element signature="e#26375#26376#0" expanded="true" />
-            <element signature="e#26405#26406#0" expanded="true" />
-            <element signature="e#27077#27078#0" expanded="true" />
-            <element signature="e#27109#27110#0" expanded="true" />
-            <element signature="e#27914#27915#0" expanded="true" />
-            <element signature="e#27946#27947#0" expanded="true" />
-            <element signature="e#28643#28644#0" expanded="true" />
-            <element signature="e#28693#28694#0" expanded="true" />
-            <element signature="e#30675#30676#0" expanded="true" />
-            <element signature="e#30745#30746#0" expanded="true" />
-            <element signature="e#30939#30940#0" expanded="true" />
-            <element signature="e#30991#30992#0" expanded="true" />
-            <element signature="e#31183#31184#0" expanded="true" />
-            <element signature="e#31235#31236#0" expanded="true" />
-            <element signature="e#32345#32346#0" expanded="true" />
-            <element signature="e#32394#32395#0" expanded="true" />
-            <element signature="e#32715#32716#0" expanded="true" />
-            <element signature="e#32758#32759#0" expanded="true" />
-            <element signature="e#34041#34042#0" expanded="true" />
-            <element signature="e#34070#34071#0" expanded="true" />
-            <element signature="e#37308#37309#0" expanded="true" />
-            <element signature="e#37356#37357#0" expanded="true" />
-            <element signature="e#43280#43281#0" expanded="true" />
-            <element signature="e#43328#43329#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReading.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="22" column="13" lean-forward="false" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        <state relative-caret-position="502">
+          <caret line="114" column="78" lean-forward="false" selection-start-line="114" selection-start-column="78" selection-end-line="114" selection-end-column="78" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiRangingReadingLocated.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="429">
+          <caret line="194" column="16" lean-forward="true" selection-start-line="194" selection-start-column="16" selection-end-line="194" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingLocated2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="197" column="90" lean-forward="false" selection-start-line="197" selection-start-column="90" selection-end-line="197" selection-end-column="90" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiRssiReadingTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="37" column="26" lean-forward="false" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5015#5016#0" expanded="true" />
-            <element signature="e#5038#5039#0" expanded="true" />
+            <element signature="e#8747#8748#0" expanded="true" />
+            <element signature="e#8787#8788#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPoint.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-202">
+          <caret line="33" column="7" lean-forward="true" selection-start-line="33" selection-start-column="7" selection-end-line="33" selection-end-column="7" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -42,7 +42,7 @@ public class WifiRssiReadingLocated2DTest {
     @Test
     public void testConstructor() throws AlgebraException {
         //test empty constructor
-        WifiRssiReadingLocated2D reading = new WifiRssiReadingLocated2D();
+        WifiRssiReadingLocated2D<WifiAccessPoint> reading = new WifiRssiReadingLocated2D<>();
 
         //check
         assertNull(reading.getPosition());
@@ -55,7 +55,7 @@ public class WifiRssiReadingLocated2DTest {
         //test constructor with access point, rssi and position
         WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
-        reading = new WifiRssiReadingLocated2D(ap, -50.0, position);
+        reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position);
 
         //check
         assertSame(reading.getPosition(), position);
@@ -67,12 +67,12 @@ public class WifiRssiReadingLocated2DTest {
         //Force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRssiReadingLocated2D(null, -50.0,
+            reading = new WifiRssiReadingLocated2D<>(null, -50.0,
                     position);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, null);
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
@@ -80,7 +80,7 @@ public class WifiRssiReadingLocated2DTest {
 
         //test constructor with access point, rssi, position and rssi standard
         //deviation
-        reading = new WifiRssiReadingLocated2D(ap, -50.0, position,
+        reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position,
                 5.5);
 
         //check
@@ -93,17 +93,17 @@ public class WifiRssiReadingLocated2DTest {
         //Force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRssiReadingLocated2D(null, -50.0, position,
+            reading = new WifiRssiReadingLocated2D<>(null, -50.0, position,
                     5.5);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, null,
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, null,
                     5.5);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, position,
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position,
                     0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -112,7 +112,7 @@ public class WifiRssiReadingLocated2DTest {
 
         //test constructor with access point, rssi, position and covariance
         Matrix cov = new Matrix(2,2);
-        reading = new WifiRssiReadingLocated2D(ap, -50.0, position, cov);
+        reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position, cov);
 
         //check
         assertSame(reading.getPosition(), position);
@@ -121,7 +121,7 @@ public class WifiRssiReadingLocated2DTest {
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
 
-        reading = new WifiRssiReadingLocated2D(ap, -50.0, position, (Matrix)null);
+        reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position, (Matrix)null);
 
         //check
         assertSame(reading.getPosition(), position);
@@ -133,15 +133,15 @@ public class WifiRssiReadingLocated2DTest {
         //Force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRssiReadingLocated2D(null, -50.0, position, cov);
+            reading = new WifiRssiReadingLocated2D<>(null, -50.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, null, cov);
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, null, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, position,
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position,
                     new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -150,7 +150,7 @@ public class WifiRssiReadingLocated2DTest {
 
         //test constructor with access point, rssi, position, rssi standard
         //deviation, and position covariance
-        reading = new WifiRssiReadingLocated2D(ap, -50.0, position,
+        reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position,
                 5.5, cov);
 
         //check
@@ -163,22 +163,22 @@ public class WifiRssiReadingLocated2DTest {
         //Force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRssiReadingLocated2D(null, -50.0,
+            reading = new WifiRssiReadingLocated2D<>(null, -50.0,
                     position, 5.5, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, null,
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, null,
                     5.5, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, position,
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position,
                     0.0, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReadingLocated2D(ap, -50.0, position,
+            reading = new WifiRssiReadingLocated2D<>(ap, -50.0, position,
                     5.5, new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -191,11 +191,11 @@ public class WifiRssiReadingLocated2DTest {
         WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
 
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
-        WifiRssiReadingLocated2D reading1 = new WifiRssiReadingLocated2D(ap1,
+        WifiRssiReadingLocated2D<WifiAccessPoint> reading1 = new WifiRssiReadingLocated2D<>(ap1,
                 -50.0, position);
-        WifiRssiReadingLocated2D reading2 = new WifiRssiReadingLocated2D(ap1,
+        WifiRssiReadingLocated2D<WifiAccessPoint> reading2 = new WifiRssiReadingLocated2D<>(ap1,
                 -50.0, position);
-        WifiRssiReadingLocated2D reading3 = new WifiRssiReadingLocated2D(ap2,
+        WifiRssiReadingLocated2D<WifiAccessPoint> reading3 = new WifiRssiReadingLocated2D<>(ap2,
                 -50.0, position);
 
         //check

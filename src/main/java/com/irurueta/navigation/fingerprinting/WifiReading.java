@@ -19,21 +19,22 @@ import java.io.Serializable;
 
 /**
  * Contains a reading related to a given WiFi access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class WifiReading implements Serializable {
+public abstract class WifiReading<AP extends WifiAccessPoint> implements Serializable {
 
     /**
      * Access point associated to this reading.
      */
-    private WifiAccessPoint mAccessPoint;
+    private AP mAccessPoint;
 
     /**
      * Constructor.
      * @param accessPoint access point associated to this reading.
      * @throws IllegalArgumentException if access point data is null.
      */
-    public WifiReading(WifiAccessPoint accessPoint)
+    public WifiReading(AP accessPoint)
             throws IllegalArgumentException {
         if (accessPoint == null) {
             throw new IllegalArgumentException();
@@ -61,7 +62,7 @@ public abstract class WifiReading implements Serializable {
      * @return true if both readings are associated to the same access point,
      * false otherwise.
      */
-    public boolean hasSameAccessPoint(WifiReading otherReading) {
+    public boolean hasSameAccessPoint(WifiReading<AP> otherReading) {
         return otherReading != null && otherReading.mAccessPoint.equals(mAccessPoint);
     }
 }

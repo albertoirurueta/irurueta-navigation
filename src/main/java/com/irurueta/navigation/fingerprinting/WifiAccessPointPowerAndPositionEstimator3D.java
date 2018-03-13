@@ -54,7 +54,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -77,7 +77,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -102,7 +102,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -130,7 +130,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Point3D initialPosition,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -159,7 +159,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -190,7 +190,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -210,7 +210,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -258,7 +258,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
@@ -280,7 +280,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -337,7 +337,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator3D(
-            List<? extends WifiRssiReadingLocated<Point3D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             WifiAccessPointPowerAndPositionEstimatorListener<Point3D> listener)
@@ -389,7 +389,7 @@ public class WifiAccessPointPowerAndPositionEstimator3D extends
     @Override
     @SuppressWarnings("unchecked")
     public WifiAccessPointWithPowerAndLocated3D getEstimatedAccessPoint() {
-        List<? extends WifiRssiReadingLocated<Point3D>> readings = getReadings();
+        List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point3D>> readings = getReadings();
         if (readings == null || readings.isEmpty()) {
             return null;
         }

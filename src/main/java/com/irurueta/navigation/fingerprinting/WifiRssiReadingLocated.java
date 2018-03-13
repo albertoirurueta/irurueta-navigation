@@ -21,10 +21,11 @@ import com.irurueta.geometry.Point;
 /**
  * Contains a located signal strength reading associated to a given WiFi
  * access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRssiReadingLocated<P extends Point> extends WifiRssiReading {
+public class WifiRssiReadingLocated<AP extends WifiAccessPoint, P extends Point> extends WifiRssiReading<AP> {
 
     /**
      * Position where WiFi reading was made.
@@ -45,7 +46,7 @@ public class WifiRssiReadingLocated<P extends Point> extends WifiRssiReading {
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiRssiReadingLocated(WifiAccessPoint accessPoint, double rssi, P position)
+    public WifiRssiReadingLocated(AP accessPoint, double rssi, P position)
             throws IllegalArgumentException {
         super(accessPoint, rssi);
 
@@ -65,7 +66,7 @@ public class WifiRssiReadingLocated<P extends Point> extends WifiRssiReading {
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiRssiReadingLocated(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated(AP accessPoint, double rssi,
                                   P position, Double rssiStandardDeviation)
             throws IllegalArgumentException {
         super(accessPoint, rssi, rssiStandardDeviation);
@@ -87,7 +88,7 @@ public class WifiRssiReadingLocated<P extends Point> extends WifiRssiReading {
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiRssiReadingLocated(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated(AP accessPoint, double rssi,
                                   P position, Matrix positionCovariance)
             throws IllegalArgumentException {
         this(accessPoint, rssi, position);
@@ -113,7 +114,7 @@ public class WifiRssiReadingLocated<P extends Point> extends WifiRssiReading {
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiRssiReadingLocated(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated(AP accessPoint, double rssi,
             P position, Double rssiStandardDeviation, Matrix positionCovariance)
             throws IllegalArgumentException {
         this(accessPoint, rssi, position, rssiStandardDeviation);

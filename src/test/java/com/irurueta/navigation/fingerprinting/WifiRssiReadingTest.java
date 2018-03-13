@@ -40,7 +40,7 @@ public class WifiRssiReadingTest {
     @Test
     public void testConstructor() {
         //test empty constructor
-        WifiRssiReading reading = new WifiRssiReading();
+        WifiRssiReading<WifiAccessPoint> reading = new WifiRssiReading<>();
 
         //check
         assertNull(reading.getAccessPoint());
@@ -50,7 +50,7 @@ public class WifiRssiReadingTest {
 
         //test constructor with access point and RSSI
         WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
-        reading = new WifiRssiReading(ap, -50.0);
+        reading = new WifiRssiReading<>(ap, -50.0);
 
         //check
         assertSame(reading.getAccessPoint(), ap);
@@ -60,14 +60,14 @@ public class WifiRssiReadingTest {
         //Force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRssiReading(null, -50.0);
+            reading = new WifiRssiReading<>(null, -50.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
 
 
         //test constructor with access point, RSSI and RSSI standard deviation
-        reading = new WifiRssiReading(ap, -50.0, 5.5);
+        reading = new WifiRssiReading<>(ap, -50.0, 5.5);
 
         //check
         assertSame(reading.getAccessPoint(), ap);
@@ -77,12 +77,12 @@ public class WifiRssiReadingTest {
         //Force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRssiReading(null, -50.0,
+            reading = new WifiRssiReading<>(null, -50.0,
                     5.5);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRssiReading(ap, -50.0, 0.0);
+            reading = new WifiRssiReading<>(ap, -50.0, 0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
@@ -93,9 +93,9 @@ public class WifiRssiReadingTest {
         WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
         WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        WifiRssiReading reading1 = new WifiRssiReading(ap1, -50.0);
-        WifiRssiReading reading2 = new WifiRssiReading(ap1, -50.0);
-        WifiRssiReading reading3 = new WifiRssiReading(ap2, -50.0);
+        WifiRssiReading<WifiAccessPoint> reading1 = new WifiRssiReading<>(ap1, -50.0);
+        WifiRssiReading<WifiAccessPoint> reading2 = new WifiRssiReading<>(ap1, -50.0);
+        WifiRssiReading<WifiAccessPoint> reading3 = new WifiRssiReading<>(ap2, -50.0);
 
         //check
         assertTrue(reading1.hasSameAccessPoint(reading1));

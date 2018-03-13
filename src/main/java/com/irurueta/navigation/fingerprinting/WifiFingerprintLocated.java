@@ -22,11 +22,13 @@ import java.util.List;
 
 /**
  * Contains located Wifi fingerprint.
+ * @param <AP> a {@link WifiAccessPoint} type.
  * @param <P> a {@link Point} type.
+ * @param <R> a {@link WifiRssiReading} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class WifiFingerprintLocated<P extends Point>
-        extends WifiFingerprint {
+public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R extends WifiRssiReading<AP>,
+        P extends Point> extends WifiFingerprint<AP, R> {
 
     /**
      * Position where fingerprint readings were made.
@@ -46,7 +48,7 @@ public abstract class WifiFingerprintLocated<P extends Point>
      * @throws IllegalArgumentException if either readings or position are
      * null.
      */
-    public WifiFingerprintLocated(List<WifiRssiReading> readings, P position)
+    public WifiFingerprintLocated(List<R> readings, P position)
             throws IllegalArgumentException {
         super(readings);
 
@@ -66,7 +68,7 @@ public abstract class WifiFingerprintLocated<P extends Point>
      * @throws IllegalArgumentException if either readings or position are null, or
      * covariance has invalid size.
      */
-    public WifiFingerprintLocated(List<WifiRssiReading> readings, P position,
+    public WifiFingerprintLocated(List<R> readings, P position,
                                   Matrix positionCovariance) throws IllegalArgumentException {
         this(readings, position);
 

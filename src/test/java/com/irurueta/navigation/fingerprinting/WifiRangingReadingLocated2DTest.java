@@ -43,7 +43,7 @@ public class WifiRangingReadingLocated2DTest {
     @Test
     public void testConstructor() throws AlgebraException {
         //test empty constructor
-        WifiRangingReadingLocated2D reading = new WifiRangingReadingLocated2D();
+        WifiRangingReadingLocated2D<WifiAccessPoint> reading = new WifiRangingReadingLocated2D<>();
 
         //check
         assertNull(reading.getAccessPoint());
@@ -56,7 +56,7 @@ public class WifiRangingReadingLocated2DTest {
         //test constructor with access point, distance and position
         WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
-        reading = new WifiRangingReadingLocated2D(ap, 1.2, position);
+        reading = new WifiRangingReadingLocated2D<>(ap, 1.2, position);
 
         //check
         assertSame(reading.getPosition(), position);
@@ -68,23 +68,23 @@ public class WifiRangingReadingLocated2DTest {
         //force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRangingReadingLocated2D(null,
+            reading = new WifiRangingReadingLocated2D<>(null,
                     1.2, position);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, -1.0, position);
+            reading = new WifiRangingReadingLocated2D<>(ap, -1.0, position);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 1.2, null);
+            reading = new WifiRangingReadingLocated2D<>(ap, 1.2, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
 
 
         //test constructor with access point, distance, position and distance standard deviation
-        reading = new WifiRangingReadingLocated2D(ap, 1.5, position,
+        reading = new WifiRangingReadingLocated2D<>(ap, 1.5, position,
                 0.1);
 
         //check
@@ -97,22 +97,22 @@ public class WifiRangingReadingLocated2DTest {
         //force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRangingReadingLocated2D(null, 1.5, position,
+            reading = new WifiRangingReadingLocated2D<>(null, 1.5, position,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, -1.0, position,
+            reading = new WifiRangingReadingLocated2D<>(ap, -1.0, position,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 1.5, null,
+            reading = new WifiRangingReadingLocated2D<>(ap, 1.5, null,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 1.5, position,
+            reading = new WifiRangingReadingLocated2D<>(ap, 1.5, position,
                     0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -121,7 +121,7 @@ public class WifiRangingReadingLocated2DTest {
 
         //test constructor with access point, distance, position and position covariance
         Matrix cov = new Matrix(2, 2);
-        reading = new WifiRangingReadingLocated2D(ap, 2.0, position, cov);
+        reading = new WifiRangingReadingLocated2D<>(ap, 2.0, position, cov);
 
         //check
         assertSame(reading.getPosition(), position);
@@ -130,7 +130,7 @@ public class WifiRangingReadingLocated2DTest {
         assertNull(reading.getDistanceStandardDeviation());
         assertSame(reading.getAccessPoint(), ap);
 
-        reading = new WifiRangingReadingLocated2D(ap, 2.0, position,
+        reading = new WifiRangingReadingLocated2D<>(ap, 2.0, position,
                 (Matrix)null);
 
         //check
@@ -143,27 +143,27 @@ public class WifiRangingReadingLocated2DTest {
         //force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRangingReadingLocated2D(null,
+            reading = new WifiRangingReadingLocated2D<>(null,
                     2.0, position, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, -1.0,
+            reading = new WifiRangingReadingLocated2D<>(ap, -1.0,
                     position, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.0,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.0,
                     null, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.0,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.0,
                     position, new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.0,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.0,
                     position, new Matrix(2,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -171,7 +171,7 @@ public class WifiRangingReadingLocated2DTest {
 
 
         //test constructor with access point, distance, position, distance standard deviation and position covariance
-        reading = new WifiRangingReadingLocated2D(ap, 2.5, position, 0.2, cov);
+        reading = new WifiRangingReadingLocated2D<>(ap, 2.5, position, 0.2, cov);
 
         //check
         assertSame(reading.getPosition(), position);
@@ -180,7 +180,7 @@ public class WifiRangingReadingLocated2DTest {
         assertEquals(reading.getDistanceStandardDeviation(), 0.2, 0.0);
         assertSame(reading.getAccessPoint(), ap);
 
-        reading = new WifiRangingReadingLocated2D(ap, 2.5, position, 0.2,
+        reading = new WifiRangingReadingLocated2D<>(ap, 2.5, position, 0.2,
                 null);
 
         //check
@@ -193,32 +193,32 @@ public class WifiRangingReadingLocated2DTest {
         //force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRangingReadingLocated2D(null, 2.5,
+            reading = new WifiRangingReadingLocated2D<>(null, 2.5,
                     position, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, -1.0,
+            reading = new WifiRangingReadingLocated2D<>(ap, -1.0,
                     position, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.5,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.5,
                     null, 0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.5, position,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.5, position,
                     0.0, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.5, position,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.5, position,
                     0.2, new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReadingLocated2D(ap, 2.5, position,
+            reading = new WifiRangingReadingLocated2D<>(ap, 2.5, position,
                     0.2, new Matrix(2,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -231,11 +231,11 @@ public class WifiRangingReadingLocated2DTest {
         WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
 
-        WifiRangingReadingLocated2D reading1 = new WifiRangingReadingLocated2D(ap1,
+        WifiRangingReadingLocated2D<WifiAccessPoint> reading1 = new WifiRangingReadingLocated2D<>(ap1,
                 50.0, position);
-        WifiRangingReadingLocated2D reading2 = new WifiRangingReadingLocated2D(ap1,
+        WifiRangingReadingLocated2D<WifiAccessPoint> reading2 = new WifiRangingReadingLocated2D<>(ap1,
                 50.0, position);
-        WifiRangingReadingLocated2D reading3 = new WifiRangingReadingLocated2D(ap2,
+        WifiRangingReadingLocated2D<WifiAccessPoint> reading3 = new WifiRangingReadingLocated2D<>(ap2,
                 50.0, position);
 
         //check

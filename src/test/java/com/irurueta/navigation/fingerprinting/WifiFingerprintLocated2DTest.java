@@ -44,7 +44,8 @@ public class WifiFingerprintLocated2DTest {
     @Test
     public void testConstructor() throws WrongSizeException {
         //test empty constructor
-        WifiFingerprintLocated2D f = new WifiFingerprintLocated2D();
+        WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> f =
+                new WifiFingerprintLocated2D<>();
 
         //check default values
         assertTrue(f.getReadings().isEmpty());
@@ -53,9 +54,9 @@ public class WifiFingerprintLocated2DTest {
 
 
         //test with readings and position
-        List<WifiRssiReading> readings = new ArrayList<>();
+        List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
-        f = new WifiFingerprintLocated2D(readings, position);
+        f = new WifiFingerprintLocated2D<>(readings, position);
 
         //check
         assertSame(f.getReadings(), readings);
@@ -65,11 +66,11 @@ public class WifiFingerprintLocated2DTest {
         //force IllegalArgumentException
         f = null;
         try {
-            f = new WifiFingerprintLocated2D(null, position);
+            f = new WifiFingerprintLocated2D<>(null, position);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            f = new WifiFingerprintLocated2D(readings, null);
+            f = new WifiFingerprintLocated2D<>(readings, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(f);
@@ -77,7 +78,7 @@ public class WifiFingerprintLocated2DTest {
 
         //test with readings, position and covariance
         Matrix cov = new Matrix(2, 2);
-        f = new WifiFingerprintLocated2D(readings, position, cov);
+        f = new WifiFingerprintLocated2D<>(readings, position, cov);
 
         //check
         assertSame(f.getReadings(), readings);
@@ -86,15 +87,15 @@ public class WifiFingerprintLocated2DTest {
 
         f = null;
         try {
-            f = new WifiFingerprintLocated2D(null, position, cov);
+            f = new WifiFingerprintLocated2D<>(null, position, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            f = new WifiFingerprintLocated2D(readings, null, cov);
+            f = new WifiFingerprintLocated2D<>(readings, null, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            f = new WifiFingerprintLocated2D(readings, position,
+            f = new WifiFingerprintLocated2D<>(readings, position,
                     new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }

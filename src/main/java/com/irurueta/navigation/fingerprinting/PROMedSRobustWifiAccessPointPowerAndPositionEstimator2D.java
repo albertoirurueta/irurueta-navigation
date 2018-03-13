@@ -109,7 +109,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -131,7 +131,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -146,7 +146,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -182,7 +182,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -210,7 +210,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -240,7 +240,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -259,7 +259,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -306,7 +306,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -326,7 +326,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -382,7 +382,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
@@ -417,7 +417,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
         internalSetQualityScores(qualityScores);
@@ -453,7 +453,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -474,7 +474,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -528,7 +528,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -569,7 +569,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -613,7 +613,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -638,7 +638,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -707,7 +707,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -733,7 +733,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -803,7 +803,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)

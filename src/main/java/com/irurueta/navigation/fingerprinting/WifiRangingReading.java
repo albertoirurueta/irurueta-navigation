@@ -18,9 +18,10 @@ package com.irurueta.navigation.fingerprinting;
 /**
  * Contains a ranging reading associated to a given WiFi
  * access point, indicating the distance to such access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRangingReading extends WifiReading {
+public class WifiRangingReading<AP extends WifiAccessPoint> extends WifiReading<AP> {
 
     /**
      * Distance in meters to the access point.
@@ -38,7 +39,7 @@ public class WifiRangingReading extends WifiReading {
      * @param distance distance in meters to the access point.
      * @throws IllegalArgumentException if access point data is null or distance is negative.
      */
-    public WifiRangingReading(WifiAccessPoint accessPoint, double distance)
+    public WifiRangingReading(AP accessPoint, double distance)
             throws IllegalArgumentException {
         super(accessPoint);
 
@@ -57,7 +58,7 @@ public class WifiRangingReading extends WifiReading {
      * @throws IllegalArgumentException if access point data is null, distance is negative or
      * standard deviation is zero or negative.
      */
-    public WifiRangingReading(WifiAccessPoint accessPoint, double distance,
+    public WifiRangingReading(AP accessPoint, double distance,
                               Double distanceStandardDeviation) throws IllegalArgumentException {
         this(accessPoint, distance);
 

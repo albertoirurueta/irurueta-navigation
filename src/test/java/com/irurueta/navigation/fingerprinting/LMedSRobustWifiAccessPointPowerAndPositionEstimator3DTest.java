@@ -140,14 +140,14 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
 
 
         //test constructor with readings
-        List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiRssiReadingLocated3D(accessPoint, 0.0, position));
+            readings.add(new WifiRssiReadingLocated3D<>(accessPoint, 0.0, position));
         }
 
         estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
@@ -197,12 +197,12 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         estimator = null;
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D>)null);
+                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>());
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -300,12 +300,12 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         estimator = null;
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D>)null, this);
+                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), this);
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -368,7 +368,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), initialPosition);
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -517,7 +517,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), initialPosition, this);
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -618,12 +618,12 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         estimator = null;
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D>)null, MAX_RSSI);
+                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), MAX_RSSI);
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -724,12 +724,12 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         estimator = null;
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D>)null, MAX_RSSI, this);
+                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), MAX_RSSI, this);
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -789,7 +789,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -943,7 +943,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1004,7 +1004,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1159,7 +1159,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new LMedSRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D>(), initialPosition,
+                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1401,14 +1401,14 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
         assertNull(estimator.getReadings());
 
         //set new value
-        List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+        List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiRssiReadingLocated3D(accessPoint, 0.0, position));
+            readings.add(new WifiRssiReadingLocated3D<>(accessPoint, 0.0, position));
         }
 
         estimator.setReadings(readings);
@@ -1422,7 +1422,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator.setReadings(new ArrayList<WifiRssiReadingLocated3D>());
+            estimator.setReadings(new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
@@ -1482,7 +1482,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1506,7 +1506,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -1683,7 +1683,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1707,7 +1707,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -1925,7 +1925,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1951,7 +1951,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
 
                 error += inlierErrorRandomizer.nextDouble();
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i], INLIER_ERROR_STD));
             }
 
@@ -2167,7 +2167,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2191,7 +2191,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2416,7 +2416,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2440,7 +2440,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2662,7 +2662,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2686,7 +2686,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2914,7 +2914,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2940,7 +2940,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
 
                 error += inlierErrorRandomizer.nextDouble();
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i], INLIER_ERROR_STD));
             }
 
@@ -3171,7 +3171,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3195,7 +3195,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -3466,13 +3466,13 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
             double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
             WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
 
-            double pathLossExponent = 2.0; //randomizer.nextDouble(
-            //MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D> readings = new ArrayList<>();
+            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3496,7 +3496,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator3DTest implement
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D(accessPoint, rssi + error,
+                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 

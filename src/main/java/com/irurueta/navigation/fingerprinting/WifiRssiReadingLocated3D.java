@@ -21,10 +21,11 @@ import com.irurueta.geometry.Point3D;
 /**
  * Contains a 3D located signal strength reading associated to a given WiFi
  * access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRssiReadingLocated3D extends
-        WifiRssiReadingLocated<Point3D> {
+public class WifiRssiReadingLocated3D<AP extends WifiAccessPoint> extends
+        WifiRssiReadingLocated<AP, Point3D> {
 
     /**
      * Constructor.
@@ -34,7 +35,7 @@ public class WifiRssiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(AP accessPoint, double rssi,
             Point3D position) throws IllegalArgumentException {
         super(accessPoint, rssi, position);
     }
@@ -48,7 +49,7 @@ public class WifiRssiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point data or position
      * are null.
      */
-    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(AP accessPoint, double rssi,
             Point3D position, Double rssiStandardDeviation)
             throws IllegalArgumentException {
         super(accessPoint, rssi, position, rssiStandardDeviation);
@@ -64,7 +65,7 @@ public class WifiRssiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(AP accessPoint, double rssi,
             Point3D position, Matrix positionCovariance)
             throws IllegalArgumentException {
         super(accessPoint, rssi, position, positionCovariance);
@@ -81,7 +82,7 @@ public class WifiRssiReadingLocated3D extends
      * @throws IllegalArgumentException if either access point or position are
      * null, or covariance has invalid size.
      */
-    public WifiRssiReadingLocated3D(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReadingLocated3D(AP accessPoint, double rssi,
             Point3D position, Double rssiStandardDeviation,
             Matrix positionCovariance) throws IllegalArgumentException {
         super(accessPoint, rssi, position, rssiStandardDeviation,

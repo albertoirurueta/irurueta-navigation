@@ -40,7 +40,7 @@ public class WifiRangingReadingTest {
     @Test
     public void testConstructor() {
         //test empty constructor
-        WifiRangingReading reading = new WifiRangingReading();
+        WifiRangingReading<WifiAccessPoint> reading = new WifiRangingReading<>();
 
         //check
         assertNull(reading.getAccessPoint());
@@ -50,7 +50,7 @@ public class WifiRangingReadingTest {
 
         //test constructor with access point and distance
         WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
-        reading = new WifiRangingReading(ap, 1.2);
+        reading = new WifiRangingReading<>(ap, 1.2);
 
         //check
         assertSame(reading.getAccessPoint(), ap);
@@ -60,25 +60,25 @@ public class WifiRangingReadingTest {
         //force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRangingReading(null, 1.2);
+            reading = new WifiRangingReading<>(null, 1.2);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReading(ap, -1.0);
+            reading = new WifiRangingReading<>(ap, -1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
 
 
         //test constructor with access point, distance and distance standard deviation
-        reading = new WifiRangingReading(ap, 1.5, 0.1);
+        reading = new WifiRangingReading<>(ap, 1.5, 0.1);
 
         //check
         assertSame(reading.getAccessPoint(), ap);
         assertEquals(reading.getDistance(), 1.5, 0.0);
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
 
-        reading = new WifiRangingReading(ap, 1.5, null);
+        reading = new WifiRangingReading<>(ap, 1.5, null);
 
         //check
         assertSame(reading.getAccessPoint(), ap);
@@ -88,17 +88,17 @@ public class WifiRangingReadingTest {
         //force IllegalArgumentException
         reading = null;
         try {
-            reading = new WifiRangingReading(null, 1.5,
+            reading = new WifiRangingReading<>(null, 1.5,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReading(ap, -1.0,
+            reading = new WifiRangingReading<>(ap, -1.0,
                     0.1);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            reading = new WifiRangingReading(ap, 1.5,
+            reading = new WifiRangingReading<>(ap, 1.5,
                     0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -110,9 +110,9 @@ public class WifiRangingReadingTest {
         WifiAccessPoint ap1 = new WifiAccessPoint("bssid1", FREQUENCY);
         WifiAccessPoint ap2 = new WifiAccessPoint("bssid2", FREQUENCY);
 
-        WifiRangingReading reading1 = new WifiRangingReading(ap1, 50.0);
-        WifiRangingReading reading2 = new WifiRangingReading(ap1, 50.0);
-        WifiRangingReading reading3 = new WifiRangingReading(ap2, 50.0);
+        WifiRangingReading<WifiAccessPoint> reading1 = new WifiRangingReading<>(ap1, 50.0);
+        WifiRangingReading<WifiAccessPoint> reading2 = new WifiRangingReading<>(ap1, 50.0);
+        WifiRangingReading<WifiAccessPoint> reading3 = new WifiRangingReading<>(ap2, 50.0);
 
         //check
         assertTrue(reading1.hasSameAccessPoint(reading1));

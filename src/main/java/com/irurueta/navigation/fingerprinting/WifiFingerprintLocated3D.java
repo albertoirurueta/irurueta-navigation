@@ -22,9 +22,12 @@ import java.util.List;
 
 /**
  * Contains 3D located WiFi fingerprint.
+ * @param <AP> a {@link WifiAccessPoint} type.
+ * @param <R> a {@link WifiRssiReading} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiFingerprintLocated3D extends WifiFingerprintLocated<Point3D> {
+public class WifiFingerprintLocated3D<AP extends WifiAccessPoint, R extends WifiRssiReading<AP>>
+        extends WifiFingerprintLocated<AP, R, Point3D> {
 
     /**
      * Constructor.
@@ -32,7 +35,7 @@ public class WifiFingerprintLocated3D extends WifiFingerprintLocated<Point3D> {
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated3D(List<WifiRssiReading> readings, Point3D position)
+    public WifiFingerprintLocated3D(List<R> readings, Point3D position)
             throws IllegalArgumentException {
         super(readings, position);
     }
@@ -45,7 +48,7 @@ public class WifiFingerprintLocated3D extends WifiFingerprintLocated<Point3D> {
      *                           current position (if available).
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated3D(List<WifiRssiReading> readings, Point3D position,
+    public WifiFingerprintLocated3D(List<R> readings, Point3D position,
                                     Matrix positionCovariance) throws IllegalArgumentException {
         super(readings, position, positionCovariance);
     }

@@ -18,9 +18,10 @@ package com.irurueta.navigation.fingerprinting;
 /**
  * Contains a reading associated to a given WiFi access point containing
  * signal strength and distance to associated access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRangingAndRssiReading extends WifiReading {
+public class WifiRangingAndRssiReading<AP extends WifiAccessPoint> extends WifiReading<AP> {
 
     /**
      * Distance in meters to the access point.
@@ -49,7 +50,7 @@ public class WifiRangingAndRssiReading extends WifiReading {
      * @param rssi received signal strength indicator in dBm.
      * @throws IllegalArgumentException if access point data is null or distance is negative.
      */
-    public WifiRangingAndRssiReading(WifiAccessPoint accessPoint, double distance, double rssi)
+    public WifiRangingAndRssiReading(AP accessPoint, double distance, double rssi)
         throws IllegalArgumentException {
         super(accessPoint);
 
@@ -71,7 +72,7 @@ public class WifiRangingAndRssiReading extends WifiReading {
      * @throws IllegalArgumentException if access point data is null, distance is negative
      * or any of the standard deviations is zero or negative.
      */
-    public WifiRangingAndRssiReading(WifiAccessPoint accessPoint, double distance, double rssi,
+    public WifiRangingAndRssiReading(AP accessPoint, double distance, double rssi,
             Double distanceStandardDeviation, Double rssiStandardDeviation)
             throws IllegalArgumentException {
         this(accessPoint, distance, rssi);

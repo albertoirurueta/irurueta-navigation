@@ -136,7 +136,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
     /**
      * WiFi signal readings belonging to the same access point to be estimated.
      */
-    private List<? extends WifiRssiReadingLocated<P>> mReadings;
+    private List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> mReadings;
 
     /**
      * Indicates whether estimator is locked during estimation.
@@ -167,7 +167,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings)
             throws IllegalArgumentException {
         internalSetReadings(readings);
     }
@@ -189,7 +189,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
         this(readings);
@@ -214,7 +214,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -243,7 +243,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if fingerprints are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
@@ -272,7 +272,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -304,7 +304,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
@@ -324,7 +324,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -376,7 +376,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
@@ -397,7 +397,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -451,7 +451,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public WifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<P>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             WifiAccessPointPowerAndPositionEstimatorListener<P> listener)
@@ -630,7 +630,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @return true if readings are valid, false otherwise.
      */
     public boolean areValidReadings(
-            List<? extends WifiRssiReadingLocated<P>> readings) {
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings) {
 
         return readings != null && readings.size() >= getMinReadings();
     }
@@ -639,7 +639,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * Gets WiFi signal readings belonging to the same access point to be estimated.
      * @return WiFi signal readings belonging to the same access point.
      */
-    public List<? extends WifiRssiReadingLocated<P>> getReadings() {
+    public List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> getReadings() {
         return mReadings;
     }
 
@@ -649,7 +649,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public void setReadings(List<? extends WifiRssiReadingLocated<P>> readings)
+    public void setReadings(List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings)
             throws LockedException, IllegalArgumentException {
         if (isLocked()) {
             throw new LockedException();
@@ -892,7 +892,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
      * are available, or readings do not belong to the same access point.
      */
     protected void internalSetReadings(
-            List<? extends WifiRssiReadingLocated<P>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings)
             throws IllegalArgumentException {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
@@ -910,7 +910,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
         //because all fingerprints must belong to the same access point, we
         //obtain the frequency of the first access point on the first fingerprint
         //reading
-        WifiRssiReadingLocated<P> reading = mReadings.get(0);
+        WifiRssiReadingLocated<WifiAccessPoint, P> reading = mReadings.get(0);
         double frequency = reading.getAccessPoint().getFrequency();
 
         //n = 2.0, is the path loss exponent
@@ -949,7 +949,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                 if (mInitialPosition == null) {
 
                     //compute average centroid of fingerprint positions
-                    for (WifiRssiReadingLocated<P> reading : mReadings) {
+                    for (WifiRssiReadingLocated<WifiAccessPoint, P> reading : mReadings) {
                         P position = reading.getPosition();
                         for (int i = 0; i < dims; i++) {
                             initial[i] += position.getInhomogeneousCoordinate(i) /
@@ -1046,7 +1046,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
         //because all fingerprints must belong to the same access point, we
         //obtain the frequency of the first access point on the first fingerprint
         //reading
-        WifiRssiReadingLocated<P> reading = mReadings.get(0);
+        WifiRssiReadingLocated<WifiAccessPoint, P> reading = mReadings.get(0);
         double frequency = reading.getAccessPoint().getFrequency();
 
         //n = 2.0, is the path loss exponent
@@ -1085,7 +1085,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
                 if (mInitialPosition == null) {
 
                     //compute average centroid of fingerprint positions
-                    for (WifiRssiReadingLocated<P> reading : mReadings) {
+                    for (WifiRssiReadingLocated<WifiAccessPoint, P> reading : mReadings) {
                         P position = reading.getPosition();
                         for (int i = 0; i < dims; i++) {
                             initial[i] += position.getInhomogeneousCoordinate(i) /
@@ -1195,7 +1195,7 @@ public abstract class WifiAccessPointPowerAndPositionEstimator<P extends Point> 
             //compute average transmitted power (in mW)
             int num = mReadings.size();
             double result = 0.0;
-            for (WifiRssiReadingLocated<P> reading : mReadings) {
+            for (WifiRssiReadingLocated<WifiAccessPoint, P> reading : mReadings) {
                 double rssi = reading.getRssi();
                 result += rssi / (double)num;
             }

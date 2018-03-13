@@ -18,9 +18,10 @@ package com.irurueta.navigation.fingerprinting;
 /**
  * Contains a signal strength reading associated to a given WiFi
  * access point.
+ * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiRssiReading extends WifiReading {
+public class WifiRssiReading<AP extends WifiAccessPoint> extends WifiReading<AP> {
 
     /**
      * Received signal strength indicator of this 802.11 network, in dBm.
@@ -38,7 +39,7 @@ public class WifiRssiReading extends WifiReading {
      * @param rssi received signal strength indicator in dBm.
      * @throws IllegalArgumentException if access point data is null.
      */
-    public WifiRssiReading(WifiAccessPoint accessPoint, double rssi)
+    public WifiRssiReading(AP accessPoint, double rssi)
             throws IllegalArgumentException {
         super(accessPoint);
         mRssi = rssi;
@@ -52,7 +53,7 @@ public class WifiRssiReading extends WifiReading {
      * @throws IllegalArgumentException if access point data is null or
      * standard deviation is zero or negative.
      */
-    public WifiRssiReading(WifiAccessPoint accessPoint, double rssi,
+    public WifiRssiReading(AP accessPoint, double rssi,
                            Double rssiStandardDeviation) throws IllegalArgumentException {
         this(accessPoint, rssi);
 

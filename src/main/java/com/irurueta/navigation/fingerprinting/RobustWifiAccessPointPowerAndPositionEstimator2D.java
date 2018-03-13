@@ -58,7 +58,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Subset of readings used by inner estimator.
      */
-    private List<WifiRssiReadingLocated<Point2D>> mInnerReadings = new ArrayList<>();
+    private List<WifiRssiReadingLocated<WifiAccessPoint, Point2D>> mInnerReadings = new ArrayList<>();
 
     /**
      * Constructor.
@@ -74,7 +74,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -96,7 +96,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
@@ -111,7 +111,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -148,7 +148,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -176,7 +176,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -206,7 +206,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -225,7 +225,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -272,7 +272,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -292,7 +292,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -348,7 +348,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
@@ -387,7 +387,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
             case RANSAC:
@@ -447,7 +447,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -480,7 +480,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -575,7 +575,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -640,7 +640,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -708,7 +708,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -745,7 +745,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -850,7 +850,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -888,7 +888,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent, RobustEstimatorMethod method)
             throws IllegalArgumentException {
@@ -1013,7 +1013,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
@@ -1083,7 +1083,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
             case RANSAC:
@@ -1151,7 +1151,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -1188,7 +1188,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -1294,7 +1294,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -1367,7 +1367,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm, RobustEstimatorMethod method)
             throws IllegalArgumentException {
         switch (method) {
@@ -1442,7 +1442,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -1483,7 +1483,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustEstimatorMethod method) throws IllegalArgumentException {
         switch (method) {
@@ -1603,7 +1603,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) throws IllegalArgumentException {
@@ -1647,7 +1647,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent, RobustEstimatorMethod method)
             throws IllegalArgumentException {
@@ -1785,7 +1785,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener,
@@ -1834,7 +1834,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings)
             throws IllegalArgumentException {
         return create(readings, DEFAULT_ROBUST_METHOD);
     }
@@ -1859,7 +1859,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
         return create(readings, listener, DEFAULT_ROBUST_METHOD);
@@ -1875,7 +1875,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition) throws IllegalArgumentException {
         return create(readings, initialPosition, DEFAULT_ROBUST_METHOD);
     }
@@ -1917,7 +1917,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -1948,7 +1948,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         return create(readings, initialTransmittedPowerdBm, DEFAULT_ROBUST_METHOD);
     }
@@ -1980,7 +1980,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -2001,7 +2001,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         return create(readings, initialPosition, initialTransmittedPowerdBm,
@@ -2056,7 +2056,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -2078,7 +2078,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) throws IllegalArgumentException {
         return create(readings, initialPosition, initialTransmittedPowerdBm,
@@ -2138,7 +2138,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
@@ -2173,7 +2173,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings)
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings)
             throws IllegalArgumentException {
         return create(qualityScores, readings, DEFAULT_ROBUST_METHOD);
     }
@@ -2206,7 +2206,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
         return create(qualityScores, readings, listener, DEFAULT_ROBUST_METHOD);
@@ -2225,7 +2225,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition) throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
                 DEFAULT_ROBUST_METHOD);
@@ -2278,7 +2278,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -2318,7 +2318,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         return create(qualityScores, readings, initialTransmittedPowerdBm,
                 DEFAULT_ROBUST_METHOD);
@@ -2359,7 +2359,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -2384,7 +2384,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
@@ -2451,7 +2451,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
             throws IllegalArgumentException {
@@ -2477,7 +2477,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) throws IllegalArgumentException {
         return create(qualityScores, readings, initialPosition,
@@ -2549,7 +2549,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     public static RobustWifiAccessPointPowerAndPositionEstimator2D create(
             double[] qualityScores,
-            List<? extends WifiRssiReadingLocated<Point2D>> readings,
+            List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
@@ -2586,7 +2586,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator2D extends
     @Override
     @SuppressWarnings("unchecked")
     public WifiAccessPointWithPowerAndLocated2D getEstimatedAccessPoint() {
-        List<? extends WifiRssiReadingLocated<Point2D>> readings = getReadings();
+        List<? extends WifiRssiReadingLocated<WifiAccessPoint, Point2D>> readings = getReadings();
         if (readings == null || readings.isEmpty()) {
             return null;
         }
