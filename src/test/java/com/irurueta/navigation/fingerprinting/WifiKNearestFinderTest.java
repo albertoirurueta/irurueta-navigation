@@ -79,7 +79,7 @@ public class WifiKNearestFinderTest {
 
     @Test
     public void testConstructor() {
-        List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+        List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                 new ArrayList<>();
         WifiKNearestFinder<Point2D> finder = new WifiKNearestFinder<>(
                 fingerprints);
@@ -123,19 +123,19 @@ public class WifiKNearestFinderTest {
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                 for (int j = 0; j < numAccessPoints; j++) {
                     double distance = fingerprintsPositions[i].distanceTo(
                             accessPointPositions[j]);
                     double rssi = powerTodBm(receivedPower(
                             transmittedPower[j], distance, accessPoints[j].getFrequency()));
-                    readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                    readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
                 fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
@@ -151,33 +151,33 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             //find closest fingerprint
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint1 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint1 =
                      finder.findNearestTo(fingerprint);
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint2 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint2 =
                     WifiKNearestFinder.findNearestTo(fingerprint, fingerprints);
 
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints1 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints1 =
                     finder.findKNearestTo(fingerprint, 1);
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints2 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints2 =
                     new ArrayList<>();
             List<Double> nearestSqrDistances = new ArrayList<>();
             finder.findKNearestTo(fingerprint, 1, closestFingerprints2,
                     nearestSqrDistances);
 
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint3 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint3 =
                     closestFingerprints1.get(0);
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint4 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint4 =
                     closestFingerprints2.get(0);
 
             avgSignalDistance += nearestSqrDistances.get(0);
@@ -249,19 +249,19 @@ public class WifiKNearestFinderTest {
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                 for (int j = 0; j < numAccessPoints; j++) {
                     double distance = fingerprintsPositions[i].distanceTo(
                             accessPointPositions[j]);
                     double rssi = powerTodBm(receivedPower(
                             transmittedPower[j], distance, accessPoints[j].getFrequency()));
-                    readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                    readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
                 fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
@@ -277,30 +277,30 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             //find k closest fingerprints
             int k = randomizer.nextInt(2, numFingerprints);
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints1 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints1 =
                     finder.findKNearestTo(fingerprint, k);
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints2 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints2 =
                     WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k);
 
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints3 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints3 =
                     new ArrayList<>();
             List<Double> nearestSqrDistances3 = new ArrayList<>();
             finder.findKNearestTo(fingerprint, k, kClosestFingerprints3,
                     nearestSqrDistances3);
 
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints4 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints4 =
                     new ArrayList<>();
             List<Double> nearestSqrDistances4 = new ArrayList<>();
             WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
@@ -326,13 +326,13 @@ public class WifiKNearestFinderTest {
             //check that k nearest fingerprints contains closest one
             boolean found = false;
             for (int i = 0; i < k; i++) {
-                WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> fingerprint1 =
+                WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> fingerprint1 =
                         kClosestFingerprints1.get(i);
-                WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> fingerprint2 =
+                WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> fingerprint2 =
                         kClosestFingerprints2.get(i);
-                WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> fingerprint3 =
+                WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> fingerprint3 =
                         kClosestFingerprints3.get(i);
-                WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> fingerprint4 =
+                WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> fingerprint4 =
                         kClosestFingerprints4.get(i);
 
                 assertEquals(fingerprint1.getPosition(), fingerprint2.getPosition());
@@ -399,19 +399,19 @@ public class WifiKNearestFinderTest {
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                 for (int j = 0; j < numAccessPoints; j++) {
                     double distance = fingerprintsPositions[i].distanceTo(
                             accessPointPositions[j]);
                     double rssi = powerTodBm(receivedPower(
                             transmittedPower[j], distance, accessPoints[j].getFrequency()));
-                    readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                    readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
                 fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
@@ -421,17 +421,17 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
                     new ArrayList<>();
             List<Double> nearestSqrDistances = new ArrayList<>();
             WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints,
@@ -478,20 +478,20 @@ public class WifiKNearestFinderTest {
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                 for (int j = 0; j < numAccessPoints; j++) {
                     double distance = fingerprintsPositions[i].distanceTo(
                             accessPointPositions[j]);
                     double error = errorRandomizer.nextDouble();
                     double rssi = powerTodBm(receivedPower(
                             transmittedPower[j], distance, accessPoints[j].getFrequency())) + error;
-                    readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                    readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
                 fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
@@ -507,34 +507,34 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double error = errorRandomizer.nextDouble();
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency())) + error;
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             //find closest fingerprint
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint1 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint1 =
                     finder.findNearestTo(fingerprint);
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint2 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint2 =
                     WifiKNearestFinder.findNearestTo(fingerprint, fingerprints);
 
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints1 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints1 =
                     finder.findKNearestTo(fingerprint, 1);
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints2 =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints2 =
                     new ArrayList<>();
             List<Double> nearestSqrDistances = new ArrayList<>();
             finder.findKNearestTo(fingerprint, 1, closestFingerprints2,
                     nearestSqrDistances);
 
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint3 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint3 =
                     closestFingerprints1.get(0);
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint4 =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint4 =
                     closestFingerprints2.get(0);
 
             avgSignalDistance += nearestSqrDistances.get(0);
@@ -596,19 +596,19 @@ public class WifiKNearestFinderTest {
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                 for (int j = 0; j < numAccessPoints; j++) {
                     double distance = fingerprintsPositions[i].distanceTo(
                             accessPointPositions[j]);
                     double rssi = powerTodBm(receivedPower(
                             transmittedPower[j], distance, accessPoints[j].getFrequency()));
-                    readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                    readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
                 fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
@@ -624,20 +624,20 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             Point2D nearestPosition = tree.nearestPoint(position);
 
             for (int k = 1; k < numFingerprints; k++) {
-                List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
+                List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
                         finder.findKNearestTo(fingerprint, k);
                 boolean found = false;
                 for (int i = 0; i < k; i++) {
@@ -684,20 +684,20 @@ public class WifiKNearestFinderTest {
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point2D[] fingerprintsPositions = new Point2D[numFingerprints];
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
-                List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                 for (int j = 0; j < numAccessPoints; j++) {
                     double distance = fingerprintsPositions[i].distanceTo(
                             accessPointPositions[j]);
                     double error = errorRandomizer.nextDouble();
                     double rssi = powerTodBm(receivedPower(
                             transmittedPower[j], distance, accessPoints[j].getFrequency())) + error;
-                    readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                    readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
                 fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
@@ -713,21 +713,21 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double error = errorRandomizer.nextDouble();
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency())) + error;
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             Point2D nearestPosition = tree.nearestPoint(position);
 
             for (int k = 1; k < numFingerprints; k++) {
-                List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
+                List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
                         finder.findKNearestTo(fingerprint, k);
                 boolean found = false;
                 for (int i = 0; i < k; i++) {
@@ -771,20 +771,20 @@ public class WifiKNearestFinderTest {
             }
 
             //setup uniform fingerprint readings
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (double x = MIN_POS; x < MAX_POS; x+= SEPARATION_POS) {
                 for (double y = MIN_POS; y < MAX_POS; y+= SEPARATION_POS) {
                     InhomogeneousPoint2D fingerprintPosition =
                             new InhomogeneousPoint2D(x, y);
 
-                    List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                    List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                     for (int j = 0; j < numAccessPoints; j++) {
                         double distance = fingerprintPosition.distanceTo(
                                 accessPointPositions[j]);
                         double rssi = powerTodBm(receivedPower(
                                 transmittedPower[j], distance, accessPoints[j].getFrequency()));
-                        readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                        readings.add(new RssiReading<>(accessPoints[j], rssi));
                     }
 
                     fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintPosition));
@@ -798,24 +798,24 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             //find closest fingerprint
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
                     new ArrayList<>();
             List<Double> nearestSqrDistances = new ArrayList<>();
             finder.findKNearestTo(fingerprint, 1, closestFingerprints,
                     nearestSqrDistances);
 
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint =
                     closestFingerprints.get(0);
 
 
@@ -853,21 +853,21 @@ public class WifiKNearestFinderTest {
             }
 
             //setup uniform fingerprint readings
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (double x = MIN_POS; x < MAX_POS; x+= SEPARATION_POS) {
                 for (double y = MIN_POS; y < MAX_POS; y+= SEPARATION_POS) {
                     InhomogeneousPoint2D fingerprintPosition =
                             new InhomogeneousPoint2D(x, y);
 
-                    List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                    List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                     for (int j = 0; j < numAccessPoints; j++) {
                         double distance = fingerprintPosition.distanceTo(
                                 accessPointPositions[j]);
                         double error = errorRandomizer.nextDouble();
                         double rssi = powerTodBm(receivedPower(
                                 transmittedPower[j], distance, accessPoints[j].getFrequency())) + error;
-                        readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                        readings.add(new RssiReading<>(accessPoints[j], rssi));
                     }
 
                     fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintPosition));
@@ -881,25 +881,25 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double error = errorRandomizer.nextDouble();
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency())) + error;
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             //find closest fingerprint
-            List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
+            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
                     new ArrayList<>();
             List<Double> nearestSqrDistances = new ArrayList<>();
             finder.findKNearestTo(fingerprint, 1, closestFingerprints,
                     nearestSqrDistances);
 
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D> closestFingerprint =
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint =
                     closestFingerprints.get(0);
 
             avgSignalDistance += nearestSqrDistances.get(0);
@@ -934,7 +934,7 @@ public class WifiKNearestFinderTest {
 
             //setup uniform fingerprint readings
             List<Point2D> fingerprintsPositionsList = new ArrayList<>();
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (double x = MIN_POS; x < MAX_POS; x+= SEPARATION_POS) {
                 for (double y = MIN_POS; y < MAX_POS; y+= SEPARATION_POS) {
@@ -942,13 +942,13 @@ public class WifiKNearestFinderTest {
                             new InhomogeneousPoint2D(x, y);
                     fingerprintsPositionsList.add(fingerprintPosition);
 
-                    List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                    List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                     for (int j = 0; j < numAccessPoints; j++) {
                         double distance = fingerprintPosition.distanceTo(
                                 accessPointPositions[j]);
                         double rssi = powerTodBm(receivedPower(
                                 transmittedPower[j], distance, accessPoints[j].getFrequency()));
-                        readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                        readings.add(new RssiReading<>(accessPoints[j], rssi));
                     }
 
                     fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintPosition));
@@ -965,14 +965,14 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             Point2D nearestPosition = tree.nearestPoint(position);
@@ -980,7 +980,7 @@ public class WifiKNearestFinderTest {
             int numFingerprints = fingerprints.size();
             int maxK = Math.min(numFingerprints, MAX_K);
             for (int k = 1; k < maxK; k++) {
-                List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
+                List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
                         finder.findKNearestTo(fingerprint, k);
                 boolean found = false;
                 for (int i = 0; i < k; i++) {
@@ -1026,7 +1026,7 @@ public class WifiKNearestFinderTest {
 
             //setup uniform fingerprint readings
             List<Point2D> fingerprintsPositionsList = new ArrayList<>();
-            List<WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>>> fingerprints =
+            List<WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (double x = MIN_POS; x < MAX_POS; x+= SEPARATION_POS) {
                 for (double y = MIN_POS; y < MAX_POS; y+= SEPARATION_POS) {
@@ -1034,14 +1034,14 @@ public class WifiKNearestFinderTest {
                             new InhomogeneousPoint2D(x, y);
                     fingerprintsPositionsList.add(fingerprintPosition);
 
-                    List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+                    List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
                     for (int j = 0; j < numAccessPoints; j++) {
                         double distance = fingerprintPosition.distanceTo(
                                 accessPointPositions[j]);
                         double error = errorRandomizer.nextDouble();
                         double rssi = powerTodBm(receivedPower(
                                 transmittedPower[j], distance, accessPoints[j].getFrequency())) + error;
-                        readings.add(new WifiRssiReading<>(accessPoints[j], rssi));
+                        readings.add(new RssiReading<>(accessPoints[j], rssi));
                     }
 
                     fingerprints.add(new WifiFingerprintLocated2D<>(readings, fingerprintPosition));
@@ -1058,15 +1058,15 @@ public class WifiKNearestFinderTest {
             Point2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numAccessPoints; i++) {
                 double distance = position.distanceTo(accessPointPositions[i]);
                 double error = errorRandomizer.nextDouble();
                 double rssi = powerTodBm(receivedPower(
                         transmittedPower[i], distance, accessPoints[i].getFrequency())) + error;
-                readings.add(new WifiRssiReading<>(accessPoints[i], rssi));
+                readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> fingerprint =
+            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                     new WifiFingerprint<>(readings);
 
             Point2D nearestPosition = tree.nearestPoint(position);
@@ -1074,7 +1074,7 @@ public class WifiKNearestFinderTest {
             int numFingerprints = fingerprints.size();
             int maxK = Math.min(numFingerprints, MAX_K);
             for (int k = 1; k < maxK; k++) {
-                List<WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
+                List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> nearestFingerprints =
                         finder.findKNearestTo(fingerprint, k);
                 boolean found = false;
                 for (int i = 0; i < k; i++) {

@@ -29,6 +29,7 @@ public class WifiAccessPointWithPowerTest {
     private static final double FREQUENCY = 2.4e9;
     private static final double TRANSMITTED_POWER = -50.0;
     private static final double TRANSMITTED_POWER_STD = 0.5;
+    private static final double PATHLOSS_STD = 0.1;
 
     private static final double MIN_PATH_LOSS_EXPONENT = 1.6;
     private static final double MAX_PATH_LOSS_EXPONENT = 2.0;
@@ -56,9 +57,11 @@ public class WifiAccessPointWithPowerTest {
         assertNull(ap.getBssid());
         assertNull(ap.getSsid());
         assertEquals(ap.getTransmittedPower(), 0.0, 0.0);
-        assertEquals(ap.getTransmittedPowerStandardDeviation(), 0.0, 0.0);
+        assertNull(ap.getTransmittedPowerStandardDeviation());
         assertEquals(ap.getPathLossExponent(),
                 WifiAccessPointWithPower.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
 
         //test with bssid, frequency and transmitted power
@@ -70,9 +73,11 @@ public class WifiAccessPointWithPowerTest {
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
         assertEquals(ap.getTransmittedPower(), TRANSMITTED_POWER, 0.0);
-        assertEquals(ap.getTransmittedPowerStandardDeviation(), 0.0, 0.0);
+        assertNull(ap.getTransmittedPowerStandardDeviation());
         assertEquals(ap.getPathLossExponent(),
                 WifiAccessPointWithPower.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -98,9 +103,11 @@ public class WifiAccessPointWithPowerTest {
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
         assertEquals(ap.getTransmittedPower(), TRANSMITTED_POWER, 0.0);
-        assertEquals(ap.getTransmittedPowerStandardDeviation(), 0.0, 0.0);
+        assertNull(ap.getTransmittedPowerStandardDeviation());
         assertEquals(ap.getPathLossExponent(),
                 WifiAccessPointWithPower.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -120,7 +127,7 @@ public class WifiAccessPointWithPowerTest {
         //test with bssid, frequency, transmitted power, transmitted power
         // standard deviation
         ap = new WifiAccessPointWithPower(BSSID, FREQUENCY,
-                TRANSMITTED_POWER, TRANSMITTED_POWER_STD);
+                TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD));
 
         //check default values
         assertEquals(ap.getBssid(), BSSID);
@@ -131,22 +138,24 @@ public class WifiAccessPointWithPowerTest {
                 TRANSMITTED_POWER_STD, 0.0);
         assertEquals(ap.getPathLossExponent(),
                 WifiAccessPointWithPower.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
         try {
             ap = new WifiAccessPointWithPower(null, FREQUENCY,
-                    TRANSMITTED_POWER, TRANSMITTED_POWER_STD);
+                    TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD));
             fail("IllgalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             ap = new WifiAccessPointWithPower(BSSID, -FREQUENCY,
-                    TRANSMITTED_POWER, TRANSMITTED_POWER_STD);
+                    TRANSMITTED_POWER, Double.valueOf(TRANSMITTED_POWER_STD));
             fail("IllgalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             ap = new WifiAccessPointWithPower(BSSID, FREQUENCY,
-                    TRANSMITTED_POWER, -TRANSMITTED_POWER_STD);
+                    TRANSMITTED_POWER, Double.valueOf(-TRANSMITTED_POWER_STD));
             fail("IllgalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(ap);
@@ -166,6 +175,8 @@ public class WifiAccessPointWithPowerTest {
                 TRANSMITTED_POWER_STD, 0.0);
         assertEquals(ap.getPathLossExponent(),
                 WifiAccessPointWithPower.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -192,6 +203,34 @@ public class WifiAccessPointWithPowerTest {
         double pathLossExponent = randomizer.nextDouble(
                 MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
         ap = new WifiAccessPointWithPower(BSSID, FREQUENCY,
+                TRANSMITTED_POWER, pathLossExponent);
+
+        //check default values
+        assertEquals(ap.getBssid(), BSSID);
+        assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
+        assertNull(ap.getSsid());
+        assertEquals(ap.getTransmittedPower(), TRANSMITTED_POWER, 0.0);
+        assertNull(ap.getTransmittedPowerStandardDeviation());
+        assertEquals(ap.getPathLossExponent(), pathLossExponent, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
+
+        //force IllegalArgumentException
+        ap = null;
+        try {
+            ap = new WifiAccessPointWithPower(null, FREQUENCY,
+                    TRANSMITTED_POWER, pathLossExponent);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, -FREQUENCY,
+                    TRANSMITTED_POWER, pathLossExponent);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(ap);
+
+
+        ap = new WifiAccessPointWithPower(BSSID, FREQUENCY,
                 TRANSMITTED_POWER, TRANSMITTED_POWER_STD, pathLossExponent);
 
         //check default values
@@ -202,6 +241,8 @@ public class WifiAccessPointWithPowerTest {
         assertEquals(ap.getTransmittedPowerStandardDeviation(),
                 TRANSMITTED_POWER_STD, 0.0);
         assertEquals(ap.getPathLossExponent(), pathLossExponent, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -236,6 +277,8 @@ public class WifiAccessPointWithPowerTest {
         assertEquals(ap.getTransmittedPowerStandardDeviation(),
                 TRANSMITTED_POWER_STD, 0.0);
         assertEquals(ap.getPathLossExponent(), pathLossExponent, 0.0);
+        assertNull(ap.getPathLossExponentStandardDeviation());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -252,6 +295,94 @@ public class WifiAccessPointWithPowerTest {
         try {
             ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, SSID,
                     TRANSMITTED_POWER, -TRANSMITTED_POWER_STD, pathLossExponent);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(ap);
+
+
+        //test constructor with bssid, frequency, tx power, tx power std
+        //deviation and pathloss and pathloss std deviation
+        ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, TRANSMITTED_POWER,
+                TRANSMITTED_POWER_STD, pathLossExponent, PATHLOSS_STD);
+
+        //check
+        assertEquals(ap.getBssid(), BSSID);
+        assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
+        assertNull(ap.getSsid());
+        assertEquals(ap.getTransmittedPower(), TRANSMITTED_POWER, 0.0);
+        assertEquals(ap.getTransmittedPowerStandardDeviation(),
+                TRANSMITTED_POWER_STD, 0.0);
+        assertEquals(ap.getPathLossExponent(), pathLossExponent, 0.0);
+        assertEquals(ap.getPathLossExponentStandardDeviation(),
+                PATHLOSS_STD, 0.0);
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
+
+        //force IllegalArgumentException
+        ap = null;
+        try {
+            ap = new WifiAccessPointWithPower(null, FREQUENCY, TRANSMITTED_POWER,
+                    TRANSMITTED_POWER_STD, pathLossExponent, PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, -FREQUENCY, TRANSMITTED_POWER,
+                    TRANSMITTED_POWER_STD, pathLossExponent, PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, TRANSMITTED_POWER,
+                    -TRANSMITTED_POWER_STD, pathLossExponent, PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, TRANSMITTED_POWER,
+                    TRANSMITTED_POWER_STD, pathLossExponent, -PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(ap);
+
+
+        //test constructor with bssid, frequency, ssid, tx power, tx power
+        //std deviation, path loss, pathloss std deviation
+        ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, SSID, TRANSMITTED_POWER,
+                TRANSMITTED_POWER_STD, pathLossExponent, PATHLOSS_STD);
+
+        //check
+        assertEquals(ap.getBssid(), BSSID);
+        assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
+        assertEquals(ap.getSsid(), SSID);
+        assertEquals(ap.getTransmittedPower(), TRANSMITTED_POWER, 0.0);
+        assertEquals(ap.getTransmittedPowerStandardDeviation(),
+                TRANSMITTED_POWER_STD, 0.0);
+        assertEquals(ap.getPathLossExponent(), pathLossExponent, 0.0);
+        assertEquals(ap.getPathLossExponentStandardDeviation(),
+                PATHLOSS_STD, 0.0);
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
+
+        //force IllegalArgumentException
+        ap = null;
+        try {
+            ap = new WifiAccessPointWithPower(null, FREQUENCY, SSID,
+                    TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
+                    pathLossExponent, PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, -FREQUENCY, SSID,
+                    TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
+                    pathLossExponent, PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, SSID,
+                    TRANSMITTED_POWER, -TRANSMITTED_POWER_STD,
+                    pathLossExponent, PATHLOSS_STD);
+            fail("IllgalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            ap = new WifiAccessPointWithPower(BSSID, FREQUENCY, SSID,
+                    TRANSMITTED_POWER, TRANSMITTED_POWER_STD,
+                    pathLossExponent, -PATHLOSS_STD);
             fail("IllgalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(ap);

@@ -21,11 +21,11 @@ import java.util.List;
 
 /**
  * Contains WiFi readings for an unknown location to be determined.
- * @param <R> a {@link WifiRssiReading} type.
+ * @param <R> a {@link RssiReading} type.
  * @param <AP> a {@link WifiAccessPoint} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiFingerprint<AP extends WifiAccessPoint, R extends WifiRssiReading<AP>>
+public class WifiFingerprint<AP extends WifiAccessPoint, R extends RssiReading<AP>>
         implements Serializable {
 
     /**
@@ -97,7 +97,7 @@ public class WifiFingerprint<AP extends WifiAccessPoint, R extends WifiRssiReadi
         double result = 0.0, diff;
         for (R reading : mReadings) {
             for (R otherReading : otherReadings) {
-                if (reading.hasSameAccessPoint(otherReading)) {
+                if (reading.hasSameSource(otherReading)) {
                     diff = reading.getRssi() - otherReading.getRssi();
                     result += diff * diff;
                     numAccessPoints++;

@@ -21,7 +21,7 @@ import java.io.Serializable;
  * Data related to a WiFi access point.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiAccessPoint implements Serializable {
+public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**
      * Basic service set identifier of this access point in the form of a six-byte MAC address:
@@ -90,6 +90,7 @@ public class WifiAccessPoint implements Serializable {
      * Gets frequency used by this Access Point (expressed in Hz).
      * @return frequency used by this Access Point (expressed in Hz).
      */
+    @Override
     public double getFrequency() {
         return mFrequency;
     }
@@ -132,5 +133,14 @@ public class WifiAccessPoint implements Serializable {
     @Override
     public int hashCode() {
         return mBssid.hashCode();
+    }
+
+    /**
+     * Gets radio source type, which can be either a WiFi Access point or a bluetooth Beacon.
+     * @return radio source type.
+     */
+    @Override
+    public RadioSourceType getType() {
+        return RadioSourceType.WIFI_ACCESS_POINT;
     }
 }

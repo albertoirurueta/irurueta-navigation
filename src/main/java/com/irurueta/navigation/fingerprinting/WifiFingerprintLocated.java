@@ -24,10 +24,10 @@ import java.util.List;
  * Contains located Wifi fingerprint.
  * @param <AP> a {@link WifiAccessPoint} type.
  * @param <P> a {@link Point} type.
- * @param <R> a {@link WifiRssiReading} type.
+ * @param <R> a {@link RssiReading} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R extends WifiRssiReading<AP>,
+public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R extends RssiReading<AP>,
         P extends Point> extends WifiFingerprint<AP, R> {
 
     /**

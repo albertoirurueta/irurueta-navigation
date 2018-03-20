@@ -45,7 +45,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
     /**
      * Known located WiFi fingerprints.
      */
-    protected WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, P>[] mFingerprints;
+    protected WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] mFingerprints;
 
     /**
      * Euclidean distances between WiFi signal fingerprints (expressed in dB's).
@@ -89,7 +89,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver(
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, P>[] fingerprints, double[] distances)
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints, double[] distances)
             throws IllegalArgumentException {
         internalSetFingerprintsAndDistances(fingerprints, distances);
     }
@@ -115,7 +115,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver(
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, P>[] fingerprints,
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
             double[] distances, WeightedKNearestNeighboursPositionSolverListener<P> listener)
             throws IllegalArgumentException {
         this(fingerprints, distances);
@@ -148,7 +148,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * Gets known located WiFi fingerprints.
      * @return known located WiFi fingerprints.
      */
-    public WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, P>[] getFingerprints() {
+    public WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] getFingerprints() {
         return mFingerprints;
     }
 
@@ -190,7 +190,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * @throws LockedException if instance is busy solving the position.
      */
     public void setFingerprintsAndDistances(
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, P>[] fingerprints,
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
             double[] distances) throws IllegalArgumentException, LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -328,7 +328,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * don't have the same length or their length is smaller than 1.
      */
     protected void internalSetFingerprintsAndDistances(
-            WifiFingerprintLocated<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>, P>[] fingerprints,
+            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
             double[] distances) throws IllegalArgumentException {
         if (fingerprints == null || distances == null) {
             throw new IllegalArgumentException();

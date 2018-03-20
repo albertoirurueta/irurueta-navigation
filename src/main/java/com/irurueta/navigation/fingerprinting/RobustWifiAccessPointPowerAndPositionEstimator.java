@@ -136,7 +136,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * value.
      */
     protected double mInitialPathLossExponent =
-            WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT;
+            RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Indicates whether path loss estimation is enabled or not.
@@ -146,7 +146,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     /**
      * WiFi signal readings belonging to the same access point to be estimated.
      */
-    protected List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> mReadings;
+    protected List<? extends RssiReadingLocated<WifiAccessPoint, P>> mReadings;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or its
@@ -173,10 +173,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
      * If path loss exponent estimation is not enabled, this value will always be equal to
-     * {@link WifiAccessPointPowerAndPositionEstimator#DEFAULT_PATH_LOSS_EXPONENT}
+     * {@link RssiRadioSourceEstimator#DEFAULT_PATH_LOSS_EXPONENT}
      */
     protected double mEstimatedPathLossExponent =
-            WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT;
+            RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Indicates if this instance is locked because estimation is being executed.
@@ -238,7 +238,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings)
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings)
             throws IllegalArgumentException {
         internalSetReadings(readings);
     }
@@ -260,7 +260,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
         this(readings);
@@ -276,7 +276,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -314,7 +314,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
@@ -343,7 +343,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -375,7 +375,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
@@ -395,7 +395,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -447,7 +447,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
             throws IllegalArgumentException {
@@ -468,7 +468,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -522,7 +522,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings,
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
@@ -845,7 +845,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @return true if readings are valid, false otherwise.
      */
     public boolean areValidReadings(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings) {
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings) {
 
         return readings != null && readings.size() >= getMinReadings();
     }
@@ -854,7 +854,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * Gets WiFi signal readings belonging to the same access point.
      * @return WiFi signal readings belonging to the same access point.
      */
-    public List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> getReadings() {
+    public List<? extends RssiReadingLocated<WifiAccessPoint, P>> getReadings() {
         return mReadings;
     }
 
@@ -865,7 +865,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public void setReadings(List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings)
+    public void setReadings(List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings)
             throws LockedException, IllegalArgumentException {
         if (isLocked()) {
             throw new LockedException();
@@ -1021,7 +1021,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * - Suburban Area: 3 to 5
      * - Indoor (line-of-sight): 1.6 to 1.8
      * If path loss exponent estimation is not enabled, this value will always be equal to
-     * {@link WifiAccessPointPowerAndPositionEstimator#DEFAULT_PATH_LOSS_EXPONENT}
+     * {@link RssiRadioSourceEstimator#DEFAULT_PATH_LOSS_EXPONENT}
      * @return estimated path loss exponent.
      */
     public double getEstimatedPathLossExponent() {
@@ -1072,7 +1072,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * are available, or readings do not belong to the same access point.
      */
     protected void internalSetReadings(
-            List<? extends WifiRssiReadingLocated<WifiAccessPoint, P>> readings)
+            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings)
             throws IllegalArgumentException {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
@@ -1103,12 +1103,12 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
         //Pte is equivalent transmitted power, expressed in dBm
         //k is a constant equal to k = c^2 / (pi * f)^2, where c is speed of light
         //and d is equal to distance between fingerprint and estimated position
-        WifiRssiReadingLocated<WifiAccessPoint, P> reading = mReadings.get(i);
-        double frequency = reading.getAccessPoint().getFrequency();
+        RssiReadingLocated<WifiAccessPoint, P> reading = mReadings.get(i);
+        double frequency = reading.getSource().getFrequency();
 
         //compute k as the constant part of the isotropic received power formula
         //so that: Pr = Pte*k^n/d^n
-        double k = WifiAccessPointPowerAndPositionEstimator.SPEED_OF_LIGHT /
+        double k = RssiRadioSourceEstimator.SPEED_OF_LIGHT /
                 (4.0 * Math.PI * frequency);
         final double kdB = 10.0 * mInitialPathLossExponent * Math.log10(k);
 

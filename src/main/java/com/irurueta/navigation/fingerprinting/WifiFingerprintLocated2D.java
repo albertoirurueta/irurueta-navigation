@@ -23,10 +23,10 @@ import java.util.List;
 /**
  * Contains 2D located WiFi fingerprint.
  * @param <AP> a {@link WifiAccessPoint} type.
- * @param <R> a {@link WifiRssiReading} type.
+ * @param <R> a {@link RssiReading} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiFingerprintLocated2D<AP extends WifiAccessPoint, R extends WifiRssiReading<AP>>
+public class WifiFingerprintLocated2D<AP extends WifiAccessPoint, R extends RssiReading<AP>>
         extends WifiFingerprintLocated<AP, R, Point2D> {
 
     /**

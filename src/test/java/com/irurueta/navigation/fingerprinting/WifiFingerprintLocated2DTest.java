@@ -44,7 +44,7 @@ public class WifiFingerprintLocated2DTest {
     @Test
     public void testConstructor() throws WrongSizeException {
         //test empty constructor
-        WifiFingerprintLocated2D<WifiAccessPoint, WifiRssiReading<WifiAccessPoint>> f =
+        WifiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
                 new WifiFingerprintLocated2D<>();
 
         //check default values
@@ -54,7 +54,7 @@ public class WifiFingerprintLocated2DTest {
 
 
         //test with readings and position
-        List<WifiRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
         f = new WifiFingerprintLocated2D<>(readings, position);
 

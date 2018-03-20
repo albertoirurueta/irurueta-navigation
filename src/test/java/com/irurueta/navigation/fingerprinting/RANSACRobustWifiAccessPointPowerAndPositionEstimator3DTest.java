@@ -112,7 +112,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -138,19 +138,19 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
         //test constructor with readings
-        List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiRssiReadingLocated3D<>(accessPoint, 0.0, position));
+            readings.add(new RssiReadingLocated3D<>(accessPoint, 0.0, position));
         }
 
         estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
@@ -170,7 +170,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -196,19 +196,19 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null);
+                    (List<RssiReadingLocated3D<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>());
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -231,7 +231,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -257,7 +257,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -279,7 +279,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -305,19 +305,19 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null, this);
+                    (List<RssiReadingLocated3D<WifiAccessPoint>>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), this);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -345,7 +345,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -371,7 +371,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -383,7 +383,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -407,7 +407,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -433,7 +433,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -455,7 +455,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -481,7 +481,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -503,7 +503,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -529,7 +529,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -541,7 +541,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, this);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -565,7 +565,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -591,7 +591,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -613,7 +613,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -639,19 +639,19 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI);
+                    (List<RssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -675,7 +675,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -701,7 +701,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -723,7 +723,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -749,19 +749,19 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    (List<WifiRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI, this);
+                    (List<RssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI, this);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -785,7 +785,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -811,7 +811,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -823,7 +823,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, MAX_RSSI);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -847,7 +847,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -873,7 +873,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -895,7 +895,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -921,7 +921,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -944,7 +944,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
@@ -970,7 +970,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -982,7 +982,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, MAX_RSSI, this);
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -1033,7 +1033,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -1046,7 +1046,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1099,7 +1099,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -1149,7 +1149,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -1199,7 +1199,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedAccessPoint());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getEstimatedPathLossExponentVariance(), 0.0, 0.0);
 
 
@@ -1212,7 +1212,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator = new RANSACRobustWifiAccessPointPowerAndPositionEstimator3D(
-                    new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, MAX_RSSI,
+                    new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>(), initialPosition, MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1339,7 +1339,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
 
         //check default value
         assertEquals(estimator.getInitialPathLossExponent(),
-                WifiAccessPointPowerAndPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
 
         //set new value
@@ -1490,14 +1490,14 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
         assertNull(estimator.getReadings());
 
         //set new value
-        List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new WifiRssiReadingLocated3D<>(accessPoint, 0.0, position));
+            readings.add(new RssiReadingLocated3D<>(accessPoint, 0.0, position));
         }
 
         estimator.setReadings(readings);
@@ -1511,7 +1511,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator.setReadings(new ArrayList<WifiRssiReadingLocated3D<WifiAccessPoint>>());
+            estimator.setReadings(new ArrayList<RssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
@@ -1571,7 +1571,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1595,7 +1595,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -1769,7 +1769,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1793,7 +1793,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -1967,7 +1967,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1991,7 +1991,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2165,7 +2165,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2189,7 +2189,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2368,7 +2368,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2392,7 +2392,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2610,7 +2610,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2634,7 +2634,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -2852,7 +2852,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -2876,7 +2876,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -3096,7 +3096,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3122,7 +3122,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
 
                 error += inlierErrorRandomizer.nextDouble();
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i], INLIER_ERROR_STD));
             }
 
@@ -3340,7 +3340,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3364,7 +3364,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -3591,7 +3591,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3615,7 +3615,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -3839,7 +3839,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3863,7 +3863,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -4093,7 +4093,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -4119,7 +4119,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
 
                 error += inlierErrorRandomizer.nextDouble();
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i], INLIER_ERROR_STD));
             }
 
@@ -4352,7 +4352,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -4376,7 +4376,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 
@@ -4655,7 +4655,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
-            List<WifiRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -4679,7 +4679,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator3DTest implemen
                     error = 0.0;
                 }
 
-                readings.add(new WifiRssiReadingLocated3D<>(accessPoint, rssi + error,
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
                         readingsPositions[i]));
             }
 

@@ -77,6 +77,8 @@ public class WifiAccessPointLocated3D extends WifiAccessPointLocated<Point3D> {
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @param ssid service set identifier (SSID) of this 802.11 network.
      * @param position position where access point is located.
+     * @param positionCovariance covariance of inhomogeneous coordinates of current
+     *                           position (if available).*
      * @throws IllegalArgumentException if either BSSID or position are null or
      * frequency is negative.
      */

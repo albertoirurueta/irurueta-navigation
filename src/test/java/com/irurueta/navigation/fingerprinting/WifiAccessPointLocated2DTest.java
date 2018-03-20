@@ -59,6 +59,7 @@ public class WifiAccessPointLocated2DTest {
         assertNull(ap.getSsid());
         assertNull(ap.getPosition());
         assertNull(ap.getPositionCovariance());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
 
         //test constructor with bssid, frequency and position
@@ -74,6 +75,7 @@ public class WifiAccessPointLocated2DTest {
         assertNull(ap.getSsid());
         assertSame(ap.getPosition(), position);
         assertNull(ap.getPositionCovariance());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -101,6 +103,7 @@ public class WifiAccessPointLocated2DTest {
         assertEquals(ap.getSsid(), SSID);
         assertSame(ap.getPosition(), position);
         assertNull(ap.getPositionCovariance());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -133,6 +136,7 @@ public class WifiAccessPointLocated2DTest {
         assertNull(ap.getSsid());
         assertSame(ap.getPosition(), position);
         assertSame(ap.getPositionCovariance(), cov);
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         ap = new WifiAccessPointLocated2D(BSSID, FREQUENCY, position, null);
 
@@ -142,6 +146,7 @@ public class WifiAccessPointLocated2DTest {
         assertNull(ap.getSsid());
         assertSame(ap.getPosition(), position);
         assertNull(ap.getPositionCovariance());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;
@@ -177,6 +182,7 @@ public class WifiAccessPointLocated2DTest {
         assertEquals(ap.getSsid(), SSID);
         assertSame(ap.getPosition(), position);
         assertSame(ap.getPositionCovariance(), cov);
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         ap = new WifiAccessPointLocated2D(BSSID, FREQUENCY, SSID, position,
                 null);
@@ -187,6 +193,7 @@ public class WifiAccessPointLocated2DTest {
         assertEquals(ap.getSsid(), SSID);
         assertSame(ap.getPosition(), position);
         assertNull(ap.getPositionCovariance());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //force IllegalArgumentException
         ap = null;

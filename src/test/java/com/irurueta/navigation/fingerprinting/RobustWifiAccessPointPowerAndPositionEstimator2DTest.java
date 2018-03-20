@@ -88,11 +88,11 @@ public class RobustWifiAccessPointPowerAndPositionEstimator2DTest implements
 
 
         //create with readings and method
-        List<WifiRssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 3; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D();
-            readings.add(new WifiRssiReadingLocated2D<>(accessPoint, 0.0, position));
+            readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0, position));
         }
 
         //RANSAC

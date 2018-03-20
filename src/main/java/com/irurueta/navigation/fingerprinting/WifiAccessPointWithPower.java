@@ -19,7 +19,8 @@ package com.irurueta.navigation.fingerprinting;
  * Data related to a WiFi access point with estimated transmitted power.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiAccessPointWithPower extends WifiAccessPoint {
+public class WifiAccessPointWithPower extends WifiAccessPoint implements
+        RadioSourceWithPower {
 
     /**
      * Default exponent typically used on free space for path loss propagation in
@@ -33,9 +34,9 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
     private double mTransmittedPower;
 
     /**
-     * Standard deviation of transmitted power value.
+     * Standard deviation of transmitted power value or null if unknown.
      */
-    private double mTransmittedPowerStandardDeviation;
+    private Double mTransmittedPowerStandardDeviation;
 
     /**
      * Exponent typically used on free space for path loss propagation in
@@ -49,6 +50,11 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      * {@link #DEFAULT_PATH_LOSS_EXPONENT}
      */
     private double mPathLossExponent = DEFAULT_PATH_LOSS_EXPONENT;
+
+    /**
+     * Standard deviation of path loss exponent or null if unknown.
+     */
+    private Double mPathLossExponentStandardDeviation;
 
     /**
      * Constructor.
@@ -85,16 +91,17 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      *              xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @param transmittedPower transmitted power by this access point (expressed in dBm's).
-     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null if
+     *                                          unknown.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
      * or transmitted power standard deviation is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
-            double transmittedPower, double transmittedPowerStandardDeviation)
+            double transmittedPower, Double transmittedPowerStandardDeviation)
             throws IllegalArgumentException {
         this(bssid, frequency, transmittedPower);
 
-        if (transmittedPowerStandardDeviation < 0.0) {
+        if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
             throw new IllegalArgumentException();
         }
         mTransmittedPowerStandardDeviation = transmittedPowerStandardDeviation;
@@ -107,16 +114,16 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @param ssid service set identifier (SSID) of this 802.11 network.
      * @param transmittedPower transmitted power by this access point (expressed in dBM's).
-     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null if unknown.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
      * or transmitted power standard deviation is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
-            double transmittedPower, double transmittedPowerStandardDeviation)
+            double transmittedPower, Double transmittedPowerStandardDeviation)
             throws IllegalArgumentException {
         this(bssid, frequency, ssid, transmittedPower);
 
-        if (transmittedPowerStandardDeviation < 0.0) {
+        if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
             throw new IllegalArgumentException();
         }
         mTransmittedPowerStandardDeviation = transmittedPowerStandardDeviation;
@@ -128,13 +135,29 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      *              xx:xx:xx:xx:xx:xx.
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @param transmittedPower transmitted power by this access point (expressed in dBm's).
-     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
+     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @throws IllegalArgumentException if BSSID is null or frequency is negative.
+     */
+    public WifiAccessPointWithPower(String bssid, double frequency,
+            double transmittedPower, double pathLossExponent) throws IllegalArgumentException {
+        this(bssid, frequency, transmittedPower);
+        mPathLossExponent = pathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
+     *              xx:xx:xx:xx:xx:xx.
+     * @param frequency frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null if
+     *                                          unknown.
      * @param pathLossExponent path loss exponent. By default this is 2.0.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative
      * or transmitted power standard deviation is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
-            double transmittedPower, double transmittedPowerStandardDeviation,
+            double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent) throws IllegalArgumentException {
         this(bssid, frequency, transmittedPower,
                 transmittedPowerStandardDeviation);
@@ -148,17 +171,73 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @param ssid service set identifier (SSID) of this 802.11 network.
      * @param transmittedPower transmitted power by this access point (expressed in dBM's).
-     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value.
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null if
+     *                                          unknown.
      * @param pathLossExponent path loss exponent. By default this is 2.0.
      * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
      * or transmitted power standard deviation is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
-            double transmittedPower, double transmittedPowerStandardDeviation,
+            double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent) throws IllegalArgumentException {
         this(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation);
         mPathLossExponent = pathLossExponent;
+    }
+
+    /**
+     * Constructor.
+     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
+     *              xx:xx:xx:xx:xx:xx.
+     * @param frequency frequency used by this Access Point (expressed in Hz).
+     * @param transmittedPower transmitted power by this access point (expressed in dBm's).
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null if
+     *                                          unknown.
+     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param pathLossExponentStandardDeviation standard deviation of path loss exponent or null if
+     *                                          unknown.
+     * @throws IllegalArgumentException if either BSSID is null, frequency is negative
+     * or any standard deviation is negative.
+     */
+    public WifiAccessPointWithPower(String bssid, double frequency,
+            double transmittedPower, Double transmittedPowerStandardDeviation,
+            double pathLossExponent, Double pathLossExponentStandardDeviation)
+            throws IllegalArgumentException {
+        this(bssid, frequency, transmittedPower,
+                transmittedPowerStandardDeviation, pathLossExponent);
+
+        if (pathLossExponentStandardDeviation != null && pathLossExponentStandardDeviation < 0.0) {
+            throw new IllegalArgumentException();
+        }
+        mPathLossExponentStandardDeviation = pathLossExponentStandardDeviation;
+    }
+
+    /**
+     * Constructor.
+     * @param bssid basic service set identifier of this access point in the form of a six-byte MAC address:
+     *              xx:xx:xx:xx:xx:xx.
+     * @param frequency frequency used by this Access Point (expressed in Hz).
+     * @param ssid service set identifier (SSID) of this 802.11 network.
+     * @param transmittedPower transmitted power by this access point (expressed in dBM's).
+     * @param transmittedPowerStandardDeviation standard deviation of transmitted power value or null if
+     *                                          unknown.
+     * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param pathLossExponentStandardDeviation standard deviation of path loss exponent or null if
+     *                                          unknown.
+     * @throws IllegalArgumentException if either BSSID is null, frequency is negative,
+     * or transmitted power standard deviation is negative.
+     */
+    public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
+            double transmittedPower, Double transmittedPowerStandardDeviation,
+            double pathLossExponent, Double pathLossExponentStandardDeviation)
+            throws IllegalArgumentException {
+        this(bssid, frequency, ssid, transmittedPower,
+                transmittedPowerStandardDeviation, pathLossExponent);
+
+        if (pathLossExponentStandardDeviation != null && pathLossExponentStandardDeviation < 0.0) {
+            throw new IllegalArgumentException();
+        }
+        mPathLossExponentStandardDeviation = pathLossExponentStandardDeviation;
     }
 
     /**
@@ -172,15 +251,17 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      * Gets transmitted power expressed in dBm's.
      * @return transmitted power expressed in dBm's.
      */
+    @Override
     public double getTransmittedPower() {
         return mTransmittedPower;
     }
 
     /**
-     * Gets standard deviation of transmitted power value.
-     * @return standard deviation of transmitted power value.
+     * Gets standard deviation of transmitted power value or null if unknown.
+     * @return standard deviation of transmitted power value or null if unknown.
      */
-    public double getTransmittedPowerStandardDeviation() {
+    @Override
+    public Double getTransmittedPowerStandardDeviation() {
         return mTransmittedPowerStandardDeviation;
     }
 
@@ -196,7 +277,17 @@ public class WifiAccessPointWithPower extends WifiAccessPoint {
      * {@link #DEFAULT_PATH_LOSS_EXPONENT}
      * @return path loss exponent.
      */
+    @Override
     public double getPathLossExponent() {
         return mPathLossExponent;
+    }
+
+    /**
+     * Gets standard deviation of path loss exponent or null if unknown.
+     * @return standard deviation of path loss exponent or null if unknown.
+     */
+    @Override
+    public Double getPathLossExponentStandardDeviation() {
+        return mPathLossExponentStandardDeviation;
     }
 }

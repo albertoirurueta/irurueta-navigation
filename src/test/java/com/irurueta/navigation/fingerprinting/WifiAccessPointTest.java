@@ -48,6 +48,7 @@ public class WifiAccessPointTest {
         assertNull(ap.getBssid());
         assertEquals(ap.getFrequency(), 0.0, 0.0);
         assertNull(ap.getSsid());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //test constructor with BSSID
         ap = new WifiAccessPoint(BSSID, FREQUENCY);
@@ -56,6 +57,7 @@ public class WifiAccessPointTest {
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertNull(ap.getSsid());
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //Force IllegalArgumentException
         ap = null;
@@ -76,6 +78,7 @@ public class WifiAccessPointTest {
         assertEquals(ap.getBssid(), BSSID);
         assertEquals(ap.getFrequency(), FREQUENCY, 0.0);
         assertEquals(ap.getSsid(), SSID);
+        assertEquals(ap.getType(), RadioSourceType.WIFI_ACCESS_POINT);
 
         //Force IllegalArgumentException
         ap = null;
