@@ -4581,7 +4581,6 @@ public class RssiRadioSourceEstimator2DTest implements
         } catch (NotReadyException ignore) { }
     }
 
-
     @Test
     public void testEstimateTransmittedPowerOnly() throws LockedException,
             NotReadyException, FingerprintingException {
