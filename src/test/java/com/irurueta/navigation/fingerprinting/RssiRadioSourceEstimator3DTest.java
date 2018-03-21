@@ -95,7 +95,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -113,10 +115,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -140,7 +140,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -159,10 +161,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -190,7 +190,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -209,10 +211,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -227,7 +227,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -246,10 +248,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -281,7 +281,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -300,10 +302,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -318,7 +318,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -335,10 +337,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -367,7 +367,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -386,10 +388,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -404,7 +404,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -423,10 +425,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -457,7 +457,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -476,10 +478,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -495,7 +495,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -514,10 +516,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -547,7 +547,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -566,10 +568,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -585,7 +585,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -604,10 +606,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -640,7 +640,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -659,10 +661,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -693,7 +693,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -712,10 +714,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -732,7 +732,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -751,10 +753,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -771,7 +771,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
@@ -790,10 +792,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -824,7 +824,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isLocked());
@@ -841,10 +843,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -876,7 +876,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
@@ -894,10 +896,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -915,7 +915,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
@@ -933,10 +935,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
 
@@ -954,7 +954,9 @@ public class RssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isPositionEstimationEnabled());
         assertEquals(estimator.getInitialPathLossExponent(),
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
@@ -972,10 +974,8 @@ public class RssiRadioSourceEstimator3DTest implements
                 0.0);
         assertNull(estimator.getEstimatedCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
-        assertEquals(estimator.getEstimatedTransmittedPowerVariance(),
-                0.0, 0.0);
-        assertEquals(estimator.getEstimatedPathLossExponentVariance(),
-                0.0, 0.0);
+        assertNull(estimator.getEstimatedTransmittedPowerVariance());
+        assertNull(estimator.getEstimatedPathLossExponentVariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
 
         //force IllegalArgumentException
@@ -1224,6 +1224,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -1239,7 +1242,11 @@ public class RssiRadioSourceEstimator3DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            estimator.estimate();
+            try {
+                estimator.estimate();
+            } catch (FingerprintingException e) {
+                continue;
+            }
 
             //check
             assertTrue(estimator.isReady());
@@ -1455,6 +1462,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             initialPosition, this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -1684,6 +1694,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             initialTransmittedPowerdBm, this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -1918,6 +1931,9 @@ public class RssiRadioSourceEstimator3DTest implements
                     new RssiRadioSourceEstimator3D<>(readings,
                             initialPosition, initialTransmittedPowerdBm,
                             this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -2145,6 +2161,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -2375,6 +2394,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             initialPosition, this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -2603,6 +2625,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             initialTransmittedPowerdBm, this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -2835,6 +2860,9 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             initialPosition, initialTransmittedPowerdBm, this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());
@@ -3008,7 +3036,7 @@ public class RssiRadioSourceEstimator3DTest implements
     }
 
     @Test
-    public void testEstimateWithPathLossEstimationEnabled()
+    public void testEstimateWithPositionTransmittedPowerAndPathLossEstimationEnabled()
             throws LockedException, NotReadyException, FingerprintingException, AlgebraException {
 
         int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0,
@@ -3065,6 +3093,8 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(true);
             estimator.setInitialPathLossExponent(pathLossExponent);
 
@@ -3109,6 +3139,9 @@ public class RssiRadioSourceEstimator3DTest implements
                     estimator.getEstimatedPositionCovariance());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            if (powerVariance <= 0.0) {
+                continue;
+            }
             assertTrue(powerVariance > 0.0);
             double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
@@ -3343,6 +3376,8 @@ public class RssiRadioSourceEstimator3DTest implements
             RssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                     new RssiRadioSourceEstimator3D<>(readings,
                             this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
             estimator.setInitialPathLossExponent(pathLossExponent);
 
@@ -3389,8 +3424,6 @@ public class RssiRadioSourceEstimator3DTest implements
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
-            assertEquals(pathLossVariance, 0.0, 0.0);
 
             SingularValueDecomposer decomposer = new SingularValueDecomposer(
                     estimator.getEstimatedPositionCovariance());
@@ -3573,6 +3606,9 @@ public class RssiRadioSourceEstimator3DTest implements
 
             RssiRadioSourceEstimator3D<Beacon> estimator =
                     new RssiRadioSourceEstimator3D<>(readings);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
 
             reset();
             assertTrue(estimator.isReady());

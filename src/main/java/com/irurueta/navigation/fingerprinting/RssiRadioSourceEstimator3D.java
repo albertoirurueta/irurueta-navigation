@@ -36,6 +36,19 @@ import java.util.List;
  * retrieved (because many measurements are made on unkown radio sources where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
+ * If Readings contain RSSI standard deviations, those values will be used,
+ * otherwise it will be asumed an RSSI standard deviation of 1 dB.
+ *
+ * IMPORTANT: Implementations of this class can choose to estimate a
+ * combination of radio source position, transmitted power and path loss
+ * exponent. However enabling all three estimations usually achieves
+ * innacurate results. When using this class, estimation must be of at least
+ * one parameter (position, transmitted power or path loss exponent) when
+ * initial values are provided for the other two, and at most it should consist
+ * of two parameters (either position and transmitted power, position and
+ * path loss exponent or transmitted power and path loss exponent), providing an
+ * initial value for the remaining parameter.
+ *
  * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -402,13 +415,24 @@ public class RssiRadioSourceEstimator3D<S extends RadioSource> extends
 
         Matrix estimatedPositionCovariance = getEstimatedPositionCovariance();
 
+        Double transmittedPowerVariance =
+                getEstimatedTransmittedPowerVariance();
+        Double transmittedPowerStandardDeviation = transmittedPowerVariance != null ?
+                Math.sqrt(transmittedPowerVariance) : null;
+
+        Double pathlossExponentVariance =
+                getEstimatedPathLossExponentVariance();
+        Double pathlossExponentStandardDeviation = pathlossExponentVariance != null ?
+                Math.sqrt(pathlossExponentVariance) : null;
+
         if (source instanceof WifiAccessPoint) {
             WifiAccessPoint accessPoint = (WifiAccessPoint)source;
             return new WifiAccessPointWithPowerAndLocated3D(accessPoint.getBssid(),
                     accessPoint.getFrequency(), accessPoint.getSsid(),
                     getEstimatedTransmittedPowerdBm(),
-                    Math.sqrt(getEstimatedTransmittedPowerVariance()),
+                    transmittedPowerStandardDeviation,
                     getEstimatedPathLossExponent(),
+                    pathlossExponentStandardDeviation,
                     estimatedPosition,
                     estimatedPositionCovariance);
         } else if(source instanceof Beacon) {
@@ -419,8 +443,8 @@ public class RssiRadioSourceEstimator3D<S extends RadioSource> extends
                     beacon.getManufacturer(), beacon.getServiceUuid(),
                     beacon.getBluetoothName(),
                     getEstimatedPathLossExponent(),
-                    Math.sqrt(getEstimatedTransmittedPowerVariance()),
-                    Math.sqrt(getEstimatedPathLossExponentVariance()),
+                    transmittedPowerStandardDeviation,
+                    pathlossExponentStandardDeviation,
                     estimatedPosition, estimatedPositionCovariance);
         }else {
             return null;
