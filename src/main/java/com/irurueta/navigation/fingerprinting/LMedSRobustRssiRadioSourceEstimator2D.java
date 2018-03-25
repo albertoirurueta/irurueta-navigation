@@ -23,9 +23,10 @@ import com.irurueta.numerical.robust.*;
 import java.util.List;
 
 /**
- * Robustly estimate 2D position and transmitted power of a WiFi access point, by
- * discarding outliers using LMedS algorithm and assuming that the access point
- * emits isotropically following the expression below:
+ * Robustly estimate 2D position, transmitted power and pathloss exponent of a radio source
+ * (e.g. WiFi access point or bluetooth beacon), by discarding outliers using LMedS
+ * algorithm and assuming that the radio source emits isotropically following the
+ * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
  * where Pr is the received power (expressed in mW),
  * Gt is the Gain of the transmission antena
@@ -33,19 +34,31 @@ import java.util.List;
  * d is the distance between emitter and receiver
  * and lambda is the wavelength and is equal to: lambda = c / f,
  * where c is the speed of light
- * and f is the carrier frequency of the WiFi signal.
- * Because usually information about the antena of the Wifi Access Point cannot be
- * retrieved (because many measurements are made on unkown access points where
+ * and f is the carrier frequency of the radio signal.
+ * Because usually information about the antena of the radio source cannot be
+ * retrieved (because many measurements are made on unkown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
- * If WifiReadings contain RSSI standard deviations, those values will be used,
+ * If RssiReadings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
+ *
+ * IMPORTANT: When using this class estimation can be done using a
+ * combination of radio source position, transmitted power and path loss
+ * exponent. However enabling all three estimations usually achieves
+ * innacurate results. When using this class, estimation must be of at least
+ * one parameter (position, transmitted power or path loss exponent) when
+ * initial values are provided for the other two, and at most it should consist
+ * of two parameters (either position and transmitted power, position and
+ * path loss exponent or transmitted power and path loss exponent), providing an
+ * initial value for the remaining parameter.
+ *
+ * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
-        RobustWifiAccessPointPowerAndPositionEstimator2D {
+public class LMedSRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
+        RobustRssiRadioSourceEstimator2D<S> {
 
     /**
      * Default value to be used for stop threshold. Stop threshold can be used to
@@ -92,18 +105,18 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D() {
+    public LMedSRobustRssiRadioSourceEstimator2D() {
         super();
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings)
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -112,35 +125,35 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -148,37 +161,37 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition) {
+    public LMedSRobustRssiRadioSourceEstimator2D(Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+    public LMedSRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, listener);
     }
@@ -186,25 +199,25 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public LMedSRobustRssiRadioSourceEstimator2D(
             Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -213,47 +226,47 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public LMedSRobustRssiRadioSourceEstimator2D(
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -261,66 +274,66 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
+    public LMedSRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener in charge of attending events raised by this instance.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
+    public LMedSRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -330,14 +343,14 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public LMedSRobustRssiRadioSourceEstimator2D(
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
@@ -346,40 +359,40 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public LMedSRobustRssiRadioSourceEstimator2D(
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public LMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public LMedSRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -440,7 +453,8 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
-     * Robustly estimates position and transmitted power for an access point.
+     * Robustly estimates position, transmitted power and pathloss exponent for a
+     * radio source.
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -481,14 +495,14 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
                             @Override
                             public boolean isReady() {
-                                return LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this.isReady();
+                                return LMedSRobustRssiRadioSourceEstimator2D.this.isReady();
                             }
 
                             @Override
                             public void onEstimateStart(RobustEstimator<Solution<Point2D>> estimator) {
                                 if (mListener != null) {
                                     mListener.onEstimateStart(
-                                            LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this);
+                                            LMedSRobustRssiRadioSourceEstimator2D.this);
                                 }
                             }
 
@@ -496,7 +510,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
                             public void onEstimateEnd(RobustEstimator<Solution<Point2D>> estimator) {
                                 if (mListener != null) {
                                     mListener.onEstimateEnd(
-                                            LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this);
+                                            LMedSRobustRssiRadioSourceEstimator2D.this);
                                 }
                             }
 
@@ -504,7 +518,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
                             public void onEstimateNextIteration(RobustEstimator<Solution<Point2D>> estimator, int iteration) {
                                 if (mListener != null) {
                                     mListener.onEstimateNextIteration(
-                                            LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this, iteration);
+                                            LMedSRobustRssiRadioSourceEstimator2D.this, iteration);
                                 }
                             }
 
@@ -512,7 +526,7 @@ public class LMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
                             public void onEstimateProgressChange(RobustEstimator<Solution<Point2D>> estimator, float progress) {
                                 if (mListener != null) {
                                     mListener.onEstimateProgressChange(
-                                            LMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this, progress);
+                                            LMedSRobustRssiRadioSourceEstimator2D.this, progress);
                                 }
                             }
                         });

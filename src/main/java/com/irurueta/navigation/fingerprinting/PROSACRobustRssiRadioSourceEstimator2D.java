@@ -23,9 +23,10 @@ import com.irurueta.numerical.robust.*;
 import java.util.List;
 
 /**
- * Robustly estimate 2D position and transmitted power of a WiFi access point, by
- * discarding outliers using PROMedS algorithm and assuming that the access point
- * emits isotropically following the expression below:
+ * Robustly estimate 2D position, transmitted power and pathloss exponent of a radio source
+ * (e.g. WiFi access point or bluetooth beacon), by discarding outliers using PROSAC
+ * algorithm and assuming that the radio source emits isotropically following the
+ * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
  * where Pr is the received power (expressed in mW),
  * Gt is the Gain of the transmission antena
@@ -33,61 +34,69 @@ import java.util.List;
  * d is the distance between emitter and receiver
  * and lambda is the wavelength and is equal to: lambda = c / f,
  * where c is the speed of light
- * and f is the carrier frequency of the WiFi signal.
- * Because usually information about the antena of the Wifi Access Point cannot be
- * retrieved (because many measurements are made on unkown access points where
+ * and f is the carrier frequency of the radio signal.
+ * Because usually information about the antena of the radio source cannot be
+ * retrieved (because many measurements are made on unkown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
- * If WifiReadings contain RSSI standard deviations, those values will be used,
+ * If RssiReadings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
+ *
+ * IMPORTANT: When using this class estimation can be done using a
+ * combination of radio source position, transmitted power and path loss
+ * exponent. However enabling all three estimations usually achieves
+ * innacurate results. When using this class, estimation must be of at least
+ * one parameter (position, transmitted power or path loss exponent) when
+ * initial values are provided for the other two, and at most it should consist
+ * of two parameters (either position and transmitted power, position and
+ * path loss exponent or transmitted power and path loss exponent), providing an
+ * initial value for the remaining parameter.
+ *
+ * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
-        RobustWifiAccessPointPowerAndPositionEstimator2D {
+public class PROSACRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
+        RobustRssiRadioSourceEstimator2D<S> {
 
     /**
-     * Default value to be used for stop threshold. Stop threshold can be used to
-     * avoid keeping the algorithm unnecessarily iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once a
-     * solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Constant defining default threshold to determine whether samples are inliers or not.
      */
-    public static final double DEFAULT_STOP_THRESHOLD = 1e-4;
+    public static final double DEFAULT_THRESHOLD = 0.1;
 
     /**
-     * Minimum allowed stop threshold value.
+     * Minimum value that can be set as threshold.
+     * Threshold must be strictly greater than 0.0.
      */
-    public static final double MIN_STOP_THRESHOLD = 0.0;
+    public static final double MIN_THRESHOLD = 0.0;
 
     /**
-     * Threshold to be used to keep the algorithm iterating in case that best
-     * estimated threshold using median of residuals is not small enough. Once
-     * a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm iterating
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
+     * Indicates that by default inliers will only be computed but not kept.
      */
-    private double mStopThreshold = DEFAULT_STOP_THRESHOLD;
+    public static final boolean DEFAULT_COMPUTE_AND_KEEP_INLIERS = false;
+
+    /**
+     * Indicates that by default residuals will only be computed but not kept.
+     */
+    public static final boolean DEFAULT_COMPUTE_AND_KEEP_RESIDUALS = false;
+
+    /**
+     * Threshold to determine whether samples are inliers or not when testing possible solutions.
+     * The threshold refers to the amount of error on distance between estimated position and
+     * distances provided for each sample.
+     */
+    private double mThreshold = DEFAULT_THRESHOLD;
+
+    /**
+     * Indicates whether inliers must be computed and kept.
+     */
+    private boolean mComputeAndKeepInliers = DEFAULT_COMPUTE_AND_KEEP_INLIERS;
+
+    /**
+     * Indicates whether residuals must be computed and kept.
+     */
+    private boolean mComputeAndKeepResiduals = DEFAULT_COMPUTE_AND_KEEP_RESIDUALS;
 
     /**
      * Quality scores corresponding to each provided sample.
@@ -98,18 +107,18 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D() {
+    public PROSACRobustRssiRadioSourceEstimator2D() {
         super();
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings)
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -118,35 +127,35 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -154,37 +163,37 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition) {
+    public PROSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+    public PROSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, listener);
     }
@@ -192,25 +201,25 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -219,47 +228,47 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -267,66 +276,66 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
+    public PROSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
+    public PROSACRobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -336,14 +345,14 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
@@ -352,40 +361,40 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public PROSACRobustRssiRadioSourceEstimator2D(
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -399,7 +408,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores) throws IllegalArgumentException {
         super();
         internalSetQualityScores(qualityScores);
@@ -407,17 +416,17 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings)
+            List<? extends RssiReadingLocated<S, Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
         internalSetQualityScores(qualityScores);
@@ -432,9 +441,9 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(listener);
         internalSetQualityScores(qualityScores);
@@ -442,19 +451,19 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         internalSetQualityScores(qualityScores);
@@ -462,19 +471,19 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
@@ -486,10 +495,10 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition) {
         super(initialPosition);
         internalSetQualityScores(qualityScores);
@@ -500,37 +509,37 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
@@ -542,12 +551,12 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         super(initialTransmittedPowerdBm);
@@ -556,20 +565,20 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -582,16 +591,16 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
@@ -599,23 +608,23 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
@@ -623,22 +632,22 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                     sample. The larger the score value the better
      *                     the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -650,15 +659,15 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
             Point2D initialPosition,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
@@ -671,45 +680,45 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
             Point2D initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
@@ -717,23 +726,23 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -747,14 +756,14 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
@@ -767,18 +776,18 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -786,27 +795,27 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public PROSACRobustRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+            List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -814,57 +823,32 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
-     * Returns threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value, the
-     * algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algrithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
-     * @return stop threshold to stop the algorithm prematurely when a certain
-     * accuracy has been reached.
+     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
+     * The threshold refers to the amount of error on distance between estimated position and distances
+     * provided for each sample.
+     * @return threshold to determine whether samples are inliers or not.
      */
-    public double getStopThreshold() {
-        return mStopThreshold;
+    public double getThreshold() {
+        return mThreshold;
     }
 
     /**
-     * Sets threshold to be used to keep the algorithm iterating in case that
-     * best estimated threshold using median of residuals is not small enough.
-     * Once a solution is found that generates a threshold below this value,
-     * the algorithm will stop.
-     * The stop threshold can be used to prevent the LMedS algorithm to iterate
-     * too many times in cases where samples have a very similar accuracy.
-     * For instance, in cases where proportion of outliers is very small (close
-     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
-     * iterate for a long time trying to find the best solution when indeed
-     * there is no need to do that if a reasonable threshold has already been
-     * reached.
-     * Because of this behaviour the stop threshold can be set to a value much
-     * lower than the one typically used in RANSAC, and yet the algorithm could
-     * still produce even smaller thresholds in estimated results.
-     * @param stopThreshold stop threshold to stop the algorithm prematurely
-     *                      when a certain accuracy has been reached.
-     * @throws IllegalArgumentException if provided value is zero or negative.
+     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
+     * The threshold refers to the amount of error on distance between estimated position and distances
+     * provided for each sample.
+     * @param threshold threshold to determine whether samples are inliers or not.
+     * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
+    public void setThreshold(double threshold)
             throws IllegalArgumentException, LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
-        if (stopThreshold <= MIN_STOP_THRESHOLD) {
+        if (threshold <= MIN_THRESHOLD) {
             throw new IllegalArgumentException();
         }
-
-        mStopThreshold = stopThreshold;
+        mThreshold = threshold;
     }
 
     /**
@@ -912,7 +896,54 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
-     * Robustly estimates position and transmitted power for an access point.
+     * Indicates whether inliers must be computed and kept.
+     * @return true if inliers must be computed and kept, false if inliers
+     * only need to be computed but not kept.
+     */
+    public boolean isComputeAndKeepInliersEnabled() {
+        return mComputeAndKeepInliers;
+    }
+
+    /**
+     * Specifies whether inliers must be computed and kept.
+     * @param computeAndKeepInliers true if inliers must be computed and kept,
+     *                              false if inliers only need to be computed but not kept.
+     * @throws LockedException if this solver is locked.
+     */
+    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mComputeAndKeepInliers = computeAndKeepInliers;
+    }
+
+    /**
+     * Indicates whether residuals must be computed and kept.
+     * @return true if residuals must be computed and kept, false if residuals
+     * only need to be computed but not kept.
+     */
+    public boolean isComputeAndKeepResidualsEnabled() {
+        return mComputeAndKeepResiduals;
+    }
+
+    /**
+     * Specifies whether residuals must be computed and kept.
+     * @param computeAndKeepResiduals true if residuals must be computed and kept,
+     *                                false if residuals only need to be computed but not kept.
+     * @throws LockedException if this solver is locked.
+     */
+    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mComputeAndKeepResiduals = computeAndKeepResiduals;
+    }
+
+    /**
+     * Robustly estimates position, transmitted power and pathloss exponent for a
+     * radio source.
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -927,9 +958,9 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
             throw new NotReadyException();
         }
 
-        PROMedSRobustEstimator<Solution<Point2D>> innerEstimator =
-                new PROMedSRobustEstimator<>(
-                        new PROMedSRobustEstimatorListener<Solution<Point2D>>() {
+        PROSACRobustEstimator<Solution<Point2D>> innerEstimator =
+                new PROSACRobustEstimator<>(
+                        new PROSACRobustEstimatorListener<Solution<Point2D>>() {
 
                             @Override
                             public double[] getQualityScores() {
@@ -938,7 +969,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
                             @Override
                             public double getThreshold() {
-                                return mStopThreshold;
+                                return mThreshold;
                             }
 
                             @Override
@@ -964,14 +995,14 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
                             @Override
                             public boolean isReady() {
-                                return PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this.isReady();
+                                return PROSACRobustRssiRadioSourceEstimator2D.this.isReady();
                             }
 
                             @Override
                             public void onEstimateStart(RobustEstimator<Solution<Point2D>> estimator) {
                                 if (mListener != null) {
                                     mListener.onEstimateStart(
-                                            PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this);
+                                            PROSACRobustRssiRadioSourceEstimator2D.this);
                                 }
                             }
 
@@ -979,7 +1010,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
                             public void onEstimateEnd(RobustEstimator<Solution<Point2D>> estimator) {
                                 if (mListener != null) {
                                     mListener.onEstimateEnd(
-                                            PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this);
+                                            PROSACRobustRssiRadioSourceEstimator2D.this);
                                 }
                             }
 
@@ -987,7 +1018,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
                             public void onEstimateNextIteration(RobustEstimator<Solution<Point2D>> estimator, int iteration) {
                                 if (mListener != null) {
                                     mListener.onEstimateNextIteration(
-                                            PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this, iteration);
+                                            PROSACRobustRssiRadioSourceEstimator2D.this, iteration);
                                 }
                             }
 
@@ -995,7 +1026,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
                             public void onEstimateProgressChange(RobustEstimator<Solution<Point2D>> estimator, float progress) {
                                 if (mListener != null) {
                                     mListener.onEstimateProgressChange(
-                                            PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D.this, progress);
+                                            PROSACRobustRssiRadioSourceEstimator2D.this, progress);
                                 }
                             }
                         });
@@ -1003,6 +1034,10 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
         try {
             mLocked = true;
             mInliersData = null;
+            innerEstimator.setComputeAndKeepInliersEnabled(
+                    mComputeAndKeepInliers || mRefineResult);
+            innerEstimator.setComputeAndKeepResidualsEnabled(
+                    mComputeAndKeepResiduals || mRefineResult);
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
@@ -1025,7 +1060,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROMedS;
+        return RobustEstimatorMethod.PROSAC;
     }
 
     /**
@@ -1034,7 +1069,7 @@ public class PROMedSRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * locked or not.
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
-     * is smaller than 3 samples.
+     * is smaller than required minimum.
      */
     private void internalSetQualityScores(double[] qualityScores)
             throws IllegalArgumentException {

@@ -15,7 +15,7 @@
  */
 package com.irurueta.navigation.fingerprinting;
 
-import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.*;
@@ -23,9 +23,10 @@ import com.irurueta.numerical.robust.*;
 import java.util.List;
 
 /**
- * Robustly estimate 2D position and transmitted power of a WiFi access point, by
- * discarding outliers using RANSAC algorithm and assuming that the access point
- * emits isotropically following the expression below:
+ * Robustly estimate 3D position, transmitted power and pathloss exponent of a radio source
+ * (e.g. WiFi access point or bluetooth beacon), by discarding outliers using RANSAC
+ * algorithm and assuming that the access point emits isotropically following the
+ * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
  * where Pr is the received power (expressed in mW),
  * Gt is the Gain of the transmission antena
@@ -33,19 +34,30 @@ import java.util.List;
  * d is the distance between emitter and receiver
  * and lambda is the wavelength and is equal to: lambda = c / f,
  * where c is the speed of light
- * and f is the carrier frequency of the WiFi signal.
- * Because usually information about the antena of the Wifi Access Point cannot be
- * retrieved (because many measurements are made on unkown access points where
+ * and f is the carrier frequency of the signal.
+ * Because usually information about the antena of the radio source cannot be
+ * retrieved (because many measurements are made on unkown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
- * If WifiReadings contain RSSI standard deviations, those values will be used,
+ * If RssiReadings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
+ *
+ * IMPORTANT: When using this class estimation can be done using a
+ * combination of radio source position, transmitted power and path loss
+ * exponent. However enabling all three estimations usually achieves
+ * innacurate results. When using this class, estimation must be of at least
+ * one parameter (position, transmitted power or path loss exponent) when
+ * initial values are provided for the other two, and at most it should consist
+ * of two parameters (either position and transmitted power, position and
+ * path loss exponent or transmitted power and path loss exponent), providing an
+ * initial value for the remaining parameter.
+ *
+ * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
-public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
-        RobustWifiAccessPointPowerAndPositionEstimator2D {
+public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> extends
+        RobustRssiRadioSourceEstimator3D<S> {
 
     /**
      * Constant defining default threshold on received power (RSSI) expressed in
@@ -90,18 +102,18 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D() {
+    public RANSACRobustRssiRadioSourceEstimator3D() {
         super();
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings)
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -110,73 +122,73 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings bleonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            Point2D initialPosition)
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            Point3D initialPosition)
             throws IllegalArgumentException {
         super(readings, initialPosition);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition) {
+    public RANSACRobustRssiRadioSourceEstimator3D(Point3D initialPosition) {
         super(initialPosition);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+    public RANSACRobustRssiRadioSourceEstimator3D(Point3D initialPosition,
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            Point2D initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            Point3D initialPosition,
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, listener);
     }
@@ -184,25 +196,25 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public RANSACRobustRssiRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -211,115 +223,115 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
+    public RANSACRobustRssiRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
+    public RANSACRobustRssiRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener in charge of attending events raised by this instance.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(Point2D initialPosition,
+    public RANSACRobustRssiRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
@@ -328,15 +340,15 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
@@ -344,40 +356,40 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RANSACRobustWifiAccessPointPowerAndPositionEstimator2D(
-            List<? extends RssiReadingLocated<WifiAccessPoint, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm,
+    public RANSACRobustRssiRadioSourceEstimator3D(
+            List<? extends RssiReadingLocated<S, Point3D>> readings,
+            Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<Point2D> listener)
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -413,7 +425,6 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
         }
         mThreshold = threshold;
     }
-
 
     /**
      * Indicates whether inliers must be computed and kept.
@@ -462,7 +473,8 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
     }
 
     /**
-     * Robustly estimates position and transmitted power for an access point.
+     * Robustly estimates position, transmitted power and pathloss exponent for a
+     * radio source.
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -477,72 +489,72 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
             throw new NotReadyException();
         }
 
-        RANSACRobustEstimator<Solution<Point2D>> innerEstimator =
+        RANSACRobustEstimator<Solution<Point3D>> innerEstimator =
                 new RANSACRobustEstimator<>(
-                        new RANSACRobustEstimatorListener<Solution<Point2D>>() {
-                    @Override
-                    public double getThreshold() {
-                        return mThreshold;
-                    }
+                        new RANSACRobustEstimatorListener<Solution<Point3D>>() {
+                            @Override
+                            public double getThreshold() {
+                                return mThreshold;
+                            }
 
-                    @Override
-                    public int getTotalSamples() {
-                        return mReadings.size();
-                    }
+                            @Override
+                            public int getTotalSamples() {
+                                return mReadings.size();
+                            }
 
-                    @Override
-                    public int getSubsetSize() {
-                        return getMinReadings();
-                    }
+                            @Override
+                            public int getSubsetSize() {
+                                return getMinReadings();
+                            }
 
-                    @Override
-                    public void estimatePreliminarSolutions(int[] samplesIndices,
-                                                            List<Solution<Point2D>> solutions) {
-                        solvePreliminarSolutions(samplesIndices, solutions);
-                    }
+                            @Override
+                            public void estimatePreliminarSolutions(int[] samplesIndices,
+                                    List<Solution<Point3D>> solutions) {
+                                solvePreliminarSolutions(samplesIndices, solutions);
+                            }
 
-                    @Override
-                    public double computeResidual(Solution<Point2D> currentEstimation, int i) {
-                        return residual(currentEstimation, i);
-                    }
+                            @Override
+                            public double computeResidual(Solution<Point3D> currentEstimation, int i) {
+                                return residual(currentEstimation, i);
+                            }
 
-                    @Override
-                    public boolean isReady() {
-                        return RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.this.isReady();
-                    }
+                            @Override
+                            public boolean isReady() {
+                                return RANSACRobustRssiRadioSourceEstimator3D.this.isReady();
+                            }
 
-                    @Override
-                    public void onEstimateStart(RobustEstimator<Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateStart(
-                                    RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateStart(RobustEstimator<Solution<Point3D>> estimator) {
+                                if (mListener != null) {
+                                    mListener.onEstimateStart(
+                                            RANSACRobustRssiRadioSourceEstimator3D.this);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateEnd(RobustEstimator<Solution<Point2D>> estimator) {
-                        if (mListener != null) {
-                            mListener.onEstimateEnd(
-                                    RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.this);
-                        }
-                    }
+                            @Override
+                            public void onEstimateEnd(RobustEstimator<Solution<Point3D>> estimator) {
+                                if (mListener != null) {
+                                    mListener.onEstimateEnd(
+                                            RANSACRobustRssiRadioSourceEstimator3D.this);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateNextIteration(RobustEstimator<Solution<Point2D>> estimator, int iteration) {
-                        if (mListener != null) {
-                            mListener.onEstimateNextIteration(
-                                    RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.this, iteration);
-                        }
-                    }
+                            @Override
+                            public void onEstimateNextIteration(RobustEstimator<Solution<Point3D>> estimator, int iteration) {
+                                if (mListener != null) {
+                                    mListener.onEstimateNextIteration(
+                                            RANSACRobustRssiRadioSourceEstimator3D.this, iteration);
+                                }
+                            }
 
-                    @Override
-                    public void onEstimateProgressChange(RobustEstimator<Solution<Point2D>> estimator, float progress) {
-                        if (mListener != null) {
-                            mListener.onEstimateProgressChange(
-                                    RANSACRobustWifiAccessPointPowerAndPositionEstimator2D.this, progress);
-                        }
-                    }
-                });
+                            @Override
+                            public void onEstimateProgressChange(RobustEstimator<Solution<Point3D>> estimator, float progress) {
+                                if (mListener != null) {
+                                    mListener.onEstimateProgressChange(
+                                            RANSACRobustRssiRadioSourceEstimator3D.this, progress);
+                                }
+                            }
+                        });
 
         try {
             mLocked = true;
@@ -554,7 +566,7 @@ public class RANSACRobustWifiAccessPointPowerAndPositionEstimator2D extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            Solution<Point2D> result = innerEstimator.estimate();
+            Solution<Point3D> result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             attemptRefine(result);
 

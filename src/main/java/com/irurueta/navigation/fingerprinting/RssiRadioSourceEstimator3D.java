@@ -360,14 +360,26 @@ public class RssiRadioSourceEstimator3D<S extends RadioSource> extends
     }
 
     /**
-     * Gets minimum required number of readings to estimate power
-     * and position.
-     * This is always 4 readings.
+     * Gets minimum required number of readings to estimate
+     * power, position and pathloss exponent.
+     * This value depends on the number of parameters to
+     * be estimated, but for position only, this is 4
+     * readings for 3D.
      * @return minimum required number of readings.
      */
     @Override
     public int getMinReadings() {
-        return Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;
+        int minReadings = 0;
+        if (isPositionEstimationEnabled()) {
+            minReadings += Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH;
+        }
+        if (isTransmittedPowerEstimationEnabled()) {
+            minReadings++;
+        }
+        if (isPathLossEstimationEnabled()) {
+            minReadings++;
+        }
+        return ++minReadings;
     }
 
     /**

@@ -89,7 +89,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 new RssiRadioSourceEstimator2D<>();
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -123,7 +123,7 @@ public class RssiRadioSourceEstimator2DTest implements
         //test constructor with readings
         List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
@@ -133,7 +133,7 @@ public class RssiRadioSourceEstimator2DTest implements
         estimator = new RssiRadioSourceEstimator2D<>(readings);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -183,7 +183,7 @@ public class RssiRadioSourceEstimator2DTest implements
         estimator = new RssiRadioSourceEstimator2D<>(this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -220,7 +220,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -273,7 +273,7 @@ public class RssiRadioSourceEstimator2DTest implements
         estimator = new RssiRadioSourceEstimator2D<>(initialPosition);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -310,7 +310,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -360,7 +360,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -397,7 +397,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -449,7 +449,7 @@ public class RssiRadioSourceEstimator2DTest implements
         estimator = new RssiRadioSourceEstimator2D<>(MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -487,7 +487,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -539,7 +539,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -577,7 +577,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 MAX_RSSI, this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -632,7 +632,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -684,7 +684,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, MAX_RSSI);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -723,7 +723,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, MAX_RSSI, this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -762,7 +762,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, MAX_RSSI, this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -816,7 +816,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -868,7 +868,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -907,7 +907,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -946,7 +946,7 @@ public class RssiRadioSourceEstimator2DTest implements
                 this);
 
         //check default values
-        assertEquals(estimator.getMinReadings(), 3);
+        assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -992,6 +992,77 @@ public class RssiRadioSourceEstimator2DTest implements
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
+    }
+
+    @Test
+    public void testGetMinReadings() throws LockedException {
+        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RssiRadioSourceEstimator2D<>();
+
+        //check default value
+        assertEquals(estimator.getMinReadings(), 4);
+
+        //position only
+        estimator.setPositionEstimationEnabled(true);
+        estimator.setTransmittedPowerEstimationEnabled(false);
+        estimator.setPathLossEstimationEnabled(false);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 3);
+
+
+        //transmitted power only
+        estimator.setPositionEstimationEnabled(false);
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(false);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 2);
+
+
+        //pathloss only
+        estimator.setPositionEstimationEnabled(false);
+        estimator.setTransmittedPowerEstimationEnabled(false);
+        estimator.setPathLossEstimationEnabled(true);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 2);
+
+
+        //position and transmitted power
+        estimator.setPositionEstimationEnabled(true);
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(false);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 4);
+
+
+        //position and pathloss
+        estimator.setPositionEstimationEnabled(true);
+        estimator.setTransmittedPowerEstimationEnabled(false);
+        estimator.setPathLossEstimationEnabled(true);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 4);
+
+
+        //transmitted power and pathloss
+        estimator.setPositionEstimationEnabled(false);
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(true);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 3);
+
+
+        //position, transmitted power and patloss
+        estimator.setPositionEstimationEnabled(true);
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(true);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 5);
     }
 
     @Test
@@ -1083,6 +1154,36 @@ public class RssiRadioSourceEstimator2DTest implements
     }
 
     @Test
+    public void testIsSetTransmittedPowerEstimationEnabled() throws LockedException {
+        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RssiRadioSourceEstimator2D<>();
+
+        //check default value
+        assertTrue(estimator.isTransmittedPowerEstimationEnabled());
+
+        //set new value
+        estimator.setTransmittedPowerEstimationEnabled(false);
+
+        //check
+        assertFalse(estimator.isTransmittedPowerEstimationEnabled());
+    }
+
+    @Test
+    public void testIsSetPositionEstimationEnabled() throws LockedException {
+        RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RssiRadioSourceEstimator2D<>();
+
+        //check default value
+        assertTrue(estimator.isPositionEstimationEnabled());
+
+        //set new value
+        estimator.setPositionEstimationEnabled(false);
+
+        //check
+        assertFalse(estimator.isPositionEstimationEnabled());
+    }
+
+    @Test
     public void testIsSetPathLossEstimationEnabled() throws LockedException {
         RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
@@ -1098,12 +1199,12 @@ public class RssiRadioSourceEstimator2DTest implements
     }
 
     @Test
-    public void testAreValidReadings() {
+    public void testAreValidReadings() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
@@ -1112,6 +1213,9 @@ public class RssiRadioSourceEstimator2DTest implements
 
         RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
+        estimator.setPositionEstimationEnabled(true);
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(false);
 
         assertTrue(estimator.areValidReadings(readings));
 
@@ -1136,6 +1240,11 @@ public class RssiRadioSourceEstimator2DTest implements
 
         RssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RssiRadioSourceEstimator2D<>();
+        estimator.setPositionEstimationEnabled(true);
+        estimator.setTransmittedPowerEstimationEnabled(false);
+        estimator.setInitialTransmittedPowerdBm(MAX_RSSI);
+        estimator.setPathLossEstimationEnabled(false);
+        estimator.setInitialPathLossExponent(MAX_PATH_LOSS_EXPONENT);
 
         //initial value
         assertNull(estimator.getReadings());
@@ -3910,6 +4019,7 @@ public class RssiRadioSourceEstimator2DTest implements
                     Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
             assertEquals(estimatedBeacon.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
+            assertNull(estimatedBeacon.getPathLossExponentStandardDeviation());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
@@ -4468,7 +4578,7 @@ public class RssiRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //repet again so that position covariance matrix is reused
+            //repeat again so that position covariance matrix is reused
             estimator.estimate();
 
             //check

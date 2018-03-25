@@ -1077,8 +1077,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Gets minimum required number of readings to estimate
-     * power and position.
-     * This is 3 readings for 2D, and 4 readings for 3D.
+     * power, position and pathloss exponent.
+     * This value depends on the number of parameters to
+     * be estimated, but for position only, this is 3
+     * readings for 2D, and 4 readings for 3D.
      * @return minimum required number of readings.
      */
     public abstract int getMinReadings();

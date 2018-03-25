@@ -26,8 +26,10 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * This is an abstract class to robustly estimate position and transmitted power of a WiFi access point, by discarding
- * outliers and assuming that the access point emits isotropically following the expression below:
+ * This is an abstract class to robustly estimate position, transmitted power and pathloss
+ * exponent of a radio source (e.g. WiFi access point or bluetooth beacon), by discarding
+ * outliers and assuming that the radio source emits isotropically following the
+ * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
  * where Pr is the received power (expressed in mW),
  * Gt is the Gain of the transmission antena
@@ -35,19 +37,31 @@ import java.util.List;
  * d is the distance between emitter and receiver
  * and lambda is the wavelength and is equal to: lambda = c / f,
  * where c is the speed of light
- * and f is the carrier frequency of the WiFi signal.
- * Because usually information about the antena of the Wifi Access Point cannot be
- * retrieved (because many measurements are made on unkown access points where
+ * and f is the carrier frequency of the radio signal.
+ * Because usually information about the antena of the radio source cannot be
+ * retrieved (because many measurements are made on unkown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
- * If WifiReadings contain RSSI standard deviations, those values will be used,
+ * If RssiReadings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
+ *
+ * IMPORTANT: Implementations of this class can choose to estimate a
+ * combination of radio source position, transmitted power and path loss
+ * exponent. However enabling all three estimations usually achieves
+ * innacurate results. When using this class, estimation must be of at least
+ * one parameter (position, transmitted power or path loss exponent) when
+ * initial values are provided for the other two, and at most it should consist
+ * of two parameters (either position and transmitted power, position and
+ * path loss exponent or transmitted power and path loss exponent), providing an
+ * initial value for the remaining parameter.
+ *
+ * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends Point> {
+public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P extends Point> {
 
     /**
      * Default robust estimator method when none is provided.
@@ -108,15 +122,15 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     public static final int MIN_ITERATIONS = 1;
 
     /**
-     * Initial transmitted power to start the estimation of access point
+     * Initial transmitted power to start the estimation of radio source
      * transmitted power.
      * If not defined, average value of received power readings will be used.
      */
     protected Double mInitialTransmittedPowerdBm;
 
     /**
-     * Initial position to start the estimation of access point position.
-     * If not defined, centroid of provided fingerprints will be used.
+     * Initial position to start the estimation of radio source position.
+     * If not defined, centroid of provided located readings will be used.
      */
     protected P mInitialPosition;
 
@@ -139,20 +153,32 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
             RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
+     * Indicates whether transmitted power estimation is enabled or not.
+     */
+    protected boolean mTransmittedPowerEstimationEnabled =
+            RssiRadioSourceEstimator.DEFAULT_TRANSMITTED_POWER_ESTIMATION_ENABLED;
+
+    /**
+     * Indicates whether radio source position estimation is enabled or not.
+     */
+    protected boolean mPositionEstimationEnabled =
+            RssiRadioSourceEstimator.DEFAULT_POSITION_ESTIMATION_ENABLED;
+
+    /**
      * Indicates whether path loss estimation is enabled or not.
      */
     protected boolean mPathLossEstimationEnabled;
 
     /**
-     * WiFi signal readings belonging to the same access point to be estimated.
+     * Signal readings belonging to the same radio source to be estimated.
      */
-    protected List<? extends RssiReadingLocated<WifiAccessPoint, P>> mReadings;
+    protected List<? extends RssiReadingLocated<S, P>> mReadings;
 
     /**
      * Listener to be notified of events such as when estimation starts, ends or its
      * progress significantly changes.
      */
-    protected RobustWifiAccessPointPowerAndPositionEstimatorListener<P> mListener;
+    protected RobustRssiRadioSourceEstimatorListener<S, P> mListener;
 
     /**
      * Estimated position.
@@ -221,24 +247,46 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     protected boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;
 
     /**
-     * Covariance of estimated position and power.
+     * Covariance of estimated position, power and/or pathloss exponent.
      * This is only available when result has been refined and covariance is kept.
      */
     protected Matrix mCovariance;
 
     /**
-     * Constructor.
+     * Covariance of estimated position.
+     * Size of this matrix will depend on the number of dimensions
+     * of estimated position (either 2 or 3).
+     * This value will only be available when position estimation is enabled.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator() { }
+    protected Matrix mEstimatedPositionCovariance;
+
+    /**
+     * Variance of estimated transmitted power.
+     * This value will only be available when transmitted power
+     * estimation is enabled.
+     */
+    protected Double mEstimatedTransmittedPowerVariance;
+
+    /**
+     * Variance of estimated path loss exponent.
+     * This value will only be available when pathloss
+     * exponent estimation is enabled.
+     */
+    protected Double mEstimatedPathLossExponentVariance;
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     */
+    public RobustRssiRadioSourceEstimator() { }
+
+    /**
+     * Constructor.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings)
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings)
             throws IllegalArgumentException {
         internalSetReadings(readings);
     }
@@ -247,21 +295,21 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+    public RobustRssiRadioSourceEstimator(
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         mListener = listener;
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings bleonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
+            RobustRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings);
         mListener = listener;
@@ -269,14 +317,14 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -285,38 +333,38 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition) {
+    public RobustRssiRadioSourceEstimator(P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+    public RobustRssiRadioSourceEstimator(P initialPosition,
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         mListener = listener;
         mInitialPosition = initialPosition;
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            RobustRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings, initialPosition);
         mListener = listener;
@@ -325,25 +373,25 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
+    public RobustRssiRadioSourceEstimator(
             Double initialTransmittedPowerdBm) {
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -353,31 +401,31 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     /**
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
+    public RobustRssiRadioSourceEstimator(
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         mListener = listener;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            RobustRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings, initialTransmittedPowerdBm);
         mListener = listener;
@@ -385,17 +433,17 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         internalSetReadings(readings);
@@ -405,13 +453,13 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
+    public RobustRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -419,16 +467,16 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener in charge of attending events raised by this instance.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
+    public RobustRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         mListener = listener;
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -436,20 +484,20 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            RobustRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mListener = listener;
@@ -457,18 +505,18 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -478,14 +526,14 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
+    public RobustRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
@@ -493,39 +541,39 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(P initialPosition,
+    public RobustRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener) {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
 
     /**
      * Constructor.
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
+     *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimator(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings,
+    public RobustRssiRadioSourceEstimator(
+            List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            RobustRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
@@ -533,10 +581,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
-     * Gets initial transmitted power to start the estimation of access point
+     * Gets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
-     * @return initial transmitted power to start the estimation of access point
+     * @return initial transmitted power to start the estimation of radio source
      * transmitted power.
      */
     public Double getInitialTransmittedPowerdBm() {
@@ -544,11 +592,11 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
-     * Sets initial transmitted power to start the estimation of access point
+     * Sets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in dBm's).
      * If not defined, average value of received power readings will be used.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted
+     *                                   estimation of radio source transmitted
      *                                   power.
      * @throws LockedException if estimator is locked.
      */
@@ -561,10 +609,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
-     * Gets initial transmitted power to start the estimation of access point
+     * Gets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in mW).
      * If not defined, average value of received power readings will be used.
-     * @return initial transmitted power to start the estimation of access point
+     * @return initial transmitted power to start the estimation of radio source
      * transmitted power.
      */
     public Double getInitialTransmittedPower() {
@@ -573,11 +621,11 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
-     * Sets initial transmitted power to start the estimation of access point
+     * Sets initial transmitted power to start the estimation of radio source
      * transmitted power (expressed in mW).
      * If not defined, average value of received power readings will be used.
      * @param initialTransmittedPower initial transmitted power to start the
-     *                                estimation of access point transmitted power.
+     *                                estimation of radio source transmitted power.
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if provided value is negative.
      */
@@ -598,19 +646,19 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     }
 
     /**
-     * Gets initial position to start the estimation of access point position.
+     * Gets initial position to start the estimation of radio source position.
      * If not defined, centroid of provided fingerprints will be used.
-     * @return initial position to start the estimation of access point position.
+     * @return initial position to start the estimation of radio source position.
      */
     public P getInitialPosition() {
         return mInitialPosition;
     }
 
     /**
-     * Sets initial position to start the estimation of access point position.
+     * Sets initial position to start the estimation of radio source position.
      * If not defined, centroid of provided fingerprints will be used.
-     * @param initialPosition initial position to start the estimation of access
-     *                        point position.
+     * @param initialPosition initial position to start the estimation of radio
+     *                        source position.
      * @throws LockedException if estimator is locked.
      */
     public void setInitialPosition(P initialPosition) throws LockedException {
@@ -663,6 +711,50 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
             throw new LockedException();
         }
         mInitialPathLossExponent = initialPathLossExponent;
+    }
+
+    /**
+     * Indicates whether transmitted power estimation is enabled or not.
+     * @return true if transmitted power estimation is enabled, false otherwise.
+     */
+    public boolean isTransmittedPowerEstimationEnabled() {
+        return mTransmittedPowerEstimationEnabled;
+    }
+
+    /**
+     * Specifies whether transmitted power estimation is enabled or not.
+     * @param transmittedPowerEstimationEnabled true if transmitted power estimation is enabled,
+     *                                          false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setTransmittedPowerEstimationEnabled(boolean transmittedPowerEstimationEnabled)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mTransmittedPowerEstimationEnabled = transmittedPowerEstimationEnabled;
+    }
+
+    /**
+     * Indicates whether radio source position estimation is enabled or not.
+     * @return true if position estimation is enabled, false otherwise.
+     */
+    public boolean isPositionEstimationEnabled() {
+        return mPositionEstimationEnabled;
+    }
+
+    /**
+     * Specifies whether radio source position estimation is enabled or not.
+     * @param positionEstimationEnabled true if position estimation is enabled,
+     *                                  false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPositionEstimationEnabled(boolean positionEstimationEnabled)
+        throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPositionEstimationEnabled = positionEstimationEnabled;
     }
 
     /**
@@ -758,7 +850,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Returns maximum allowed number of iterations. If maximum allowed number of
-     * iterations is achieved without converging to a result when calling solve(),
+     * iterations is achieved without converging to a result when calling estimate(),
      * a RobustEstimatorException will be raised.
      * @return maximum allowed number of iterations.
      */
@@ -845,27 +937,27 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @return true if readings are valid, false otherwise.
      */
     public boolean areValidReadings(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings) {
+            List<? extends RssiReadingLocated<S, P>> readings) {
 
         return readings != null && readings.size() >= getMinReadings();
     }
 
     /**
-     * Gets WiFi signal readings belonging to the same access point.
-     * @return WiFi signal readings belonging to the same access point.
+     * Gets signal readings belonging to the same radio source.
+     * @return signal readings belonging to the same radio source.
      */
-    public List<? extends RssiReadingLocated<WifiAccessPoint, P>> getReadings() {
+    public List<? extends RssiReadingLocated<S, P>> getReadings() {
         return mReadings;
     }
 
     /**
-     * Sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same
-     *                 access point.
+     * Sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same
+     *                 radio source.
      * @throws LockedException if estimator is locked.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public void setReadings(List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings)
+    public void setReadings(List<? extends RssiReadingLocated<S, P>> readings)
             throws LockedException, IllegalArgumentException {
         if (isLocked()) {
             throw new LockedException();
@@ -878,7 +970,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * Gets listener in charge of attending events raised by this instance.
      * @return listener in charge of attending events raised by this instance.
      */
-    public RobustWifiAccessPointPowerAndPositionEstimatorListener<P> getListener() {
+    public RobustRssiRadioSourceEstimatorListener<S, P> getListener() {
         return mListener;
     }
 
@@ -889,7 +981,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @throws LockedException if estimator is locked.
      */
     public void setListener(
-            RobustWifiAccessPointPowerAndPositionEstimatorListener<P> listener)
+            RobustRssiRadioSourceEstimatorListener<S, P> listener)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -903,7 +995,14 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * @return true if this instance is ready, false otherwise.
      */
     public boolean isReady() {
-        return areValidReadings(mReadings);
+        //at least one parameter estimtion must be enabled
+        return (mPositionEstimationEnabled || mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled) &&
+                //if position estimation is disabled, an initial position must be provided
+                !(!mPositionEstimationEnabled && mInitialPosition == null) &&
+                //if transmitted power estimation is disabled, an initial transmitted power must be provided
+                !(!mTransmittedPowerEstimationEnabled && mInitialTransmittedPowerdBm == null) &&
+                //readings must also be valid
+                areValidReadings(mReadings);
     }
 
     /**
@@ -936,8 +1035,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Gets covariance for estimated position and power.
-     * Top-left submatrix contains covariance of position, and last diagonal element
-     * contains variance of estimated transmitted power.
+     * Matrix contains information in the following order:
+     * Top-left submatrix contains covariance of position,
+     * then follows transmitted power variance, and finally
+     * the last element contains pathloss exponent variance.
      * This is only available when result has been refined and covariance is kept.
      * @return covariance for estimated position and power.
      */
@@ -947,17 +1048,13 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Gets estimated position covariance.
+     * Size of this matrix will depend on the number of dimensions
+     * of estimated position (either 2 or 3).*
      * This is only available when result has been refined and covariance is kept.
      * @return estimated position covariance.
      */
     public Matrix getEstimatedPositionCovariance() {
-        if (mCovariance == null) {
-            return null;
-        }
-
-        int d = getNumberOfDimensions() - 1;
-        return mCovariance.getSubmatrix(
-                0, 0, d, d);
+        return mEstimatedPositionCovariance;
     }
 
     /**
@@ -965,27 +1062,17 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
      * This is only available when result has been refined and covariance is kept.
      * @return estimated transmitted power variance.
      */
-    public double getEstimatedTransmittedPowerVariance() {
-        if (mCovariance == null) {
-            return 0.0;
-        }
-
-        int d = getNumberOfDimensions();
-        return mCovariance.getElementAt(d, d);
+    public Double getEstimatedTransmittedPowerVariance() {
+        return mEstimatedTransmittedPowerVariance;
     }
 
     /**
      * Gets estimated path loss exponent variance.
+     * This is only available when result has been refined and covariance is kept.
      * @return estimated path loss exponent variance.
      */
-    public double getEstimatedPathLossExponentVariance() {
-        int d = getNumberOfDimensions() + 1;
-        if (mCovariance == null ||
-                mCovariance.getRows() == d) {
-            return 0.0;
-        }
-
-        return mCovariance.getElementAt(d, d);
+    public Double getEstimatedPathLossExponentVariance() {
+        return mEstimatedPathLossExponentVariance;
     }
 
     /**
@@ -1030,8 +1117,10 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
 
     /**
      * Gets minimum required number of readings to estimate
-     * power and position.
-     * This is 3 readings for 2D, and 4 readings for 3D.
+     * power, position and pathloss exponent.
+     * This value depends on the number of parameters to
+     * be estimated, but for position only, this is 3
+     * readings for 2D, and 4 readings for 3D.
      * @return minimum required number of readings.
      */
     public abstract int getMinReadings();
@@ -1043,7 +1132,8 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     public abstract int getNumberOfDimensions();
 
     /**
-     * Robustly estimates position and transmitted power for an access point.
+     * Robustly estimates position, transmitted power and pathloss exponent for a
+     * radio source.
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -1053,11 +1143,11 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
             RobustEstimatorException;
 
     /**
-     * Gets estimated located access point with estimated transmitted power.
-     * @param <AP> type of located access point with transmitted power.
-     * @return estimasted located access point with estimated transmitted power.
+     * Gets estimated located radio source with estimated transmitted power.
+     * @return estimated located radio source with estimated transmitted power and path loss exponent.
+     * @param <LS> type of located radio source with transmitted power and path loss exponent.
      */
-    public abstract <AP extends WifiAccessPointWithPowerAndLocated<P>> AP getEstimatedAccessPoint();
+    public abstract <LS extends RadioSourceWithPowerAndLocated<P>> LS getEstimatedRadioSource();
 
     /**
      * Returns method being used for robust estimation.
@@ -1066,13 +1156,13 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
     public abstract RobustEstimatorMethod getMethod();
 
     /**
-     * Internally sets WiFi signal readings belonging to the same access point.
-     * @param readings WiFi signal readings belonging to the same access point.
+     * Internally sets signal readings belonging to the same radio source.
+     * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are null, not enough readings
      * are available, or readings do not belong to the same access point.
      */
     protected void internalSetReadings(
-            List<? extends RssiReadingLocated<WifiAccessPoint, P>> readings)
+            List<? extends RssiReadingLocated<S, P>> readings)
             throws IllegalArgumentException {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
@@ -1103,14 +1193,16 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
         //Pte is equivalent transmitted power, expressed in dBm
         //k is a constant equal to k = c^2 / (pi * f)^2, where c is speed of light
         //and d is equal to distance between fingerprint and estimated position
-        RssiReadingLocated<WifiAccessPoint, P> reading = mReadings.get(i);
+        RssiReadingLocated<S, P> reading = mReadings.get(i);
         double frequency = reading.getSource().getFrequency();
+
+        double pathLossExponent = currentEstimation.getEstimatedPathLossExponent();
 
         //compute k as the constant part of the isotropic received power formula
         //so that: Pr = Pte*k^n/d^n
         double k = RssiRadioSourceEstimator.SPEED_OF_LIGHT /
                 (4.0 * Math.PI * frequency);
-        final double kdB = 10.0 * mInitialPathLossExponent * Math.log10(k);
+        final double kdB = 10.0 * pathLossExponent * Math.log10(k);
 
         //get distance from estimated access point position and fingerprint position
         P fingerprintPosition = reading.getPosition();
@@ -1125,7 +1217,7 @@ public abstract class RobustWifiAccessPointPowerAndPositionEstimator<P extends P
         //compute expected received power assuming isotropic transmission
         //and compare agains measured RSSI at fingerprint location
         double expectedRSSI = kdB + transmittedPowerdBm -
-                5.0 * mInitialPathLossExponent * Math.log10(sqrDistance);
+                5.0 * pathLossExponent * Math.log10(sqrDistance);
         double rssi = reading.getRssi();
 
         return Math.abs(expectedRSSI - rssi);
