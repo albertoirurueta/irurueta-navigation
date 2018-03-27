@@ -25,7 +25,8 @@ import com.irurueta.geometry.Point;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class RssiReadingLocated<S extends RadioSource, P extends Point> extends RssiReading<S> {
+public class RssiReadingLocated<S extends RadioSource, P extends Point> extends RssiReading<S>
+        implements ReadingLocated<P>{
 
     /**
      * Position where radio source reading was made.
@@ -140,6 +141,7 @@ public class RssiReadingLocated<S extends RadioSource, P extends Point> extends 
      * Gets position where reading was made.
      * @return position where reading was made.
      */
+    @Override
     public P getPosition() {
         return mPosition;
     }
@@ -148,6 +150,7 @@ public class RssiReadingLocated<S extends RadioSource, P extends Point> extends 
      * Gets covariance of inhomogeneous coordinates of current position (if available).
      * @return covariance of position or null.
      */
+    @Override
     public Matrix getPositionCovariance() {
         return mPositionCovariance;
     }

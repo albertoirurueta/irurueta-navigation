@@ -15,14 +15,25 @@
  */
 package com.irurueta.navigation.fingerprinting;
 
+import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
 
 /**
- * Listener to be notified of events produced by an RSSI robust radio source estimator when
- * estimation starts, ends or when progress changes.
- *
- * @param <S> a {@link RadioSource} type.
+ * Contains a located signal reading associated to a given radio source
+ * (e.g. WiFi access point or bluetooth beacon).
  * @param <P> a {@link Point} type.
  */
-public interface RobustRssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point> extends
-        RobustRadioSourceEstimatorListener<RobustRssiRadioSourceEstimator<S, P>>{ }
+public interface ReadingLocated<P extends Point> {
+
+    /**
+     * Gets position where reading was made.
+     * @return position where reading was made.
+     */
+    P getPosition();
+
+    /**
+     * Gets covariance of inhomogeneous coordinates of current position (if available).
+     * @return covariance of position or null.
+     */
+    Matrix getPositionCovariance();
+}

@@ -45,7 +45,7 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
+            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
             double[] distances) throws IllegalArgumentException {
         super(fingerprints, distances);
     }
@@ -71,7 +71,7 @@ public class WeightedKNearestNeighboursPositionSolver3D extends
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver3D(
-            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
+            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints,
             double[] distances, WeightedKNearestNeighboursPositionSolverListener<Point3D> listener)
             throws IllegalArgumentException {
         super(fingerprints, distances, listener);

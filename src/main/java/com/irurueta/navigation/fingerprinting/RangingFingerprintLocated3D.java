@@ -21,42 +21,41 @@ import com.irurueta.geometry.Point3D;
 import java.util.List;
 
 /**
- * Contains 3D located WiFi fingerprint.
- * @param <AP> a {@link WifiAccessPoint} type.
+ * Contains 3D located ranging readings from several radio sources.
+ * @param <S> a {@link RadioSource} type.
  * @param <R> a {@link RssiReading} type.
  */
-@SuppressWarnings("WeakerAccess")
-public class WifiFingerprintLocated3D<AP extends WifiAccessPoint, R extends RssiReading<AP>>
-        extends WifiFingerprintLocated<AP, R, Point3D> {
+public class RangingFingerprintLocated3D<S extends RadioSource,
+        R extends RangingReading<S>> extends RangingFingerprintLocated<S, R, Point3D> {
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings defining the fingerprint.
+     * @param readings non-located ranging readings defining the fingerprint.
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated3D(List<R> readings, Point3D position)
+    public RangingFingerprintLocated3D(List<R> readings, Point3D position)
             throws IllegalArgumentException {
         super(readings, position);
     }
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings defining the fingerprint.
+     * @param readings non-located ranging readings defining the fingerprint.
      * @param position position where readings were made.
-     * @param positionCovariance 2x2 covariance of inhomogeneous coordinates of
+     * @param positionCovariance 3x3 covariance of inhomogeneous coordinates of
      *                           current position (if available).
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated3D(List<R> readings, Point3D position,
-                                    Matrix positionCovariance) throws IllegalArgumentException {
+    public RangingFingerprintLocated3D(List<R> readings, Point3D position,
+            Matrix positionCovariance) throws IllegalArgumentException {
         super(readings, position, positionCovariance);
     }
 
     /**
      * Empty constructor.
      */
-    protected WifiFingerprintLocated3D() {
+    public RangingFingerprintLocated3D() {
         super();
     }
 }

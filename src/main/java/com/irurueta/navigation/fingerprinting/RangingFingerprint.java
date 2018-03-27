@@ -15,14 +15,31 @@
  */
 package com.irurueta.navigation.fingerprinting;
 
-import com.irurueta.geometry.Point;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * Listener to be notified of events produced by an RSSI robust radio source estimator when
- * estimation starts, ends or when progress changes.
- *
+ * Contains ranging readings from several radio sources for an unknown location
+ * to be determined.
+ * @param <R> a {@link RssiReading} type.
  * @param <S> a {@link RadioSource} type.
- * @param <P> a {@link Point} type.
  */
-public interface RobustRssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point> extends
-        RobustRadioSourceEstimatorListener<RobustRssiRadioSourceEstimator<S, P>>{ }
+@SuppressWarnings("WeakerAccess")
+public class RangingFingerprint<S extends RadioSource, R extends RangingReading<S>>
+        extends Fingerprint<S, R> {
+
+    /**
+     * Constructor.
+     */
+    public RangingFingerprint() { }
+
+    /**
+     * Constructor.
+     * @param readings non-located ranging readings.
+     * @throws IllegalArgumentException if provided readings is null.
+     */
+    public RangingFingerprint(List<R> readings)
+            throws IllegalArgumentException {
+        super(readings);
+    }
+}

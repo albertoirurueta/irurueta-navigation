@@ -25,7 +25,8 @@ import com.irurueta.geometry.Point;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class RangingReadingLocated<S extends RadioSource, P extends Point> extends RangingReading<S> {
+public class RangingReadingLocated<S extends RadioSource, P extends Point> extends RangingReading<S>
+        implements ReadingLocated<P> {
 
     /**
      * Position where WiFi reading was made.

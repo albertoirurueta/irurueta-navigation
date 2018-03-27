@@ -105,8 +105,8 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
 
         //test constructor with fingerprints and distances
         //noinspection all
-        WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints =
-                new WifiFingerprintLocated[1];
+        RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints =
+                new RssiFingerprintLocated[1];
         double[] distances = new double[1];
         solver = new WeightedKNearestNeighboursPositionSolver3D(fingerprints, distances);
 
@@ -137,7 +137,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
         try {
             //noinspection all
             solver = new WeightedKNearestNeighboursPositionSolver3D(
-                    new WifiFingerprintLocated[0], new double[0]);
+                    new RssiFingerprintLocated[0], new double[0]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
@@ -195,7 +195,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
         try {
             //noinspection all
             solver = new WeightedKNearestNeighboursPositionSolver3D(
-                    new WifiFingerprintLocated[0], new double[0], this);
+                    new RssiFingerprintLocated[0], new double[0], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
@@ -232,8 +232,8 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
 
         //set new values
         //noinspection all
-        WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints =
-                new WifiFingerprintLocated[1];
+        RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] fingerprints =
+                new RssiFingerprintLocated[1];
         double[] distances = new double[1];
         solver.setFingerprintsAndDistances(fingerprints, distances);
 
@@ -253,7 +253,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
         try {
             //noinspection all
             solver.setFingerprintsAndDistances(
-                    new WifiFingerprintLocated[0], new double[0]);
+                    new RssiFingerprintLocated[0], new double[0]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
@@ -308,7 +308,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
-            List<WifiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
+            List<RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint3D(
@@ -324,7 +324,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                     readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
-                fingerprints.add(new WifiFingerprintLocated3D<>(readings, fingerprintsPositions[i]));
+                fingerprints.add(new RssiFingerprintLocated3D<>(readings, fingerprintsPositions[i]));
             }
 
             WifiKNearestFinder<Point3D> finder =
@@ -345,20 +345,20 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
                 readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
-                    new WifiFingerprint<>(readings);
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
 
             //find nearest fingerprint
             int k = 1;
-            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
+            List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
                     new ArrayList<>();
             List<Double> nearestDistancesList = new ArrayList<>();
             finder.findKNearestTo(fingerprint, k,
                     nearestFingerprintsList, nearestDistancesList);
 
             //noinspection all
-            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
-                    new WifiFingerprintLocated[k];
+            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
+                    new RssiFingerprintLocated[k];
             double[] nearestDistances = new double[k];
             for(int i = 0; i < k; i++) {
                 nearestFingerprints[i] = nearestFingerprintsList.get(i);
@@ -497,7 +497,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
-            List<WifiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
+            List<RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint3D(
@@ -514,7 +514,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                     readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
-                fingerprints.add(new WifiFingerprintLocated3D<>(readings, fingerprintsPositions[i]));
+                fingerprints.add(new RssiFingerprintLocated3D<>(readings, fingerprintsPositions[i]));
             }
 
             WifiKNearestFinder<Point3D> finder =
@@ -535,19 +535,19 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
                 readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
-                    new WifiFingerprint<>(readings);
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
 
             //find nearest fingerprints
-            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
+            List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
                     new ArrayList<>();
             List<Double> nearestDistancesList = new ArrayList<>();
             finder.findKNearestTo(fingerprint, k,
                     nearestFingerprintsList, nearestDistancesList);
 
             //noinspection all
-            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
-                    new WifiFingerprintLocated[k];
+            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
+                    new RssiFingerprintLocated[k];
             double[] nearestDistances = new double[k];
             for(int i = 0; i < k; i++) {
                 nearestFingerprints[i] = nearestFingerprintsList.get(i);
@@ -627,7 +627,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
             int numFingerprints = randomizer.nextInt(
                     MIN_FINGERPRINTS, MAX_FINGERPRINTS);
             Point3D[] fingerprintsPositions = new Point3D[numFingerprints];
-            List<WifiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
+            List<RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (int i = 0; i < numFingerprints; i++) {
                 fingerprintsPositions[i] = new InhomogeneousPoint3D(
@@ -644,7 +644,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                     readings.add(new RssiReading<>(accessPoints[j], rssi));
                 }
 
-                fingerprints.add(new WifiFingerprintLocated3D<>(readings, fingerprintsPositions[i]));
+                fingerprints.add(new RssiFingerprintLocated3D<>(readings, fingerprintsPositions[i]));
             }
 
             WifiKNearestFinder<Point3D> finder =
@@ -662,21 +662,21 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
                 readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
-                    new WifiFingerprint<>(readings);
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
 
             int bestK = 0;
             double bestDistance = Double.MAX_VALUE;
             for (int k = 1; k < numFingerprints; k++) {
-                List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
+                List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
                         new ArrayList<>();
                 List<Double> nearestDistancesList = new ArrayList<>();
                 finder.findKNearestTo(fingerprint, k,
                         nearestFingerprintsList, nearestDistancesList);
 
                 //noinspection all
-                WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
-                        new WifiFingerprintLocated[k];
+                RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
+                        new RssiFingerprintLocated[k];
                 double[] nearestDistances = new double[k];
                 for (int i = 0; i < k; i++) {
                     nearestFingerprints[i] = nearestFingerprintsList.get(i);
@@ -737,7 +737,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
 
             //setup uniform fingerprint readings
             List<Point3D> fingerprintsPositionsList = new ArrayList<>();
-            List<WifiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
+            List<RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (double x = MIN_POS; x < MAX_POS; x += SEPARATION_POS) {
                 for (double y = MIN_POS; y < MAX_POS; y += SEPARATION_POS) {
@@ -756,7 +756,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                             readings.add(new RssiReading<>(accessPoints[j], rssi));
                         }
 
-                        fingerprints.add(new WifiFingerprintLocated3D<>(readings, fingerprintPosition));
+                        fingerprints.add(new RssiFingerprintLocated3D<>(readings, fingerprintPosition));
                     }
                 }
             }
@@ -779,19 +779,19 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
                 readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
-                    new WifiFingerprint<>(readings);
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
 
             //find nearest fingerprints
-            List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
+            List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
                     new ArrayList<>();
             List<Double> nearestDistancesList = new ArrayList<>();
             finder.findKNearestTo(fingerprint, k,
                     nearestFingerprintsList, nearestDistancesList);
 
             //noinspection all
-            WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
-                    new WifiFingerprintLocated[k];
+            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
+                    new RssiFingerprintLocated[k];
             double[] nearestDistances = new double[k];
             for(int i = 0; i < k; i++) {
                 nearestFingerprints[i] = nearestFingerprintsList.get(i);
@@ -868,7 +868,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
             }
 
             //setup uniform fingerprint readings
-            List<WifiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
+            List<RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                     new ArrayList<>();
             for (double x = MIN_POS; x < MAX_POS; x += SEPARATION_POS) {
                 for (double y = MIN_POS; y < MAX_POS; y += SEPARATION_POS) {
@@ -886,7 +886,7 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                             readings.add(new RssiReading<>(accessPoints[j], rssi));
                         }
 
-                        fingerprints.add(new WifiFingerprintLocated3D<>(readings, fingerprintPosition));
+                        fingerprints.add(new RssiFingerprintLocated3D<>(readings, fingerprintPosition));
                     }
                 }
             }
@@ -906,23 +906,23 @@ public class WeightedKNearestNeighboursPositionSolver3DTest implements
                         transmittedPower[i], distance, accessPoints[i].getFrequency()));
                 readings.add(new RssiReading<>(accessPoints[i], rssi));
             }
-            WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
-                    new WifiFingerprint<>(readings);
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
 
             int bestK = 0;
             double bestDistance = Double.MAX_VALUE;
             int numFingerprints = fingerprints.size();
             int maxK = Math.min(numFingerprints, MAX_K);
             for (int k = 1; k < maxK; k++) {
-                List<WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
+                List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>> nearestFingerprintsList =
                         new ArrayList<>();
                 List<Double> nearestDistancesList = new ArrayList<>();
                 finder.findKNearestTo(fingerprint, k,
                         nearestFingerprintsList, nearestDistancesList);
 
                 //noinspection all
-                WifiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
-                        new WifiFingerprintLocated[k];
+                RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point3D>[] nearestFingerprints =
+                        new RssiFingerprintLocated[k];
                 double[] nearestDistances = new double[k];
                 for (int i = 0; i < k; i++) {
                     nearestFingerprints[i] = nearestFingerprintsList.get(i);

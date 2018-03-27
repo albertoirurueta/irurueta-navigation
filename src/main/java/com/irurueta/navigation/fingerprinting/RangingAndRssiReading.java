@@ -98,6 +98,15 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
     }
 
     /**
+     * Contains radio source reading type.
+     * @return reading type.
+     */
+    @Override
+    public ReadingType getType() {
+        return ReadingType.RANGING_AND_RSSI_READING;
+    }
+
+    /**
      * Gets distance in meters to the radio source.
      * @return distance in mters to the radio source.
      */

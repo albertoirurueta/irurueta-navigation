@@ -65,4 +65,10 @@ public abstract class Reading<S extends RadioSource> implements Serializable {
     public boolean hasSameSource(Reading<S> otherReading) {
         return otherReading != null && otherReading.mSource.equals(mSource);
     }
+
+    /**
+     * Contains radio source reading type.
+     * @return reading type.
+     */
+    public abstract ReadingType getType();
 }

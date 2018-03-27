@@ -72,6 +72,15 @@ public class RssiReading<S extends RadioSource> extends Reading<S> {
     }
 
     /**
+     * Contains radio source reading type.
+     * @return reading type.
+     */
+    @Override
+    public ReadingType getType() {
+        return ReadingType.RSSI_READING;
+    }
+
+    /**
      * Gets received signal strength indicator of this 802.11 network, in dBm.
      * @return received signal strength indicator.
      */

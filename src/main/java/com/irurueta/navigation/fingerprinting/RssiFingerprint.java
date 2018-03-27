@@ -20,56 +20,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contains WiFi readings for an unknown location to be determined.
+ * Contains RSSI readings from several radio sources for an unknown location to be
+ * determined.
  * @param <R> a {@link RssiReading} type.
- * @param <AP> a {@link WifiAccessPoint} type.
+ * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiFingerprint<AP extends WifiAccessPoint, R extends RssiReading<AP>>
-        implements Serializable {
-
-    /**
-     * Non-located WiFi readings.
-     */
-    private List<R> mReadings = new ArrayList<>();
+public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
+        extends Fingerprint<S, R> {
 
     /**
      * Constructor.
      */
-    public WifiFingerprint() { }
+    public RssiFingerprint() { }
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings.
+     * @param readings non-located RSSI readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public WifiFingerprint(List<R> readings)
+    public RssiFingerprint(List<R> readings)
             throws IllegalArgumentException {
-        if (readings == null) {
-            throw new IllegalArgumentException();
-        }
-        mReadings = readings;
-    }
-
-    /**
-     * Gets non-located WiFi readings.
-     * @return non-located WiFi readings.
-     */
-    public List<R> getReadings() {
-        return mReadings;
-    }
-
-    /**
-     * Sets non-located WiFi readings.
-     * @param readings non-located WiFi readings.
-     * @throws IllegalArgumentException if provided readings is null.
-     */
-    public void setReadings(List<R> readings)
-            throws IllegalArgumentException {
-        if (readings == null) {
-            throw new IllegalArgumentException();
-        }
-        mReadings = readings;
+        super(readings);
     }
 
     /**
@@ -77,7 +49,7 @@ public class WifiFingerprint<AP extends WifiAccessPoint, R extends RssiReading<A
      * @param otherFingerprint other fingerprint to compare.
      * @return euclidean distance of signal readings from another fingerprint.
      */
-    public double distanceTo(WifiFingerprint<AP, R> otherFingerprint) {
+    public double distanceTo(RssiFingerprint<S, R> otherFingerprint) {
         return Math.sqrt(sqrDistanceTo(otherFingerprint));
     }
 
@@ -87,7 +59,7 @@ public class WifiFingerprint<AP extends WifiAccessPoint, R extends RssiReading<A
      * @return squared euclidean distance of signal readings from another
      * fingerprint.
      */
-    public double sqrDistanceTo(WifiFingerprint<AP, R> otherFingerprint) {
+    public double sqrDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
         if (otherFingerprint == null) {
             return Double.MAX_VALUE;
         }

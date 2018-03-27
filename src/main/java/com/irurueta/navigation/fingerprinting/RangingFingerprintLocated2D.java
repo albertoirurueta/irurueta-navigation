@@ -21,42 +21,42 @@ import com.irurueta.geometry.Point2D;
 import java.util.List;
 
 /**
- * Contains 2D located WiFi fingerprint.
- * @param <AP> a {@link WifiAccessPoint} type.
+ * Contains 2D located ranging readings from several radio sources.
+ * @param <S> a {@link RadioSource} type.
  * @param <R> a {@link RssiReading} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiFingerprintLocated2D<AP extends WifiAccessPoint, R extends RssiReading<AP>>
-        extends WifiFingerprintLocated<AP, R, Point2D> {
+public class RangingFingerprintLocated2D<S extends RadioSource,
+        R extends RangingReading<S>> extends RangingFingerprintLocated<S, R, Point2D> {
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings defining the fingerprint.
+     * @param readings non-located ranging readings defining the fingerprint.
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated2D(List<R> readings, Point2D position)
+    public RangingFingerprintLocated2D(List<R> readings, Point2D position)
             throws IllegalArgumentException {
         super(readings, position);
     }
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings defining the fingerprint.
+     * @param readings non-located ranging readings defining the fingerprint.
      * @param position position where readings were made.
      * @param positionCovariance 2x2 covariance of inhomogeneous coordinates of
      *                           current position (if available).
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public WifiFingerprintLocated2D(List<R> readings, Point2D position,
-                                    Matrix positionCovariance) throws IllegalArgumentException {
+    public RangingFingerprintLocated2D(List<R> readings, Point2D position,
+            Matrix positionCovariance) throws IllegalArgumentException {
         super(readings, position, positionCovariance);
     }
 
     /**
      * Empty constructor.
      */
-    protected WifiFingerprintLocated2D() {
+    public RangingFingerprintLocated2D() {
         super();
     }
 }

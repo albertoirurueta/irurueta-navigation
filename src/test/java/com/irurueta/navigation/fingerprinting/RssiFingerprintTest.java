@@ -24,7 +24,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class WifiFingerprintTest {
+public class RssiFingerprintTest {
 
     private static final int MIN_RSSI = -100;
     private static final int MAX_RSSI = -50;
@@ -36,7 +36,7 @@ public class WifiFingerprintTest {
 
     private static final double FREQUENCY = 2.4e9;
 
-    public WifiFingerprintTest() { }
+    public RssiFingerprintTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -53,8 +53,8 @@ public class WifiFingerprintTest {
     @Test
     public void testConstructor() {
         //test empty constructor
-        WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
-                new WifiFingerprint<>();
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
+                new RssiFingerprint<>();
 
         //check default values
         assertTrue(f.getReadings().isEmpty());
@@ -62,7 +62,7 @@ public class WifiFingerprintTest {
 
         //test constructor with readings
         List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-        f = new WifiFingerprint<>(readings);
+        f = new RssiFingerprint<>(readings);
 
         //check
         assertSame(f.getReadings(), readings);
@@ -70,7 +70,7 @@ public class WifiFingerprintTest {
         //force IllegalArgumentException
         f = null;
         try {
-            f = new WifiFingerprint<>(null);
+            f = new RssiFingerprint<>(null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(f);
@@ -78,7 +78,7 @@ public class WifiFingerprintTest {
 
     @Test
     public void testGetSetReadings() {
-        WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f = new WifiFingerprint<>();
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f = new RssiFingerprint<>();
 
         //check default value
         assertTrue(f.getReadings().isEmpty());
@@ -102,7 +102,7 @@ public class WifiFingerprintTest {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //test fingerprint with empty readings
-        WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f = new WifiFingerprint<>();
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f = new RssiFingerprint<>();
 
         assertEquals(f.sqrDistanceTo(f), Double.MAX_VALUE, 0.0);
 
@@ -116,7 +116,7 @@ public class WifiFingerprintTest {
             readings.add(reading);
         }
 
-        f = new WifiFingerprint<>(readings);
+        f = new RssiFingerprint<>(readings);
 
         assertEquals(f.sqrDistanceTo(f), 0.0, ABSOLUTE_ERROR);
         assertEquals(f.distanceTo(f), 0.0, ABSOLUTE_ERROR);
@@ -130,8 +130,8 @@ public class WifiFingerprintTest {
             readings2.add(reading);
         }
 
-        WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f2 =
-                new WifiFingerprint<>(readings2);
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f2 =
+                new RssiFingerprint<>(readings2);
 
         assertEquals(f.sqrDistanceTo(f2), numReadings, ABSOLUTE_ERROR);
         assertEquals(f.distanceTo(f2), Math.sqrt(numReadings), ABSOLUTE_ERROR);
@@ -150,8 +150,8 @@ public class WifiFingerprintTest {
             readings3.add(reading);
         }
 
-        WifiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f3 =
-                new WifiFingerprint<>(readings3);
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f3 =
+                new RssiFingerprint<>(readings3);
 
         assertEquals(f.sqrDistanceTo(f3), 0.0, ABSOLUTE_ERROR);
         assertEquals(f.distanceTo(f3), 0.0, ABSOLUTE_ERROR);

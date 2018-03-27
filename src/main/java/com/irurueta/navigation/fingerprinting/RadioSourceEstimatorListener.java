@@ -15,14 +15,21 @@
  */
 package com.irurueta.navigation.fingerprinting;
 
-import com.irurueta.geometry.Point;
-
 /**
- * Listener to be notified of events produced by an RSSI robust radio source estimator when
- * estimation starts, ends or when progress changes.
- *
- * @param <S> a {@link RadioSource} type.
- * @param <P> a {@link Point} type.
+ * Listener defining events of RssiRadioSourceEstimator
+ * @param <E> a {@link RadioSourceEstimator} type.
  */
-public interface RobustRssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point> extends
-        RobustRadioSourceEstimatorListener<RobustRssiRadioSourceEstimator<S, P>>{ }
+public interface RadioSourceEstimatorListener<E extends RadioSourceEstimator> {
+
+    /**
+     * Called when estimation starts.
+     * @param estimator estimator raising the event.
+     */
+    void onEstimateStart(E estimator);
+
+    /**
+     * Called when estimation ends.
+     * @param estimator estimator raising the event.
+     */
+    void onEstimateEnd(E estimator);
+}

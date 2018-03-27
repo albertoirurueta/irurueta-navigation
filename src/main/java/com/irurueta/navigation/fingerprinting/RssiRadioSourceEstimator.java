@@ -61,7 +61,9 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends Point> {
+public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends Point>
+        extends RadioSourceEstimator<P, RssiReadingLocated<S, P>,
+        RssiRadioSourceEstimatorListener<S, P>> {
 
     /**
      * Speed of light expressed in meters per second (m/s).
@@ -96,10 +98,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public static final boolean DEFAULT_PATHLOSS_ESTIMATION_ENABLED = false;
 
-    /**
-     * Estimated position.
-     */
-    protected double[] mEstimatedPositionCoordinates;
 
     /**
      * Indicates whether radio source position estimation is enabled or not.
@@ -128,20 +126,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * {@link #DEFAULT_PATH_LOSS_EXPONENT}
      */
     private double mEstimatedPathLossExponent = DEFAULT_PATH_LOSS_EXPONENT;
-
-    /**
-     * Covariance of estimated parameters (position, transmitted power and pathloss exponent).
-     * Size of this matrix will depend on which parameters estimation is enabled.
-     */
-    private Matrix mEstimatedCovariance;
-
-    /**
-     * Covariance of estimated position.
-     * Size of this matrix will depend on the number of dimensions
-     * of estimated position (either 2 or 3).
-     * This value will only be available when position estimation is enabled.
-     */
-    private Matrix mEstimatedPositionCovariance;
 
     /**
      * Variance of estimated transmitted power.
@@ -198,21 +182,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     private boolean mPathLossEstimationEnabled = DEFAULT_PATHLOSS_ESTIMATION_ENABLED;
 
     /**
-     * Signal readings belonging to the same radio source to be estimated.
-     */
-    private List<? extends RssiReadingLocated<S, P>> mReadings;
-
-    /**
-     * Indicates whether estimator is locked during estimation.
-     */
-    private boolean mLocked;
-
-    /**
-     * Listener in charge of attending events raised by this instance.
-     */
-    private RssiRadioSourceEstimatorListener<S, P> mListener;
-
-    /**
      * Levenberg-Marquardt fitter to find a solution.
      */
     private LevenbergMarquardtMultiDimensionFitter mFitter =
@@ -221,7 +190,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Constructor.
      */
-    public RssiRadioSourceEstimator() { }
+    public RssiRadioSourceEstimator() {
+        super();
+    }
 
     /**
      * Constructor.
@@ -233,7 +204,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings)
             throws IllegalArgumentException {
-        internalSetReadings(readings);
+        super(readings);
     }
 
     /**
@@ -242,7 +213,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public RssiRadioSourceEstimator(
             RssiRadioSourceEstimatorListener<S, P> listener) {
-        mListener = listener;
+        super(listener);
     }
 
     /**
@@ -256,8 +227,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             List<? extends RssiReadingLocated<S, P>> readings,
             RssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
-        this(readings);
-        mListener = listener;
+        super(readings, listener);
     }
 
     /**
@@ -281,7 +251,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition)
             throws IllegalArgumentException {
-        internalSetReadings(readings);
+        super(readings);
         mInitialPosition = initialPosition;
     }
 
@@ -292,8 +262,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator(P initialPosition,
-                                    RssiRadioSourceEstimatorListener<S, P> listener) {
-        mListener = listener;
+            RssiRadioSourceEstimatorListener<S, P> listener) {
+        super(listener);
         mInitialPosition = initialPosition;
     }
 
@@ -311,8 +281,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             P initialPosition,
             RssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
-        this(readings, initialPosition);
-        mListener = listener;
+        super(readings, listener);
+        mInitialPosition = initialPosition;
     }
 
     /**
@@ -339,7 +309,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             List<? extends RssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        internalSetReadings(readings);
+        super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
@@ -353,7 +323,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             Double initialTransmittedPowerdBm,
             RssiRadioSourceEstimatorListener<S, P> listener) {
-        mListener = listener;
+        super(listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
@@ -372,8 +342,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             Double initialTransmittedPowerdBm,
             RssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
-        this(readings, initialTransmittedPowerdBm);
-        mListener = listener;
+        super(readings, listener);
+        mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
@@ -391,7 +361,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
-        internalSetReadings(readings);
+        super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -405,7 +375,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      *                                (expressed in dBm's)
      */
     public RssiRadioSourceEstimator(P initialPosition,
-                                    Double initialTransmittedPowerdBm) {
+            Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -420,9 +390,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator(P initialPosition,
-                                    Double initialTransmittedPowerdBm,
-                                    RssiRadioSourceEstimatorListener<S, P> listener) {
-        mListener = listener;
+            Double initialTransmittedPowerdBm,
+            RssiRadioSourceEstimatorListener<S, P> listener) {
+        super(listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -444,8 +414,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             P initialPosition, Double initialTransmittedPowerdBm,
             RssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
-        this(readings, initialPosition, initialTransmittedPowerdBm);
-        mListener = listener;
+        super(readings, listener);
+        mInitialPosition = initialPosition;
+        mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
 
     /**
@@ -479,7 +450,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
     public RssiRadioSourceEstimator(P initialPosition,
-                                    Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -495,8 +466,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator(P initialPosition,
-                                    Double initialTransmittedPowerdBm, double initialPathLossExponent,
-                                    RssiRadioSourceEstimatorListener<S, P> listener) {
+            Double initialTransmittedPowerdBm, double initialPathLossExponent,
+            RssiRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -758,76 +729,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     }
 
     /**
-     * Indicates whether estimator is locked during estimation.
-     * @return true if estimator is locked, false otherwise.
-     */
-    public boolean isLocked() {
-        return mLocked;
-    }
-
-    /**
-     * Indicates whether readings are valid or not.
-     * Readings are considered valid when there are enough readings.
-     * @param readings readings to be validated.
-     * @return true if readings are valid, false otherwise.
-     */
-    public boolean areValidReadings(
-            List<? extends RssiReadingLocated<S, P>> readings) {
-
-        return readings != null && readings.size() >= getMinReadings();
-    }
-
-    /**
-     * Gets radio signal readings belonging to the same radio source to be estimated.
-     * @return radio signal readings belonging to the same radio source.
-     */
-    public List<? extends RssiReadingLocated<S, P>> getReadings() {
-        return mReadings;
-    }
-
-    /**
-     * Sets radio signal readings belonging to the same radio source.
-     * @param readings WiFi signal readings belonging to the same radio source.
-     * @throws LockedException if estimator is locked.
-     * @throws IllegalArgumentException if readings are not valid.
-     */
-    public void setReadings(List<? extends RssiReadingLocated<S, P>> readings)
-            throws LockedException, IllegalArgumentException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-
-        internalSetReadings(readings);
-    }
-
-    /**
-     * Gets listener in charge of attending events raised by this instance.
-     * @return listener in charge of attending events raised by this instance.
-     */
-    public RssiRadioSourceEstimatorListener<S, P> getListener() {
-        return mListener;
-    }
-
-    /**
-     * Sets listener in charge of attending events raised by this instance.
-     * @param listener listener in charge of attending events raised by this
-     *                 instance.
-     * @throws LockedException if estimator is locked.
-     */
-    public void setListener(
-            RssiRadioSourceEstimatorListener<S, P> listener)
-            throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-
-        mListener = listener;
-    }
-
-    /**
      * Indicates whether this instance is ready to start the estimation.
      * @return true if this instance is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         //at least one parameter estimtion must be enabled
         return (mPositionEstimationEnabled || mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled) &&
@@ -841,12 +746,13 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
     /**
      * Estimate position, transmitted power and path loss exponent.
-     * @throws FingerprintingException if estimation fails.
+     * @throws RadioSourceEstimationException if estimation fails.
      * @throws NotReadyException if estimator is not ready.
      * @throws LockedException if estimator is locked.
      */
     @SuppressWarnings("all")
-    public void estimate() throws FingerprintingException, NotReadyException,
+    @Override
+    public void estimate() throws RadioSourceEstimationException, NotReadyException,
             LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -965,7 +871,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 mListener.onEstimateEnd(this);
             }
         } catch (NumericalException e) {
-            throw new FingerprintingException(e);
+            throw new RadioSourceEstimationException(e);
         } finally {
             mLocked = false;
         }
@@ -988,27 +894,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     }
 
     /**
-     * Gets estimated inhomogeneous position coordinates.
-     * @return estimated inhomogeneous position coordinates.
-     */
-    public double[] getEstimatedPositionCoordinates() {
-        return mEstimatedPositionCoordinates;
-    }
-
-    /**
-     * Gets estimated estimated position and stores result into provided instance.
-     * @param estimatedPosition instance where estimated estimated position will be stored.
-     */
-    public void getEstimatedPosition(P estimatedPosition) {
-        if (mEstimatedPositionCoordinates != null) {
-            for (int i = 0; i < mEstimatedPositionCoordinates.length; i++) {
-                estimatedPosition.setInhomogeneousCoordinate(i,
-                        mEstimatedPositionCoordinates[i]);
-            }
-        }
-    }
-
-    /**
      * Gets estimated exponent typically used on free space for path loss propagation in
      * terms of distance.
      * On different environments path loss exponent might have different values:
@@ -1022,29 +907,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public double getEstimatedPathLossExponent() {
         return mEstimatedPathLossExponent;
-    }
-
-    /**
-     * Gets covariance for estimated position and power.
-     * Matrix contains information in the following order:
-     * Top-left submatrix contains covariance of position,
-     * then follows transmitted power variance, and finally
-     * the last element contains pathloss exponent variance.
-     * @return covariance for estimated parameters.
-     */
-    public Matrix getEstimatedCovariance() {
-        return mEstimatedCovariance;
-    }
-
-    /**
-     * Gets estimated position covariance.
-     * Size of this matrix will depend on the number of dimensions
-     * of estimated position (either 2 or 3).
-     * This value will only be available when position estimation is enabled.
-     * @return estimated position covariance or null.
-     */
-    public Matrix getEstimatedPositionCovariance() {
-        return mEstimatedPositionCovariance;
     }
 
     /**
@@ -1073,51 +935,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public double getChiSq() {
         return mChiSq;
-    }
-
-    /**
-     * Gets minimum required number of readings to estimate
-     * power, position and pathloss exponent.
-     * This value depends on the number of parameters to
-     * be estimated, but for position only, this is 3
-     * readings for 2D, and 4 readings for 3D.
-     * @return minimum required number of readings.
-     */
-    public abstract int getMinReadings();
-
-    /**
-     * Gets number of dimensions of position points.
-     * @return number of dimensions of position points.
-     */
-    public abstract int getNumberOfDimensions();
-
-    /**
-     * Gets estimated radio sourceposition.
-     * @return estimated radio source position.
-     */
-    public abstract P getEstimatedPosition();
-
-    /**
-     * Gets estimated located radio source with estimated transmitted power and path loss exponent.
-     * @param <LS> type of located radio source with transmitted power and path loss exponent.
-     * @return estimated located radio source with estimated transmitted power and path loss exponent.
-     */
-    public abstract <LS extends RadioSourceWithPowerAndLocated<P>> LS getEstimatedRadioSource();
-
-    /**
-     * Internally sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @throws IllegalArgumentException if readings are null or not enough readings
-     * are available.
-     */
-    protected void internalSetReadings(
-            List<? extends RssiReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
-        if (!areValidReadings(readings)) {
-            throw new IllegalArgumentException();
-        }
-
-        mReadings = readings;
     }
 
     /**

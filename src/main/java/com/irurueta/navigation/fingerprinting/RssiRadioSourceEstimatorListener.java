@@ -22,17 +22,5 @@ import com.irurueta.geometry.Point;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-public interface RssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point> {
-
-    /**
-     * Called when estimation starts.
-     * @param estimator estimator raising the event.
-     */
-    void onEstimateStart(RssiRadioSourceEstimator<S, P> estimator);
-
-    /**
-     * Called when estimation ends.
-     * @param estimator estimator raising the event.
-     */
-    void onEstimateEnd(RssiRadioSourceEstimator<S, P> estimator);
-}
+public interface RssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point>
+        extends RadioSourceEstimatorListener<RssiRadioSourceEstimator<S, P>>{ }

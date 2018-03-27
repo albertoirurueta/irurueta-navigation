@@ -50,6 +50,7 @@ public class RssiReadingLocated2DTest {
         assertNull(reading.getSource());
         assertEquals(reading.getRssi(), 0.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
+        assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
 
         //test constructor with access point, rssi and position
@@ -63,6 +64,7 @@ public class RssiReadingLocated2DTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
+        assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
         //Force IllegalArgumentException
         reading = null;
@@ -89,6 +91,7 @@ public class RssiReadingLocated2DTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertEquals(reading.getRssiStandardDeviation(), 5.5, 0.0);
+        assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
         //Force IllegalArgumentException
         reading = null;
@@ -120,6 +123,7 @@ public class RssiReadingLocated2DTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
+        assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
         reading = new RssiReadingLocated2D<>(ap, -50.0, position, (Matrix)null);
 
@@ -129,6 +133,7 @@ public class RssiReadingLocated2DTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
+        assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
         //Force IllegalArgumentException
         reading = null;
@@ -159,6 +164,7 @@ public class RssiReadingLocated2DTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertEquals(reading.getRssiStandardDeviation(), 5.5,0.0);
+        assertEquals(reading.getType(), ReadingType.RSSI_READING);
 
         //Force IllegalArgumentException
         reading = null;

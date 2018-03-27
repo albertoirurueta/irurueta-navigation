@@ -21,14 +21,14 @@ import com.irurueta.geometry.Point;
 import java.util.List;
 
 /**
- * Contains located Wifi fingerprint.
- * @param <AP> a {@link WifiAccessPoint} type.
+ * Contains located RSSI readings from several radio sources.
+ * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  * @param <R> a {@link RssiReading} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R extends RssiReading<AP>,
-        P extends Point> extends WifiFingerprint<AP, R> {
+public abstract class RssiFingerprintLocated<S extends RadioSource, R extends RssiReading<S>,
+        P extends Point> extends RssiFingerprint<S, R> implements FingerprintLocated<P> {
 
     /**
      * Position where fingerprint readings were made.
@@ -43,12 +43,12 @@ public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R exten
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings defining the fingerprint.
+     * @param readings non-located RSSI readings defining the fingerprint.
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are
      * null.
      */
-    public WifiFingerprintLocated(List<R> readings, P position)
+    public RssiFingerprintLocated(List<R> readings, P position)
             throws IllegalArgumentException {
         super(readings);
 
@@ -61,15 +61,15 @@ public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R exten
 
     /**
      * Constructor.
-     * @param readings non-located WiFi readings defining the fingerprint.
+     * @param readings non-located RSSI readings defining the fingerprint.
      * @param position position where readings were made.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
      * @throws IllegalArgumentException if either readings or position are null, or
      * covariance has invalid size.
      */
-    public WifiFingerprintLocated(List<R> readings, P position,
-                                  Matrix positionCovariance) throws IllegalArgumentException {
+    public RssiFingerprintLocated(List<R> readings, P position,
+            Matrix positionCovariance) throws IllegalArgumentException {
         this(readings, position);
 
         if (positionCovariance != null) {
@@ -85,7 +85,7 @@ public abstract class WifiFingerprintLocated<AP extends WifiAccessPoint, R exten
     /**
      * Empty constructor.
      */
-    protected WifiFingerprintLocated() {
+    protected RssiFingerprintLocated() {
         super();
     }
 

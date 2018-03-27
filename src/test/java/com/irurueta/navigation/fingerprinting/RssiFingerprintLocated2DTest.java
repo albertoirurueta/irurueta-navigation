@@ -17,7 +17,7 @@ package com.irurueta.navigation.fingerprinting;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
-import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.InhomogeneousPoint2D;
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -25,9 +25,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class WifiFingerprintLocated3DTest {
+public class RssiFingerprintLocated2DTest {
 
-    public WifiFingerprintLocated3DTest() { }
+    public RssiFingerprintLocated2DTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -44,8 +44,8 @@ public class WifiFingerprintLocated3DTest {
     @Test
     public void testConstructor() throws WrongSizeException {
         //test empty constructor
-        WifiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
-                new WifiFingerprintLocated3D<>();
+        RssiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
+                new RssiFingerprintLocated2D<>();
 
         //check default values
         assertTrue(f.getReadings().isEmpty());
@@ -55,8 +55,8 @@ public class WifiFingerprintLocated3DTest {
 
         //test with readings and position
         List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-        InhomogeneousPoint3D position = new InhomogeneousPoint3D();
-        f = new WifiFingerprintLocated3D<>(readings, position);
+        InhomogeneousPoint2D position = new InhomogeneousPoint2D();
+        f = new RssiFingerprintLocated2D<>(readings, position);
 
         //check
         assertSame(f.getReadings(), readings);
@@ -66,19 +66,19 @@ public class WifiFingerprintLocated3DTest {
         //force IllegalArgumentException
         f = null;
         try {
-            f = new WifiFingerprintLocated3D<>(null, position);
+            f = new RssiFingerprintLocated2D<>(null, position);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            f = new WifiFingerprintLocated3D<>(readings, null);
+            f = new RssiFingerprintLocated2D<>(readings, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(f);
 
 
         //test with readings, position and covariance
-        Matrix cov = new Matrix(3, 3);
-        f = new WifiFingerprintLocated3D<>(readings, position, cov);
+        Matrix cov = new Matrix(2, 2);
+        f = new RssiFingerprintLocated2D<>(readings, position, cov);
 
         //check
         assertSame(f.getReadings(), readings);
@@ -87,15 +87,15 @@ public class WifiFingerprintLocated3DTest {
 
         f = null;
         try {
-            f = new WifiFingerprintLocated3D<>(null, position, cov);
+            f = new RssiFingerprintLocated2D<>(null, position, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            f = new WifiFingerprintLocated3D<>(readings, null, cov);
+            f = new RssiFingerprintLocated2D<>(readings, null, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            f = new WifiFingerprintLocated3D<>(readings, position,
+            f = new RssiFingerprintLocated2D<>(readings, position,
                     new Matrix(1,1));
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
