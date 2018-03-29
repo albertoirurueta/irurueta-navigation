@@ -25,10 +25,11 @@ import java.util.List;
 /**
  * Linearly estimates 3D position using located radio sources and their readings at
  * unknown locations.
- * These kind of estimators can be used to determine the position of a given device by
+ * These kind of estimators can be used to determine the 3D position of a given device by
  * getting readings at an unknown location of different radio sources whose locations are
  * known.
  */
+@SuppressWarnings("WeakerAccess")
 public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> {
 
     /**
@@ -47,8 +48,9 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      */
     public LinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources)
             throws IllegalArgumentException {
-        super(sources);
+        super();
         init();
+        internalSetSources(sources);
     }
 
     /**
@@ -60,8 +62,9 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
     public LinearPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
             throws IllegalArgumentException {
-        super(fingerprint);
+        super();
         init();
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -76,8 +79,10 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
             List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
             throws IllegalArgumentException {
-        super(sources, fingerprint);
+        super();
         init();
+        internalSetSources(sources);
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -100,8 +105,9 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
             List<? extends RadioSourceLocated<Point3D>> sources,
             PositionEstimatorListener<Point3D> listener)
             throws IllegalArgumentException {
-        super(sources, listener);
+        super(listener);
         init();
+        internalSetSources(sources);
     }
 
     /**
@@ -114,8 +120,9 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
     public LinearPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
-        super(fingerprint, listener);
+        super(listener);
         init();
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -131,8 +138,10 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
             List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
-        super(sources, fingerprint, listener);
+        super(listener);
         init();
+        internalSetSources(sources);
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -141,6 +150,10 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      */
     @Override
     public Point3D getEstimatedPosition() {
+        if(mEstimatedPositionCoordinates == null) {
+            return null;
+        }
+
         InhomogeneousPoint3D result = new InhomogeneousPoint3D();
         getEstimatedPosition(result);
         return result;

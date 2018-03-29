@@ -35,43 +35,8 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
     /**
      * Constructor.
      */
-    public LinearPositionEstimator() { }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @throws IllegalArgumentException if provided sources is null or the number of provided sources is less
-     * than the required minimum.
-     */
-    public LinearPositionEstimator(List<? extends RadioSourceLocated<P>> sources)
-            throws IllegalArgumentException {
-        super(sources);
-        init();
-    }
-
-    /**
-     * Constructor.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @throws IllegalArgumentException if provided fingerprint is null.
-     */
-    public LinearPositionEstimator(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
-        super(fingerprint);
-        init();
-    }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @throws IllegalArgumentException if either provided sources or fingerprint is null or the number of provided
-     * sources is less than the required minimum.
-     */
-    public LinearPositionEstimator(List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException{
-        super(sources, fingerprint);
+    public LinearPositionEstimator() {
+        super();
         init();
     }
 
@@ -81,47 +46,6 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      */
     public LinearPositionEstimator(PositionEstimatorListener<P> listener) {
         super(listener);
-        init();
-    }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @param listener listener in charge of handling events.
-     * @throws IllegalArgumentException if provided sources is null or the number of provided sources is less
-     * than the required minimum.
-     */
-    public LinearPositionEstimator(List<? extends RadioSourceLocated<P>> sources,
-            PositionEstimatorListener<P> listener) throws IllegalArgumentException {
-        super(sources, listener);
-        init();
-    }
-
-    /**
-     * Constructor.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @param listener listener in charge of handling events.
-     * @throws IllegalArgumentException if provided fingerprint is null.
-     */
-    public LinearPositionEstimator(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<P> listener) throws IllegalArgumentException {
-        super(fingerprint, listener);
-        init();
-    }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @param listener listener in charge of handling events.
-     * @throws IllegalArgumentException if either provided sources or fingerprint is null or the number of provided
-     * sources is less than the required minimum.
-     */
-    public LinearPositionEstimator(List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<P> listener) throws IllegalArgumentException {
-        super(sources, fingerprint, listener);
         init();
     }
 
@@ -225,7 +149,7 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
     }
 
     /**
-     * Build positions and distances for the internal trilateration solver.
+     * Builds positions and distances for the internal trilateration solver.
      */
     @SuppressWarnings("unchecked")
     private void buildPositionsAndDistances() {
@@ -241,130 +165,11 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
             return;
         }
 
-        List<? extends Reading<? extends RadioSource>> readings = mFingerprint.getReadings();
         List<P> positions = new ArrayList<>();
         List<Double> distances = new ArrayList<>();
-        for (Reading<? extends RadioSource> reading : readings) {
-            //noinspection all
-            int index = mSources.indexOf(reading.getSource());
-            if (index >= 0) {
-                RadioSourceLocated<P> locatedSource = mSources.get(index);
-                P position = locatedSource.getPosition();
-
-                //compute distance
-                Double distance1 = null, distance2 = null;
-                switch (reading.getType()) {
-                    case RANGING_READING:
-                        distance1 = computeDistanceRanging((RangingReading<? extends RadioSource>)reading);
-                        break;
-                    case RSSI_READING:
-                        distance1 =  computeDistanceRssi(locatedSource,
-                                (RssiReading<? extends RadioSource>)reading);
-                        break;
-                    case RANGING_AND_RSSI_READING:
-                        //in this case two positions and distance might be added to
-                        //the trilateration solver
-                        distance1 = computeDistanceRanging(
-                                (RangingAndRssiReading<? extends RadioSource>)reading);
-                        distance2 =  computeDistanceRssi(locatedSource,
-                                (RangingAndRssiReading<? extends RadioSource>)reading);
-                }
-
-                if (position != null) {
-                    if (distance1 != null) {
-                        positions.add(position);
-                        distances.add(distance1);
-                    }
-                    if (distance2 != null) {
-                        positions.add(position);
-                        distances.add(distance2);
-                    }
-                }
-            }
-        }
+        PositionEstimatorHelper.buildPositionsAndDistances(
+                mSources, mFingerprint, positions, distances);
 
         setPositionsAndDistances(positions, distances);
-    }
-
-    /**
-     * Obtain distance for a ranging reading.
-     * @param reading a ranging reading.
-     * @return distance to reading source or null if not available.
-     */
-    private Double computeDistanceRanging(RangingReading<? extends RadioSource> reading) {
-        return reading.getDistance();
-    }
-
-    /**
-     * Obtain distance for a ranging reading.
-     * @param reading a ranging reading.
-     * @return distance to reading source or null if not available.
-     */
-    private Double computeDistanceRanging(RangingAndRssiReading<? extends RadioSource> reading) {
-        return reading.getDistance();
-    }
-
-    /**
-     * Obtain distance for an RSSI reading.
-     * @param locatedSource a located source, that must also have power information.
-     * @param reading an RSSI reading.
-     * @return estimated distance or null if not available.
-     */
-    private Double computeDistanceRssi(RadioSourceLocated<P> locatedSource,
-            RssiReading<? extends RadioSource> reading) {
-        return computeDistanceRssi(locatedSource, reading.getRssi());
-    }
-
-    /**
-     * Obtain distance for an RSSI reading.
-     * @param locatedSource a located source, that must also have power information.
-     * @param reading a randing and RSSI reading.
-     * @return estimated distance or null if not available.
-     */
-    private Double computeDistanceRssi(RadioSourceLocated<P> locatedSource,
-            RangingAndRssiReading<? extends RadioSource> reading) {
-        return computeDistanceRssi(locatedSource, reading.getRssi());
-    }
-
-    /**
-     * Obtain distance for an RSSI reading.
-     * @param locatedSource a located source, that must also have power information.
-     * @param rxPower received power expressed in dBm's.
-     * @return estimated distance or null if not available.
-     */
-    private Double computeDistanceRssi(RadioSourceLocated<P> locatedSource,
-                                       double rxPower) {
-        if(!(locatedSource instanceof RadioSourceWithPower)) {
-            return null;
-        }
-
-        RadioSourceWithPower poweredSource = (RadioSourceWithPower)locatedSource;
-
-        //source related parameters:
-
-        //transmitted power in dBm's
-        double txPower = poweredSource.getTransmittedPower();
-
-        //path loss exponent
-        double pathLossExponent = poweredSource.getPathLossExponent();
-
-        double frequency = poweredSource.getFrequency();
-        double k = RssiRadioSourceEstimator.SPEED_OF_LIGHT / (4.0 * Math.PI * frequency);
-        double kdB = 10.0 * Math.log10(k);
-
-
-        //received power in dBm's follows the equation:
-        //rxPower = pathLossExponent * kdB + txPower - 5.0 * pathLossExponent * logSqrDistance
-
-        //hence:
-        //5.0 * pathLossExponent * logSqrDistance = pathLossExponent * kdB + txPower - rxPower
-
-        double logSqrDistance = (pathLossExponent * kdB + txPower - rxPower) / (5.0 * pathLossExponent);
-
-        //where logSqrDistance = Math.log10(sqrDistance)
-        //and sqrDistance = distance * distance, hence
-        //logSqrDistance = Math.log10(distance * distance) = 2 * Math.log10(distance)
-
-        return Math.pow(10.0,logSqrDistance / 2.0);
     }
 }

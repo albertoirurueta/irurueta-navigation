@@ -53,7 +53,7 @@ public class MSACRobustRssiRadioSourceEstimator3DTest implements
     private static final double MIN_PATH_LOSS_EXPONENT = 1.6;
     private static final double MAX_PATH_LOSS_EXPONENT = 2.0;
 
-    private static final double INLIER_ERROR_STD = 0.5;
+    private static final double INLIER_ERROR_STD = 0.1;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_POSITION_ERROR = 5.0;

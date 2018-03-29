@@ -42,83 +42,9 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @throws IllegalArgumentException if provided sources is null or the number of provided sources is less
-     * than the required minimum.
-     */
-    public PositionEstimator(List<? extends RadioSourceLocated<P>> sources) throws IllegalArgumentException {
-        internalSetSources(sources);
-    }
-
-    /**
-     * Constructor.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @throws IllegalArgumentException if provided fingerprint is null.
-     */
-    public PositionEstimator(Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
-        internalSetFingerprint(fingerprint);
-    }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @throws IllegalArgumentException if either provided sources or fingerprint is null or the number of provided
-     * sources is less than the required minimum.
-     */
-    public PositionEstimator(List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
-        internalSetSources(sources);
-        internalSetFingerprint(fingerprint);
-    }
-
-    /**
-     * Constructor.
      * @param listener listener in charge of handling events.
      */
     public PositionEstimator(PositionEstimatorListener<P> listener) {
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @param listener listener in charge of handling events.
-     * @throws IllegalArgumentException if provided sources is null or the number of provided sources is less
-     * than the required minimum.
-     */
-    public PositionEstimator(List<? extends RadioSourceLocated<P>> sources,
-            PositionEstimatorListener<P> listener) throws IllegalArgumentException {
-        this(sources);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @param listener listener in charge of handling events.
-     * @throws IllegalArgumentException if provided fingerprint is null.
-     */
-    public PositionEstimator(Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<P> listener) throws IllegalArgumentException {
-        this(fingerprint);
-        mListener = listener;
-    }
-
-    /**
-     * Constructor.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @param listener listener in charge of handling events.
-     * @throws IllegalArgumentException if either provided sources or fingerprint is null or the number of provided
-     * sources is less than the required minimum.
-     */
-    public PositionEstimator(List<? extends RadioSourceLocated<P>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<P> listener) throws IllegalArgumentException {
-        this(sources, fingerprint);
         mListener = listener;
     }
 

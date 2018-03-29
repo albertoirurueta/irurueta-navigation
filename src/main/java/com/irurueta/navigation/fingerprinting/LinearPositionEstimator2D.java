@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Linearly estimates 2D position using located radio sources and their readings at
  * unknown locations.
- * These kind of estimators can be used to determine the position of a given device by
+ * These kind of estimators can be used to determine the 2D position of a given device by
  * getting readings at an unknown location of different radio sources whose locations are
  * known.
  */
@@ -62,8 +62,9 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
     public LinearPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
             throws IllegalArgumentException {
-        super(fingerprint);
+        super();
         init();
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -78,9 +79,10 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
             throws IllegalArgumentException {
-        super(fingerprint);
+        super();
         init();
         internalSetSources(sources);
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -118,8 +120,9 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
     public LinearPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
-        super(fingerprint, listener);
+        super(listener);
         init();
+        internalSetFingerprint(fingerprint);
     }
 
     /**
@@ -135,9 +138,10 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
-        super(fingerprint, listener);
+        super(listener);
         init();
         internalSetSources(sources);
+        internalSetFingerprint(fingerprint);
     }
 
     /**
