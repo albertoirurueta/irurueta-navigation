@@ -428,8 +428,6 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * Returns quality scores corresponding to each pair of
      * positions and distances (i.e. sample).
      * The larger the score value the better the quality of the sample.
-     * This implementation always returns null.
-     * Subclasses using quality scores must implement proper behavior.
      * @return quality scores corresponding to each sample.
      */
     @Override
@@ -441,8 +439,6 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * Sets quality scores corresponding to each pair of positions and
      * distances (i.e. sample).
      * The larger the score value the better the quality of the sample.
-     * This implementation makes no action.
-     * Subclasses using quality scores must implement proper behaviour.
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
@@ -450,6 +446,7 @@ public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolv
      * @throws LockedException if robust solver is locked because an
      * estimation is already in progress.
      */
+    @Override
     public void setQualityScores(double[] qualityScores)
             throws IllegalArgumentException, LockedException {
         if (isLocked()) {

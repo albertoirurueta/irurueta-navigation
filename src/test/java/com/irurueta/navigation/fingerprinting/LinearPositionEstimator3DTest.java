@@ -85,6 +85,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
 
         //constructor with sources
@@ -104,6 +106,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -134,6 +138,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -157,6 +163,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -189,6 +197,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
 
         //constructor with sources and listener
@@ -203,6 +213,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -231,6 +243,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -255,6 +269,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -401,6 +417,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
             assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
@@ -485,6 +503,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
             assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 

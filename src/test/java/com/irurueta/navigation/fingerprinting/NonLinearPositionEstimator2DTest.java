@@ -86,7 +86,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
-
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //constructor with sources
         List<WifiAccessPointLocated2D> sources = new ArrayList<>();
@@ -110,6 +112,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -145,6 +150,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -173,6 +181,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -210,6 +221,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
 
         //constructor with sources and listener
@@ -229,6 +243,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -262,6 +279,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -292,6 +312,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -333,6 +356,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
 
         //constructor with sources and initial position
@@ -352,6 +378,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -387,6 +416,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -417,6 +449,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -457,6 +492,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
 
         //constructor with sources, initial position and listener
@@ -477,6 +515,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -513,6 +554,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -543,6 +587,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
+        assertNull(estimator.getDistanceStandardDeviations());
 
         //force IllegalArgumentException
         estimator = null;
@@ -733,6 +780,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
             assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertNotNull(estimator.getDistanceStandardDeviations());
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
@@ -812,6 +862,9 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
             assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertNotNull(estimator.getDistanceStandardDeviations());
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 

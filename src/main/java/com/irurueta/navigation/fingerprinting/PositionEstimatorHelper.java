@@ -136,7 +136,52 @@ public class PositionEstimatorHelper {
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             boolean useRadioSourcePositionCovariance,
             double fallbackDistanceStandardDeviation,
-            List<P> positions, List<Double> distances, List<Double> distanceStandardDeviations) {
+            List<P> positions, List<Double> distances,
+            List<Double> distanceStandardDeviations) {
+        buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(sources, fingerprint,
+                null, useRadioSourcePositionCovariance,
+                fallbackDistanceStandardDeviation, positions, distances,
+                distanceStandardDeviations, null);
+    }
+
+    /**
+     * Builds positions, distances and standard deviations from provided locatd radio
+     * sources and fingerprint readings.
+     * Notice that positions, distances and standard deviations lists might not have the
+     * same size as provided sources list or fingerprint readings list if not all radio
+     * sources between sources and fingerprint readings match.
+     * If no sources, fingerprint readings, positions, distances and standard deviations
+     * are provided, this method makes no action.
+     * @param sources located radio sources to obtain positions and other parameters.
+     * @param fingerprint fingerprint containing ranged RSSI readings.
+     * @param qualityScores quality scores corresponding to each provided located
+     *                      radio source. The larger the score value the better the
+     *                      quality of the sample. If null, no distance quality
+     *                      scores will be stored.
+     * @param useRadioSourcePositionCovariance true to take into account radio source
+     *                                         position covariance, false otherwise.
+     * @param fallbackDistanceStandardDeviation distance standard deviation to be assumed
+     *                                          when it cannot be determined.
+     * @param positions list where extracted positions will be stored.
+     * @param distances list where extracted distances will be stored.
+     * @param distanceStandardDeviations list where extracted standard deviations of
+     *                                   distances will be stored.
+     * @param distanceQualityScores list where extracted quality scores will be stored.
+     *                              If null, quality scores will be ignored.
+     * @throws IllegalArgumentException if provided distance standard deviation
+     * fallback is negative.
+     * @param <P> a {@link Point} type.
+     */
+    @SuppressWarnings("unchecked")
+    public static <P extends Point> void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+            List<? extends RadioSourceLocated<P>> sources,
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
+            double[] qualityScores,
+            boolean useRadioSourcePositionCovariance,
+            double fallbackDistanceStandardDeviation,
+            List<P> positions, List<Double> distances,
+            List<Double> distanceStandardDeviations,
+            List<Double> distanceQualityScores) {
 
         if (fallbackDistanceStandardDeviation < 0.0) {
             throw new IllegalArgumentException();
@@ -153,6 +198,10 @@ public class PositionEstimatorHelper {
         distances.clear();
         distanceStandardDeviations.clear();
 
+        if (qualityScores != null && distanceQualityScores != null) {
+            distanceQualityScores.clear();
+        }
+
         Double[] result1 = new Double[2];
         Double[] result2 = new Double[2];
 
@@ -161,9 +210,14 @@ public class PositionEstimatorHelper {
         for (Reading<? extends RadioSource> reading : readings) {
             //noinspection all
             int index = sources.indexOf(reading.getSource());
+            Double qualityScore = null;
             if (index >= 0) {
                 RadioSourceLocated<P> locatedSource = sources.get(index);
                 P position = locatedSource.getPosition();
+                if (qualityScores != null) {
+                    qualityScore = qualityScores[index];
+                }
+
                 Matrix positionCovariance = null;
                 if (useRadioSourcePositionCovariance) {
                     positionCovariance = locatedSource.getPositionCovariance();
@@ -227,6 +281,10 @@ public class PositionEstimatorHelper {
                         distances.add(distance1);
                         distanceStandardDeviations.add(standardDeviation1 != null ?
                                 standardDeviation1 : fallbackDistanceStandardDeviation);
+
+                        if (qualityScore != null && distanceQualityScores != null) {
+                            distanceQualityScores.add(qualityScore);
+                        }
                     }
                     if (distance2 != null) {
                         Double standardDeviation2 = result2[1];
@@ -235,6 +293,10 @@ public class PositionEstimatorHelper {
                         distances.add(distance2);
                         distanceStandardDeviations.add(standardDeviation2 != null ?
                                 standardDeviation2 : fallbackDistanceStandardDeviation);
+
+                        if (qualityScore != null && distanceQualityScores != null) {
+                            distanceQualityScores.add(qualityScore);
+                        }
                     }
                 }
             }

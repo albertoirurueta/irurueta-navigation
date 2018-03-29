@@ -1025,6 +1025,85 @@ public class PositionEstimatorHelperTest {
         }
     }
 
+    @Test
+    public void testBuildPositionsDistancesDistanceStandardDeviationsAndQualityScoresRssiReadings() {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+                qualityScores[i] = randomizer.nextDouble();
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, FREQUENCY, pathLossExponent));
+
+                readings.add(new RssiReading<>(accessPoint, rssi,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            List<Point2D> positions = new ArrayList<>();
+            List<Double> distances = new ArrayList<>();
+            List<Double> distanceStandardDeviations = new ArrayList<>();
+            List<Double> distanceQualityScores = new ArrayList<>();
+            PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+                    sources, fingerprint, qualityScores, true,
+                    FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
+                    distanceStandardDeviations, distanceQualityScores);
+
+            //check that positions, distances and distance standard deviations are not
+            //modified if no sources or fingerprint are provided
+            PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
+                    null, null, true,
+                    FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
+                    distanceStandardDeviations);
+
+            //check
+            assertEquals(positions.size(), numSources);
+            assertEquals(distances.size(), numSources);
+            assertEquals(distanceStandardDeviations.size(), numSources);
+
+            for (int i = 0; i < numSources; i++) {
+                assertEquals(sources.get(i).getPosition(), positions.get(i));
+                assertTrue(distances.get(i) > 0.0);
+                assertTrue(distanceStandardDeviations.get(i) > 0.0);
+                assertEquals(qualityScores[i], distanceQualityScores.get(i), 0.0);
+            }
+        }
+    }
+
 
     private double receivedPower(double equivalentTransmittedPower,
                                  double distance, double frequency, double pathLossExponent) {

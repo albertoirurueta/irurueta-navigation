@@ -37,15 +37,13 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     /**
      * Linear trilateration solver internally used by a robust algorithm.
      */
-    protected LinearLeastSquaresTrilateration2DSolver mLinearSolver =
-            new LinearLeastSquaresTrilateration2DSolver();
+    protected LinearLeastSquaresTrilateration2DSolver mLinearSolver;
 
     /**
      * Non linear trilateration solver internally used to refine solution
      * found by robust algorithm.
      */
-    protected NonLinearLeastSquaresTrilateration2DSolver mNonLinearSolver =
-            new NonLinearLeastSquaresTrilateration2DSolver();
+    protected NonLinearLeastSquaresTrilateration2DSolver mNonLinearSolver;
 
     /**
      * Positions for linear inner solver used during robust estimation.

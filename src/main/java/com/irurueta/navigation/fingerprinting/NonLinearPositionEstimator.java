@@ -216,6 +216,16 @@ public abstract class NonLinearPositionEstimator<P extends Point> extends Positi
     }
 
     /**
+     * Gets standard deviations of distances from known located radio sources to
+     * the location of provided readings in a fingerprint.
+     * Distance standard deviations are used internally to solve trilateration.
+     * @return standard deviations used internally.
+     */
+    public double[] getDistanceStandardDeviations() {
+        return mTrilaterationSolver.getDistanceStandardDeviations();
+    }
+
+    /**
      * Estimates position based on provided located radio sources and readings of such radio sources at
      * an unknown location.
      * @throws LockedException if estimator is locked.
@@ -234,6 +244,26 @@ public abstract class NonLinearPositionEstimator<P extends Point> extends Positi
         } catch (TrilaterationException e) {
             throw new PositionEstimationException(e);
         }
+    }
+
+    /**
+     * Gets known positions of radio sources used internally to solve trilateration.
+     * @return known positions used internally.
+     */
+    @Override
+    public P[] getPositions() {
+        return mTrilaterationSolver.getPositions();
+    }
+
+    /**
+     * Gets euclidean distances from known located radio sources to
+     * the location of provided readings in a fingerprint.
+     * Distance values are used internally to solve trilateration.
+     * @return euclidean distances used internally.
+     */
+    @Override
+    public double[] getDistances() {
+        return mTrilaterationSolver.getDistances();
     }
 
     /**
@@ -294,6 +324,7 @@ public abstract class NonLinearPositionEstimator<P extends Point> extends Positi
      * Builds positions, distances and standard deviation of distances for the internal
      * trilateration solver.
      */
+    @SuppressWarnings("unchecked")
     private void buildPositionsDistancesAndDistanceStandardDeviations() {
         if (mTrilaterationSolver == null) {
             return;

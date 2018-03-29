@@ -96,6 +96,26 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
     }
 
     /**
+     * Gets known positions of radio sources used internally to solve trilateration.
+     * @return known positions used internally.
+     */
+    @Override
+    public P[] getPositions() {
+        return mTrilaterationSolver.getPositions();
+    }
+
+    /**
+     * Gets euclidean distances from known located radio sources to
+     * the location of provided readings in a fingerprint.
+     * Distance values are used internally to solve trilateration.
+     * @return euclidean distances used internally.
+     */
+    @Override
+    public double[] getDistances() {
+        return mTrilaterationSolver.getDistances();
+    }
+
+    /**
      * Internally sets located radio sources used for trilateration.
      * @param sources located radio sources used for trilateration.
      * @throws IllegalArgumentException if provided value is null or the number of provided sources is less

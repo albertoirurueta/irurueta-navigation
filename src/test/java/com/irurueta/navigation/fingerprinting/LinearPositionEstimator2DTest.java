@@ -85,6 +85,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
 
         //constructor with sources
@@ -104,6 +106,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -134,6 +138,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -157,6 +163,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -189,6 +197,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
 
         //constructor with sources and listener
@@ -203,6 +213,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -231,6 +243,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -255,6 +269,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getEstimatedPositionCoordinates());
+        assertNull(estimator.getPositions());
+        assertNull(estimator.getDistances());
 
         //force IllegalArgumentException
         estimator = null;
@@ -399,6 +415,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
             assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
@@ -481,6 +499,8 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
             assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
@@ -528,7 +548,7 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
     }
 
     private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double frequency, double pathLossExponent) {
+            double distance, double frequency, double pathLossExponent) {
         //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain

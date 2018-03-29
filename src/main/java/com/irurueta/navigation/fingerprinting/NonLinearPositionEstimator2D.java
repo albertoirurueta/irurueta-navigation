@@ -275,8 +275,10 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * @param distanceStandardDeviations standard deviations of distances to be set.
      */
     @Override
-    protected void setPositionsDistancesAndDistanceStandardDeviations(List<Point2D> positions,
-            List<Double> distances, List<Double> distanceStandardDeviations) {
+    protected void setPositionsDistancesAndDistanceStandardDeviations(
+            List<Point2D> positions, List<Double> distances,
+            List<Double> distanceStandardDeviations) {
+
         int size = positions.size();
         Point2D[] positionsArray = new InhomogeneousPoint2D[size];
         positionsArray = positions.toArray(positionsArray);
