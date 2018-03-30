@@ -122,7 +122,7 @@ public class UtilsTest {
             });
 
             double derivative2 = derivativeEstimator.derivative(rxPowerdBm);
-            assertEquals(derivative, derivative2, ABSOLUTE_ERROR);
+            assertEquals(derivative, derivative2, LARGE_ABSOLUTE_ERROR);
 
             assertEquals(distanceVariance,
                     derivative * derivative * RX_POWER_VARIANCE, 0.0);
@@ -141,6 +141,11 @@ public class UtilsTest {
                     txPowerdBm, rxPowerdBm, pathLossExponent, FREQUENCY,
                     0.0);
             assertEquals(distanceVariance, 0.0, 0.0);
+
+            //test without rx power
+            assertEquals(Utils.propagatePowerVarianceToDistanceVariance(
+                    txPowerdBm, rxPowerdBm, pathLossExponent, FREQUENCY,
+                    null), 0.0, 0.0);
         }
 
         LOGGER.log(Level.INFO, "Min dist variance: {0}", minDistanceVariance);
@@ -227,6 +232,11 @@ public class UtilsTest {
                 maxDistanceVariance = distanceVariance;
             }
             avgDistanceVariance += distanceVariance / TIMES;
+
+            //check without variances
+            assertNull(Utils.propagateVariancesToDistanceVariance(
+                    txPowerdBm, rxPowerdBm, pathLossExponent, FREQUENCY,
+                    null, null, null));
         }
 
         LOGGER.log(Level.INFO, "Min dist variance: {0}", minDistanceVariance);
@@ -396,6 +406,7 @@ public class UtilsTest {
         }
     }
 
+    @SuppressWarnings("all")
     private double receivedPower(double equivalentTransmittedPower,
             double distance, double frequency, double pathLossExponent) {
         //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power

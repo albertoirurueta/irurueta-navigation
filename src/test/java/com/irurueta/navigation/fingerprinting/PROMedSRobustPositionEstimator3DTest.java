@@ -21,8 +21,7 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.trilateration.PROSACRobustTrilateration3DSolver;
-import com.irurueta.navigation.trilateration.PROSACRobustTrilateration3DSolver;
+import com.irurueta.navigation.trilateration.PROMedSRobustTrilateration3DSolver;
 import com.irurueta.navigation.trilateration.RobustTrilaterationSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -39,11 +38,11 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class PROSACRobustPositionEstimator3DTest implements
+public class PROMedSRobustPositionEstimator3DTest implements
         RobustPositionEstimatorListener<Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            PROSACRobustPositionEstimator3DTest.class.getName());
+            PROMedSRobustPositionEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
@@ -84,16 +83,12 @@ public class PROSACRobustPositionEstimator3DTest implements
     @Test
     public void testConstructor() {
         //empty constructor
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
@@ -130,15 +125,11 @@ public class PROSACRobustPositionEstimator3DTest implements
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
                     new InhomogeneousPoint3D()));
         }
-        estimator = new PROSACRobustPositionEstimator3D(sources);
+        estimator = new PROMedSRobustPositionEstimator3D(sources);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -171,12 +162,12 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     (List<WifiAccessPointLocated3D>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -186,15 +177,11 @@ public class PROSACRobustPositionEstimator3DTest implements
         //constructor with fingerprints
         RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
-        estimator = new PROSACRobustPositionEstimator3D(fingerprint);
+        estimator = new PROMedSRobustPositionEstimator3D(fingerprint);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -227,7 +214,7 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -235,15 +222,11 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with sources and fingerprint
-        estimator = new PROSACRobustPositionEstimator3D(sources, fingerprint);
+        estimator = new PROMedSRobustPositionEstimator3D(sources, fingerprint);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -276,17 +259,17 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     (List<WifiAccessPointLocated3D>)null, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(sources,
+            estimator = new PROMedSRobustPositionEstimator3D(sources,
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -294,15 +277,11 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with listener
-        estimator = new PROSACRobustPositionEstimator3D(this);
+        estimator = new PROMedSRobustPositionEstimator3D(this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
@@ -334,15 +313,11 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with sources and listener
-        estimator = new PROSACRobustPositionEstimator3D(sources, this);
+        estimator = new PROMedSRobustPositionEstimator3D(sources, this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -375,12 +350,12 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     (List<WifiAccessPointLocated3D>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -388,15 +363,11 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with fingerprint and listener
-        estimator = new PROSACRobustPositionEstimator3D(fingerprint, this);
+        estimator = new PROMedSRobustPositionEstimator3D(fingerprint, this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -429,7 +400,7 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -438,16 +409,12 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with sources, fingerprint and listener
-        estimator = new PROSACRobustPositionEstimator3D(sources, fingerprint,
+        estimator = new PROMedSRobustPositionEstimator3D(sources, fingerprint,
                 this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -480,19 +447,19 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     (List<WifiAccessPointLocated3D>)null, fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(
+            estimator = new PROMedSRobustPositionEstimator3D(
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(sources,
+            estimator = new PROMedSRobustPositionEstimator3D(sources,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -501,15 +468,11 @@ public class PROSACRobustPositionEstimator3DTest implements
 
         //constructor with quality scores
         double[] qualityScores = new double[4];
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores);
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
@@ -542,26 +505,22 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D((double[])null);
+            estimator = new PROMedSRobustPositionEstimator3D((double[])null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1]);
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //constructor with quality scores and sources
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores, sources);
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores, sources);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -594,22 +553,22 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(null,
+            estimator = new PROMedSRobustPositionEstimator3D(null,
                     sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     (List<WifiAccessPointLocated3D>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -617,15 +576,11 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with quality scores and fingerprint
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores, fingerprint);
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores, fingerprint);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -658,17 +613,17 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D((double[])null,
+            estimator = new PROMedSRobustPositionEstimator3D((double[])null,
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -676,16 +631,12 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with quality scores, sources and fingerprint
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores, sources,
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                 fingerprint);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -718,27 +669,27 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(null,
+            estimator = new PROMedSRobustPositionEstimator3D(null,
                     sources, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     sources, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     null, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores, sources,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -746,16 +697,12 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with quality scores and listener
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                 this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
@@ -788,12 +735,12 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D((double[])null,
+            estimator = new PROMedSRobustPositionEstimator3D((double[])null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -801,16 +748,12 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with quality scores, sources and listener
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores, sources,
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                 this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -843,22 +786,22 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(null,
+            estimator = new PROMedSRobustPositionEstimator3D(null,
                     sources, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     sources, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     (List<WifiAccessPointLocated3D>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -866,16 +809,12 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with quality scores, fingerprint and listener
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                 fingerprint, this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -908,17 +847,17 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D((double[])null,
+            estimator = new PROMedSRobustPositionEstimator3D((double[])null,
                     fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -927,16 +866,12 @@ public class PROSACRobustPositionEstimator3DTest implements
 
 
         //constructor with quality scores, sources, fingerprint listener
-        estimator = new PROSACRobustPositionEstimator3D(qualityScores, sources,
+        estimator = new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                 fingerprint, this);
 
         //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResiduals(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -969,28 +904,28 @@ public class PROSACRobustPositionEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustPositionEstimator3D(null,
+            estimator = new PROMedSRobustPositionEstimator3D(null,
                     sources, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(new double[1],
+            estimator = new PROMedSRobustPositionEstimator3D(new double[1],
                     sources, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     null, fingerprint, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores,
                     new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustPositionEstimator3D(qualityScores, sources,
+            estimator = new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -998,61 +933,31 @@ public class PROSACRobustPositionEstimator3DTest implements
     }
 
     @Test
-    public void testGetSetThreshold() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+    public void testGetSetStopThreshold() throws LockedException {
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getStopThreshold(),
+                PROMedSRobustTrilateration3DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
 
         //set new value
-        estimator.setThreshold(1.0);
+        estimator.setStopThreshold(1.0);
 
         //check
-        assertEquals(estimator.getThreshold(), 1.0, 0.0);
+        assertEquals(estimator.getStopThreshold(), 1.0, 0.0);
 
         //force IllegalArgumentException
         try {
-            estimator.setThreshold(0.0);
+            estimator.setStopThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
-    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
-
-        //check default value
-        assertFalse(estimator.isComputeAndKeepInliersEnabled());
-
-        //set new value
-        estimator.setComputeAndKeepInliersEnabled(true);
-
-        //check
-        assertTrue(estimator.isComputeAndKeepInliersEnabled());
-    }
-
-    @Test
-    public void testIsSetComputeAndKeepResiduals() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
-
-        //check default value
-        assertFalse(estimator.isComputeAndKeepResiduals());
-
-        //set new value
-        estimator.setComputeAndKeepResidualsEnabled(true);
-
-        //check
-        assertTrue(estimator.isComputeAndKeepResiduals());
-    }
-
-    @Test
     public void testGetSetSources() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getSources());
@@ -1082,8 +987,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getFingerprint());
@@ -1105,8 +1010,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getListener());
@@ -1120,8 +1025,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testIsSetRadioSourcePositionCovarianceUsed() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertFalse(estimator.isRadioSourcePositionCovarianceUsed());
@@ -1135,8 +1040,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetFallbackDistanceStandardDeviation() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
@@ -1153,8 +1058,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getProgressDelta(),
@@ -1175,8 +1080,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getConfidence(),
@@ -1195,8 +1100,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getMaxIterations(),
@@ -1217,8 +1122,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isResultRefined());
@@ -1232,8 +1137,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isCovarianceKept());
@@ -1247,8 +1152,8 @@ public class PROSACRobustPositionEstimator3DTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getQualityScores());
@@ -1338,11 +1243,9 @@ public class PROSACRobustPositionEstimator3DTest implements
                     new RssiFingerprint<>(readings);
 
 
-            PROSACRobustPositionEstimator3D estimator =
-                    new PROSACRobustPositionEstimator3D(qualityScores, sources,
+            PROMedSRobustPositionEstimator3D estimator =
+                    new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                             fingerprint, this);
-            estimator.setComputeAndKeepInliersEnabled(true);
-            estimator.setComputeAndKeepResidualsEnabled(true);
             estimator.setResultRefined(true);
 
             reset();
@@ -1425,8 +1328,8 @@ public class PROSACRobustPositionEstimator3DTest implements
                 avgPositionStd);
 
         //force NotReadyException
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1442,7 +1345,7 @@ public class PROSACRobustPositionEstimator3DTest implements
         GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
-        int numValidPosition = 0;
+        int numValidPosition = 0, numValidCovariance = 0, num = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
@@ -1508,11 +1411,9 @@ public class PROSACRobustPositionEstimator3DTest implements
                     new RssiFingerprint<>(readings);
 
 
-            PROSACRobustPositionEstimator3D estimator =
-                    new PROSACRobustPositionEstimator3D(qualityScores, sources,
+            PROMedSRobustPositionEstimator3D estimator =
+                    new PROMedSRobustPositionEstimator3D(qualityScores, sources,
                             fingerprint, this);
-            estimator.setComputeAndKeepInliersEnabled(true);
-            estimator.setComputeAndKeepResidualsEnabled(true);
             estimator.setResultRefined(true);
 
             reset();
@@ -1538,18 +1439,25 @@ public class PROSACRobustPositionEstimator3DTest implements
 
             Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    estimator.getCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
             double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
+            boolean hasCovariance = false;
+            if (estimator.getInliersData() != null && estimator.getCovariance() != null) {
+                assertNotNull(estimator.getInliersData());
+                assertNotNull(estimator.getCovariance());
+
+                SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                        estimator.getCovariance());
+                decomposer.decompose();
+                double[] v = decomposer.getSingularValues();
+                for (double aV : v) {
+                    positionStd += Math.sqrt(aV);
+                }
+                positionStd /= v.length;
+
+                num++;
+                hasCovariance = true;
             }
-            positionStd /= v.length;
 
             double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
@@ -1557,14 +1465,24 @@ public class PROSACRobustPositionEstimator3DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
+
+                if (hasCovariance) {
+                    avgValidPositionStd += positionStd;
+                    numValidCovariance++;
+                }
             } else {
                 avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
+
+                if (hasCovariance) {
+                    avgInvalidPositionStd += positionStd;
+                }
             }
 
             avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
+
+            if (hasCovariance) {
+                avgPositionStd += positionStd;
+            }
         }
 
         assertTrue(numValidPosition > 0);
@@ -1573,9 +1491,9 @@ public class PROSACRobustPositionEstimator3DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
+        avgValidPositionStd /= numValidCovariance;
+        avgInvalidPositionStd /= (num - numValidPosition);
+        avgPositionStd /= num;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1595,8 +1513,8 @@ public class PROSACRobustPositionEstimator3DTest implements
                 avgPositionStd);
 
         //force NotReadyException
-        PROSACRobustPositionEstimator3D estimator =
-                new PROSACRobustPositionEstimator3D();
+        PROMedSRobustPositionEstimator3D estimator =
+                new PROMedSRobustPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1606,27 +1524,27 @@ public class PROSACRobustPositionEstimator3DTest implements
     @Override
     public void onEstimateStart(RobustPositionEstimator<Point3D> estimator) {
         estimateStart++;
-        checkLocked((PROSACRobustPositionEstimator3D)estimator);
+        checkLocked((PROMedSRobustPositionEstimator3D)estimator);
     }
 
     @Override
     public void onEstimateEnd(RobustPositionEstimator<Point3D> estimator) {
         estimateEnd++;
-        checkLocked((PROSACRobustPositionEstimator3D)estimator);
+        checkLocked((PROMedSRobustPositionEstimator3D)estimator);
     }
 
     @Override
     public void onEstimateNextIteration(RobustPositionEstimator<Point3D> estimator,
                                         int iteration) {
         estimateNextIteration++;
-        checkLocked((PROSACRobustPositionEstimator3D)estimator);
+        checkLocked((PROMedSRobustPositionEstimator3D)estimator);
     }
 
     @Override
     public void onEstimateProgressChange(RobustPositionEstimator<Point3D> estimator,
                                          float progress) {
         estimateProgressChange++;
-        checkLocked((PROSACRobustPositionEstimator3D)estimator);
+        checkLocked((PROMedSRobustPositionEstimator3D)estimator);
     }
 
     private void reset() {
@@ -1646,7 +1564,7 @@ public class PROSACRobustPositionEstimator3DTest implements
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(PROSACRobustPositionEstimator3D estimator) {
+    private void checkLocked(PROMedSRobustPositionEstimator3D estimator) {
         try {
             estimator.setQualityScores(null);
             fail("LockedException expected but not thrown");
@@ -1680,15 +1598,7 @@ public class PROSACRobustPositionEstimator3DTest implements
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {
-            estimator.setThreshold(1.0);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
-        try {
-            estimator.setComputeAndKeepInliersEnabled(true);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
-        try {
-            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setStopThreshold(1.0);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

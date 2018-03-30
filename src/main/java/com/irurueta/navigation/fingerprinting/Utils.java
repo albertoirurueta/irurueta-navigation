@@ -20,6 +20,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.StatisticsException;
 
+@SuppressWarnings("WeakerAccess")
 public class Utils {
 
     /**

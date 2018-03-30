@@ -22,7 +22,6 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.trilateration.PROSACRobustTrilateration2DSolver;
-import com.irurueta.navigation.trilateration.RANSACRobustTrilateration2DSolver;
 import com.irurueta.navigation.trilateration.RobustTrilaterationSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -134,11 +133,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -190,11 +189,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -239,11 +238,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -298,11 +297,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
@@ -338,11 +337,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -392,11 +391,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -443,11 +442,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -557,11 +556,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -621,11 +620,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -681,11 +680,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -751,11 +750,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
@@ -806,11 +805,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
@@ -871,11 +870,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
@@ -932,11 +931,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+                PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResiduals(),
-                RANSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                PROSACRobustTrilateration2DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMinRequiredSources(), 3);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
