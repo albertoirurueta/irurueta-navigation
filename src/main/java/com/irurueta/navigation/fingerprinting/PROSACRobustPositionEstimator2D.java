@@ -28,6 +28,7 @@ import java.util.List;
  * device by getting readings at an unknown location of different radio sources whose
  * 2D locations are known.
  */
+@SuppressWarnings("WeakerAccess")
 public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
 
     /**
@@ -387,7 +388,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
     public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
             throws LockedException {
         ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
-                setComputeAndKeepInliersEnabled(computeAndKeepResiduals);
+                setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);
     }
 
     /**

@@ -387,7 +387,7 @@ public class PROSACRobustPositionEstimator3D extends RobustPositionEstimator3D {
     public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
             throws LockedException {
         ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                setComputeAndKeepInliersEnabled(computeAndKeepResiduals);
+                setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);
     }
 
     /**
