@@ -28,6 +28,7 @@ import java.util.List;
  * device by getting readings at an unknown location of different radio sources whose
  * 3D locations are known.
  */
+@SuppressWarnings("WeakerAccess")
 public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
 
     /**

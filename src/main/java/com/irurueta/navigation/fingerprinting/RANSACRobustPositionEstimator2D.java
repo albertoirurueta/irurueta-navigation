@@ -28,6 +28,7 @@ import java.util.List;
  * device by getting readings at an unknown location of different radio sources whose
  * 2D locations are known.
  */
+@SuppressWarnings("WeakerAccess")
 public class RANSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
 
     /**
