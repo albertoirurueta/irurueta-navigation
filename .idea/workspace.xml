@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator2DTest.java" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3DTest.java" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2D.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3D.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2D.java" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3D.java" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3D.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -73,92 +73,7 @@
     <favorites_list name="irurueta-navigation" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="RANSACRobustPositionEstimator3DTest.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="270">
-                  <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-                  <folding>
-                    <element signature="method#testConstructor#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetThreshold#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testIsSetComputeAndKeepResiduals#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetSources#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetFingerprint#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetListener#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetConfidence#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testIsSetResultRefined#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testGetSetQualityScores#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#testEstimate#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#onEstimateStart#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#onEstimateEnd#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#onEstimateNextIteration#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#onEstimateProgressChange#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#reset#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="method#receivedPower#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                    <element signature="e#47833#47903#0" expanded="false" />
-                    <element signature="method#checkLocked#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="LMedSRobustPositionEstimator2DTest.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="83" column="24" lean-forward="false" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="24" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="method#testGetSetThreshold#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetSources#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetFingerprint#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetListener#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetConfidence#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testIsSetResultRefined#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testGetSetQualityScores#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testEstimate#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#testEstimateWithInlierError#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#reset#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="method#receivedPower#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-                    <element signature="e#44070#44140#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="LMedSRobustPositionEstimator3DTest.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="158">
-                  <caret line="125" column="33" lean-forward="true" selection-start-line="125" selection-start-column="33" selection-end-line="125" selection-end-column="33" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -172,7 +87,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mListener</find>
       <find>getEstimatedRad</find>
       <find>getEstimated</find>
       <find>est</find>
@@ -201,12 +115,14 @@
       <find>setQuali</find>
       <find>getCova</find>
       <find>Singular</find>
+      <find>setStopThreshold</find>
       <find>2D</find>
     </findStrings>
     <replaceStrings>
       <replace>MSAC</replace>
       <replace>PROSAC</replace>
       <replace>PROMedS</replace>
+      <replace>setThreshold</replace>
       <replace>3D</replace>
     </replaceStrings>
   </component>
@@ -221,8 +137,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PositionEstimationExceptionTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimatorListener.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/FingerprintTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated3DTest.java" />
@@ -264,14 +178,16 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PositionEstimatorHelperTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimator.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2D.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3DTest.java" />
       </list>
     </option>
   </component>
@@ -559,7 +475,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.LMedSRobustPositionEstimator3DTest">
+  <component name="RunManager" selected="JUnit.RANSACRobustPositionEstimator3DTest">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -581,56 +497,6 @@
       <module name="" />
       <envs />
     </configuration>
-    <configuration name="LMedSRobustPositionEstimator2DTest.testEstimate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.fingerprinting.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="irurueta-navigation" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.fingerprinting" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.fingerprinting.LMedSRobustPositionEstimator2DTest" />
-      <option name="METHOD_NAME" value="testEstimate" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
-    <configuration name="LMedSRobustPositionEstimator2DTest.testEstimateWithInlierError" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.fingerprinting.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="irurueta-navigation" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.fingerprinting" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.fingerprinting.LMedSRobustPositionEstimator2DTest" />
-      <option name="METHOD_NAME" value="testEstimateWithInlierError" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-    </configuration>
     <configuration name="LMedSRobustPositionEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -643,6 +509,56 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.fingerprinting" />
       <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.fingerprinting.LMedSRobustPositionEstimator3DTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration name="MSACRobustPositionEstimator2DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.irurueta.navigation.fingerprinting.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="irurueta-navigation" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.fingerprinting" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.fingerprinting.MSACRobustPositionEstimator2DTest" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+    </configuration>
+    <configuration name="MSACRobustPositionEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="com.irurueta.navigation.fingerprinting.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="irurueta-navigation" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.fingerprinting" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.fingerprinting.MSACRobustPositionEstimator3DTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -767,19 +683,19 @@
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator2DTest" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator3DTest" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator2DTest.testEstimate" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator2DTest.testEstimateWithInlierError" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator3DTest" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.MSACRobustPositionEstimator2DTest" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.MSACRobustPositionEstimator3DTest" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator3DTest" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator2DTest" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator3DTest" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator3DTest" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator2DTest.testEstimateWithInlierError" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator2DTest.testEstimate" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator3DTest" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator2DTest" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator3DTest" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.RANSACRobustPositionEstimator2DTest" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.MSACRobustPositionEstimator3DTest" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.MSACRobustPositionEstimator2DTest" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.LMedSRobustPositionEstimator3DTest" />
       </list>
     </recent_temporary>
   </component>
@@ -856,7 +772,7 @@
       <workItem from="1521706700460" duration="17149000" />
       <workItem from="1521729054110" duration="77993000" />
       <workItem from="1522052575714" duration="49033000" />
-      <workItem from="1522224065687" duration="68971000" />
+      <workItem from="1522224065687" duration="70423000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -869,39 +785,39 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="LMedSRobustPositionEstimator2DTest_testEstimate - 2018.03.30 at 01h 51m 57s.xml">
-      <configuration name="LMedSRobustPositionEstimator2DTest.testEstimate" configurationId="JUnit" />
+    <history-entry file="LMedSRobustPositionEstimator2DTest - 2018.03.30 at 02h 23m 03s.xml">
+      <configuration name="LMedSRobustPositionEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustPositionEstimator2DTest_testEstimateWithInlierError - 2018.03.30 at 01h 52m 09s.xml">
-      <configuration name="LMedSRobustPositionEstimator2DTest.testEstimateWithInlierError" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="LMedSRobustPositionEstimator3DTest - 2018.03.30 at 01h 56m 59s.xml">
+    <history-entry file="LMedSRobustPositionEstimator3DTest - 2018.03.30 at 02h 23m 13s.xml">
       <configuration name="LMedSRobustPositionEstimator3DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustPositionEstimator3DTest - 2018.03.30 at 01h 59m 10s.xml">
-      <configuration name="LMedSRobustPositionEstimator3DTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustPositionEstimator2DTest - 2018.03.30 at 02h 13m 19s.xml">
+      <configuration name="MSACRobustPositionEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="LMedSRobustPositionEstimator3DTest - 2018.03.30 at 01h 59m 45s.xml">
-      <configuration name="LMedSRobustPositionEstimator3DTest" configurationId="JUnit" />
+    <history-entry file="MSACRobustPositionEstimator2DTest - 2018.03.30 at 02h 23m 39s.xml">
+      <configuration name="MSACRobustPositionEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="RANSACRobustPositionEstimator2DTest - 2018.03.30 at 01h 37m 25s.xml">
+    <history-entry file="MSACRobustPositionEstimator2DTest_testEstimate - 2018.03.30 at 02h 13m 00s.xml">
+      <configuration name="MSACRobustPositionEstimator2DTest.testEstimate" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MSACRobustPositionEstimator3DTest - 2018.03.30 at 02h 17m 31s.xml">
+      <configuration name="MSACRobustPositionEstimator3DTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MSACRobustPositionEstimator3DTest - 2018.03.30 at 02h 24m 00s.xml">
+      <configuration name="MSACRobustPositionEstimator3DTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="MSACRobustPositionEstimator3DTest_testEstimateWithInlierError - 2018.03.30 at 02h 18m 09s.xml">
+      <configuration name="MSACRobustPositionEstimator3DTest.testEstimateWithInlierError" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="RANSACRobustPositionEstimator2DTest - 2018.03.30 at 02h 24m 57s.xml">
       <configuration name="RANSACRobustPositionEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="RANSACRobustPositionEstimator2DTest_testEstimateWithInlierError - 2018.03.30 at 01h 31m 57s.xml">
-      <configuration name="RANSACRobustPositionEstimator2DTest.testEstimateWithInlierError" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="RANSACRobustPositionEstimator3DTest - 2018.03.30 at 01h 37m 45s.xml">
+    <history-entry file="RANSACRobustPositionEstimator3DTest - 2018.03.30 at 02h 25m 18s.xml">
       <configuration name="RANSACRobustPositionEstimator3DTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="RANSACRobustPositionEstimator3DTest_testEstimateWithInlierError - 2018.03.30 at 01h 32m 30s.xml">
-      <configuration name="RANSACRobustPositionEstimator3DTest.testEstimateWithInlierError" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="RANSACRobustPositionEstimator3DTest_testEstimateWithInlierError - 2018.03.30 at 01h 32m 59s.xml">
-      <configuration name="RANSACRobustPositionEstimator3DTest.testEstimateWithInlierError" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1208561000" />
+    <option name="totallyTimeSpent" value="1210013000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -914,7 +830,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="13" y="23" width="1427" height="857" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -924,13 +839,13 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30971128" sideWeight="0.50303954" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32943755" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30971128" sideWeight="0.4969605" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30971128" sideWeight="0.4969605" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36101082" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2895307" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24404332" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24848025" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1022,37 +937,11 @@
           <option name="timeStamp" value="895" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="1016" />
+      <option name="time" value="1017" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustRssiRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="3170" column="0" lean-forward="false" selection-start-line="3170" selection-start-column="0" selection-end-line="3170" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="247" column="14" lean-forward="false" selection-start-line="247" selection-start-column="14" selection-end-line="247" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration3DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="1382" column="17" lean-forward="false" selection-start-line="1382" selection-start-column="17" selection-end-line="1382" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20171122.110611-2-sources.jar!/com/irurueta/numerical/robust/InliersData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1264,14 +1153,6 @@
             <element signature="e#3915#3916#0" expanded="false" />
             <element signature="e#3946#3947#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2291">
-          <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1735,106 +1616,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="1092" column="0" lean-forward="true" selection-start-line="1092" selection-start-column="0" selection-end-line="1092" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#testConstructor#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetThreshold#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepResiduals#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetSources#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetFingerprint#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimate#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#reset#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#47560#47630#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2D.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding>
             <element signature="e#1238#1271#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding>
-            <element signature="method#testConstructor#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetThreshold#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetComputeAndKeepResiduals#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetSources#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetFingerprint#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#testEstimate#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateStart#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateEnd#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateNextIteration#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#onEstimateProgressChange#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#reset#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-            <element signature="e#47833#47903#0" expanded="false" />
-            <element signature="method#checkLocked#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="83" column="24" lean-forward="false" selection-start-line="83" selection-start-column="24" selection-end-line="83" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#testGetSetThreshold#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetSources#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetFingerprint#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetListener#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetConfidence#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetResultRefined#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testGetSetQualityScores#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimate#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#testEstimateWithInlierError#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#reset#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="method#receivedPower#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
-            <element signature="e#44070#44140#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1861,12 +1648,254 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="125" column="33" lean-forward="true" selection-start-line="125" selection-start-column="33" selection-end-line="125" selection-end-column="33" />
+        <state relative-caret-position="75">
+          <caret line="29" column="3" lean-forward="true" selection-start-line="29" selection-start-column="3" selection-end-line="29" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustRssiRadioSourceEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-495">
+          <caret line="91" column="19" lean-forward="false" selection-start-line="91" selection-start-column="19" selection-end-line="91" selection-end-column="19" />
+          <folding>
+            <element signature="method#LMedSRobustRssiRadioSourceEstimator2DTest#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#setUpClass#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#tearDownClass#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#setUp#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#tearDown#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testConstructor#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="e#45807#45884#0" expanded="false" />
+            <element signature="e#57522#57599#0" expanded="false" />
+            <element signature="method#testGetSetStopThreshold#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetMinReadings#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialTransmittedPower#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialPosition#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetInitialPathLossExponent#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetTransmittedPowerEstimationEnabled#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetPositionEstimationEnabled#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testAreValidReadings#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetReadings#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateNoInlierErrorNoRefinement#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateNoInlierErrorWithRefinement#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateWithInlierErrorWithRefinement#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateNoInlierErrorWithInitialPosition#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateNoInlierErrorWithInitialPower#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateNoInlierErrorWithInitialPositionAndPower#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateWithInlierErrorWithInitialPositionAndPower#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionTransmittedPowerAndPathLossEstimationEnabled#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionTransmittedPowerAndPathLossEstimationEnabledWithInitialValues#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateWithInitialPathLoss#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateBeacon#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionOnly#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionOnlyWithInitialPosition#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionOnlyRepeated#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateTransmittedPowerOnly#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateTransmittedPowerOnlyWithInitialTransmittedPower#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePathlossOnly#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePathlossOnlyWithInitialPathloss#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionAndPathloss#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimatePositionAndPathlossWithInitialValues#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateTransmittedPowerAndPathloss#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#testEstimateTransmittedPowerAndPathlossWithInitialValues#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateStart#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateEnd#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateNextIteration#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateProgressChange#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+            <element signature="e#306675#306745#0" expanded="false" />
+            <element signature="method#checkLocked#0;class#LMedSRobustRssiRadioSourceEstimator2DTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2319">
+          <caret line="884" column="41" lean-forward="false" selection-start-line="884" selection-start-column="41" selection-end-line="884" selection-end-column="41" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#testConstructor#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepResiduals#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetSources#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetFingerprint#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateStart#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateEnd#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateNextIteration#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateProgressChange#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#reset#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="e#47646#47716#0" expanded="false" />
+            <element signature="method#checkLocked#0;class#RANSACRobustPositionEstimator2DTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="1005" column="0" lean-forward="false" selection-start-line="1005" selection-start-column="0" selection-end-line="1005" selection-end-column="0" />
+          <folding>
+            <element signature="method#testConstructor#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetSources#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetFingerprint#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateStart#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateEnd#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateNextIteration#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateProgressChange#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#reset#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="e#44747#44817#0" expanded="false" />
+            <element signature="method#checkLocked#0;class#MSACRobustPositionEstimator3DTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="984" column="0" lean-forward="false" selection-start-line="984" selection-start-column="0" selection-end-line="984" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#testGetSetThreshold#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetSources#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetFingerprint#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#reset#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#LMedSRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="e#44156#44226#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="987" column="41" lean-forward="false" selection-start-line="987" selection-start-column="41" selection-end-line="987" selection-end-column="41" />
+          <folding>
+            <element signature="method#testConstructor#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetSources#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetFingerprint#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateStart#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateEnd#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateNextIteration#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateProgressChange#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#reset#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="e#44408#44478#0" expanded="false" />
+            <element signature="method#checkLocked#0;class#LMedSRobustPositionEstimator3DTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="1001" column="0" lean-forward="false" selection-start-line="1001" selection-start-column="0" selection-end-line="1001" selection-end-column="0" />
+          <folding>
+            <element signature="method#testConstructor#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetSources#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetFingerprint#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateStart#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateEnd#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateNextIteration#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#onEstimateProgressChange#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#reset#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+            <element signature="e#44495#44565#0" expanded="false" />
+            <element signature="method#checkLocked#0;class#MSACRobustPositionEstimator2DTest#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-284">
+          <caret line="1054" column="0" lean-forward="false" selection-start-line="1054" selection-start-column="0" selection-end-line="1054" selection-end-column="0" />
+          <folding>
+            <element signature="method#testConstructor#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetThreshold#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetComputeAndKeepResiduals#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetSources#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetFingerprint#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetListener#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetConfidence#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateStart#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateEnd#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateNextIteration#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#onEstimateProgressChange#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#reset#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="method#receivedPower#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
+            <element signature="e#47919#47989#0" expanded="false" />
+            <element signature="method#checkLocked#0;class#RANSACRobustPositionEstimator3DTest#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -17,11 +17,11 @@ package com.irurueta.navigation.fingerprinting;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.SingularValueDecomposer;
-import com.irurueta.geometry.InhomogeneousPoint2D;
-import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.trilateration.LMedSRobustTrilateration2DSolver;
+import com.irurueta.navigation.trilateration.MSACRobustTrilateration3DSolver;
 import com.irurueta.navigation.trilateration.RobustTrilaterationSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -36,11 +36,11 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-public class LMedSRobustPositionEstimator2DTest implements
-        RobustPositionEstimatorListener<Point2D> {
+public class MSACRobustPositionEstimator3DTest implements
+        RobustPositionEstimatorListener<Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            LMedSRobustPositionEstimator2DTest.class.getName());
+            MSACRobustPositionEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
@@ -59,7 +59,7 @@ public class LMedSRobustPositionEstimator2DTest implements
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
-    private static final double LARGE_ABSOLUTE_ERROR = 0.5;
+    private static final double LARGE_ABSOLUTE_ERROR = 1.0;
 
     private static final int TIMES = 50;
 
@@ -81,13 +81,13 @@ public class LMedSRobustPositionEstimator2DTest implements
     @Test
     public void testConstructor() {
         //empty constructor
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
@@ -114,21 +114,21 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
 
         //constructor with sources
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
-                    new InhomogeneousPoint2D()));
+        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
+                    new InhomogeneousPoint3D()));
         }
-        estimator = new LMedSRobustPositionEstimator2D(sources);
+        estimator = new MSACRobustPositionEstimator3D(sources);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
@@ -155,18 +155,18 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
-                    (List<WifiAccessPointLocated2D>)null);
+            estimator = new MSACRobustPositionEstimator3D(
+                    (List<WifiAccessPointLocated3D>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
-                    new ArrayList<WifiAccessPointLocated2D>());
+            estimator = new MSACRobustPositionEstimator3D(
+                    new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -175,12 +175,12 @@ public class LMedSRobustPositionEstimator2DTest implements
         //constructor with fingerprints
         RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
-        estimator = new LMedSRobustPositionEstimator2D(fingerprint);
+        estimator = new MSACRobustPositionEstimator3D(fingerprint);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
@@ -207,12 +207,12 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
+            estimator = new MSACRobustPositionEstimator3D(
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -220,12 +220,12 @@ public class LMedSRobustPositionEstimator2DTest implements
 
 
         //constructor with sources and fingerprint
-        estimator = new LMedSRobustPositionEstimator2D(sources, fingerprint);
+        estimator = new MSACRobustPositionEstimator3D(sources, fingerprint);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
@@ -252,21 +252,21 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSRobustPositionEstimator2D(null, fingerprint);
+            estimator = new MSACRobustPositionEstimator3D(null, fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
-                    new ArrayList<WifiAccessPointLocated2D>(), fingerprint);
+            estimator = new MSACRobustPositionEstimator3D(
+                    new ArrayList<WifiAccessPointLocated3D>(), fingerprint);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LMedSRobustPositionEstimator2D(sources,
+            estimator = new MSACRobustPositionEstimator3D(sources,
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -274,12 +274,12 @@ public class LMedSRobustPositionEstimator2DTest implements
 
 
         //constructor with listener
-        estimator = new LMedSRobustPositionEstimator2D(this);
+        estimator = new MSACRobustPositionEstimator3D(this);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
@@ -306,16 +306,16 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
 
         //constructor with sources and listener
-        estimator = new LMedSRobustPositionEstimator2D(sources, this);
+        estimator = new MSACRobustPositionEstimator3D(sources, this);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
@@ -342,30 +342,30 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
-                    (List<WifiAccessPointLocated2D>)null, this);
+            estimator = new MSACRobustPositionEstimator3D(
+                    (List<WifiAccessPointLocated3D>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
-                    new ArrayList<WifiAccessPointLocated2D>(), this);
+            estimator = new MSACRobustPositionEstimator3D(
+                    new ArrayList<WifiAccessPointLocated3D>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //constructor with fingerprint and listener
-        estimator = new LMedSRobustPositionEstimator2D(fingerprint, this);
+        estimator = new MSACRobustPositionEstimator3D(fingerprint, this);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
@@ -392,12 +392,12 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
+            estimator = new MSACRobustPositionEstimator3D(
                     (RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>>)null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -406,13 +406,13 @@ public class LMedSRobustPositionEstimator2DTest implements
 
 
         //constructor with sources, fingerprint and listener
-        estimator = new LMedSRobustPositionEstimator2D(sources, fingerprint,
+        estimator = new MSACRobustPositionEstimator3D(sources, fingerprint,
                 this);
 
         //check default values
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
-        assertEquals(estimator.getMinRequiredSources(), 3);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+        assertEquals(estimator.getMinRequiredSources(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
@@ -439,23 +439,23 @@ public class LMedSRobustPositionEstimator2DTest implements
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getCovariance());
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LMedSRobustPositionEstimator2D(null, fingerprint,
+            estimator = new MSACRobustPositionEstimator3D(null, fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LMedSRobustPositionEstimator2D(
-                    new ArrayList<WifiAccessPointLocated2D>(), fingerprint,
+            estimator = new MSACRobustPositionEstimator3D(
+                    new ArrayList<WifiAccessPointLocated3D>(), fingerprint,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LMedSRobustPositionEstimator2D(sources,
+            estimator = new MSACRobustPositionEstimator3D(sources,
                     null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -464,39 +464,39 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
-        assertEquals(estimator.getStopThreshold(),
-                LMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+        assertEquals(estimator.getThreshold(),
+                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
 
         //set new value
-        estimator.setStopThreshold(1.0);
+        estimator.setThreshold(1.0);
 
         //check
-        assertEquals(estimator.getStopThreshold(), 1.0, 0.0);
+        assertEquals(estimator.getThreshold(), 1.0, 0.0);
 
         //force IllegalArgumentException
         try {
-            estimator.setStopThreshold(0.0);
+            estimator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
     public void testGetSetSources() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getSources());
 
         //set new value
-        List<WifiAccessPointLocated2D> sources = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
-                    new InhomogeneousPoint2D()));
+        List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
+                    new InhomogeneousPoint3D()));
         }
 
         estimator.setSources(sources);
@@ -510,15 +510,15 @@ public class LMedSRobustPositionEstimator2DTest implements
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator.setSources(new ArrayList<WifiAccessPointLocated2D>());
+            estimator.setSources(new ArrayList<WifiAccessPointLocated3D>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getFingerprint());
@@ -540,8 +540,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getListener());
@@ -555,8 +555,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testIsSetRadioSourcePositionCovarianceUsed() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertFalse(estimator.isRadioSourcePositionCovarianceUsed());
@@ -570,8 +570,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetFallbackDistanceStandardDeviation() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
@@ -588,8 +588,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getProgressDelta(),
@@ -610,8 +610,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getConfidence(),
@@ -630,8 +630,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getMaxIterations(),
@@ -652,8 +652,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isResultRefined());
@@ -667,8 +667,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isCovarianceKept());
@@ -682,8 +682,8 @@ public class LMedSRobustPositionEstimator2DTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        LMedSRobustPositionEstimator2D estimator =
-                new LMedSRobustPositionEstimator2D();
+        MSACRobustPositionEstimator3D estimator =
+                new MSACRobustPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getQualityScores());
@@ -711,18 +711,20 @@ public class LMedSRobustPositionEstimator2DTest implements
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
             List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             double error;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -730,8 +732,8 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
                 String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
-                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
                                 pathLossExponent,
@@ -761,8 +763,8 @@ public class LMedSRobustPositionEstimator2DTest implements
                     new RssiFingerprint<>(readings);
 
 
-            LMedSRobustPositionEstimator2D estimator =
-                    new LMedSRobustPositionEstimator2D(sources, fingerprint,
+            MSACRobustPositionEstimator3D estimator =
+                    new MSACRobustPositionEstimator3D(sources, fingerprint,
                             this);
             estimator.setResultRefined(true);
 
@@ -778,7 +780,7 @@ public class LMedSRobustPositionEstimator2DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point2D p = estimator.estimate();
+            Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -787,7 +789,7 @@ public class LMedSRobustPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
@@ -846,8 +848,8 @@ public class LMedSRobustPositionEstimator2DTest implements
                 avgPositionStd);
 
         //force NotReadyException
-        RANSACRobustPositionEstimator2D estimator =
-                new RANSACRobustPositionEstimator2D();
+        RANSACRobustPositionEstimator3D estimator =
+                new RANSACRobustPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -863,7 +865,7 @@ public class LMedSRobustPositionEstimator2DTest implements
         GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
-        int numValidPosition = 0;
+        int numValidPosition = 0, numValidCovariance = 0, num = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
@@ -871,18 +873,20 @@ public class LMedSRobustPositionEstimator2DTest implements
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
 
-            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
             List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
             double error;
             for (int i = 0; i < numSources; i++) {
-                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -890,8 +894,8 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
                 String bssid = String.valueOf(i);
 
-                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
-                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
                                 FREQUENCY, transmittedPowerdBm,
                                 Math.sqrt(TX_POWER_VARIANCE),
                                 pathLossExponent,
@@ -924,8 +928,8 @@ public class LMedSRobustPositionEstimator2DTest implements
                     new RssiFingerprint<>(readings);
 
 
-            LMedSRobustPositionEstimator2D estimator =
-                    new LMedSRobustPositionEstimator2D(sources, fingerprint,
+            MSACRobustPositionEstimator3D estimator =
+                    new MSACRobustPositionEstimator3D(sources, fingerprint,
                             this);
             estimator.setResultRefined(true);
 
@@ -941,7 +945,7 @@ public class LMedSRobustPositionEstimator2DTest implements
             assertEquals(estimateStart, 0);
             assertEquals(estimateEnd, 0);
 
-            Point2D p = estimator.estimate();
+            Point3D p = estimator.estimate();
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
@@ -950,20 +954,27 @@ public class LMedSRobustPositionEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
             assertSame(estimatedPosition, p);
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    estimator.getCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
             double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
+            boolean hasCovariance = false;
+            if(estimator.getInliersData() != null && estimator.getCovariance() != null) {
+                assertNotNull(estimator.getInliersData());
+                assertNotNull(estimator.getCovariance());
+
+                SingularValueDecomposer decomposer = new SingularValueDecomposer(
+                        estimator.getCovariance());
+                decomposer.decompose();
+                double[] v = decomposer.getSingularValues();
+                for (double aV : v) {
+                    positionStd += Math.sqrt(aV);
+                }
+                positionStd /= v.length;
+
+                num++;
+                hasCovariance = true;
             }
-            positionStd /= v.length;
 
             double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
@@ -971,14 +982,24 @@ public class LMedSRobustPositionEstimator2DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
+
+                if (hasCovariance) {
+                    avgValidPositionStd += positionStd;
+                    numValidCovariance++;
+                }
             } else {
                 avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
+
+                if (hasCovariance) {
+                    avgInvalidPositionStd += positionStd;
+                }
             }
 
             avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
+
+            if (hasCovariance) {
+                avgPositionStd += positionStd;
+            }
         }
 
         assertTrue(numValidPosition > 0);
@@ -987,9 +1008,9 @@ public class LMedSRobustPositionEstimator2DTest implements
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
 
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
+        avgValidPositionStd /= numValidCovariance;
+        avgInvalidPositionStd /= (num - numValidCovariance);
+        avgPositionStd /= num;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1009,8 +1030,8 @@ public class LMedSRobustPositionEstimator2DTest implements
                 avgPositionStd);
 
         //force NotReadyException
-        RANSACRobustPositionEstimator2D estimator =
-                new RANSACRobustPositionEstimator2D();
+        RANSACRobustPositionEstimator3D estimator =
+                new RANSACRobustPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1018,29 +1039,29 @@ public class LMedSRobustPositionEstimator2DTest implements
     }
 
     @Override
-    public void onEstimateStart(RobustPositionEstimator<Point2D> estimator) {
+    public void onEstimateStart(RobustPositionEstimator<Point3D> estimator) {
         estimateStart++;
-        checkLocked((LMedSRobustPositionEstimator2D)estimator);
+        checkLocked((MSACRobustPositionEstimator3D)estimator);
     }
 
     @Override
-    public void onEstimateEnd(RobustPositionEstimator<Point2D> estimator) {
+    public void onEstimateEnd(RobustPositionEstimator<Point3D> estimator) {
         estimateEnd++;
-        checkLocked((LMedSRobustPositionEstimator2D)estimator);
+        checkLocked((MSACRobustPositionEstimator3D)estimator);
     }
 
     @Override
-    public void onEstimateNextIteration(RobustPositionEstimator<Point2D> estimator,
+    public void onEstimateNextIteration(RobustPositionEstimator<Point3D> estimator,
                                         int iteration) {
         estimateNextIteration++;
-        checkLocked((LMedSRobustPositionEstimator2D)estimator);
+        checkLocked((MSACRobustPositionEstimator3D)estimator);
     }
 
     @Override
-    public void onEstimateProgressChange(RobustPositionEstimator<Point2D> estimator,
+    public void onEstimateProgressChange(RobustPositionEstimator<Point3D> estimator,
                                          float progress) {
         estimateProgressChange++;
-        checkLocked((LMedSRobustPositionEstimator2D)estimator);
+        checkLocked((MSACRobustPositionEstimator3D)estimator);
     }
 
     private void reset() {
@@ -1059,7 +1080,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(LMedSRobustPositionEstimator2D estimator) {
+    private void checkLocked(MSACRobustPositionEstimator3D estimator) {
         try {
             estimator.setRadioSourcePositionCovarianceUsed(true);
             fail("LockedException expected but not thrown");
@@ -1089,7 +1110,7 @@ public class LMedSRobustPositionEstimator2DTest implements
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {
-            estimator.setStopThreshold(1.0);
+            estimator.setThreshold(1.0);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

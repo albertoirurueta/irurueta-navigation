@@ -882,6 +882,8 @@ public class RANSACRobustPositionEstimator2DTest implements
             avgPositionStd += positionStd;
         }
 
+        assertTrue(numValidPosition > 0);
+
         avgValidPositionError /= numValidPosition;
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
@@ -1044,6 +1046,8 @@ public class RANSACRobustPositionEstimator2DTest implements
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
         }
+
+        assertTrue(numValidPosition > 0);
 
         avgValidPositionError /= numValidPosition;
         avgInvalidPositionError /= (TIMES - numValidPosition);

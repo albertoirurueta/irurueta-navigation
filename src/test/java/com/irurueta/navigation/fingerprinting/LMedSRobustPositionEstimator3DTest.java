@@ -820,6 +820,8 @@ public class LMedSRobustPositionEstimator3DTest implements
             avgPositionStd += positionStd;
         }
 
+        assertTrue(numValidPosition > 0);
+
         avgValidPositionError /= numValidPosition;
         avgInvalidPositionError /= (TIMES - numValidPosition);
         avgPositionError /= TIMES;
@@ -982,6 +984,8 @@ public class LMedSRobustPositionEstimator3DTest implements
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
         }
+
+        assertTrue(numValidPosition > 0);
 
         avgValidPositionError /= numValidPosition;
         avgInvalidPositionError /= (TIMES - numValidPosition);
