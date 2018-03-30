@@ -22,7 +22,7 @@ package com.irurueta.navigation.geodesic;
  * (<i>lat</i>, <i>lon</i>) given a center point of projection (<i>lat0</i>,
  * <i>lon0</i>). The returned GnomonicData objects always include the
  * parameters provided to
- * {@link Gnomonic@forward} and {@link Gnomonic#reverse}
+ * {@link Gnomonic#forward} and {@link Gnomonic#reverse}
  * and it always includes the fields <i>x</i>, <i>y</i>, <i>azi</i>, and
  * <i>rk</i>.
  */

@@ -22,7 +22,7 @@ package com.irurueta.navigation.geodesic;
  * {@link Geodesic#direct(double, double, double, double, int)} and
  * {@link Geodesic#inverse(double, double, double, double, int)} routines.
  * They also signify (via the <i>caps</i> parameter) to the
- * {@link GeodesicLine(Geodesic, double, double, double, int)} constructor
+ * {@link GeodesicLine} constructor
  * and to {@link Geodesic#line(double, double, double, int)} what capabilities
  * should be included in the {@link GeodesicLine} object.
  */

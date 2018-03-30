@@ -234,6 +234,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @param distanceStandardDeviations standard deviations of provided measured distances.
+     * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */

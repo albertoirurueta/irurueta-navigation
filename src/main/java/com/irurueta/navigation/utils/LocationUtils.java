@@ -61,7 +61,9 @@ public class LocationUtils {
      * This conversion is performed in a method that is dependent on the
      * default locale, and so is not guaranteed to round-trip with
      * {@link #convert(String)}.
-     *
+     * @param coordinate coordinate to be converted.
+     * @param outputType output format.
+     * @return converted coordinate.
      * @throws IllegalArgumentException if coordinate is less than
      * -180.0, greater than 180.0, or is not a number.
      * @throws IllegalArgumentException if outputType is not one of
@@ -111,7 +113,8 @@ public class LocationUtils {
      * double. This conversion is performed in a locale agnostic
      * method, and so is not guaranteed to round-trip with
      * {@link #convert(double, int)}.
-     *
+     * @param coordinate coordinate to be parsed.
+     * @return parsed value.
      * @throws NullPointerException if coordinate is null
      * @throws IllegalArgumentException if the coordinate is not
      * in one of the valid formats.

@@ -82,8 +82,12 @@ public class RangingAndRssiReadingLocated3D<S extends RadioSource> extends
      * Constructor.
      * @param source radio source associated to this reading.
      * @param distance distance in meters to the radio source.
+     * @param rssi received signal strength indicator in dBm.
      * @param position position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param rssiStandardDeviation standard deviation of RSSI value.
+     * @param positionCovariance covariance of inhomogeneous coordinates of
+     *                           current position (if available).
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
      * position is null or standard deviation is zero or negative.
      */

@@ -86,6 +86,7 @@ public class BeaconWithPowerAndLocated2D extends BeaconWithPowerAndLocated<Point
      * @param manufacturer a two byte code indicating the beacon manufacturer.
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
+     * @param transmittedPowerStandardDeviation transmitted power standard deviation.
      * @param position position where beacon is located.
      * @throws IllegalArgumentException if either identifiers or position are null or
      * standard deviation is negative.
@@ -170,6 +171,7 @@ public class BeaconWithPowerAndLocated2D extends BeaconWithPowerAndLocated<Point
      * @param manufacturer a two byte code indicating the beacon manufacturer.
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
+     * @param transmittedPowerStandardDeviation transmitted power standard deviation.
      * @param position position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
@@ -238,6 +240,7 @@ public class BeaconWithPowerAndLocated2D extends BeaconWithPowerAndLocated<Point
      * @param manufacturer a two byte code indicating the beacon manufacturer.
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
+     * @param transmittedPowerStandardDeviation transmitted power standard deviation.
      * @param position position where beacon is located.
      * @throws IllegalArgumentException if either identifiers or position are null or
      * standard deviation is negative.
@@ -309,6 +312,7 @@ public class BeaconWithPowerAndLocated2D extends BeaconWithPowerAndLocated<Point
      * @param manufacturer a two byte code indicating the beacon manufacturer.
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
+     * @param transmittedPowerStandardDeviation transmitted power standard deviation.
      * @param position position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
@@ -483,6 +487,7 @@ public class BeaconWithPowerAndLocated2D extends BeaconWithPowerAndLocated<Point
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
      * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param transmittedPowerStandardDeviation transmitted power standard deviation.
      * @param position position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).
@@ -631,6 +636,7 @@ public class BeaconWithPowerAndLocated2D extends BeaconWithPowerAndLocated<Point
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
      * @param pathLossExponent path loss exponent. By default this is 2.0.
+     * @param transmittedPowerStandardDeviation transmitted power standard deviation.
      * @param position position where beacon is located.
      * @param positionCovariance covariance of inhomogeneous coordinates of current
      *                           position (if available).

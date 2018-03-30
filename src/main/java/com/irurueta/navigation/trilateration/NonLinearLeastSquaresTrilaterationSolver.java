@@ -263,6 +263,7 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @param distanceStandardDeviations standard deviations of provided measured distances.
      * @throws IllegalArgumentException if either positions, distances or standard deviations
      * are null, don't have the same length of their length is smaller than required (2 points).
+     * @throws LockedException if instance is busy solving the trialteration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(P[] positions, double[] distances,
             double[] distanceStandardDeviations) throws IllegalArgumentException, LockedException {

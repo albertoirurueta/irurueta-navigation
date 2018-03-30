@@ -3,182 +3,28 @@
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/AltBeaconUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Beacon.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconIdentifier.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconWithPower.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconWithPowerAndLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconWithPowerAndLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/BeaconWithPowerAndLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Fingerprint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/FingerprintLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/FingerprintingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustRssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LMedSRobustRssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustRssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustRssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustRssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustRssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustRssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustRssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimationException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimatorHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimatorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustRssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RANSACRobustRssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSource.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceEstimationException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceEstimatorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceWithPower.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RadioSourceWithPowerAndLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReading.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReadingLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReadingLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReadingLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingFingerprint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingFingerprintLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingFingerprintLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingFingerprintLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingReading.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingReadingLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingReadingLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RangingReadingLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Reading.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/ReadingLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/ReadingType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimatorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustRadioSourceEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustRadioSourceEstimatorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustRssiRadioSourceEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustRssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustRssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustRssiRadioSourceEstimatorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiFingerprint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiFingerprintLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiFingerprintLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiFingerprintLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiRadioSourceEstimator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiRadioSourceEstimator2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiRadioSourceEstimator3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiRadioSourceEstimatorListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiReading.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiReadingLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiReadingLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RssiReadingLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Utils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolverListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPoint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPower.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3D.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/package-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/AltBeaconUtilsTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconIdentifierTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconWithPowerAndLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconWithPowerAndLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconWithPowerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/FingerprintTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/FingerprintingExceptionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROMedSRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PROSACRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PositionEstimationExceptionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PositionEstimatorHelperTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RadioSourceEstimationExceptionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiFingerprintTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReadingLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReadingLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingAndRssiReadingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingFingerprintLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingFingerprintLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingFingerprintTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingReadingLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingReadingLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RangingReadingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiFingerprintLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiFingerprintLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiFingerprintTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiRadioSourceEstimator2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiRadioSourceEstimator3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiReadingLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiReadingLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RssiReadingTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/UtilsTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WeightedKNearestNeighboursPositionSolver3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated2DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerAndLocated3DTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiAccessPointWithPowerTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/WifiKNearestFinderTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/s3-settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/s3-settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -249,7 +95,17 @@
     <favorites_list name="irurueta-navigation" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="57" selection-start-line="4" selection-end-line="4" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -263,7 +119,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mLis</find>
       <find>SPEED_OF_LIGHT</find>
       <find>isRead</find>
       <find>solve(</find>
@@ -293,6 +148,7 @@
       <find>RANSAC</find>
       <find>getMe</find>
       <find>2D</find>
+      <find>transmittedPowerStandardDeviation</find>
     </findStrings>
     <replaceStrings>
       <replace>MSAC</replace>
@@ -310,27 +166,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimatorHelper.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimatorHelper.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustRssiRadioSourceEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimatorListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration2DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration3DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/NonLinearPositionEstimator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROSACRobustTrilateration3DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROSACRobustTrilateration2DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolver.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PositionEstimatorHelper.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PositionEstimatorHelperTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Utils.java" />
@@ -361,6 +196,27 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RobustPositionEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/BeaconIdentifierTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/s3-settings.xml" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" />
       </list>
     </option>
   </component>
@@ -394,7 +250,7 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="8" />
+    <option name="x" value="7" />
     <option name="y" value="23" />
     <option name="width" value="1427" />
     <option name="height" value="857" />
@@ -547,6 +403,15 @@
               <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
               <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="navigation" type="462c0819:PsiDirectoryNode" />
+              <item name="indoor" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -601,7 +466,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.com.irurueta.navigation in irurueta-navigation">
+  <component name="RunManager" selected="JUnit.NonLinearPositionEstimator3DTest">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
     </configuration>
@@ -654,7 +519,7 @@
       </option>
       <patterns />
     </configuration>
-    <configuration name="RobustPositionEstimator2DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="NonLinearPositionEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="irurueta-navigation" />
       <extension name="coverage">
         <pattern>
@@ -665,7 +530,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.RobustPositionEstimator2DTest" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.NonLinearPositionEstimator3DTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -775,19 +640,19 @@
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.RobustPositionEstimator2DTest" />
       <item itemvalue="JUnit.RobustPositionEstimator3DTest" />
       <item itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
       <item itemvalue="JUnit.BeaconIdentifierTest" />
       <item itemvalue="JUnit.MSACRobustPositionEstimator3DTest" />
+      <item itemvalue="JUnit.NonLinearPositionEstimator3DTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.NonLinearPositionEstimator3DTest" />
         <item itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
         <item itemvalue="JUnit.MSACRobustPositionEstimator3DTest" />
         <item itemvalue="JUnit.BeaconIdentifierTest" />
         <item itemvalue="JUnit.RobustPositionEstimator3DTest" />
-        <item itemvalue="JUnit.RobustPositionEstimator2DTest" />
       </list>
     </recent_temporary>
   </component>
@@ -863,7 +728,7 @@
       <workItem from="1522052575714" duration="49033000" />
       <workItem from="1522224065687" duration="70652000" />
       <workItem from="1522406460172" duration="104000" />
-      <workItem from="1522406694344" duration="18034000" />
+      <workItem from="1522406694344" duration="22607000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -876,9 +741,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="RobustPositionEstimator2DTest - 2018.03.30 at 21h 11m 21s.xml">
-      <configuration name="RobustPositionEstimator2DTest" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="RobustPositionEstimator3DTest - 2018.03.30 at 21h 12m 51s.xml">
       <configuration name="RobustPositionEstimator3DTest" configurationId="JUnit" />
     </history-entry>
@@ -906,9 +768,12 @@
     <history-entry file="com_irurueta_navigation_in_irurueta-navigation - 2018.03.30 at 22h 39m 27s.xml">
       <configuration name="com.irurueta.navigation in irurueta-navigation" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="NonLinearPositionEstimator3DTest - 2018.03.30 at 23h 00m 59s.xml">
+      <configuration name="NonLinearPositionEstimator3DTest" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1228380000" />
+    <option name="totallyTimeSpent" value="1232953000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -920,7 +785,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="8" y="23" width="1427" height="857" extended-state="0" />
+    <frame x="7" y="23" width="1427" height="857" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32939634" />
@@ -937,7 +803,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24404332" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.24404332" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32894737" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24848025" />
@@ -1033,326 +899,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="868" column="57" lean-forward="true" selection-start-line="868" selection-start-column="57" selection-end-line="868" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="221" column="50" selection-start-line="221" selection-start-column="50" selection-end-line="221" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/LMedSRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="562">
-          <caret line="256" lean-forward="true" selection-start-line="203" selection-end-line="256" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROSACRobustTrilateration3DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="429" column="71" selection-start-line="429" selection-start-column="71" selection-end-line="429" selection-end-column="71" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="470" selection-start-line="470" selection-end-line="470" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROSACRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2441">
-          <caret line="361" selection-start-line="358" selection-end-line="361" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="31" column="47" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20171122.105616-5-sources.jar!/com/irurueta/statistics/UniformRandomizer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="363" column="18" selection-start-line="363" selection-start-column="18" selection-end-line="363" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PositionEstimatorHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="173" column="7" lean-forward="true" selection-start-line="173" selection-start-column="7" selection-end-line="173" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20171122.110611-2-sources.jar!/com/irurueta/numerical/robust/RANSACRobustEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="456" selection-start-line="456" selection-end-line="456" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4980">
-          <caret line="368" selection-start-line="368" selection-end-line="368" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="1486" lean-forward="true" selection-start-line="1480" selection-end-line="1486" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LinearPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="559" lean-forward="true" selection-start-line="549" selection-end-line="559" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/PositionEstimatorHelperTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-703">
-          <caret line="56" lean-forward="true" selection-start-line="53" selection-end-line="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RANSACRobustRssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="58" column="59" lean-forward="true" selection-start-line="58" selection-start-column="4" selection-end-line="58" selection-end-column="59" />
-          <folding>
-            <element signature="method#RANSACRobustRssiRadioSourceEstimator2DTest#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#setUpClass#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#tearDownClass#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#setUp#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#tearDown#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testConstructor#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="e#50073#50144#0" />
-            <element signature="e#53640#53717#0" />
-            <element signature="e#57299#57370#0" />
-            <element signature="e#60168#60236#0" />
-            <element signature="e#63060#63137#0" />
-            <element signature="method#testGetSetThreshold#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetComputeAndKeepInliersEnabled#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetComputeAndKeepResidualsEnabled#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetMinReadings#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetInitialTransmittedPowerdBm#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetInitialTransmittedPower#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetInitialPosition#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetInitialPathLossExponent#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetTransmittedPowerEstimationEnabled#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetPositionEstimationEnabled#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetPathLossEstimationEnabled#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetProgressDelta#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetConfidence#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetMaxIterations#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetResultRefined#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testIsSetCovarianceKept#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testAreValidReadings#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetReadings#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetListener#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testGetSetQualityScores#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementWithInlierDataAndNoResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorNoRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementNoInlierDataAndNoResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementNoInlierDataAndWithResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorWithRefinementWithInlierDataAndWithResiduals#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPosition#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPower#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateNoInlierErrorWithInitialPositionAndPower#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateWithInlierErrorWithInitialPositionAndPower#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionTransmittedPowerAndPathLossEstimationEnabled#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionTransmittedPowerAndPathLossEstimationEnabledWithInitialValues#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateWithInitialPathLoss#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateBeacon#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionOnly#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionOnlyWithInitialPosition#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionOnlyRepeated#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateTransmittedPowerOnly#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateTransmittedPowerOnlyWithInitialTransmittedPower#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePathlossOnly#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePathlossOnlyWithInitialPathloss#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionAndPathloss#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimatePositionAndPathlossWithInitialValues#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateTransmittedPowerAndPathloss#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#testEstimateTransmittedPowerAndPathlossWithInitialValues#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#onEstimateStart#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#onEstimateEnd#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#onEstimateNextIteration#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#onEstimateProgressChange#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="method#receivedPower#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-            <element signature="e#365592#365662#0" />
-            <element signature="method#checkLocked#0;class#RANSACRobustRssiRadioSourceEstimator2DTest#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="1654" lean-forward="true" selection-start-line="1654" selection-end-line="1654" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="29" column="3" lean-forward="true" selection-start-line="29" selection-start-column="3" selection-end-line="29" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LMedSRobustRssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-495">
-          <caret line="91" column="19" selection-start-line="91" selection-start-column="19" selection-end-line="91" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/PROSACRobustRssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1234">
-          <caret line="91" column="26" selection-start-line="91" selection-start-column="26" selection-end-line="91" selection-end-column="26" />
-          <folding>
-            <element signature="e#2743#2798#0" />
-            <element signature="e#2804#2856#0" />
-            <element signature="e#2862#2916#0" />
-            <element signature="e#2922#2957#0" />
-            <element signature="e#2963#3000#0" />
-            <element signature="e#3006#142996#0" />
-            <element signature="e#50216#50287#0" />
-            <element signature="e#63131#63202#0" />
-            <element signature="e#143002#143750#0" />
-            <element signature="e#143756#144514#0" />
-            <element signature="e#144520#145292#0" />
-            <element signature="e#145298#147542#0" />
-            <element signature="e#147548#148054#0" />
-            <element signature="e#148060#148610#0" />
-            <element signature="e#148616#149350#0" />
-            <element signature="e#149356#150173#0" />
-            <element signature="e#150179#150691#0" />
-            <element signature="e#150697#151177#0" />
-            <element signature="e#151183#151662#0" />
-            <element signature="e#151668#152619#0" />
-            <element signature="e#152625#153550#0" />
-            <element signature="e#153556#154289#0" />
-            <element signature="e#154295#154936#0" />
-            <element signature="e#154942#155593#0" />
-            <element signature="e#155599#156791#0" />
-            <element signature="e#156797#158760#0" />
-            <element signature="e#158766#159185#0" />
-            <element signature="e#159191#160115#0" />
-            <element signature="e#169078#178033#0" />
-            <element signature="e#178039#186970#0" />
-            <element signature="e#186976#195932#0" />
-            <element signature="e#195938#207101#0" />
-            <element signature="e#207107#218271#0" />
-            <element signature="e#218277#229442#0" />
-            <element signature="e#229448#240712#0" />
-            <element signature="e#240718#252341#0" />
-            <element signature="e#252347#263821#0" />
-            <element signature="e#263827#275665#0" />
-            <element signature="e#275671#287479#0" />
-            <element signature="e#287485#301392#0" />
-            <element signature="e#301398#315469#0" />
-            <element signature="e#315475#326714#0" />
-            <element signature="e#326720#337263#0" />
-            <element signature="e#337269#346515#0" />
-            <element signature="e#346521#355666#0" />
-            <element signature="e#355672#364849#0" />
-            <element signature="e#364855#373490#0" />
-            <element signature="e#373496#382244#0" />
-            <element signature="e#382250#390993#0" />
-            <element signature="e#390999#399841#0" />
-            <element signature="e#399847#411197#0" />
-            <element signature="e#411203#422701#0" />
-            <element signature="e#422707#433851#0" />
-            <element signature="e#433857#445160#0" />
-            <element signature="e#445166#445397#0" />
-            <element signature="e#445403#445630#0" />
-            <element signature="e#445636#445938#0" />
-            <element signature="e#445944#446250#0" />
-            <element signature="e#446380#447032#0" />
-            <element signature="e#446547#446617#0" />
-            <element signature="e#447038#449591#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/Utils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="123" column="7" lean-forward="true" selection-start-line="123" selection-start-column="7" selection-end-line="123" selection-end-column="7" />
-          <folding>
-            <element signature="e#876#909#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/UtilsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="121" column="15" lean-forward="true" selection-start-line="121" selection-start-column="15" selection-end-line="121" selection-end-column="15" />
-          <folding>
-            <element signature="method#testdBmToPowerAndPowerTodBm#0;class#UtilsTest#0" />
-            <element signature="e#17166#17190#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="1913" column="44" lean-forward="true" selection-start-line="1913" selection-start-column="44" selection-end-line="1913" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="721" lean-forward="true" selection-start-line="716" selection-end-line="721" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RANSACRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="221" column="13" selection-start-line="221" selection-start-column="13" selection-end-line="221" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#9038#9039#0" expanded="true" />
-            <element signature="e#9089#9090#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RANSACRobustPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="221" column="13" selection-start-line="221" selection-start-column="13" selection-end-line="221" selection-end-column="13" />
-          <folding>
-            <element signature="e#9038#9039#0" expanded="true" />
-            <element signature="e#9089#9090#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/LMedSRobustPositionEstimator2D.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -1707,6 +1253,203 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/s3-settings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="808" column="33" lean-forward="true" selection-start-line="808" selection-start-column="33" selection-end-line="808" selection-end-column="33" />
+          <folding>
+            <element signature="method#NonLinearPositionEstimator3DTest#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#setUpClass#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#tearDownClass#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#setUp#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#tearDown#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testConstructor#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testGetSetInitialPosition#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testGetSetSources#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testGetSetFingerprint#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testGetSetListener#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#testEstimateNoErrorWithInitialPosition#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#onEstimateStart#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="method#onEstimateEnd#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="e#39470#39471#0" expanded="true" />
+            <element signature="e#39517#39518#0" expanded="true" />
+            <element signature="method#receivedPower#0;class#NonLinearPositionEstimator3DTest#0" />
+            <element signature="e#39532#39602#0" />
+            <element signature="method#checkLocked#0;class#NonLinearPositionEstimator3DTest#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="263" column="18" selection-start-line="263" selection-start-column="18" selection-end-line="263" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="253" lean-forward="true" selection-start-line="253" selection-end-line="253" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicLine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="87" column="13" selection-start-line="87" selection-start-column="13" selection-end-line="87" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="25" column="28" selection-start-line="25" selection-start-column="28" selection-end-line="25" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="102" column="8" lean-forward="true" selection-start-line="102" selection-start-column="8" selection-end-line="102" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Gnomonic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="156" column="24" selection-start-line="156" selection-start-column="24" selection-end-line="156" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="121" column="16" selection-start-line="121" selection-start-column="16" selection-end-line="121" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="175" selection-start-line="173" selection-end-line="175" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="125" column="45" selection-start-line="125" selection-start-column="45" selection-end-line="125" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="635" column="7" lean-forward="true" selection-start-line="635" selection-start-column="7" selection-end-line="635" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="638" column="17" selection-start-line="638" selection-start-column="17" selection-end-line="638" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="82" column="29" selection-start-line="82" selection-start-column="29" selection-end-line="82" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="2787" column="29" selection-start-line="2787" selection-start-column="29" selection-end-line="2787" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="349">
+          <caret line="90" selection-start-line="87" selection-end-line="90" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="100" column="5" lean-forward="true" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="103" column="5" lean-forward="true" selection-start-line="103" selection-start-column="5" selection-end-line="103" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="80" selection-start-line="78" selection-end-line="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="79" column="8" lean-forward="true" selection-start-line="79" selection-start-column="8" selection-end-line="79" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="2787" column="38" selection-start-line="2787" selection-start-column="38" selection-end-line="2787" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="120" column="65" selection-start-line="120" selection-start-column="65" selection-end-line="120" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="164" column="39" selection-start-line="164" selection-start-column="39" selection-end-line="164" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="57" selection-start-line="4" selection-end-line="4" selection-end-column="57" />
         </state>
       </provider>
     </entry>

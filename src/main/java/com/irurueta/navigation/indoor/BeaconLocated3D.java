@@ -124,7 +124,8 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
      * @param serviceUuid a 32 bit service uuid for the beacon.
      * @param bluetoothName the bluetooth device name.
      * @param position position where beacon is located.
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if either identifiers or position are null or
+     * frequency is negative.
      */
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
             double frequency, String bluetoothAddress, int beaconTypeCode,

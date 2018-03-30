@@ -2293,6 +2293,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
+     * @param readings signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @return a new robust 2D position radio source estimator.
@@ -2789,6 +2790,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined result.
      * solution if not requested or refinement failed.
+     * @param result result to be refined.
      */
     protected void attemptRefine(Solution<Point2D> result) {
         Point2D initialPosition = result.getEstimatedPosition();

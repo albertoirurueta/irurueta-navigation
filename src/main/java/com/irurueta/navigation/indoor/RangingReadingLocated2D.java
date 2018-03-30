@@ -76,6 +76,8 @@ public class RangingReadingLocated2D<S extends RadioSource> extends RangingReadi
      * @param distance distance in meters to the radio source.
      * @param position position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param positionCovariance covariance of inhomogeneous coordinates of
+     *                           current position (if available).
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
      * position is null or standard deviation is zero or negative.
      */

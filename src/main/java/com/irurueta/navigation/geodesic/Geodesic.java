@@ -116,7 +116,7 @@ package com.irurueta.navigation.geodesic;
  *         (This occurs when the longitude difference is near &plusmn;180&deg; for oblate ellipsoids.)
  *     </li>
  *     <li>
- *         <i>lon2</i> = <i>lon1</i> &plusm; 180&deg; (with neither point at pole). If <i>azi1</i> = 0&deg; or
+ *         <i>lon2</i> = <i>lon1</i> + 180&deg; (with neither point at pole). If <i>azi1</i> = 0&deg; or
  *         &plusmn;180&deg;, the geodesic is unique. Otherwise there are two geodesics and the second one is obtained
  *         by setting [<i>azi1</i>, <i>azi2</i>] &rarr; [&minus;<i>azi1</i>, &minus;<i>azi2</i>], <i>S12</i> &rarr;
  *         &minus; <i>S12</i>. (This occurs when <i>lat2</i> is near &minus;<i>lat1</i> for prolate ellipsoids.)
@@ -220,7 +220,7 @@ public class Geodesic {
     protected static final int NC4X = (NC4 * (NC4 + 1)) / 2;
 
     /**
-     * Underflow guard. We require TINY * epsilon() > 0 and TINY + epsilon() == epsilon()
+     * Underflow guard. We require TINY * epsilon() &lt; 0 and TINY + epsilon() == epsilon()
      */
     protected static final double TINY = Math.sqrt(GeoMath.MIN);
 
@@ -763,6 +763,11 @@ public class Geodesic {
      *  - sigma = s = 0
      * - a 12 suggix means a difference, e.g., s12 = s2 - s1.
      * - s and c prefixes mean sin and cos
+     * @param sinp sinus of p
+     * @param sinx sinus of x
+     * @param cosx cosinus of x
+     * @param c c
+     * @return sin cos series.
      */
     protected static double sinCosSeries(boolean sinp, double sinx, double cosx, double[] c) {
         //evaluate
