@@ -15,11 +15,13 @@
  */
 package com.irurueta.navigation.units;
 
+import java.io.Serializable;
+
 /**
  * Base class to define a measurement unit and value.
  * @param <T> a measurement unit.
  */
-public abstract class Measurement<T extends Enum> {
+public abstract class Measurement<T extends Enum> implements Serializable {
 
     /**
      * Measurement value.

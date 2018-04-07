@@ -2,29 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/s3-settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/s3-settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/Geodesic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicMask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GnomonicData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconLocated3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/BeaconWithPowerAndLocated3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilaterationSolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator3DTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -95,12 +74,48 @@
     <favorites_list name="irurueta-navigation" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" column="57" selection-start-line="4" selection-end-line="4" selection-end-column="57" />
+              <caret line="4" column="57" lean-forward="true" selection-start-line="4" selection-end-line="4" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Distance.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Surface.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DistanceFormatter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MeasureFormatter.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-6340">
+              <caret line="64" column="51" lean-forward="true" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -166,7 +181,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/PositionEstimatorHelperTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/Utils.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/UtilsTest.java" />
@@ -217,6 +231,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiReadingLocated.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" />
       </list>
     </option>
   </component>
@@ -249,7 +264,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="7" />
     <option name="y" value="23" />
     <option name="width" value="1427" />
@@ -406,7 +421,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="indoor" type="462c0819:PsiDirectoryNode" />
+              <item name="units" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
@@ -729,6 +744,7 @@
       <workItem from="1522224065687" duration="70652000" />
       <workItem from="1522406460172" duration="104000" />
       <workItem from="1522406694344" duration="22607000" />
+      <workItem from="1523103895946" duration="2066000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -773,7 +789,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1232953000" />
+    <option name="totallyTimeSpent" value="1235019000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -785,70 +801,69 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="7" y="23" width="1427" height="857" extended-state="0" />
-    <editor active="true" />
+    <frame x="7" y="23" width="1427" height="857" extended-state="1" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32939634" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.328084" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50303954" side_tool="true" weight="0.30971128" />
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.32943755" />
-      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4969605" visible="true" weight="0.30921054" />
-      <window_info anchor="right" id="Coverage" order="4" side_tool="true" weight="0.36101082" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4969605" weight="0.30921054" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.24404332" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24404332" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32894737" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24848025" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" weight="0.3295711" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.38451442" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.328084" />
       <window_info anchor="bottom" id="Thumbnails" order="8" weight="0.32939634" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="Coverage" order="4" side_tool="true" weight="0.36101082" />
       <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32894737" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32939634" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="Designer" order="3" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
-      <window_info id="Capture Tool" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4969605" weight="0.30971128" />
       <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.328084" />
       <window_info anchor="bottom" id="Thumbnails" order="11" weight="0.32939634" />
       <window_info id="Structure" order="1" weight="0.24848025" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4969605" weight="0.30971128" />
       <window_info id="Image Layers" order="5" />
-      <window_info id="Designer" order="3" />
+      <window_info id="Capture Tool" order="2" />
       <window_info id="UI Designer" order="4" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32939634" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27963525" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.38451442" />
-      <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.362462" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50303954" side_tool="true" weight="0.30971128" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="6" side_tool="true" weight="0.3295711" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.328084" />
+      <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="Maven Projects" order="4" weight="0.32943755" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27963525" />
+      <window_info id="Favorites" order="6" side_tool="true" weight="0.3295711" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -899,104 +914,10 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/LMedSRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="201" column="13" selection-start-line="201" selection-start-column="13" selection-end-line="201" selection-end-column="13" />
-          <folding>
-            <element signature="e#8708#8709#0" expanded="true" />
-            <element signature="e#8758#8759#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/LMedSRobustPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="203" column="13" selection-start-line="203" selection-start-column="13" selection-end-line="203" selection-end-column="13" />
-          <folding>
-            <element signature="e#8732#8733#0" expanded="true" />
-            <element signature="e#8782#8783#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="519">
-          <caret line="177" column="13" selection-start-line="177" selection-start-column="13" selection-end-line="177" selection-end-column="13" />
-          <folding>
-            <element signature="e#7102#7103#0" expanded="true" />
-            <element signature="e#7151#7152#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="177" column="13" selection-start-line="177" selection-start-column="13" selection-end-line="177" selection-end-column="13" />
-          <folding>
-            <element signature="e#7102#7103#0" expanded="true" />
-            <element signature="e#7151#7152#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROSACRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="402" lean-forward="true" selection-start-line="394" selection-end-line="402" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#16940#16941#0" expanded="true" />
-            <element signature="e#16989#16990#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROSACRobustPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="519">
-          <caret line="398" column="13" selection-start-line="398" selection-start-column="13" selection-end-line="398" selection-end-column="13" />
-          <folding>
-            <element signature="e#1298#1331#0" expanded="true" />
-            <element signature="e#16944#16945#0" expanded="true" />
-            <element signature="e#16995#16996#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="382" lean-forward="true" selection-start-line="374" selection-end-line="382" />
-          <folding>
-            <element signature="e#16657#16658#0" expanded="true" />
-            <element signature="e#16708#16709#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustPositionEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="380" selection-start-line="380" selection-end-line="380" />
-          <folding>
-            <element signature="e#1300#1333#0" expanded="true" />
-            <element signature="e#16709#16710#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RANSACRobustPositionEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="274">
           <caret line="1125" column="28" lean-forward="true" selection-start-line="1125" selection-start-column="28" selection-end-line="1125" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#48160#48184#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1011,9 +932,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
           <caret line="1069" column="5" lean-forward="true" selection-start-line="1069" selection-start-column="5" selection-end-line="1069" selection-end-column="5" />
-          <folding>
-            <element signature="e#44705#44729#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1028,9 +946,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="316">
           <caret line="1073" column="31" selection-start-line="1073" selection-start-column="31" selection-end-line="1073" selection-end-column="31" />
-          <folding>
-            <element signature="e#45036#45060#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1045,9 +960,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-9484">
           <caret line="919" column="8" selection-start-line="919" selection-start-column="8" selection-end-line="919" selection-end-column="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1055,9 +967,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-376">
           <caret line="918" column="8" selection-start-line="918" selection-start-column="8" selection-end-line="918" selection-end-column="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1065,45 +974,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="350">
           <caret line="470" lean-forward="true" selection-start-line="470" selection-end-line="470" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3637#3638#0" expanded="true" />
-            <element signature="e#3659#3660#0" expanded="true" />
-            <element signature="e#6705#6706#0" expanded="true" />
-            <element signature="e#6761#6762#0" expanded="true" />
-            <element signature="e#7745#7746#0" expanded="true" />
-            <element signature="e#7802#7803#0" expanded="true" />
-            <element signature="e#8677#8678#0" expanded="true" />
-            <element signature="e#8731#8732#0" expanded="true" />
-            <element signature="e#8996#8997#0" expanded="true" />
-            <element signature="e#9058#9059#0" expanded="true" />
-            <element signature="e#10094#10095#0" expanded="true" />
-            <element signature="e#10153#10154#0" expanded="true" />
-            <element signature="e#11198#11199#0" expanded="true" />
-            <element signature="e#11260#11261#0" expanded="true" />
-            <element signature="e#12209#12210#0" expanded="true" />
-            <element signature="e#12270#12271#0" expanded="true" />
-            <element signature="e#13031#13032#0" expanded="true" />
-            <element signature="e#13093#13094#0" expanded="true" />
-            <element signature="e#13880#13881#0" expanded="true" />
-            <element signature="e#13940#13941#0" expanded="true" />
-            <element signature="e#14122#14123#0" expanded="true" />
-            <element signature="e#14180#14181#0" expanded="true" />
-            <element signature="e#14480#14481#0" expanded="true" />
-            <element signature="e#14538#14539#0" expanded="true" />
-            <element signature="e#14877#14878#0" expanded="true" />
-            <element signature="e#14952#14953#0" expanded="true" />
-            <element signature="e#15124#15125#0" expanded="true" />
-            <element signature="e#15177#15178#0" expanded="true" />
-            <element signature="e#15552#15553#0" expanded="true" />
-            <element signature="e#15579#15580#0" expanded="true" />
-            <element signature="e#16567#16568#0" expanded="true" />
-            <element signature="e#16626#16627#0" expanded="true" />
-            <element signature="e#16748#16749#0" expanded="true" />
-            <element signature="e#16814#16815#0" expanded="true" />
-            <element signature="e#16981#16982#0" expanded="true" />
-            <element signature="e#17048#17049#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1111,9 +981,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="335">
           <caret line="46" column="30" lean-forward="true" selection-start-line="46" selection-start-column="30" selection-end-line="46" selection-end-column="30" />
-          <folding>
-            <element signature="method#testCreate#0;class#RobustRssiRadioSourceEstimator2DTest#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1121,75 +988,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
           <caret line="740" column="27" selection-start-line="740" selection-start-column="27" selection-end-line="740" selection-end-column="27" />
-          <folding>
-            <element signature="docComment;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#RobustPositionEstimator2D#0;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#RobustPositionEstimator2D#1;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#getMinRequiredSources#0;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#0;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#0;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#1;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#1;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#2;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#2;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#3;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#3;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#4;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#4;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#5;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#5;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#6;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#6;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#7;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#7;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#8;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#8;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#9;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#9;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#10;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#10;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#11;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#11;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#12;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#12;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#13;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#13;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#14;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#14;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#15;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#15;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#16;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#17;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#17;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#18;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#18;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#19;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#19;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#20;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#20;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#21;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#21;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#22;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#22;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#23;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#23;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#24;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#24;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#25;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#25;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#26;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#26;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#27;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#27;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#28;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#28;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#29;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#30;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#create#31;class#RobustPositionEstimator2D#0" />
-            <element signature="method#create#31;class#RobustPositionEstimator2D#0" />
-            <element signature="docComment;method#setPositionsDistancesDistanceStandardDeviationsAndQualityScores#0;class#RobustPositionEstimator2D#0" />
-            <element signature="method#setPositionsDistancesDistanceStandardDeviationsAndQualityScores#0;class#RobustPositionEstimator2D#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1197,10 +995,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
           <caret line="969" column="60" lean-forward="true" selection-start-line="28" selection-start-column="43" selection-end-line="969" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#testCreate#0;class#RobustPositionEstimator2DTest#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1208,9 +1002,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
           <caret line="190" selection-start-line="188" selection-end-line="190" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1218,9 +1009,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="200">
           <caret line="403" column="45" selection-start-line="403" selection-start-column="45" selection-end-line="403" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1228,10 +1016,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="106">
           <caret line="520" column="25" lean-forward="true" selection-start-line="520" selection-start-column="25" selection-end-line="520" selection-end-column="25" />
-          <folding>
-            <element signature="e#24956#24957#0" expanded="true" />
-            <element signature="e#25008#25009#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1267,28 +1051,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="328">
           <caret line="808" column="33" lean-forward="true" selection-start-line="808" selection-start-column="33" selection-end-line="808" selection-end-column="33" />
-          <folding>
-            <element signature="method#NonLinearPositionEstimator3DTest#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#setUpClass#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#tearDownClass#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#setUp#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#tearDown#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testConstructor#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testGetSetInitialPosition#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testIsSetRadioSourcePositionCovarianceUsed#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testGetSetFallbackDistanceStandardDeviation#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testGetSetSources#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testGetSetFingerprint#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testGetSetListener#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#testEstimateNoErrorWithInitialPosition#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#onEstimateStart#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="method#onEstimateEnd#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="e#39470#39471#0" expanded="true" />
-            <element signature="e#39517#39518#0" expanded="true" />
-            <element signature="method#receivedPower#0;class#NonLinearPositionEstimator3DTest#0" />
-            <element signature="e#39532#39602#0" />
-            <element signature="method#checkLocked#0;class#NonLinearPositionEstimator3DTest#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1446,10 +1208,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Time.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="4" column="57" selection-start-line="4" selection-end-line="4" selection-end-column="57" />
+          <caret line="4" column="57" lean-forward="true" selection-start-line="4" selection-end-line="4" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/lang/Cloneable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="52" column="17" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-597">
+          <caret line="42" column="29" selection-start-line="42" selection-start-column="23" selection-end-line="42" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="23" column="46" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6340">
+          <caret line="64" column="51" lean-forward="true" selection-start-line="64" selection-start-column="24" selection-end-line="64" selection-end-column="51" />
         </state>
       </provider>
     </entry>
