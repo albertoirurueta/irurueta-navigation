@@ -794,7 +794,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
             assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
-            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertTrue(position.equals(estimatedPosition, 10.0 * ABSOLUTE_ERROR));
         }
 
         //force NotReadyException

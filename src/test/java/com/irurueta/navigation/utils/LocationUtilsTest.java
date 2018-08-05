@@ -17,8 +17,8 @@ package com.irurueta.navigation.utils;
 
 import com.irurueta.navigation.geodesic.Geodesic;
 import com.irurueta.navigation.geodesic.GeodesicData;
-import com.irurueta.navigation.units.Distance;
-import com.irurueta.navigation.units.DistanceUnit;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceUnit;
 import org.junit.*;
 
 import static org.junit.Assert.*;

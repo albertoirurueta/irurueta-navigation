@@ -22,5 +22,6 @@
     <orderEntry type="library" name="Maven: com.irurueta:irurueta-sorting:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.irurueta:irurueta-algebra:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.irurueta:irurueta-geometry:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.irurueta:irurueta-units:1.0-SNAPSHOT" level="project" />
   </component>
 </module>

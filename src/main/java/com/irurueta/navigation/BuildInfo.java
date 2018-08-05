@@ -36,7 +36,7 @@ public class BuildInfo {
     private static final Logger LOGGER = Logger.getLogger(BuildInfo.class.getName());
 
     /**
-     * LocationUtils of properties file that contains build data.
+     * Properties file that contains build data.
      * Build data is stored in this file, which is modified each time that compilation is
      * run in the CI server.
      */
