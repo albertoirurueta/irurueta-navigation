@@ -25,6 +25,7 @@ import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.DistanceUnit;
 import org.junit.*;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,9 @@ public class Accuracy3DTest {
     private static final double MIN_ANGLE_DEGREES = 0.0;
     private static final double MAX_ANGLE_DEGREES = 90.0;
     private static final double ABSOLUTE_ERROR = 1e-6;
+
+    private static final double MIN_RANDOM_VALUE = -10.0;
+    private static final double MAX_RANDOM_VALUE = 10.0;
 
     private static final int TIMES = 50;
 
@@ -80,6 +84,12 @@ public class Accuracy3DTest {
                 semiAxesLengths[i] = previous + randomizer.nextDouble();
                 previous = semiAxesLengths[i];
             }
+
+            double[] sqrSemiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+            for (int i = 0; i < Ellipsoid.DIMENSIONS; i++) {
+                sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
+            }
+
             double roll = Utils.convertToRadians(randomizer.nextDouble(
                     MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             double pitch = Utils.convertToRadians(randomizer.nextDouble(
@@ -92,7 +102,7 @@ public class Accuracy3DTest {
 
             Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
             Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
-                    Matrix.diagonal(semiAxesLengths).multiplyAndReturnNew(rotationMatrix));
+                    Matrix.diagonal(sqrSemiAxesLengths).multiplyAndReturnNew(rotationMatrix));
 
             accuracy = new Accuracy3D(covarianceMatrix);
 
@@ -263,6 +273,34 @@ public class Accuracy3DTest {
                 fail("NonSymmetricPositiveDefiniteMatrixException expected but not thrown");
             } catch (NonSymmetricPositiveDefiniteMatrixException ignore) { }
             assertNull(accuracy);
+
+
+            //test constructor with internal accuracy
+            accuracy = new Accuracy3D(new com.irurueta.geometry.Accuracy3D(conf));
+
+            //check default values
+            assertNull(accuracy.getCovarianceMatrix());
+            assertTrue(accuracy.getStandardDeviationFactor() > 0.0);
+            assertEquals(accuracy.getStandardDeviationFactor(),
+                    NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0), 0.0);
+            assertEquals(accuracy.getConfidence(), conf, 0.0);
+
+            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
+                    Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(accuracy.getSmallestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+
+            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
+                    Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(accuracy.getLargestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+
+            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
+                    Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(accuracy.getAverageAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+
+            assertEquals(accuracy.getNumberOfDimensions(), 3);
         }
     }
 
@@ -350,7 +388,7 @@ public class Accuracy3DTest {
     }
 
     @Test
-    public void testFlattenTo2D() throws AlgebraException {
+    public void testFlattenTo2D() throws AlgebraException, GeometryException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double[] semiAxesLengths = new double[Ellipsoid.DIMENSIONS];
         double previous = 0.0;
@@ -358,6 +396,12 @@ public class Accuracy3DTest {
             semiAxesLengths[i] = previous + randomizer.nextDouble();
             previous = semiAxesLengths[i];
         }
+
+        double[] sqrSemiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+        for (int i = 0; i < Ellipsoid.DIMENSIONS; i++) {
+            sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
+        }
+
         double roll = Utils.convertToRadians(randomizer.nextDouble(
                 MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
         double pitch = Utils.convertToRadians(randomizer.nextDouble(
@@ -368,22 +412,144 @@ public class Accuracy3DTest {
 
         Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
         Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
-                Matrix.diagonal(semiAxesLengths).multiplyAndReturnNew(rotationMatrix));
+                Matrix.diagonal(sqrSemiAxesLengths).multiplyAndReturnNew(rotationMatrix));
 
         Accuracy3D accuracy = new Accuracy3D(covarianceMatrix);
 
         Accuracy2D flattenedAccuracy = accuracy.flattenTo2D();
 
-        assertEquals(flattenedAccuracy.getCovarianceMatrix(),
-                covarianceMatrix.getSubmatrix(0, 0,
-                        1, 1));
-        assertEquals(flattenedAccuracy.getStandardDeviationFactor(),
-                accuracy.getStandardDeviationFactor(), 0.0);
-        assertEquals(flattenedAccuracy.getConfidence(), accuracy.getConfidence(), 0.0);
+        Ellipse ellipse = accuracy.intersectWithPlane();
+        Ellipse flattenedEllipse = flattenedAccuracy.toEllipse();
 
-        LOGGER.log(Level.INFO, "Avg accuracy 2D: {0} m",
-                flattenedAccuracy.getAverageAccuracy());
-        LOGGER.log(Level.INFO, "Avg accuracy 3D: {0} m",
-                accuracy.getAverageAccuracy());
+        assertEquals(ellipse.getSemiMajorAxis(),
+                flattenedEllipse.getSemiMajorAxis(), ABSOLUTE_ERROR);
+        assertEquals(ellipse.getSemiMinorAxis(),
+                flattenedEllipse.getSemiMinorAxis(), ABSOLUTE_ERROR);
+        //because ellipses are symmetric, there is a rotation ambiguity
+        assertTrue(Math.abs(ellipse.getRotationAngle() - flattenedEllipse.getRotationAngle()) <= ABSOLUTE_ERROR ||
+                Math.abs(Math.abs(ellipse.getRotationAngle() - flattenedEllipse.getRotationAngle()) - Math.PI) <= ABSOLUTE_ERROR);
+
+        assertEquals(ellipse.getCenter(), Point2D.create());
+        assertEquals(flattenedEllipse.getCenter(), Point2D.create());
+    }
+
+    @Test
+    public void testIntersectWithPlaneSphere() throws AlgebraException, GeometryException {
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            double radius = Math.abs(randomizer.nextDouble(MIN_RANDOM_VALUE,
+                    MAX_RANDOM_VALUE));
+            double[] sqrSemiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+            Arrays.fill(sqrSemiAxesLengths, radius * radius);
+
+            double roll = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            double pitch = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            double yaw = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            Rotation3D rotation = new MatrixRotation3D(new Quaternion(roll, pitch, yaw));
+
+            Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+            Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
+                    Matrix.diagonal(sqrSemiAxesLengths).multiplyAndReturnNew(rotationMatrix));
+
+            com.irurueta.geometry.Accuracy3D accuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
+
+            Ellipse ellipse = accuracy.intersectWithPlane();
+
+            //check
+            assertEquals(ellipse.getCenter(), Point2D.create());
+            assertEquals(ellipse.getSemiMajorAxis(),
+                    radius * accuracy.getStandardDeviationFactor(), ABSOLUTE_ERROR);
+            assertEquals(ellipse.getSemiMinorAxis(),
+                    radius * accuracy.getStandardDeviationFactor(), ABSOLUTE_ERROR);
+        }
+    }
+
+    @Test
+    public void testIntersectWithPlaneEllipsoid() throws AlgebraException, GeometryException {
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            double[] semiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+            double previous = 0.0;
+            for (int i = Ellipsoid.DIMENSIONS - 1; i >= 0; i--) {
+                semiAxesLengths[i] = previous + randomizer.nextDouble();
+                previous = semiAxesLengths[i];
+            }
+
+            double[] sqrSemiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+            for (int i = 0; i < Ellipsoid.DIMENSIONS; i++) {
+                sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
+            }
+
+
+            double roll = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            double pitch = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            double yaw = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            Rotation3D rotation = new MatrixRotation3D(new Quaternion(roll, pitch, yaw));
+
+            Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+            Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
+                    Matrix.diagonal(sqrSemiAxesLengths).multiplyAndReturnNew(rotationMatrix));
+
+            Accuracy3D accuracy = new Accuracy3D(covarianceMatrix);
+            accuracy.setStandardDeviationFactor(1.0);
+
+            Ellipse ellipse = accuracy.intersectWithPlane();
+
+            //chck
+            assertEquals(ellipse.getCenter(), Point2D.create());
+            assertTrue(ellipse.getSemiMajorAxis() <= semiAxesLengths[0] &&
+                    ellipse.getSemiMajorAxis() >= semiAxesLengths[2]);
+            assertTrue(ellipse.getSemiMinorAxis() <= semiAxesLengths[0] &&
+                    ellipse.getSemiMinorAxis() >= semiAxesLengths[2]);
+            assertTrue(ellipse.getSemiMajorAxis() >= ellipse.getSemiMinorAxis());
+        }
+    }
+
+    @Test
+    public void testIntersectWithPlaneEllipsoidOnlyZAxisRotation() throws AlgebraException, GeometryException {
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            double[] semiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+            double previous = 0.0;
+            for (int i = Ellipsoid.DIMENSIONS - 1; i >= 0; i--) {
+                semiAxesLengths[i] = previous + randomizer.nextDouble();
+                previous = semiAxesLengths[i];
+            }
+
+            double[] sqrSemiAxesLengths = new double[Ellipsoid.DIMENSIONS];
+            for (int i = 0; i < Ellipsoid.DIMENSIONS; i++) {
+                sqrSemiAxesLengths[i] = semiAxesLengths[i] * semiAxesLengths[i];
+            }
+
+
+            double angle = Utils.convertToRadians(randomizer.nextDouble(
+                    MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            double[] axis = new double[]{0.0, 0.0, 1.0};
+            AxisRotation3D rotation = new AxisRotation3D(axis, angle);
+
+            Matrix rotationMatrix = rotation.asInhomogeneousMatrix();
+            Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
+                    Matrix.diagonal(sqrSemiAxesLengths).multiplyAndReturnNew(rotationMatrix));
+
+            Accuracy3D accuracy = new Accuracy3D(covarianceMatrix);
+            accuracy.setStandardDeviationFactor(1.0);
+
+            Ellipse ellipse = accuracy.intersectWithPlane();
+
+            //chck
+            assertEquals(ellipse.getCenter(), Point2D.create());
+            assertEquals(ellipse.getSemiMajorAxis(), semiAxesLengths[0], ABSOLUTE_ERROR);
+            assertEquals(ellipse.getSemiMinorAxis(), semiAxesLengths[1], ABSOLUTE_ERROR);
+
+            //because ellipses are symmetric, there is a rotation ambiguity
+            assertTrue(Math.abs(ellipse.getRotationAngle() - angle) <= ABSOLUTE_ERROR ||
+                    Math.abs(Math.abs(ellipse.getRotationAngle() - angle) - Math.PI) <= ABSOLUTE_ERROR);
+        }
     }
 }

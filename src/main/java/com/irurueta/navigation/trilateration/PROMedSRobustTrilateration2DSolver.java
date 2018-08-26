@@ -586,6 +586,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
+            innerEstimator.setUseInlierThresholds(false);
             Point2D result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             return attemptRefine(result);

@@ -586,6 +586,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
+            innerEstimator.setUseInlierThresholds(false);
             Point3D result = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
             return attemptRefine(result);

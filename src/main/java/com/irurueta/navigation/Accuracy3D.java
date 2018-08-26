@@ -17,8 +17,9 @@ package com.irurueta.navigation;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
-import com.irurueta.geometry.AccuracyPoint3D;
+import com.irurueta.geometry.Ellipse;
 import com.irurueta.geometry.Ellipsoid;
+import com.irurueta.geometry.GeometryException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 
 /**
@@ -26,13 +27,13 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
  * requested confidence.
  */
 @SuppressWarnings("WeakerAccess")
-public class Accuracy3D extends Accuracy<AccuracyPoint3D> {
+public class Accuracy3D extends Accuracy<com.irurueta.geometry.Accuracy3D> {
 
     /**
      * Constructor.
      */
     public Accuracy3D() {
-        mInternalAccuracy = new AccuracyPoint3D();
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D();
     }
 
     /**
@@ -46,7 +47,7 @@ public class Accuracy3D extends Accuracy<AccuracyPoint3D> {
      */
     public Accuracy3D(Matrix covarianceMatrix) throws IllegalArgumentException,
             NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new AccuracyPoint3D(covarianceMatrix);
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix);
     }
 
     /**
@@ -55,7 +56,7 @@ public class Accuracy3D extends Accuracy<AccuracyPoint3D> {
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
     public Accuracy3D(double confidence) throws IllegalArgumentException {
-        mInternalAccuracy = new AccuracyPoint3D(confidence);
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(confidence);
     }
 
     /**
@@ -72,14 +73,14 @@ public class Accuracy3D extends Accuracy<AccuracyPoint3D> {
     public Accuracy3D(Matrix covarianceMatrix, double confidence)
             throws IllegalArgumentException,
             NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new AccuracyPoint3D(covarianceMatrix, confidence);
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy3D(covarianceMatrix, confidence);
     }
 
     /**
      * Constructor.
      * @param internalAccuracy internal accuracy to be set.
      */
-    Accuracy3D(AccuracyPoint3D internalAccuracy) {
+    Accuracy3D(com.irurueta.geometry.Accuracy3D internalAccuracy) {
         super(internalAccuracy);
     }
 
@@ -100,11 +101,20 @@ public class Accuracy3D extends Accuracy<AccuracyPoint3D> {
      * ignoring variance related to z coordinates.
      * @return flattened accuracy representation in 2D.
      * @throws NullPointerException if covariance matrix is not defined.
-     * @throws NonSymmetricPositiveDefiniteMatrixException if covariance matrix is not symmetric and
-     * positive definite.
+     * @throws GeometryException if accuracy cannot be flattened.
      */
-    public Accuracy2D flattenTo2D() throws NullPointerException,
-            NonSymmetricPositiveDefiniteMatrixException {
+    public Accuracy2D flattenTo2D() throws NullPointerException, GeometryException {
         return new Accuracy2D(mInternalAccuracy.flattenTo2D());
+    }
+
+    /**
+     * Intersects ellipsoid representing this accuracy with horizontal xy plane.
+     * @return intersected ellipse.
+     * @throws NullPointerException if covariance matrix is not defined.
+     * @throws GeometryException if intersection cannot be computed.
+     */
+    public Ellipse intersectWithPlane() throws NullPointerException,
+            GeometryException {
+        return mInternalAccuracy.intersectWithPlane();
     }
 }

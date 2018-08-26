@@ -17,7 +17,6 @@ package com.irurueta.navigation;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
-import com.irurueta.geometry.AccuracyPoint;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 
@@ -29,7 +28,7 @@ import com.irurueta.units.DistanceUnit;
  * @param <A> type of internal accuracy.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class Accuracy<A extends AccuracyPoint> {
+public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Internal accuracy rference.

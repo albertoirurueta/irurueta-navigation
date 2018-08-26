@@ -198,6 +198,8 @@ public abstract class RobustPositionEstimator<P extends Point> {
             throw new LockedException();
         }
         mUseRadioSourcePositionCovariance = useRadioSourcePositionCovariance;
+
+        buildPositionsDistancesDistanceStandardDeviationsAndQualityScores();
     }
 
     /**
@@ -222,6 +224,8 @@ public abstract class RobustPositionEstimator<P extends Point> {
             throw new LockedException();
         }
         mFallbackDistanceStandardDeviation = fallbackDistanceStandardDeviation;
+
+        buildPositionsDistancesDistanceStandardDeviationsAndQualityScores();
     }
 
     /**

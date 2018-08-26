@@ -1893,7 +1893,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             if (solver.getInliersData() != null) {
                 assertNotNull(solver.getInliersData());
                 assertNotNull(solver.getInliersData().getInliers());
@@ -1990,7 +1990,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
                 continue;
             }
             assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-            assertNull(solver.getCovariance());
+            assertNotNull(solver.getCovariance());
             if (solver.getInliersData() != null) {
                 assertNotNull(solver.getInliersData());
                 assertNotNull(solver.getInliersData().getInliers());

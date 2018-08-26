@@ -17,7 +17,6 @@ package com.irurueta.navigation;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
-import com.irurueta.geometry.AccuracyPoint2D;
 import com.irurueta.geometry.Ellipse;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 
@@ -26,13 +25,13 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
  * requested confidence.
  */
 @SuppressWarnings("WeakerAccess")
-public class Accuracy2D extends Accuracy<AccuracyPoint2D> {
+public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
 
     /**
      * Constructor.
      */
     public Accuracy2D() {
-        mInternalAccuracy = new AccuracyPoint2D();
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D();
     }
 
     /**
@@ -46,7 +45,7 @@ public class Accuracy2D extends Accuracy<AccuracyPoint2D> {
      */
     public Accuracy2D(Matrix covarianceMatrix) throws IllegalArgumentException,
             NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new AccuracyPoint2D(covarianceMatrix);
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);
     }
 
     /**
@@ -55,7 +54,7 @@ public class Accuracy2D extends Accuracy<AccuracyPoint2D> {
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
     public Accuracy2D(double confidence) throws IllegalArgumentException {
-        mInternalAccuracy = new AccuracyPoint2D(confidence);
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);
     }
 
     /**
@@ -71,14 +70,14 @@ public class Accuracy2D extends Accuracy<AccuracyPoint2D> {
      */
     public Accuracy2D(Matrix covarianceMatrix, double confidence)
             throws IllegalArgumentException, NonSymmetricPositiveDefiniteMatrixException {
-        mInternalAccuracy = new AccuracyPoint2D(covarianceMatrix, confidence);
+        mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);
     }
 
     /**
      * Constructor.
      * @param internalAccuracy internal accuracy to be set.
      */
-    Accuracy2D(AccuracyPoint2D internalAccuracy) {
+    Accuracy2D(com.irurueta.geometry.Accuracy2D internalAccuracy) {
         super(internalAccuracy);
     }
 

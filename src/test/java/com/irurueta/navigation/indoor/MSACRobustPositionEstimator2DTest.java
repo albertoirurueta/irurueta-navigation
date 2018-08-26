@@ -877,7 +877,7 @@ public class MSACRobustPositionEstimator2DTest implements
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
                 avgInvalidPositionStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2*TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(

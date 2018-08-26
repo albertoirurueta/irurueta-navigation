@@ -729,6 +729,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
             PositionEstimationException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
+        int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -794,8 +795,15 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
             assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+            if (!position.equals(estimatedPosition, 10.0 * ABSOLUTE_ERROR)) {
+                continue;
+            }
             assertTrue(position.equals(estimatedPosition, 10.0 * ABSOLUTE_ERROR));
+
+            numValid++;
         }
+
+        assertTrue(numValid > 0);
 
         //force NotReadyException
         NonLinearPositionEstimator2D estimator = new NonLinearPositionEstimator2D();

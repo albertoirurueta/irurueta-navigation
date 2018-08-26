@@ -79,7 +79,9 @@ public class Accuracy2DTest {
             Rotation2D rotation2D = new Rotation2D(rotationAngle);
             Matrix rotationMatrix = rotation2D.asInhomogeneousMatrix();
             Matrix covarianceMatrix = rotationMatrix.multiplyAndReturnNew(
-                    Matrix.diagonal(new double[]{semiMajorAxis, semiMinorAxis}).
+                    Matrix.diagonal(new double[]{
+                            semiMajorAxis * semiMajorAxis,
+                            semiMinorAxis * semiMinorAxis}).
                             multiplyAndReturnNew(rotationMatrix));
 
             accuracy = new Accuracy2D(covarianceMatrix);
@@ -244,6 +246,34 @@ public class Accuracy2DTest {
                 fail("NonSymmetricPositiveDefiniteMatrixException expected but not thrown");
             } catch (NonSymmetricPositiveDefiniteMatrixException ignore) { }
             assertNull(accuracy);
+
+
+            //test constructor with internal accuracy
+            accuracy = new Accuracy2D(new com.irurueta.geometry.Accuracy2D(conf));
+
+            //check default values
+            assertNull(accuracy.getCovarianceMatrix());
+            assertTrue(accuracy.getStandardDeviationFactor() > 0.0);
+            assertEquals(accuracy.getStandardDeviationFactor(),
+                    NormalDist.invcdf((conf + 1.0) / 2.0, 0.0, 1.0), 0.0);
+            assertEquals(accuracy.getConfidence(), conf, 0.0);
+
+            assertEquals(accuracy.getSmallestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(accuracy.getSmallestAccuracy().getValue().doubleValue(),
+                    Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(accuracy.getSmallestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+
+            assertEquals(accuracy.getLargestAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(accuracy.getLargestAccuracy().getValue().doubleValue(),
+                    Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(accuracy.getLargestAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+
+            assertEquals(accuracy.getAverageAccuracy().getUnit(), DistanceUnit.METER);
+            assertEquals(accuracy.getAverageAccuracy().getValue().doubleValue(),
+                    Double.POSITIVE_INFINITY, 0.0);
+            assertEquals(accuracy.getAverageAccuracyMeters(), Double.POSITIVE_INFINITY, 0.0);
+
+            assertEquals(accuracy.getNumberOfDimensions(), 2);
         }
     }
 

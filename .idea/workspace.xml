@@ -2,56 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_units_1_0_SNAPSHOT.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy2D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy3D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy2DTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy3DTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_algebra_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_algebra_1_0_SNAPSHOT.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_geometry_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_geometry_1_0_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_numerical_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_numerical_1_0_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_sorting_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_sorting_1_0_SNAPSHOT.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_statistics_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_statistics_1_0_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_units_1_0_SNAPSHOT.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_irurueta_irurueta_units_1_0_SNAPSHOT.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/irurueta-navigation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/irurueta-navigation.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/BuildInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/BuildInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Distance.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceConverter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceFormatter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/DistanceUnit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/MeasureFormatter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Surface.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceFormatter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceUnit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Time.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeConverter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeFormatter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/TimeUnit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitLocale.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitSystem.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnitsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/UnknownUnitException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/package-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy2DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy2DTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy3DTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator2DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator2DTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator2DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator2DTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceConverterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceFormatterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/DistanceUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceConverterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceFormatterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/SurfaceUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeConverterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeFormatterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/TimeUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitLocaleTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnitsExceptionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/units/UnknownUnitExceptionTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolverTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolverTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolverTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -126,8 +101,8 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+            <state relative-caret-position="187">
+              <caret line="205" column="21" lean-forward="true" selection-start-line="205" selection-start-column="21" selection-end-line="205" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -146,13 +121,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>double pathLossExponent</find>
-      <find>ERROR_S</find>
-      <find>MIN_POINTS</find>
-      <find>devia</find>
-      <find>standardDe</find>
-      <find>getMinRequiredPositionsAndDistances</find>
-      <find>isLocked</find>
       <find>getEstimatedTrans</find>
       <find>getMinRequired</find>
       <find>buildPositionsDistancesAndDistanceStandardDeviations</find>
@@ -176,6 +144,13 @@
       <find>estimate(</find>
       <find>ranging</find>
       <find>standardDevi</find>
+      <find>mTrilaterationSolver</find>
+      <find>MSACRobustPositionEstimator2DTes</find>
+      <find>PROMedSRobustTrilateration2DSolverTest</find>
+      <find>PROMedSRobustTrilateration3DSolverTest</find>
+      <find>NonLinearPositionEstimator2DTest</find>
+      <find>refi</find>
+      <find>attempt</find>
     </findStrings>
     <replaceStrings>
       <replace>MSAC</replace>
@@ -193,12 +168,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/MSACRobustPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROSACRobustPositionEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustPositionEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/fingerprinting/PROMedSRobustPositionEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/RANSACRobustPositionEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/fingerprinting/LMedSRobustPositionEstimator2DTest.java" />
@@ -235,15 +204,21 @@
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/Measurement.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSource.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/BuildInfo.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/utils/LocationUtils.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolver.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolver.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolverTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolverTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy3D.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy3DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -277,9 +252,9 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="111" />
+    <option name="x" value="65" />
     <option name="y" value="23" />
-    <option name="width" value="1440" />
+    <option name="width" value="1267" />
     <option name="height" value="877" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -388,14 +363,12 @@
       </profile-state>
     </entry>
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -450,19 +423,13 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="navigation" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="indoor" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -472,6 +439,9 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs.jest.jest_package" value="" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RecentsManager">
@@ -494,7 +464,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.NonLinearPositionEstimator2DTest">
+  <component name="RunManager" selected="JUnit.Accuracy3DTest">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
     </configuration>
@@ -547,18 +517,18 @@
       </option>
       <patterns />
     </configuration>
-    <configuration name="LocationUtilsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MSACRobustPositionEstimator2DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="irurueta-navigation" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.utils.*" />
+          <option name="PATTERN" value="com.irurueta.navigation.indoor.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.utils" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.utils.LocationUtilsTest" />
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.MSACRobustPositionEstimator2DTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" value="-ea" />
@@ -668,19 +638,19 @@
       <predefined_log_file id="idea.log" enabled="true" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.MSACRobustPositionEstimator2DTest" />
+      <item itemvalue="JUnit.NonLinearPositionEstimator2DTest" />
       <item itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
-      <item itemvalue="JUnit.LocationUtilsTest" />
       <item itemvalue="JUnit.Accuracy2DTest" />
       <item itemvalue="JUnit.Accuracy3DTest" />
-      <item itemvalue="JUnit.NonLinearPositionEstimator2DTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.NonLinearPositionEstimator2DTest" />
         <item itemvalue="JUnit.Accuracy3DTest" />
         <item itemvalue="JUnit.Accuracy2DTest" />
         <item itemvalue="JUnit.com.irurueta.navigation in irurueta-navigation" />
-        <item itemvalue="JUnit.LocationUtilsTest" />
+        <item itemvalue="JUnit.NonLinearPositionEstimator2DTest" />
+        <item itemvalue="JUnit.MSACRobustPositionEstimator2DTest" />
       </list>
     </recent_temporary>
   </component>
@@ -788,7 +758,14 @@
       <workItem from="1531993299049" duration="494000" />
       <workItem from="1532555940493" duration="49000" />
       <workItem from="1533418013875" duration="702000" />
-      <workItem from="1533491744850" duration="11375000" />
+      <workItem from="1533491744850" duration="11468000" />
+      <workItem from="1533505588439" duration="727000" />
+      <workItem from="1533591510215" duration="793000" />
+      <workItem from="1533648636007" duration="999000" />
+      <workItem from="1534030446502" duration="3924000" />
+      <workItem from="1534086694670" duration="4414000" />
+      <workItem from="1534406210410" duration="4000" />
+      <workItem from="1534799768603" duration="5301000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -801,39 +778,39 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Accuracy2DTest - 2018.08.05 at 22h 36m 36s.xml">
+    <history-entry file="Accuracy2DTest - 2018.08.20 at 23h 26m 19s.xml">
       <configuration name="Accuracy2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Accuracy2DTest - 2018.08.05 at 22h 42m 34s.xml">
+    <history-entry file="Accuracy3DTest - 2018.08.20 at 23h 26m 24s.xml">
+      <configuration name="Accuracy3DTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Accuracy2DTest - 2018.08.20 at 23h 41m 50s.xml">
       <configuration name="Accuracy2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Accuracy2DTest - 2018.08.05 at 22h 44m 23s.xml">
+    <history-entry file="Accuracy3DTest - 2018.08.20 at 23h 44m 17s.xml">
+      <configuration name="Accuracy3DTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Accuracy3DTest - 2018.08.20 at 23h 44m 49s.xml">
+      <configuration name="Accuracy3DTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="Accuracy2DTest - 2018.08.20 at 23h 57m 41s.xml">
       <configuration name="Accuracy2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Accuracy3DTest - 2018.08.05 at 23h 05m 35s.xml">
+    <history-entry file="Accuracy3DTest - 2018.08.20 at 23h 59m 51s.xml">
       <configuration name="Accuracy3DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Accuracy3DTest - 2018.08.05 at 23h 05m 48s.xml">
+    <history-entry file="Accuracy3DTest - 2018.08.21 at 00h 08m 14s.xml">
       <configuration name="Accuracy3DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Accuracy3DTest - 2018.08.05 at 23h 07m 46s.xml">
+    <history-entry file="Accuracy3DTest - 2018.08.21 at 00h 11m 01s.xml">
       <configuration name="Accuracy3DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Accuracy3DTest - 2018.08.05 at 23h 07m 58s.xml">
+    <history-entry file="Accuracy3DTest - 2018.08.21 at 00h 11m 32s.xml">
       <configuration name="Accuracy3DTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="Accuracy3DTest - 2018.08.05 at 23h 11m 07s.xml">
-      <configuration name="Accuracy3DTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="NonLinearPositionEstimator2DTest - 2018.08.05 at 23h 28m 36s.xml">
-      <configuration name="NonLinearPositionEstimator2DTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="NonLinearPositionEstimator2DTest - 2018.08.05 at 23h 29m 20s.xml">
-      <configuration name="NonLinearPositionEstimator2DTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1276876000" />
+    <option name="totallyTimeSpent" value="1293131000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -845,26 +822,24 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="111" y="23" width="1440" height="877" extended-state="0" />
-    <editor active="true" />
+    <frame x="65" y="23" width="1267" height="877" extended-state="0" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32939634" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.328084" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32692307" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50303954" side_tool="true" weight="0.30971128" />
-      <window_info anchor="right" id="Maven Projects" order="3" weight="0.32881" />
+      <window_info anchor="right" id="Maven Projects" order="3" weight="0.32734695" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4969605" visible="true" weight="0.30897436" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4969605" weight="0.30897436" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986842" visible="true" weight="0.3597997" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986842" weight="0.23265307" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32894737" />
       <window_info id="Structure" order="1" sideWeight="0.5013158" side_tool="true" weight="0.29169676" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -873,6 +848,7 @@
       <window_info id="Favorites" order="2" side_tool="true" weight="0.3295711" />
       <window_info anchor="bottom" id="Thumbnails" order="8" weight="0.32939634" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32820514" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Coverage" order="4" side_tool="true" weight="0.36101082" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -883,32 +859,32 @@
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
-      <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.362462" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4969605" weight="0.30971128" />
       <window_info anchor="right" id="Theme Preview" order="8" />
-      <window_info id="Favorites" order="6" side_tool="true" weight="0.3295711" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Thumbnails" order="11" weight="0.32939634" />
       <window_info id="Structure" order="1" weight="0.24848025" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info id="Image Layers" order="5" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32939634" />
+      <window_info anchor="right" id="Maven Projects" order="4" weight="0.32943755" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27963525" />
       <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="bottom" id="Terminal" order="10" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.38451442" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50303954" side_tool="true" weight="0.30971128" />
       <window_info id="Capture Tool" order="2" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Messages" order="8" weight="0.328084" />
-      <window_info anchor="right" id="Maven Projects" order="4" weight="0.32943755" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27963525" />
+      <window_info anchor="right" id="Coverage" order="9" side_tool="true" weight="0.362462" />
+      <window_info id="Favorites" order="6" side_tool="true" weight="0.3295711" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -953,146 +929,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/Fingerprint.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="55" column="7" selection-start-line="55" selection-start-column="7" selection-end-line="55" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRadioSourceEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="455" column="18" selection-start-line="455" selection-start-column="18" selection-end-line="455" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimatorListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiAccessPointWithPower.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="20" column="33" lean-forward="true" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiAccessPointWithPowerAndLocated.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiAccessPointWithPowerAndLocated2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="26" column="27" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="76" column="19" selection-start-line="76" selection-start-column="19" selection-end-line="76" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LMedSRobustRssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3270">
-          <caret line="3662" column="27" selection-start-line="3662" selection-start-column="27" selection-end-line="3662" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/LMedSRobustRssiRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7830">
-          <caret line="587" column="54" selection-start-line="587" selection-start-column="54" selection-end-line="587" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RANSACRobustRssiRadioSourceEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="58" column="13" selection-start-line="58" selection-start-column="13" selection-end-line="58" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PositionEstimatorHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2400">
-          <caret line="180" column="40" selection-start-line="180" selection-start-column="40" selection-end-line="180" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RANSACRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="35" column="19" selection-start-line="35" selection-start-column="19" selection-end-line="35" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RANSACRobustRssiRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="66" column="38" selection-start-line="66" selection-start-column="38" selection-end-line="66" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROSACRobustPositionEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROSACRobustRssiRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14295">
-          <caret line="992" column="43" selection-start-line="992" selection-start-column="43" selection-end-line="992" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/lang/ClassLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="1327" column="30" selection-start-line="1327" selection-start-column="30" selection-end-line="1327" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_152.jdk/Contents/Home/src.zip!/java/lang/Class.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="2220" column="43" lean-forward="true" selection-start-line="2220" selection-start-column="43" selection-end-line="2220" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/NavigationException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/BuildInfoTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
@@ -1198,13 +1034,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="30" column="54" selection-start-line="30" selection-start-column="54" selection-end-line="30" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/SurfaceConverter.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/geodesic/GeodesicData.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="690">
@@ -1219,13 +1049,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="17" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/units/package-info.java" />
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/utils/LocationUtilsTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1237,12 +1061,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#convert#0;class#LocationUtils#0" />
-            <element signature="method#convert#1;class#LocationUtils#0" />
-            <element signature="class#BearingDistance#0;class#LocationUtils#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1253,122 +1071,219 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT-sources.jar!/com/irurueta/geometry/AccuracyPoint2D.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT-sources.jar!/com/irurueta/geometry/AccuracyPoint2D.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustPositionEstimator2D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="67" column="25" lean-forward="true" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
+        <state relative-caret-position="110">
+          <caret line="370" column="65" selection-start-line="370" selection-start-column="45" selection-end-line="370" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy2D.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-SNAPSHOT-sources.jar!/com/irurueta/numerical/robust/PROMedSRobustEstimator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="83" lean-forward="true" selection-start-line="76" selection-end-line="83" />
-          <folding>
-            <element signature="e#0#700#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#683#716#0" expanded="true" />
-            <element signature="e#1107#1108#0" expanded="true" />
-            <element signature="e#1164#1165#0" expanded="true" />
-            <element signature="e#3199#3200#0" expanded="true" />
-            <element signature="e#3238#3239#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="158">
+          <caret line="265" column="20" selection-start-line="265" selection-start-column="20" selection-end-line="265" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="578" column="25" lean-forward="true" selection-start-line="578" selection-start-column="25" selection-end-line="578" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-226">
+          <caret line="34" column="65" lean-forward="true" selection-start-line="34" selection-start-column="65" selection-end-line="34" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/MSACRobustTrilateration2DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="294" column="55" lean-forward="true" selection-start-line="294" selection-start-column="55" selection-end-line="294" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="186" column="44" lean-forward="true" selection-start-line="186" selection-start-column="44" selection-end-line="186" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/RANSACRobustTrilateration2DSolverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-27665">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration2DSolverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="1858" column="23" selection-start-line="1858" selection-start-column="23" selection-end-line="1858" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolverTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="1892" column="25" lean-forward="true" selection-start-line="1892" selection-start-column="25" selection-end-line="1892" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/PROMedSRobustPositionEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="58" column="61" lean-forward="true" selection-start-line="58" selection-start-column="61" selection-end-line="58" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MSACRobustPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="888" lean-forward="true" selection-start-line="888" selection-end-line="888" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="801" selection-start-line="801" selection-end-line="801" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="34" column="77" selection-start-line="34" selection-start-column="77" selection-end-line="34" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustPositionEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="312" column="74" selection-start-line="312" selection-start-column="74" selection-end-line="312" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustPositionEstimator3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="32" column="75" selection-start-line="32" selection-start-column="75" selection-end-line="32" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/RobustTrilateration3DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="1273" column="51" lean-forward="true" selection-start-line="1273" selection-start-column="51" selection-end-line="1273" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/NonLinearLeastSquaresTrilaterationSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="429" column="17" selection-start-line="429" selection-start-column="17" selection-end-line="429" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT-sources.jar!/com/irurueta/geometry/Ellipsoid.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT-sources.jar!/com/irurueta/geometry/AccuracyPoint3D.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-20180820.172646-4.jar!/com/irurueta/geometry/Accuracy3D.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-20180820.172646-4-sources.jar!/com/irurueta/geometry/Accuracy3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="102" column="68" lean-forward="true" selection-start-line="102" selection-start-column="68" selection-end-line="102" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/trilateration/PROMedSRobustTrilateration3DSolver.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="700">
+          <caret line="591" column="25" selection-start-line="591" selection-start-column="25" selection-end-line="591" selection-end-column="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy3D.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="27" column="33" lean-forward="true" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
+        <state relative-caret-position="304">
+          <caret line="113" column="68" selection-start-line="113" selection-start-column="68" selection-end-line="113" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3264#3265#0" expanded="true" />
-            <element signature="e#3303#3304#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/com/irurueta/navigation/build-info.properties">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-272">
+          <caret line="41" column="65" lean-forward="true" selection-start-line="41" selection-start-column="65" selection-end-line="41" selection-end-column="65" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/Accuracy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1458">
-          <caret line="19" column="9" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+        <state relative-caret-position="369">
+          <caret line="177" column="5" lean-forward="true" selection-start-line="177" selection-start-column="5" selection-end-line="177" selection-end-column="5" />
           <folding>
-            <element signature="e#0#698#0" expanded="true" />
-            <element signature="e#1215#1248#0" expanded="true" />
-            <element signature="e#1546#1547#0" expanded="true" />
-            <element signature="e#1598#1599#0" expanded="true" />
-            <element signature="e#1300#1301#0" expanded="true" />
-            <element signature="e#1362#1363#0" expanded="true" />
-            <element signature="e#2637#2638#0" expanded="true" />
-            <element signature="e#2706#2707#0" expanded="true" />
-            <element signature="e#3813#3814#0" expanded="true" />
-            <element signature="e#3869#3870#0" expanded="true" />
-            <element signature="e#4874#4875#0" expanded="true" />
-            <element signature="e#4958#4959#0" expanded="true" />
-            <element signature="e#4796#4797#0" expanded="true" />
-            <element signature="e#4858#4859#0" expanded="true" />
-            <element signature="e#5450#5451#0" expanded="true" />
-            <element signature="e#5533#5534#0" expanded="true" />
-            <element signature="e#5046#5047#0" expanded="true" />
-            <element signature="e#5107#5108#0" expanded="true" />
-            <element signature="e#6020#6021#0" expanded="true" />
-            <element signature="e#6103#6104#0" expanded="true" />
-            <element signature="e#5292#5293#0" expanded="true" />
-            <element signature="e#5353#5354#0" expanded="true" />
-            <element signature="e#5516#5517#0" expanded="true" />
-            <element signature="e#5580#5581#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="330" selection-start-line="32" selection-end-line="330" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#testConstructor#0;class#Accuracy2DTest#0" />
-            <element signature="method#testGetSetCovarianceMatrix#0;class#Accuracy2DTest#0" />
-            <element signature="method#testGetSetStandardDeviationFactor#0;class#Accuracy2DTest#0" />
-            <element signature="method#testGetSetConfidence#0;class#Accuracy2DTest#0" />
-          </folding>
+        <state relative-caret-position="126">
+          <caret line="251" column="45" selection-start-line="251" selection-start-column="45" selection-end-line="251" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/Accuracy3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="297" column="9" lean-forward="true" selection-start-line="297" selection-start-column="9" selection-end-line="297" selection-end-column="9" />
+        <state relative-caret-position="369">
+          <caret line="553" column="5" selection-start-line="553" selection-start-column="5" selection-end-line="553" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="method#testConstructor#0;class#Accuracy3DTest#0" />
             <element signature="method#testGetSetCovarianceMatrix#0;class#Accuracy3DTest#0" />
-            <element signature="method#testGetSetStandardDeviationFactor#0;class#Accuracy3DTest#0" />
-            <element signature="method#testGetSetConfidence#0;class#Accuracy3DTest#0" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/NonLinearPositionEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="787" lean-forward="true" selection-start-line="787" selection-end-line="787" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+        <state relative-caret-position="187">
+          <caret line="205" column="21" lean-forward="true" selection-start-line="205" selection-start-column="21" selection-end-line="205" selection-end-column="21" />
         </state>
       </provider>
     </entry>
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="Copyright.UI">
         <settings>
           <splitter-proportions>
@@ -1380,9 +1295,69 @@
           </splitter-proportions>
         </settings>
       </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>irurueta-navigation</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>9.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: com.irurueta:irurueta-algebra:1.0-SNAPSHOT</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
