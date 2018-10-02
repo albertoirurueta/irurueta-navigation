@@ -21,6 +21,8 @@ import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
 import org.junit.*;
 
+import java.util.Locale;
+
 import static org.junit.Assert.*;
 
 public class LocationUtilsTest {
@@ -28,7 +30,9 @@ public class LocationUtilsTest {
     public LocationUtilsTest() { }
 
     @BeforeClass
-    public static void setUpClass() { }
+    public static void setUpClass() {
+        Locale.setDefault(Locale.ENGLISH);
+    }
 
     @AfterClass
     public static void tearDownClass() { }

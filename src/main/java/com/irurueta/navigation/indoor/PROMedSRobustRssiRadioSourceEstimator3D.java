@@ -1017,6 +1017,10 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
         try {
             mLocked = true;
             mInliersData = null;
+
+            //inlier thresholds are disable to obtain a less restrictive amount of inliers
+            innerEstimator.setUseInlierThresholds(false);
+
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);

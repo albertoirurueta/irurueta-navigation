@@ -16,7 +16,7 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.geometry.Accuracy3D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
@@ -27,12 +27,15 @@ import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
 
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         RobustRssiRadioSourceEstimatorListener<WifiAccessPoint, Point3D> {
 
@@ -3102,9 +3105,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -3211,15 +3216,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
@@ -3233,15 +3240,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -3289,6 +3301,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -3308,12 +3326,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -3348,16 +3382,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0, numCov = 0;
-        int numValidPositionCov = 0, numValidPowerCov = 0;
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -3438,10 +3473,10 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            if (estimator.getInliersData() == null) {
-                continue;
-            }
             assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
             WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
@@ -3457,30 +3492,27 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
             assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            double positionStd = 0.0;
-            double powerStd = 0.0;
-            if (estimator.getCovariance() != null) {
-                numCov++;
-                assertNotNull(estimator.getCovariance());
-                assertNotNull(estimator.getEstimatedPositionCovariance());
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
 
-                double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
-                assertTrue(powerVariance > 0.0);
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
 
-                SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                        estimator.getEstimatedPositionCovariance());
-                decomposer.decompose();
-                double[] v = decomposer.getSingularValues();
-                for (double aV : v) {
-                    positionStd += Math.sqrt(aV);
-                }
-                positionStd /= v.length;
-                powerStd = Math.sqrt(powerVariance);
-            }
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+            double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
@@ -3492,23 +3524,21 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
-                if (estimator.getCovariance() != null) {
-                    numValidPositionCov++;
-                    avgValidPositionStd += positionStd;
-                }
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
-                if (estimator.getCovariance() != null) {
-                    avgInvalidPositionStd += positionStd;
-                }
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
-            if (estimator.getCovariance() != null) {
-                avgPositionStd += positionStd;
-            }
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -3520,23 +3550,16 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
-                if (estimator.getCovariance() != null) {
-                    numValidPowerCov++;
-                    avgValidPowerStd += powerStd;
-                }
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
-                if (estimator.getCovariance() != null) {
-                    avgInvalidPowerStd += powerStd;
-                }
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
-            if (estimator.getCovariance() != null) {
-                avgPowerStd += powerStd;
-            }
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -3558,13 +3581,19 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
 
-        avgValidPositionStd /= numValidPositionCov;
-        avgInvalidPositionStd /= (numCov - numValidPositionCov);
-        avgPositionStd /= numCov;
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
 
-        avgValidPowerStd /= numValidPowerCov;
-        avgInvalidPowerStd /= (numCov - numValidPowerCov);
-        avgPowerStd /= numCov;
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -3580,12 +3609,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -3626,9 +3671,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -3742,15 +3789,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
@@ -3764,15 +3813,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -3820,6 +3874,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -3839,12 +3899,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -3885,9 +3961,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -3998,15 +4076,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
@@ -4020,15 +4100,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -4076,6 +4161,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -4095,12 +4186,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -4141,9 +4248,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -4260,15 +4369,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
@@ -4282,15 +4393,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -4338,6 +4454,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -4357,12 +4479,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -4397,16 +4535,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
-        int numValidPosition = 0, numValidPower = 0, numValid = 0, numCov = 0;
-        int numValidPositionCov = 0, numValidPowerCov = 0;
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -4497,6 +4636,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
+            assertNull(estimator.getEstimatedPathLossExponentVariance());
+
             WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
@@ -4510,31 +4655,27 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
             assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
+            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            double positionStd = 0.0;
-            double powerStd = 0.0;
-            if (estimator.getCovariance() != null) {
-                assertNotNull(estimator.getInliersData());
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
 
-                numCov++;
-                assertNotNull(estimator.getCovariance());
-                assertNotNull(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
 
-                double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
-                assertTrue(powerVariance > 0.0);
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
 
-                SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                        estimator.getEstimatedPositionCovariance());
-                decomposer.decompose();
-                double[] v = decomposer.getSingularValues();
-                for (double aV : v) {
-                    positionStd += Math.sqrt(aV);
-                }
-                positionStd /= v.length;
-                powerStd = Math.sqrt(powerVariance);
-            }
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+            double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
             double positionDistance = estimator.getEstimatedPosition().
@@ -4546,23 +4687,21 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
-                if (estimator.getCovariance() != null) {
-                    numValidPositionCov++;
-                    avgValidPositionStd += positionStd;
-                }
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
-                if (estimator.getCovariance() != null) {
-                    avgInvalidPositionStd += positionStd;
-                }
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
-            if (estimator.getCovariance() != null) {
-                avgPositionStd += positionStd;
-            }
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -4574,23 +4713,16 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 numValidPower++;
 
                 avgValidPowerError += powerError;
-                if (estimator.getCovariance() != null) {
-                    numValidPowerCov++;
-                    avgValidPowerStd += powerStd;
-                }
+                avgValidPowerStd += powerStd;
             } else {
                 validPower = false;
 
                 avgInvalidPowerError += powerError;
-                if (estimator.getCovariance() != null) {
-                    avgInvalidPowerStd += powerStd;
-                }
+                avgInvalidPowerStd += powerStd;
             }
 
             avgPowerError += powerError;
-            if (estimator.getCovariance() != null) {
-                avgPowerStd += powerStd;
-            }
+            avgPowerStd += powerStd;
 
             if (validPosition && validPower) {
                 numValid++;
@@ -4612,13 +4744,19 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgInvalidPowerError /= (TIMES - numValidPower);
         avgPowerError /= TIMES;
 
-        avgValidPositionStd /= numValidPositionCov;
-        avgInvalidPositionStd /= (numCov - numValidPositionCov);
-        avgPositionStd /= numCov;
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
 
-        avgValidPowerStd /= numValidPowerCov;
-        avgInvalidPowerStd /= (numCov - numValidPowerCov);
-        avgPowerStd /= numCov;
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -4634,12 +4772,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -4680,11 +4834,13 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
                 avgInvalidPathLossError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
         double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
                 avgInvalidPathLossStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -4791,6 +4947,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                     Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
+            assertNotNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             if (powerVariance <= 0.0) {
@@ -4803,15 +4960,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             }
             assertTrue(pathLossVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
             double pathLossStd = Math.sqrt(pathLossVariance);
 
@@ -4826,15 +4985,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -4909,6 +5073,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -4934,12 +5104,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -4991,9 +5177,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -5077,11 +5265,6 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertFalse(estimator.isLocked());
 
             assertNotNull(estimator.getInliersData());
-
-            if (estimator.getCovariance() == null) {
-                continue;
-            }
-
             assertNotNull(estimator.getCovariance());
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
@@ -5107,15 +5290,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
@@ -5129,15 +5314,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -5185,6 +5375,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -5204,12 +5400,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -5247,9 +5459,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D beaconPosition =
                     new InhomogeneousPoint3D(
@@ -5349,15 +5563,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double powerStd = Math.sqrt(powerVariance);
 
             boolean validPosition, validPower;
@@ -5371,15 +5587,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double powerError = Math.abs(
                     estimator.getEstimatedTransmittedPowerdBm() -
@@ -5424,6 +5645,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPowerStd /= numValidPower;
         avgInvalidPowerStd /= (TIMES - numValidPower);
@@ -5443,12 +5670,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
                 avgValidPowerError);
@@ -5484,7 +5727,9 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -5599,15 +5844,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
 
             boolean validPosition;
             double positionDistance = estimator.getEstimatedPosition().
@@ -5620,15 +5867,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             if (validPosition) {
                 numValid++;
@@ -5648,6 +5900,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -5661,12 +5919,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -5688,7 +5962,9 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -5801,15 +6077,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
 
             boolean validPosition;
             double positionDistance = estimator.getEstimatedPosition().
@@ -5822,15 +6100,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             if (validPosition) {
                 numValid++;
@@ -5850,6 +6133,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -5863,16 +6152,32 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRssiRadioSourceEstimator3D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -5890,7 +6195,9 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -6004,15 +6311,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
 
             boolean validPosition;
             double positionDistance = estimator.getEstimatedPosition().
@@ -6025,15 +6334,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             if (validPosition) {
                 numValid++;
@@ -6053,6 +6367,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -6066,16 +6386,32 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRssiRadioSourceEstimator3D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -6270,8 +6606,8 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRssiRadioSourceEstimator3D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -6468,8 +6804,8 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRssiRadioSourceEstimator3D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -6663,8 +6999,8 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 avgPathLossStd);
 
         //force NotReadyException
-        PROSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRssiRadioSourceEstimator3D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -6860,8 +7196,8 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
                 avgPathLossStd);
 
         //force NotReadyException
-        PROSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRssiRadioSourceEstimator3D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -6881,9 +7217,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
                 avgInvalidPathLossError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
                 avgInvalidPathLossStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -6995,15 +7333,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double pathLossStd = Math.sqrt(pathLossVariance);
 
             boolean validPosition, validPathLoss;
@@ -7017,15 +7357,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double pathLossError = Math.abs(
                     estimator.getEstimatedPathLossExponent() -
@@ -7072,6 +7417,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPathLossStd /= numValidPathLoss;
         avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
@@ -7091,12 +7442,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
                 avgValidPathLossError);
@@ -7134,9 +7501,11 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
                 avgInvalidPathLossError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
                 avgInvalidPathLossStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -7250,15 +7619,17 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
             double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
             double pathLossStd = Math.sqrt(pathLossVariance);
 
             boolean validPosition, validPathLoss;
@@ -7272,15 +7643,20 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 validPosition = false;
 
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
 
             double pathLossError = Math.abs(
                     estimator.getEstimatedPathLossExponent() -
@@ -7327,6 +7703,12 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         avgValidPathLossStd /= numValidPathLoss;
         avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
@@ -7346,12 +7728,28 @@ public class PROMedSRobustRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
                 avgValidPathLossError);
