@@ -221,7 +221,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Sets radio signal readings belonging to the same radio source.
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
@@ -245,7 +245,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param readings radio signal readings belonging to the same radio source.
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
@@ -274,7 +274,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
-     * @throws IllegalArgumentException if fingerprints are not valid.
+     * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
