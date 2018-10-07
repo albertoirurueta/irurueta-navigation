@@ -54,6 +54,13 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     protected P mInitialPosition;
 
     /**
+     * Indicates whether non-linear solver is enabled.
+     * If disabled a linear solver is always used, initial position ignored and
+     * covariance is not computed.
+     */
+    protected boolean mNonLinearSolverEnabled = true;
+
+    /**
      * Constructor.
      */
     public RangingRadioSourceEstimator() {
@@ -153,7 +160,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     /**
      * Gets initial position to start the non-linear estimation of radio source position.
      * If not defined, a linear solution is found instead.
-     * @return
+     * @return initial position.
      */
     public P getInitialPosition() {
         return mInitialPosition;
@@ -171,6 +178,32 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
             throw new LockedException();
         }
         mInitialPosition = initialPosition;
+    }
+
+    /**
+     * Indicates whether non-linear solver is enabled.
+     * If disabled a linear solver is always used, initial position ignored and
+     * covariance is not computed.
+     * @return true if non-linear solver is enabled, false otherwise.
+     */
+    public boolean isNonLinearSolverEnabled() {
+        return mNonLinearSolverEnabled;
+    }
+
+    /**
+     * Specifies whether non-linear solver is enabled.
+     * If disabled a linear solver is always used, initial position ignored and
+     * covariance is not computed.
+     * @param nonLinearSolverEnabled true if non-linear solver is enabled,
+     *                               false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setNonLinearSolverEnabled(boolean nonLinearSolverEnabled)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mNonLinearSolverEnabled = nonLinearSolverEnabled;
     }
 
     /**
@@ -209,20 +242,28 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
             buildSolversIfNeeded();
             buildPositionsDistancesAndDistanceStandardDeviations();
 
-            if (mLinearSolver != null && mInitialPosition == null) {
+            if (mLinearSolver != null &&
+                    (mInitialPosition == null || !mNonLinearSolverEnabled)) {
                 //if no initial position is provided, use linear solver to estimate one
                 mLinearSolver.solve();
                 mInitialPosition = mLinearSolver.getEstimatedPosition();
             }
 
-            mNonLinearSolver.setInitialPosition(mInitialPosition);
-            mNonLinearSolver.solve();
+            if (mNonLinearSolver != null && mNonLinearSolverEnabled) {
+                mNonLinearSolver.setInitialPosition(mInitialPosition);
+                mNonLinearSolver.solve();
 
-            //get position and covariance
-            mEstimatedPositionCoordinates =
-                    mNonLinearSolver.getEstimatedPositionCoordinates();
-            mEstimatedPositionCovariance  = mEstimatedCovariance =
-                    mNonLinearSolver.getCovariance();
+                //get position and covariance
+                mEstimatedPositionCoordinates =
+                        mNonLinearSolver.getEstimatedPositionCoordinates();
+                mEstimatedPositionCovariance = mEstimatedCovariance =
+                        mNonLinearSolver.getCovariance();
+            } else {
+                //non linear solver disabled
+                mEstimatedPositionCoordinates =
+                        mLinearSolver.getEstimatedPositionCoordinates();
+                mEstimatedPositionCovariance = mEstimatedCovariance = null;
+            }
 
             if (mListener != null) {
                 mListener.onEstimateEnd(this);

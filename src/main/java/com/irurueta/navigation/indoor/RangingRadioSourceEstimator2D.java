@@ -33,6 +33,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.
  */
+@SuppressWarnings("Duplicates")
 public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
         RangingRadioSourceEstimator<S, Point2D> {
 
@@ -206,7 +207,8 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
      */
     @Override
     protected void buildLinearSolverIfNeeded() {
-        if (mInitialPosition == null && mLinearSolver == null) {
+        if ((mInitialPosition == null || !mNonLinearSolverEnabled) &&
+                mLinearSolver == null) {
             mLinearSolver = new LinearLeastSquaresTrilateration2DSolver();
         }
     }
@@ -216,7 +218,7 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
      */
     @Override
     protected void buildNonLinearSolverIfNeeded() {
-        if (mNonLinearSolver == null) {
+        if (mNonLinearSolver == null && mNonLinearSolverEnabled) {
             mNonLinearSolver = new NonLinearLeastSquaresTrilateration2DSolver();
         }
     }
@@ -245,10 +247,14 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
             distanceStandardDeviationsArray[i] = distanceStandardDeviations.get(i);
         }
 
-        if (mLinearSolver != null && mInitialPosition == null) {
+        if (mLinearSolver != null &&
+                (mInitialPosition == null || !mNonLinearSolverEnabled)) {
             mLinearSolver.setPositionsAndDistances(positionsArray, distancesArray);
         }
-        mNonLinearSolver.setPositionsDistancesAndStandardDeviations(positionsArray, distancesArray,
-                distanceStandardDeviationsArray);
+
+        if (mNonLinearSolver != null && mNonLinearSolverEnabled) {
+            mNonLinearSolver.setPositionsDistancesAndStandardDeviations(positionsArray,
+                    distancesArray, distanceStandardDeviationsArray);
+        }
     }
 }

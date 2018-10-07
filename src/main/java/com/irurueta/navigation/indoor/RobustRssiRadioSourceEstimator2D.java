@@ -58,7 +58,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
         RobustRssiRadioSourceEstimator<S, Point2D> {
 
@@ -2744,6 +2744,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
      * @param samplesIndices indices of subset samples.
      * @param solutions instance where solution will be stored.
      */
+    @Override
     protected void solvePreliminarSolutions(int[] samplesIndices,
             List<Solution<Point2D>> solutions) {
 

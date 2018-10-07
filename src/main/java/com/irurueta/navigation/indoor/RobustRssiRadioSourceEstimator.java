@@ -753,12 +753,12 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
                 (4.0 * Math.PI * frequency);
         final double kdB = 10.0 * pathLossExponent * Math.log10(k);
 
-        //get distance from estimated access point position and fingerprint position
-        P fingerprintPosition = reading.getPosition();
-        P accessPointPosition = currentEstimation.getEstimatedPosition();
+        //get distance from estimated radio source position and reading position
+        P readingPosition = reading.getPosition();
+        P radioSourcePosition = currentEstimation.getEstimatedPosition();
 
         //noinspection unchecked
-        double sqrDistance = accessPointPosition.sqrDistanceTo(fingerprintPosition);
+        double sqrDistance = radioSourcePosition.sqrDistanceTo(readingPosition);
 
         double transmittedPowerdBm = currentEstimation.
                 getEstimatedTransmittedPowerdBm();

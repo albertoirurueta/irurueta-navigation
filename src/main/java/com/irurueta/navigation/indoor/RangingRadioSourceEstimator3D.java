@@ -206,7 +206,8 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
      */
     @Override
     protected void buildLinearSolverIfNeeded() {
-        if (mInitialPosition == null && mLinearSolver == null) {
+        if ((mInitialPosition == null || !mNonLinearSolverEnabled) &&
+                mLinearSolver == null) {
             mLinearSolver = new LinearLeastSquaresTrilateration3DSolver();
         }
     }
@@ -216,7 +217,7 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
      */
     @Override
     protected void buildNonLinearSolverIfNeeded() {
-        if (mNonLinearSolver == null) {
+        if (mNonLinearSolver == null && mNonLinearSolverEnabled) {
             mNonLinearSolver = new NonLinearLeastSquaresTrilateration3DSolver();
         }
     }
@@ -246,10 +247,13 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
             distanceStandardDeviationsArray[i] = distanceStandardDeviations.get(i);
         }
 
-        if (mLinearSolver != null && mInitialPosition == null) {
+        if (mLinearSolver != null &&
+                (mInitialPosition == null || !mNonLinearSolverEnabled)) {
             mLinearSolver.setPositionsAndDistances(positionsArray, distancesArray);
         }
-        mNonLinearSolver.setPositionsDistancesAndStandardDeviations(positionsArray, distancesArray,
-                distanceStandardDeviationsArray);
+        if (mNonLinearSolver != null && mNonLinearSolverEnabled) {
+            mNonLinearSolver.setPositionsDistancesAndStandardDeviations(positionsArray, distancesArray,
+                    distanceStandardDeviationsArray);
+        }
     }
 }

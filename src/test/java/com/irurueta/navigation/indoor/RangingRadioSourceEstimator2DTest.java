@@ -72,6 +72,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -99,6 +100,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -131,6 +133,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -149,6 +152,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertNull(estimator.getInitialPosition());
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -186,6 +190,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -204,6 +209,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -237,6 +243,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -256,6 +263,7 @@ public class RangingRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertSame(estimator.getInitialPosition(), initialPosition);
+        assertTrue(estimator.isNonLinearSolverEnabled());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -297,6 +305,27 @@ public class RangingRadioSourceEstimator2DTest implements
 
         //check
         assertSame(estimator.getInitialPosition(), initialPosition);
+    }
+
+    @Test
+    public void testIsSetNonLinearSolverEnabled() throws LockedException {
+        RangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RangingRadioSourceEstimator2D<>();
+
+        //check default value
+        assertTrue(estimator.isNonLinearSolverEnabled());
+
+        //set new value
+        estimator.setNonLinearSolverEnabled(false);
+
+        //check
+        assertFalse(estimator.isNonLinearSolverEnabled());
+
+        //set new value
+        estimator.setNonLinearSolverEnabled(true);
+
+        //check
+        assertTrue(estimator.isNonLinearSolverEnabled());
     }
 
     @Test
@@ -1532,6 +1561,242 @@ public class RangingRadioSourceEstimator2DTest implements
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWithNonLinearSolverDisabledAndWithoutInitialPosition()
+            throws LockedException, NotReadyException {
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint2D accessPointPosition =
+                    new InhomogeneousPoint2D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(MIN_READINGS, MAX_READINGS);
+            Point2D[] readingsPositions = new Point2D[numReadings];
+            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(accessPointPosition);
+
+                readings.add(new RangingReadingLocated2D<>(accessPoint, distance,
+                        readingsPositions[i]));
+            }
+
+            RangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                    new RangingRadioSourceEstimator2D<>(readings, this);
+            estimator.setNonLinearSolverEnabled(false);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            //check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNull(estimator.getEstimatedCovariance());
+            assertNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertNull(estimatedAccessPoint.getPositionCovariance());
+
+            double positionDistance = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                        ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+            } else {
+                avgInvalidPositionError += positionDistance;
+            }
+
+            avgPositionError += positionDistance;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        LOGGER.log(Level.INFO,
+                "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO,
+                "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO,
+                "Position standard deviation {0} meters",
+                avgPositionStd);
+    }
+
+    @Test
+    public void testEstimateWithNonLinearSolverDisabledAndWithInitialPosition()
+            throws LockedException, NotReadyException {
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint2D accessPointPosition =
+                    new InhomogeneousPoint2D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(MIN_READINGS, MAX_READINGS);
+            Point2D[] readingsPositions = new Point2D[numReadings];
+            List<RangingReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(accessPointPosition);
+
+                readings.add(new RangingReadingLocated2D<>(accessPoint, distance,
+                        readingsPositions[i]));
+            }
+
+            RangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                    new RangingRadioSourceEstimator2D<>(readings, accessPointPosition, this);
+            estimator.setNonLinearSolverEnabled(false);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            //check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNull(estimator.getEstimatedCovariance());
+            assertNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointLocated2D estimatedAccessPoint =
+                    (WifiAccessPointLocated2D) estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertNull(estimatedAccessPoint.getPositionCovariance());
+
+            double positionDistance = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                        ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+            } else {
+                avgInvalidPositionError += positionDistance;
+            }
+
+            avgPositionError += positionDistance;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        LOGGER.log(Level.INFO,
+                "Valid position standard deviation {0} meters",
+                avgValidPositionStd);
+        LOGGER.log(Level.INFO,
+                "Invalid position standard deviation {0} meters",
+                avgInvalidPositionStd);
+        LOGGER.log(Level.INFO,
+                "Position standard deviation {0} meters",
+                avgPositionStd);
     }
 
     @Override
