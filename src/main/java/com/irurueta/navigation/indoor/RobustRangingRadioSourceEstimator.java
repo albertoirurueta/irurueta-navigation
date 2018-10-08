@@ -189,13 +189,14 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
      */
     protected double residual(Solution<P> currentEstimation, int i) {
         RangingReadingLocated<S, P> reading = mReadings.get(i);
+        double distance = reading.getDistance();
 
         //get distance from estimated radio source position and reading position
         P readingPosition = reading.getPosition();
         P radioSourcePosition = currentEstimation.getEstimatedPosition();
 
         //noinspection unchecked
-        return radioSourcePosition.distanceTo(readingPosition);
+        return Math.abs(radioSourcePosition.distanceTo(readingPosition) - distance);
     }
 
     /**

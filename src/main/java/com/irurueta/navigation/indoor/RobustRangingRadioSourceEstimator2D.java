@@ -760,6 +760,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
                 mInnerEstimator.setInitialPosition(initialPosition);
                 mInnerEstimator.setReadings(mInnerReadings);
 
+                mInnerEstimator.setNonLinearSolverEnabled(true);
                 mInnerEstimator.estimate();
 
                 Matrix cov = mInnerEstimator.getEstimatedCovariance();
