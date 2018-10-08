@@ -1485,8 +1485,8 @@ public class PROSACRobustRangingRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRangingRadioSourceEstimator2D<>();
+        PROSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new PROSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1675,8 +1675,8 @@ public class PROSACRobustRangingRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRangingRadioSourceEstimator2D<>();
+        PROSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new PROSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1861,8 +1861,8 @@ public class PROSACRobustRangingRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRangingRadioSourceEstimator2D<>();
+        PROSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new PROSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -2039,8 +2039,8 @@ public class PROSACRobustRangingRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRangingRadioSourceEstimator2D<>();
+        PROSACRobustRangingRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new PROSACRobustRangingRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");

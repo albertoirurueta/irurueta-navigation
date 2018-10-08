@@ -34,15 +34,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 
 @SuppressWarnings("Duplicates")
-public class PROSACRobustRangingRadioSourceEstimator3DTest implements
+public class RANSACRobustRangingRadioSourceEstimator3DTest implements
         RobustRangingRadioSourceEstimatorListener<WifiAccessPoint, Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            PROSACRobustRangingRadioSourceEstimator3DTest.class.getName());
+            RANSACRobustRangingRadioSourceEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
     private static final double TRANSMITTED_POWER_DBM = -50.0;
@@ -69,7 +67,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
     private int estimateNextIteration;
     private int estimateProgressChange;
 
-    public PROSACRobustRangingRadioSourceEstimator3DTest() { }
+    public RANSACRobustRangingRadioSourceEstimator3DTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -88,18 +86,18 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //test empty constructor
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -139,17 +137,17 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     position));
         }
 
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(readings);
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(readings);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -169,7 +167,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
-        assertFalse(estimator.isReady());
+        assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
@@ -179,12 +177,12 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     (List<RangingReadingLocated3D<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -192,17 +190,17 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
 
         //test constructor with listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(this);
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(this);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -231,17 +229,17 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
 
         //test constructor with readings and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(readings, this);
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(readings, this);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -261,7 +259,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
-        assertFalse(estimator.isReady());
+        assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
@@ -271,13 +269,13 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     (List<RangingReadingLocated3D<WifiAccessPoint>>)null,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>(),
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -290,17 +288,17 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(initialPosition);
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(initialPosition);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -329,17 +327,17 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
 
         //test constructor with readings and initial position
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(readings, initialPosition);
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(readings, initialPosition);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -359,7 +357,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
-        assertFalse(estimator.isReady());
+        assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
@@ -369,13 +367,12 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
-                    (List<RangingReadingLocated<WifiAccessPoint, Point3D>>)null,
-                    initialPosition);
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
+                    null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
@@ -384,18 +381,18 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
 
         //test constructor with initial position and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(initialPosition,
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(initialPosition,
                 this);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -424,18 +421,18 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
 
         //test constructor with readings, initial position and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(readings,
+        estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(readings,
                 initialPosition, this);
 
         //check default values
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+        assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -455,7 +452,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
-        assertFalse(estimator.isReady());
+        assertTrue(estimator.isReady());
         assertNull(estimator.getQualityScores());
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
@@ -465,416 +462,14 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
-                    (List<RangingReadingLocated<WifiAccessPoint, Point3D>>)null,
-                    initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
-                    new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>(),
-                    initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        assertNull(estimator);
-
-
-        //test constructor with quality scores
-        double[] qualityScores = new double[readings.size()];
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertNull(estimator.getInitialPosition());
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertNull(estimator.getReadings());
-        assertNull(estimator.getListener());
-        assertFalse(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-
-        //test constructor with quality scores and readings
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                readings);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertNull(estimator.getInitialPosition());
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertSame(estimator.getReadings(), readings);
-        assertNull(estimator.getListener());
-        assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-        //force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                    (List<RangingReadingLocated3D<WifiAccessPoint>>)null);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                    new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>());
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(new double[1],
-                    readings);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        assertNull(estimator);
-
-
-        //test constructor with quality scores and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                this);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertNull(estimator.getInitialPosition());
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertNull(estimator.getReadings());
-        assertSame(estimator.getListener(), this);
-        assertFalse(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-
-        //test constructor with quality scores, readings and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                readings, this);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertNull(estimator.getInitialPosition());
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertSame(estimator.getReadings(), readings);
-        assertSame(estimator.getListener(), this);
-        assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-        //force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(
-                    qualityScores,
-                    (List<RangingReadingLocated3D<WifiAccessPoint>>)null,
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                    new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>(),
-                    this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(new double[1],
-                    readings, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        assertNull(estimator);
-
-
-        //test constructor with quality scores and initial position
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                initialPosition);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertSame(estimator.getInitialPosition(), initialPosition);
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertNull(estimator.getReadings());
-        assertNull(estimator.getListener());
-        assertFalse(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-
-        //test constructor with quality scores, readings and initial position
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                readings, initialPosition);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertSame(estimator.getInitialPosition(), initialPosition);
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertSame(estimator.getReadings(), readings);
-        assertNull(estimator.getListener());
-        assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-        //force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                    null, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                    new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>(),
-                    initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(new double[1],
-                    readings, initialPosition);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        assertNull(estimator);
-
-
-        //test constructor with quality scores, initial position and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                initialPosition, this);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertSame(estimator.getInitialPosition(), initialPosition);
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertNull(estimator.getReadings());
-        assertSame(estimator.getListener(), this);
-        assertFalse(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-
-        //test constructor with quality scores, readings, initial position and listener
-        estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                readings, initialPosition, this);
-
-        //check default values
-        assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
-                0.0);
-        assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
-        assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
-        assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 3);
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-        assertSame(estimator.getInitialPosition(), initialPosition);
-        assertFalse(estimator.isLocked());
-        assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
-        assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
-        assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
-        assertNull(estimator.getInliersData());
-        assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
-        assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
-        assertSame(estimator.getReadings(), readings);
-        assertSame(estimator.getListener(), this);
-        assertTrue(estimator.isReady());
-        assertSame(estimator.getQualityScores(), qualityScores);
-        assertNull(estimator.getCovariance());
-        assertNull(estimator.getEstimatedPositionCovariance());
-        assertNull(estimator.getEstimatedPosition());
-        assertNull(estimator.getEstimatedRadioSource());
-
-        //force IllegalArgumentException
-        estimator = null;
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     null, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
+            estimator = new RANSACRobustRangingRadioSourceEstimator3D<>(
                     new ArrayList<RangingReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition, this);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
-        try {
-            estimator = new PROSACRobustRangingRadioSourceEstimator3D<>(new double[1],
-                    readings, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
@@ -882,12 +477,12 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testGetSetThreshold() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getThreshold(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD,
                 0.0);
 
         //set new value
@@ -905,46 +500,46 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
 
         //set new value
         estimator.setComputeAndKeepInliersEnabled(
-                !PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                !RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
 
         //check
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
-                !PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
+                !RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
     }
 
     @Test
     public void testIsSetComputeAndKeepResidualsEnabled() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
 
         //set new value
         estimator.setComputeAndKeepResidualsEnabled(
-                !PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                !RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
 
         //check
         assertEquals(estimator.isComputeAndKeepResidualsEnabled(),
-                !PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
+                !RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
     }
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getInitialPosition());
@@ -962,8 +557,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getProgressDelta(),
@@ -989,8 +584,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getConfidence(),
@@ -1016,8 +611,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getMaxIterations(),
@@ -1038,8 +633,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.isResultRefined(),
@@ -1056,8 +651,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.isCovarianceKept(),
@@ -1086,8 +681,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
             readings.add(new RangingReadingLocated3D<>(accessPoint, 0.0, position));
         }
 
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         assertTrue(estimator.areValidReadings(readings));
 
@@ -1112,8 +707,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     0.0, position));
         }
 
-        PROSACRobustRangingRadioSourceEstimator3D estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D();
+        RANSACRobustRangingRadioSourceEstimator3D estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D();
 
         //initial value
         assertNull(estimator.getReadings());
@@ -1124,12 +719,6 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
         //check
         assertSame(estimator.getReadings(), readings);
-        assertFalse(estimator.isReady());
-
-        //set quality scores
-        estimator.setQualityScores(new double[readings.size()]);
-
-        //check
         assertTrue(estimator.isReady());
 
         //force IllegalArgumentException
@@ -1146,8 +735,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getListener());
@@ -1161,24 +750,17 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getQualityScores());
 
         //set new value
-        double[] qualityScores = new double[4];
-        estimator.setQualityScores(qualityScores);
+        estimator.setQualityScores(new double[3]);
 
         //check
-        assertSame(estimator.getQualityScores(), qualityScores);
-
-        //force IllegalArgumentException
-        try {
-            estimator.setQualityScores(new double[3]);
-            fail("IllegalArgumentException expected but not thrown");
-        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator.getQualityScores());
     }
 
     @Test
@@ -1203,7 +785,6 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
             List<RangingReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1222,15 +803,13 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     error = 0.0;
                 }
 
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
                 readings.add(new RangingReadingLocated3D<>(accessPoint,
                         distance + error, readingsPositions[i]));
             }
 
-            PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                    new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                            readings, this);
+            RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RANSACRobustRangingRadioSourceEstimator3D<>(readings,
+                            this);
 
             estimator.setResultRefined(false);
             estimator.setComputeAndKeepInliersEnabled(false);
@@ -1304,8 +883,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 avgPositionError);
 
         //force NotReadyException
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1339,7 +918,6 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
             List<RangingReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1358,15 +936,13 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     error = 0.0;
                 }
 
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
                 readings.add(new RangingReadingLocated3D<>(accessPoint,
                         distance + error, readingsPositions[i]));
             }
 
-            PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                    new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                            readings, this);
+            RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RANSACRobustRangingRadioSourceEstimator3D<>(readings,
+                            this);
 
             estimator.setResultRefined(true);
             estimator.setComputeAndKeepInliersEnabled(true);
@@ -1494,8 +1070,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1531,7 +1107,6 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
             List<RangingReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1552,15 +1127,13 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
 
                 error += inlierErrorRandomizer.nextDouble();
 
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
                 readings.add(new RangingReadingLocated3D<>(accessPoint,
                         Math.abs(distance + error), readingsPositions[i]));
             }
 
-            PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                    new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                            readings, this);
+            RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RANSACRobustRangingRadioSourceEstimator3D<>(readings,
+                            this);
 
             estimator.setResultRefined(true);
 
@@ -1686,8 +1259,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1721,7 +1294,6 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
             List<RangingReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1740,15 +1312,13 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     error = 0.0;
                 }
 
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
                 readings.add(new RangingReadingLocated3D<>(accessPoint,
                         distance + error, readingsPositions[i]));
             }
 
-            PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                    new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                            readings, accessPointPosition, this);
+            RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RANSACRobustRangingRadioSourceEstimator3D<>(readings,
+                            accessPointPosition, this);
 
             estimator.setResultRefined(true);
 
@@ -1874,8 +1444,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1911,7 +1481,6 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     MIN_READINGS, MAX_READINGS);
             Point3D[] readingsPositions = new Point3D[numReadings];
             List<RangingReadingLocated3D<Beacon>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
                 readingsPositions[i] = new InhomogeneousPoint3D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1930,15 +1499,12 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                     error = 0.0;
                 }
 
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
                 readings.add(new RangingReadingLocated3D<>(beacon,
                         distance + error, readingsPositions[i]));
             }
 
-            PROSACRobustRangingRadioSourceEstimator3D<Beacon> estimator =
-                    new PROSACRobustRangingRadioSourceEstimator3D<>(qualityScores,
-                            readings);
+            RANSACRobustRangingRadioSourceEstimator3D<Beacon> estimator =
+                    new RANSACRobustRangingRadioSourceEstimator3D<>(readings);
 
             estimator.setResultRefined(true);
 
@@ -2054,8 +1620,8 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
-                new PROSACRobustRangingRadioSourceEstimator3D<>();
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -2065,38 +1631,34 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
     @Override
     public void onEstimateStart(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point3D> estimator) {
         estimateStart++;
-        checkLocked((PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     @Override
     public void onEstimateEnd(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point3D> estimator) {
         estimateEnd++;
-        checkLocked((PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     @Override
     public void onEstimateNextIteration(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point3D> estimator,
                                         int iteration) {
         estimateNextIteration++;
-        checkLocked((PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     @Override
     public void onEstimateProgressChange(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point3D> estimator,
                                          float progress) {
         estimateProgressChange++;
-        checkLocked((PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
+        checkLocked((RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     private void reset() {
         estimateStart = estimateEnd = estimateNextIteration = estimateProgressChange = 0;
     }
 
-    private void checkLocked(PROSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator) {
-        try {
-            estimator.setQualityScores(null);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
+    private void checkLocked(RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator) {
         try {
             estimator.setThreshold(0.5);
             fail("LockedException expected but not thrown");
