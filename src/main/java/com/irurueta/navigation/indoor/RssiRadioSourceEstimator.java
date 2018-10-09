@@ -60,7 +60,7 @@ import java.util.List;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends Point>
         extends RadioSourceEstimator<P, RssiReadingLocated<S, P>,
         RssiRadioSourceEstimatorListener<S, P>> {
@@ -249,8 +249,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition)
-            throws IllegalArgumentException {
+            P initialPosition) throws IllegalArgumentException {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -289,7 +288,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * Constructor.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
+     *                                (expressed in dBm's).
      */
     public RssiRadioSourceEstimator(
             Double initialTransmittedPowerdBm) {
@@ -302,7 +301,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @param readings radio signal readings belonging to the same radio source.
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                estimation of radio source transmitted power
-     *                                (expressed in dBm's)
+     *                                (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
@@ -434,8 +433,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) throws IllegalArgumentException {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }

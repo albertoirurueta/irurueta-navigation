@@ -26,7 +26,7 @@ import com.irurueta.geometry.Point;
  */
 @SuppressWarnings("WeakerAccess")
 public class RangingAndRssiReadingLocated<S extends RadioSource, P extends Point> extends
-        RangingAndRssiReading<S> {
+        RangingAndRssiReading<S> implements ReadingLocated<P> {
 
     /**
      * Position where WiFi reading was made.
