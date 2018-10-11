@@ -344,6 +344,16 @@ public class RangingAndRssiRadioSourceEstimator3D<S extends RadioSource> extends
     }
 
     /**
+     * Gets number of dimensions of position points.
+     * This is always 3.
+     * @return number of dimensions of position points.
+     */
+    @Override
+    public int getNumberOfDimensions() {
+        return Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH;
+    }
+
+    /**
      * Creates inner estimators if needed.
      */
     @Override

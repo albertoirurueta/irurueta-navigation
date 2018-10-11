@@ -24,7 +24,8 @@ import java.util.List;
 /**
  * This is an abstract class to robustly estimate position, transmitted power and pathloss
  * exponent of a radio source (e.g. WiFi access point or bluetooth beacon), by discarding
- * outliers and assuming that the radio source emits isotropically following the
+ * outliers and assuming that the ranging data is available to obtain position with
+ * greater accuracy and that the radio source emits isotropically following the
  * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
  * where Pr is the received power (expressed in mW),
@@ -38,30 +39,24 @@ import java.util.List;
  * retrieved (because many measurements are made on unkown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
- * If RssiReadings contain RSSI standard deviations, those values will be used,
+ * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
- * Implementations of this class should be able to detect and discard outliers in
- * order to find the best solution.
  *
- * IMPORTANT: Implementations of this class can choose to estimate a
- * combination of radio source position, transmitted power and path loss
- * exponent. However enabling all three estimations usually achieves
- * innacurate results. When using this class, estimation must be of at least
- * one parameter (position, transmitted power or path loss exponent) when
- * initial values are provided for the other two, and at most it should consist
- * of two parameters (either position and transmitted power, position and
- * path loss exponent or transmitted power and path loss exponent), providing an
- * initial value for the remaining parameter.
+ * Althouth RobustRssiRadioSourceEstimator can estimate the same parameters of a radio
+ * source, when ranging measures are available along with RSSI measurements,
+ * implementations of this class should be preferred instead as they can provide
+ * greater accuracy.
  *
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P extends Point> extends
-        RobustRadioSourceEstimator<P, RssiReadingLocated<S, P>, RobustRssiRadioSourceEstimatorListener<S,P>> {
+public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSource, P extends Point>
+        extends RobustRadioSourceEstimator<P, RangingAndRssiReadingLocated<S, P>,
+        RobustRangingAndRssiRadioSourceEstimatorListener<S, P>> {
 
     /**
-     * Initial transmitted power to start the estimation of radio source
+     * Initially transmitted power to start the estimation of radio source
      * transmitted power.
      * If not defined, average value of received power readings will be used.
      */
@@ -89,19 +84,13 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * value.
      */
     protected double mInitialPathLossExponent =
-            RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
+            RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Indicates whether transmitted power estimation is enabled or not.
      */
     protected boolean mTransmittedPowerEstimationEnabled =
-            RssiRadioSourceEstimator.DEFAULT_TRANSMITTED_POWER_ESTIMATION_ENABLED;
-
-    /**
-     * Indicates whether radio source position estimation is enabled or not.
-     */
-    protected boolean mPositionEstimationEnabled =
-            RssiRadioSourceEstimator.DEFAULT_POSITION_ESTIMATION_ENABLED;
+            RangingAndRssiRadioSourceEstimator.DEFAULT_TRANSMITTED_POWER_ESTIMATION_ENABLED;
 
     /**
      * Indicates whether path loss estimation is enabled or not.
@@ -144,7 +133,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     /**
      * Constructor.
      */
-    public RobustRssiRadioSourceEstimator() {
+    public RobustRangingAndRssiRadioSourceEstimator() {
         super();
     }
 
@@ -154,8 +143,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings)
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -164,8 +153,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustRssiRadioSourceEstimator(
-            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
+    public RobustRangingAndRssiRadioSourceEstimator(
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
     }
 
@@ -176,9 +165,9 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
@@ -191,8 +180,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition)
             throws IllegalArgumentException {
         super(readings);
@@ -204,7 +193,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public RobustRssiRadioSourceEstimator(P initialPosition) {
+    public RobustRangingAndRssiRadioSourceEstimator(P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
@@ -214,8 +203,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustRssiRadioSourceEstimator(P initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
+    public RobustRangingAndRssiRadioSourceEstimator(P initialPosition,
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
     }
@@ -229,10 +218,10 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         mInitialPosition = initialPosition;
@@ -244,7 +233,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
      */
-    public RobustRssiRadioSourceEstimator(
+    public RobustRangingAndRssiRadioSourceEstimator(
             Double initialTransmittedPowerdBm) {
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -258,8 +247,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings);
@@ -273,9 +262,9 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   (expressed in dBm's)
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustRssiRadioSourceEstimator(
+    public RobustRangingAndRssiRadioSourceEstimator(
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -290,10 +279,10 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -310,8 +299,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings);
@@ -327,7 +316,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RobustRssiRadioSourceEstimator(P initialPosition,
+    public RobustRangingAndRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -342,9 +331,9 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   (expressed in dBm's).
      * @param listener in charge of attending events raised by this instance.
      */
-    public RobustRssiRadioSourceEstimator(P initialPosition,
+    public RobustRangingAndRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -362,10 +351,10 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         mInitialPosition = initialPosition;
@@ -384,8 +373,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent)
             throws IllegalArgumentException {
@@ -402,7 +391,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public RobustRssiRadioSourceEstimator(P initialPosition,
+    public RobustRangingAndRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
@@ -418,9 +407,9 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RobustRssiRadioSourceEstimator(P initialPosition,
+    public RobustRangingAndRssiRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -438,11 +427,11 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings,
+    public RobustRangingAndRssiRadioSourceEstimator(
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
@@ -605,28 +594,6 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     }
 
     /**
-     * Indicates whether radio source position estimation is enabled or not.
-     * @return true if position estimation is enabled, false otherwise.
-     */
-    public boolean isPositionEstimationEnabled() {
-        return mPositionEstimationEnabled;
-    }
-
-    /**
-     * Specifies whether radio source position estimation is enabled or not.
-     * @param positionEstimationEnabled true if position estimation is enabled,
-     *                                  false otherwise.
-     * @throws LockedException if estimator is locked.
-     */
-    public void setPositionEstimationEnabled(boolean positionEstimationEnabled)
-        throws LockedException {
-        if (isLocked()) {
-            throw new LockedException();
-        }
-        mPositionEstimationEnabled = positionEstimationEnabled;
-    }
-
-    /**
      * Indicates whether path loss estimation is enabled or not.
      * @return true if path loss estimation is enabled, false otherwise.
      */
@@ -654,12 +621,8 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      */
     @Override
     public boolean isReady() {
-        //at least one parameter estimtion must be enabled
-        return (mPositionEstimationEnabled || mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled) &&
-                //if position estimation is disabled, an initial position must be provided
-                !(!mPositionEstimationEnabled && mInitialPosition == null) &&
-                //if transmitted power estimation is disabled, an initial transmitted power must be provided
-                !(!mTransmittedPowerEstimationEnabled && mInitialTransmittedPowerdBm == null) &&
+        //if transmitted power estimation is disabled, an initial transmitted power must be provided
+        return !(!mTransmittedPowerEstimationEnabled && mInitialTransmittedPowerdBm == null) &&
                 //readings must also be valid
                 areValidReadings(mReadings);
     }
@@ -726,7 +689,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @param solutions instance where solution will be stored.
      */
     protected abstract void solvePreliminarSolutions(int[] samplesIndices,
-            List<Solution<P>> solutions);
+            List<RobustRangingAndRssiRadioSourceEstimator.Solution<P>> solutions);
 
     /**
      * Estimates residual for a solution obtained for a subset of samples.
@@ -742,7 +705,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
         //Pte is equivalent transmitted power, expressed in dBm
         //k is a constant equal to k = c^2 / (pi * f)^2, where c is speed of light
         //and d is equal to distance between fingerprint and estimated position
-        RssiReadingLocated<S, P> reading = mReadings.get(i);
+        RangingAndRssiReadingLocated<S, P> reading = mReadings.get(i);
         double frequency = reading.getSource().getFrequency();
 
         double pathLossExponent = currentEstimation.getEstimatedPathLossExponent();

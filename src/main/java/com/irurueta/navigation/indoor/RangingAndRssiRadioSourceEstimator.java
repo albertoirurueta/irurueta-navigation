@@ -719,16 +719,6 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     }
 
     /**
-     * Gets number of dimensions of position points.
-     * This is always 2.
-     * @return number of dimensions of position points.
-     */
-    @Override
-    public int getNumberOfDimensions() {
-        return mRangingInnerEstimator.getNumberOfDimensions();
-    }
-
-    /**
      * Gets estimated radio sourceposition.
      * @return estimated radio source position.
      */

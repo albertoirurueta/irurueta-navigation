@@ -8591,6 +8591,18 @@ public class RANSACRobustRssiRadioSourceEstimator3DTest implements
 
     private void checkLocked(RANSACRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator) {
         try {
+            estimator.setPathLossEstimationEnabled(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setTransmittedPowerEstimationEnabled(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setPositionEstimationEnabled(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
             estimator.setThreshold(0.5);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }

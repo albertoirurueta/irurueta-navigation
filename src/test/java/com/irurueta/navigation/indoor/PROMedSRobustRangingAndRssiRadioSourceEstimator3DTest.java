@@ -16,9 +16,9 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.geometry.Accuracy2D;
-import com.irurueta.geometry.InhomogeneousPoint2D;
-import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Accuracy3D;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorException;
@@ -34,13 +34,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @SuppressWarnings("Duplicates")
-public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
-        RobustRssiRadioSourceEstimatorListener<WifiAccessPoint, Point2D> {
+public class PROMedSRobustRangingAndRssiRadioSourceEstimator3DTest implements
+        RobustRangingAndRssiRadioSourceEstimatorListener<WifiAccessPoint, Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            PROMedSRobustRssiRadioSourceEstimator2DTest.class.getName());
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
@@ -77,7 +79,7 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
     private int estimateNextIteration;
     private int estimateProgressChange;
 
-    public PROMedSRobustRssiRadioSourceEstimator2DTest() { }
+    public PROMedSRobustRangingAndRssiRadioSourceEstimator3DTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -96,34 +98,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         //test empty constructor
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
                 RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -141,43 +143,46 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with readings
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 4; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+        for (int i = 0; i < 5; i++) {
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0, position));
+            readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                    0.0, 0.0, position));
         }
 
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -196,46 +201,46 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>());
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(this);
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -253,34 +258,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with readings and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -299,50 +304,51 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with readings and initial position
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, initialPosition);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -355,53 +361,53 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, initialPosition);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial position
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
                 RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -419,34 +425,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with initial position and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -459,39 +465,39 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with readings, initial position and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, initialPosition, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -504,53 +510,55 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, initialPosition, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null,
+                    initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
+                    initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -563,39 +571,39 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with readings and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -614,47 +622,47 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, MAX_RSSI);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), MAX_RSSI);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -667,39 +675,39 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with readings, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -712,53 +720,53 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, MAX_RSSI, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), MAX_RSSI, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with readings, initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, initialPosition, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -771,53 +779,55 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, initialPosition, MAX_RSSI);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null,
+                    initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition, MAX_RSSI);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
+                    initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -830,39 +840,39 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with initial position, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -875,40 +885,40 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with readings, initial position, initial transmitted
         //power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, initialPosition, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -921,35 +931,37 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, initialPosition, MAX_RSSI, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null,
+                    initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition, MAX_RSSI, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
+                    initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with readings, initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -958,16 +970,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -975,42 +987,45 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0, 0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0, 0.0);
+        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                0.0);
+        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                0.0);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, initialPosition, MAX_RSSI,
-                    MIN_PATH_LOSS_EXPONENT);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null,
+                    initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
-                    MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
+                    initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -1019,16 +1034,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -1041,21 +1056,21 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with initial position, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -1064,16 +1079,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -1086,23 +1101,23 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
         //test constructor with readings, initial position, initial transmitted
         //power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 readings, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -1139,50 +1154,50 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    (List<RssiReadingLocated2D<WifiAccessPoint>>)null, initialPosition,
-                    MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null,
+                    initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
-                    MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
+                    initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with quality scores
-        double[] qualityScores = new double[4];
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        double[] qualityScores = new double[5];
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -1195,18 +1210,18 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1]);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1214,34 +1229,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test with quality scores and readings
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
                 RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
@@ -1254,63 +1269,65 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, (List<RssiReadingLocated2D<WifiAccessPoint>>)null);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>());
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with quality scores and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA,
+                0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -1329,12 +1346,12 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1342,16 +1359,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertNull(estimator.getInitialPosition());
@@ -1388,57 +1405,57 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, (List<RssiReadingLocated2D<WifiAccessPoint>>)null, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with quality scores, readings and initial position
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, initialPosition);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
@@ -1457,23 +1474,23 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     qualityScores, null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(),
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1481,34 +1498,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores and initial position
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, initialPosition);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -1521,18 +1538,18 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1540,34 +1557,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, initial position and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, initialPosition, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -1586,12 +1603,12 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1599,34 +1616,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings, initial position and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, initialPosition, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
@@ -1639,29 +1656,29 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     qualityScores, null, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(),
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1669,34 +1686,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -1715,12 +1732,12 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1728,34 +1745,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
@@ -1768,64 +1785,66 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, (List<RssiReadingLocated2D<WifiAccessPoint>>)null, MAX_RSSI);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), MAX_RSSI);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with quality scores, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
                 Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA,
+                0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -1838,18 +1857,19 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1857,16 +1877,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertNull(estimator.getInitialPosition());
@@ -1903,57 +1923,59 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, (List<RssiReadingLocated2D<WifiAccessPoint>>)null, MAX_RSSI, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, (List<RangingAndRssiReadingLocated3D<WifiAccessPoint>>)null,
+                    MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), MAX_RSSI, this);
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
+                    MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
 
 
         //test constructor with quality scores, readings, initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, initialPosition, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
@@ -1966,29 +1988,29 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     qualityScores, null, initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(), initialPosition,
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores, new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(), initialPosition,
                     MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -1996,34 +2018,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, initial position, initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, initialPosition, MAX_RSSI);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -2036,18 +2058,18 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], initialPosition, MAX_RSSI);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -2055,34 +2077,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, initial position, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, initialPosition, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -2095,18 +2117,18 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -2114,34 +2136,34 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings, initial position, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, initialPosition, MAX_RSSI, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getInitialPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
@@ -2154,30 +2176,31 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     qualityScores, null, initialPosition, MAX_RSSI,
                     this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(),
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores,
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition, MAX_RSSI, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -2185,17 +2208,17 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings, initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, initialPosition, MAX_RSSI,
                 MIN_PATH_LOSS_EXPONENT);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2204,16 +2227,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
                 RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
@@ -2226,32 +2249,33 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     qualityScores, null, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(),
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores,
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -2259,17 +2283,17 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, initial position, initial position and initial transmitted power
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, initialPosition, MAX_RSSI,
                 MIN_PATH_LOSS_EXPONENT);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2278,16 +2302,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
@@ -2300,19 +2324,19 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT);
             fail("IllegalArgumentException expected but not thrown");
@@ -2321,17 +2345,17 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, initial position, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2340,16 +2364,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
@@ -2362,19 +2386,19 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     (double[])null, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2383,17 +2407,17 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
 
         //test constructor with quality scores, readings, initial position, initial transmitted power and listener
-        estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+        estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                 qualityScores, readings, initialPosition, MAX_RSSI,
                 MIN_PATH_LOSS_EXPONENT, this);
 
         //check
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROMedS);
-        assertEquals(estimator.getMinReadings(), 4);
-        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
         assertSame(estimator.getInitialPosition(), initialPosition);
@@ -2402,16 +2426,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
         assertNull(estimator.getInliersData());
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
@@ -2424,32 +2448,33 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
         assertEquals(estimator.getEstimatedPathLossExponent(),
-                RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
+                RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     null, readings, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     new double[1], readings, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                     qualityScores, null, initialPosition, MAX_RSSI,
                     MIN_PATH_LOSS_EXPONENT, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                    qualityScores, new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>(),
+            estimator = new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
+                    qualityScores,
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>(),
                     initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                     this);
             fail("IllegalArgumentException expected but not thrown");
@@ -2459,12 +2484,12 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetStopThreshold() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getStopThreshold(),
-                PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD,
+                PROMedSRobustRangingAndRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD,
                 0.0);
 
         //set new value
@@ -2482,79 +2507,47 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetMinReadings() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
-        assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getMinReadings(), 5);
 
         //position only
-        estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(false);
-        estimator.setPathLossEstimationEnabled(false);
-
-        //check
-        assertEquals(estimator.getMinReadings(), 3);
-
-
-        //transmitted power only
-        estimator.setPositionEstimationEnabled(false);
-        estimator.setTransmittedPowerEstimationEnabled(true);
-        estimator.setPathLossEstimationEnabled(false);
-
-        //check
-        assertEquals(estimator.getMinReadings(), 2);
-
-
-        //pathloss only
-        estimator.setPositionEstimationEnabled(false);
-        estimator.setTransmittedPowerEstimationEnabled(false);
-        estimator.setPathLossEstimationEnabled(true);
-
-        //check
-        assertEquals(estimator.getMinReadings(), 2);
-
-
-        //position and transmitted power
-        estimator.setPositionEstimationEnabled(true);
-        estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
         //check
         assertEquals(estimator.getMinReadings(), 4);
+
+        //position and transmitted power
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(false);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 5);
 
 
         //position and pathloss
-        estimator.setPositionEstimationEnabled(true);
         estimator.setTransmittedPowerEstimationEnabled(false);
-        estimator.setPathLossEstimationEnabled(true);
-
-        //check
-        assertEquals(estimator.getMinReadings(), 4);
-
-
-        //transmitted power and pathloss
-        estimator.setPositionEstimationEnabled(false);
-        estimator.setTransmittedPowerEstimationEnabled(true);
-        estimator.setPathLossEstimationEnabled(true);
-
-        //check
-        assertEquals(estimator.getMinReadings(), 3);
-
-
-        //position, transmitted power and patloss
-        estimator.setPositionEstimationEnabled(true);
-        estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(true);
 
         //check
         assertEquals(estimator.getMinReadings(), 5);
+
+
+        //position, transmitted power and patloss
+        estimator.setTransmittedPowerEstimationEnabled(true);
+        estimator.setPathLossEstimationEnabled(true);
+
+        //check
+        assertEquals(estimator.getMinReadings(), 6);
     }
 
     @Test
     public void testGetSetInitialTransmittedPowerdBm() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getInitialTransmittedPowerdBm());
@@ -2568,8 +2561,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetInitialTransmittedPower() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getInitialTransmittedPower());
@@ -2586,14 +2579,15 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
     public void testGetSetInitialPosition() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getInitialPosition());
 
         //set new value
-        InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+        InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
+                randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator.setInitialPosition(initialPosition);
@@ -2606,8 +2600,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
     public void testGetSetInitialPathLossExponent() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getInitialPathLossExponent(),
@@ -2626,8 +2620,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testIsSetTransmittedPowerEstimationEnabled() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertTrue(estimator.isTransmittedPowerEstimationEnabled());
@@ -2640,24 +2634,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
     }
 
     @Test
-    public void testIsSetPositionEstimationEnabled() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-
-        //check default value
-        assertTrue(estimator.isPositionEstimationEnabled());
-
-        //set new value
-        estimator.setPositionEstimationEnabled(false);
-
-        //check
-        assertFalse(estimator.isPositionEstimationEnabled());
-    }
-
-    @Test
     public void testIsSetPathLossEstimationEnabled() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertFalse(estimator.isPathLossEstimationEnabled());
@@ -2671,8 +2650,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetProgressDelta() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getProgressDelta(),
@@ -2698,8 +2677,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetConfidence() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getConfidence(),
@@ -2725,12 +2704,12 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetMaxIterations() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.getMaxIterations(),
-                RobustRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
 
         //set new value
         estimator.setMaxIterations(10);
@@ -2747,56 +2726,58 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testIsSetResultRefined() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.isResultRefined(),
-                RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
 
         //set new value
         estimator.setResultRefined(
-                !RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                !RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
 
         //check
         assertEquals(estimator.isResultRefined(),
-                !RobustRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
+                !RobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
     }
 
     @Test
     public void testIsSetCovarianceKept() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertEquals(estimator.isCovarianceKept(),
-                RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
 
         //set new value
         estimator.setCovarianceKept(
-                !RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                !RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
 
         //check
         assertEquals(estimator.isCovarianceKept(),
-                !RobustRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
+                !RobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
     }
 
     @Test
     public void testAreValidReadings() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0, position));
+            readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                    0.0, 0.0, position));
         }
 
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        estimator.setPositionEstimationEnabled(true);
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
@@ -2804,16 +2785,15 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
         assertFalse(estimator.areValidReadings(null));
         assertFalse(estimator.areValidReadings(
-                new ArrayList<RssiReadingLocated<WifiAccessPoint, Point2D>>()));
+                new ArrayList<RangingAndRssiReadingLocated<WifiAccessPoint, Point3D>>()));
     }
 
     @Test
     public void testGetSetReadings() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        estimator.setPositionEstimationEnabled(true);
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setInitialTransmittedPowerdBm(MAX_RSSI);
         estimator.setPathLossEstimationEnabled(false);
@@ -2824,13 +2804,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isReady());
 
         //set new value
-        List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+        List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-        for (int i = 0; i < 3; i++) {
-            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+        for (int i = 0; i < 4; i++) {
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS),
                     randomizer.nextDouble(MIN_POS, MAX_POS));
-            readings.add(new RssiReadingLocated2D<>(accessPoint, 0.0, position));
+            readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                    0.0, 0.0, position));
         }
 
         estimator.setReadings(readings);
@@ -2840,7 +2823,7 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         assertFalse(estimator.isReady());
 
         //set quality scores
-        estimator.setQualityScores(new double[3]);
+        estimator.setQualityScores(new double[4]);
 
         //check
         assertTrue(estimator.isReady());
@@ -2851,15 +2834,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator.setReadings(new ArrayList<RssiReadingLocated2D<WifiAccessPoint>>());
+            estimator.setReadings(
+                    new ArrayList<RangingAndRssiReadingLocated3D<WifiAccessPoint>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
     public void testGetSetListener() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getListener());
@@ -2873,14 +2857,14 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
     @Test
     public void testGetSetQualityScores() throws LockedException {
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
 
         //check default value
         assertNull(estimator.getQualityScores());
 
         //set new value
-        double[] qualityScores = new double[4];
+        double[] qualityScores = new double[5];
         estimator.setQualityScores(qualityScores);
 
         //check
@@ -2910,8 +2894,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -2920,11 +2905,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -2947,14 +2934,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -2991,8 +2977,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3088,8 +3074,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerError);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -3116,8 +3102,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -3126,11 +3113,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -3153,14 +3142,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -3197,8 +3185,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3219,11 +3207,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -3367,8 +3355,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -3397,8 +3385,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -3407,11 +3396,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -3436,14 +3427,14 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i], INLIER_ERROR_STD));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error,
+                        readingsPositions[i], INLIER_ERROR_STD, INLIER_ERROR_STD));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -3480,8 +3471,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3502,11 +3493,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -3648,8 +3639,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -3678,8 +3669,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -3688,11 +3680,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -3715,19 +3709,19 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            InhomogeneousPoint2D initialPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition =
+                    new InhomogeneousPoint3D(
                             accessPointPosition.getInhomX() + inlierErrorRandomizer.nextDouble(),
-                            accessPointPosition.getInhomY() + inlierErrorRandomizer.nextDouble());
+                            accessPointPosition.getInhomY() + inlierErrorRandomizer.nextDouble(),
+                            accessPointPosition.getInhomZ() + inlierErrorRandomizer.nextDouble());
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -3765,8 +3759,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -3787,11 +3781,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -3935,8 +3929,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -3965,8 +3959,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -3975,11 +3970,12 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -4002,17 +3998,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     inlierErrorRandomizer.nextDouble();
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -4050,8 +4045,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4072,11 +4067,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -4220,8 +4215,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -4250,8 +4245,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -4260,11 +4256,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -4287,21 +4285,21 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            InhomogeneousPoint2D initialPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition =
+                    new InhomogeneousPoint3D(
                             accessPointPosition.getInhomX() + inlierErrorRandomizer.nextDouble(),
-                            accessPointPosition.getInhomY() + inlierErrorRandomizer.nextDouble());
+                            accessPointPosition.getInhomY() + inlierErrorRandomizer.nextDouble(),
+                            accessPointPosition.getInhomZ() + inlierErrorRandomizer.nextDouble());
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     inlierErrorRandomizer.nextDouble();
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -4340,8 +4338,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4362,11 +4360,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -4510,8 +4508,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -4540,8 +4538,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -4550,11 +4549,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -4579,21 +4580,22 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i], INLIER_ERROR_STD));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error,
+                        readingsPositions[i], INLIER_ERROR_STD, INLIER_ERROR_STD));
             }
 
-            InhomogeneousPoint2D initialPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D initialPosition =
+                    new InhomogeneousPoint3D(
                             accessPointPosition.getInhomX() + inlierErrorRandomizer.nextDouble(),
-                            accessPointPosition.getInhomY() + inlierErrorRandomizer.nextDouble());
+                            accessPointPosition.getInhomY() + inlierErrorRandomizer.nextDouble(),
+                            accessPointPosition.getInhomZ() + inlierErrorRandomizer.nextDouble());
             double initialTransmittedPowerdBm = transmittedPowerdBm +
                     inlierErrorRandomizer.nextDouble();
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -4626,8 +4628,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4648,11 +4650,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -4794,8 +4796,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -4826,8 +4828,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -4839,11 +4842,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -4866,14 +4871,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(true);
 
@@ -4913,8 +4917,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -4943,11 +4947,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             }
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -5139,8 +5143,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPathLossStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -5166,8 +5170,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -5179,11 +5184,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -5206,14 +5213,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -5251,8 +5257,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -5271,11 +5277,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -5419,8 +5425,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -5446,8 +5452,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
-            InhomogeneousPoint2D beaconPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D beaconPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -5459,11 +5466,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<Beacon>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<Beacon>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -5486,14 +5495,14 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(beacon, rssi + error,
+                readings.add(new RangingAndRssiReadingLocated3D<>(beacon,
+                        distance, rssi + error,
                         readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<Beacon> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<Beacon> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -5522,8 +5531,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            BeaconWithPowerAndLocated2D estimatedBeacon =
-                    (BeaconWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            BeaconWithPowerAndLocated3D estimatedBeacon =
+                    (BeaconWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedBeacon.getIdentifiers(), beacon.getIdentifiers());
             assertEquals(estimatedBeacon.getTransmittedPower(),
@@ -5542,11 +5551,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
             assertTrue(powerVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -5687,8 +5696,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPowerStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -5713,8 +5722,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -5723,11 +5733,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -5750,18 +5762,16 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(false);
             estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
             estimator.setPathLossEstimationEnabled(false);
@@ -5800,8 +5810,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -5821,11 +5831,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -5920,8 +5930,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -5946,8 +5956,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -5956,11 +5967,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -5983,15 +5996,14 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
 
-            estimator.setPositionEstimationEnabled(true);
             estimator.setInitialPosition(accessPointPosition);
             estimator.setTransmittedPowerEstimationEnabled(false);
             estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
@@ -6031,8 +6043,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -6052,11 +6064,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -6151,8 +6163,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -6177,8 +6189,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -6187,11 +6200,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -6214,14 +6229,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(false);
             estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
             estimator.setPathLossEstimationEnabled(false);
@@ -6263,8 +6277,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -6284,11 +6298,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertEquals(estimatedAccessPoint.getPositionCovariance(),
                     estimator.getEstimatedPositionCovariance());
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -6383,786 +6397,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
-    }
-
-    @Test
-    public void testEstimateTransmittedPowerOnly() throws LockedException, NotReadyException, RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValidPower = 0, numValid = 0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
-            double pathLossExponent = randomizer.nextDouble(
-                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
-
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
-                            randomizer.nextDouble(MIN_POS, MAX_POS),
-                            randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-
-            int numReadings = randomizer.nextInt(
-                    MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
-            for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POS, MAX_POS),
-                        randomizer.nextDouble(MIN_POS, MAX_POS));
-
-                double distance = readingsPositions[i].distanceTo(
-                        accessPointPosition);
-
-                double rssi = Utils.powerTodBm(receivedPower(
-                        transmittedPower, distance,
-                        accessPoint.getFrequency(),
-                        pathLossExponent));
-
-                double error;
-                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
-            }
-
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                            qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(false);
-            estimator.setInitialPosition(accessPointPosition);
-            estimator.setTransmittedPowerEstimationEnabled(true);
-            estimator.setPathLossEstimationEnabled(false);
-            estimator.setInitialPathLossExponent(pathLossExponent);
-
-            estimator.setResultRefined(true);
-
-            reset();
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-            assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    MAX_PATH_LOSS_EXPONENT, 0.0);
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
-
-            estimator.estimate();
-
-            //check
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-            assertTrue(estimateNextIteration > 0);
-            assertTrue(estimateProgressChange >= 0);
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
-            assertNull(estimator.getEstimatedPositionCovariance());
-            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
-            assertNull(estimator.getEstimatedPathLossExponentVariance());
-
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
-
-            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
-            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
-            assertNull(estimatedAccessPoint.getSsid());
-            assertEquals(estimator.getEstimatedPosition(), accessPointPosition);
-            assertEquals(estimatedAccessPoint.getPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    pathLossExponent, 0.0);
-            assertEquals(estimatedAccessPoint.getPathLossExponent(),
-                    pathLossExponent, 0.0);
-            assertNull(estimatedAccessPoint.getPositionCovariance());
-            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
-            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
-
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
-            if (powerVariance <= 0.0) {
-                continue;
-            }
-            assertTrue(powerVariance > 0.0);
-
-            double powerStd = Math.sqrt(powerVariance);
-
-            boolean validPower;
-
-            double powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
-                    transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
-            }
-
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPower) {
-                numValid++;
-            }
-
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-        }
-
-        assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
-        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
-
-        //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
-    }
-
-    @Test
-    public void testEstimateTransmittedPowerOnlyWithInitialTransmittedPower() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValidPower = 0, numValid = 0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
-            double pathLossExponent = randomizer.nextDouble(
-                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
-
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
-                            randomizer.nextDouble(MIN_POS, MAX_POS),
-                            randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-
-            int numReadings = randomizer.nextInt(
-                    MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
-            for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POS, MAX_POS),
-                        randomizer.nextDouble(MIN_POS, MAX_POS));
-
-                double distance = readingsPositions[i].distanceTo(
-                        accessPointPosition);
-
-                double rssi = Utils.powerTodBm(receivedPower(
-                        transmittedPower, distance,
-                        accessPoint.getFrequency(),
-                        pathLossExponent));
-
-                double error;
-                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
-            }
-
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                            qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(false);
-            estimator.setInitialPosition(accessPointPosition);
-            estimator.setTransmittedPowerEstimationEnabled(true);
-            estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
-            estimator.setPathLossEstimationEnabled(false);
-            estimator.setInitialPathLossExponent(pathLossExponent);
-
-            estimator.setResultRefined(true);
-
-            reset();
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-            assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    MAX_PATH_LOSS_EXPONENT, 0.0);
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
-
-            estimator.estimate();
-
-            //check
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-            assertTrue(estimateNextIteration > 0);
-            assertTrue(estimateProgressChange >= 0);
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
-            assertNull(estimator.getEstimatedPositionCovariance());
-            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
-            assertNull(estimator.getEstimatedPathLossExponentVariance());
-
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
-
-            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
-            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
-            assertNull(estimatedAccessPoint.getSsid());
-            assertEquals(estimator.getEstimatedPosition(), accessPointPosition);
-            assertEquals(estimatedAccessPoint.getPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    pathLossExponent, 0.0);
-            assertEquals(estimatedAccessPoint.getPathLossExponent(),
-                    pathLossExponent, 0.0);
-            assertNull(estimatedAccessPoint.getPositionCovariance());
-            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
-            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
-
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
-            if (powerVariance <= 0.0) {
-                continue;
-            }
-            assertTrue(powerVariance > 0.0);
-
-            double powerStd = Math.sqrt(powerVariance);
-
-            boolean validPower;
-
-            double powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
-                    transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
-            }
-
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPower) {
-                numValid++;
-            }
-
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-        }
-
-        assertTrue(numValidPower > 0);
-        assertTrue(numValid > 0);
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
-        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
-
-        //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
-    }
-
-    @Test
-    public void testEstimatePathlossOnly() throws LockedException, NotReadyException, RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValidPathLoss = 0, numValid = 0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
-            double pathLossExponent = randomizer.nextDouble(
-                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
-
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
-                            randomizer.nextDouble(MIN_POS, MAX_POS),
-                            randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-
-            int numReadings = randomizer.nextInt(
-                    MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
-            for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POS, MAX_POS),
-                        randomizer.nextDouble(MIN_POS, MAX_POS));
-
-                double distance = readingsPositions[i].distanceTo(
-                        accessPointPosition);
-
-                double rssi = Utils.powerTodBm(receivedPower(
-                        transmittedPower, distance,
-                        accessPoint.getFrequency(),
-                        pathLossExponent));
-
-                double error;
-                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
-            }
-
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                            qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(false);
-            estimator.setInitialPosition(accessPointPosition);
-            estimator.setTransmittedPowerEstimationEnabled(false);
-            estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
-            estimator.setPathLossEstimationEnabled(true);
-
-            estimator.setResultRefined(true);
-
-            reset();
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-            assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    MAX_PATH_LOSS_EXPONENT, 0.0);
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
-
-            estimator.estimate();
-
-            //check
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-            assertTrue(estimateNextIteration > 0);
-            assertTrue(estimateProgressChange >= 0);
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
-            assertNull(estimator.getEstimatedPositionCovariance());
-            assertNull(estimator.getEstimatedTransmittedPowerVariance());
-            assertNotNull(estimator.getEstimatedPathLossExponentVariance());
-
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
-
-            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
-            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
-            assertNull(estimatedAccessPoint.getSsid());
-            assertEquals(estimator.getEstimatedPosition(), accessPointPosition);
-            assertEquals(estimatedAccessPoint.getPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                    transmittedPowerdBm, 0.0);
-            assertEquals(estimatedAccessPoint.getTransmittedPower(),
-                    transmittedPowerdBm, 0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    estimatedAccessPoint.getPathLossExponent(), 0.0);
-            assertNull(estimatedAccessPoint.getPositionCovariance());
-            assertNull(estimatedAccessPoint.getTransmittedPowerStandardDeviation());
-            assertEquals(estimatedAccessPoint.getPathLossExponentStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
-
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
-            assertTrue(pathLossVariance > 0.0);
-
-            double pathLossStd = Math.sqrt(pathLossVariance);
-
-            boolean validPathLoss;
-
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
-            }
-
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPathLoss) {
-                numValid++;
-            }
-
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-        }
-
-        assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
-        LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
-
-        //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
-    }
-
-    @Test
-    public void testEstimatePathlossOnlyWithInitialPathloss() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValidPathLoss = 0, numValid = 0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
-            double pathLossExponent = randomizer.nextDouble(
-                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
-
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
-                            randomizer.nextDouble(MIN_POS, MAX_POS),
-                            randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-
-            int numReadings = randomizer.nextInt(
-                    MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
-            for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POS, MAX_POS),
-                        randomizer.nextDouble(MIN_POS, MAX_POS));
-
-                double distance = readingsPositions[i].distanceTo(
-                        accessPointPosition);
-
-                double rssi = Utils.powerTodBm(receivedPower(
-                        transmittedPower, distance,
-                        accessPoint.getFrequency(),
-                        pathLossExponent));
-
-                double error;
-                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
-            }
-
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                            qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(false);
-            estimator.setInitialPosition(accessPointPosition);
-            estimator.setTransmittedPowerEstimationEnabled(false);
-            estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
-            estimator.setPathLossEstimationEnabled(true);
-            estimator.setInitialPathLossExponent(pathLossExponent);
-
-            estimator.setResultRefined(true);
-
-            reset();
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-            assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    MAX_PATH_LOSS_EXPONENT, 0.0);
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
-
-            estimator.estimate();
-
-            //check
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-            assertTrue(estimateNextIteration > 0);
-            assertTrue(estimateProgressChange >= 0);
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
-            assertNull(estimator.getEstimatedPositionCovariance());
-            assertNull(estimator.getEstimatedTransmittedPowerVariance());
-            assertNotNull(estimator.getEstimatedPathLossExponentVariance());
-
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
-
-            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
-            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
-            assertNull(estimatedAccessPoint.getSsid());
-            assertEquals(estimator.getEstimatedPosition(), accessPointPosition);
-            assertEquals(estimatedAccessPoint.getPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                    transmittedPowerdBm, 0.0);
-            assertEquals(estimatedAccessPoint.getTransmittedPower(),
-                    transmittedPowerdBm, 0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    estimatedAccessPoint.getPathLossExponent(), 0.0);
-            assertNull(estimatedAccessPoint.getPositionCovariance());
-            assertNull(estimatedAccessPoint.getTransmittedPowerStandardDeviation());
-            assertEquals(estimatedAccessPoint.getPathLossExponentStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
-
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
-            assertTrue(pathLossVariance > 0.0);
-
-            double pathLossStd = Math.sqrt(pathLossVariance);
-
-            boolean validPathLoss;
-
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
-            }
-
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPathLoss) {
-                numValid++;
-            }
-
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-        }
-
-        assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
-        LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
-
-        //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -7191,8 +6427,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -7201,11 +6438,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -7228,14 +6467,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setTransmittedPowerEstimationEnabled(false);
             estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
             estimator.setPathLossEstimationEnabled(true);
@@ -7273,8 +6511,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -7296,11 +6534,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -7443,8 +6681,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPathLossStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -7473,8 +6711,9 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS),
                             randomizer.nextDouble(MIN_POS, MAX_POS));
             double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
@@ -7483,11 +6722,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
             int numReadings = randomizer.nextInt(
                     MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
             double[] qualityScores = new double[numReadings];
             for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS),
                         randomizer.nextDouble(MIN_POS, MAX_POS));
 
@@ -7510,14 +6751,14 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
 
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
 
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error,
                         readingsPositions[i]));
             }
 
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
+            PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>(
                             qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(true);
             estimator.setInitialPosition(accessPointPosition);
             estimator.setTransmittedPowerEstimationEnabled(false);
             estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
@@ -7557,8 +6798,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
 
             assertEquals(estimatedAccessPoint.getBssid(), "bssid");
             assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
@@ -7580,11 +6821,11 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
             double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
             assertTrue(pathLossVariance > 0.0);
 
-            Accuracy2D accuracyStd = new Accuracy2D(
+            Accuracy3D accuracyStd = new Accuracy3D(
                     estimator.getEstimatedPositionCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
 
-            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
             double positionStd = accuracyStd.getAverageAccuracy();
@@ -7727,508 +6968,8 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 avgPathLossStd);
 
         //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
-    }
-
-    @Test
-    public void testEstimateTransmittedPowerAndPathloss() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValidPower = 0, numValidPathLoss = 0, numValid = 0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
-            double pathLossExponent = randomizer.nextDouble(
-                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
-
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
-                            randomizer.nextDouble(MIN_POS, MAX_POS),
-                            randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-
-            int numReadings = randomizer.nextInt(
-                    MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
-            for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POS, MAX_POS),
-                        randomizer.nextDouble(MIN_POS, MAX_POS));
-
-                double distance = readingsPositions[i].distanceTo(
-                        accessPointPosition);
-
-                double rssi = Utils.powerTodBm(receivedPower(
-                        transmittedPower, distance,
-                        accessPoint.getFrequency(),
-                        pathLossExponent));
-
-                double error;
-                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
-            }
-
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                            qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(false);
-            estimator.setInitialPosition(accessPointPosition);
-            estimator.setTransmittedPowerEstimationEnabled(true);
-            estimator.setPathLossEstimationEnabled(true);
-
-            estimator.setResultRefined(true);
-
-            reset();
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-            assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    MAX_PATH_LOSS_EXPONENT, 0.0);
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
-
-            estimator.estimate();
-
-            //check
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-            assertTrue(estimateNextIteration > 0);
-            assertTrue(estimateProgressChange >= 0);
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
-            assertNull(estimator.getEstimatedPositionCovariance());
-            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
-            assertNotNull(estimator.getEstimatedPathLossExponentVariance());
-
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
-
-            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
-            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
-            assertNull(estimatedAccessPoint.getSsid());
-            assertEquals(estimatedAccessPoint.getTransmittedPower(),
-                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
-            assertEquals(estimatedAccessPoint.getPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    estimatedAccessPoint.getPathLossExponent(), 0.0);
-            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
-            assertEquals(estimatedAccessPoint.getPathLossExponentStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
-            assertNull(estimatedAccessPoint.getPositionCovariance());
-
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
-            if (powerVariance <= 0.0) {
-                continue;
-            }
-            assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
-            assertTrue(pathLossVariance > 0.0);
-
-            double powerStd = Math.sqrt(powerVariance);
-            double pathLossStd = Math.sqrt(pathLossVariance);
-
-            boolean validPower, validPathLoss;
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
-            }
-
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
-            }
-
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPower && validPathLoss) {
-                numValid++;
-            }
-
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-        }
-
-        assertTrue(numValidPower > 0);
-        assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
-        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
-
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
-        LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
-
-        //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
-        try {
-            estimator.estimate();
-            fail("NotReadyException expected but not thrown");
-        } catch (NotReadyException ignore) { }
-    }
-
-    @Test
-    public void testEstimateTransmittedPowerAndPathlossWithInitialValues() throws LockedException, NotReadyException,
-            RobustEstimatorException {
-        UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
-                new Random(), 0.0, STD_OUTLIER_ERROR);
-
-        int numValidPower = 0, numValidPathLoss = 0, numValid = 0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
-            double pathLossExponent = randomizer.nextDouble(
-                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
-
-            InhomogeneousPoint2D accessPointPosition =
-                    new InhomogeneousPoint2D(
-                            randomizer.nextDouble(MIN_POS, MAX_POS),
-                            randomizer.nextDouble(MIN_POS, MAX_POS));
-            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
-            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
-
-            int numReadings = randomizer.nextInt(
-                    MIN_READINGS, MAX_READINGS);
-            Point2D[] readingsPositions = new Point2D[numReadings];
-            List<RssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numReadings];
-            for (int i = 0; i < numReadings; i++) {
-                readingsPositions[i] = new InhomogeneousPoint2D(
-                        randomizer.nextDouble(MIN_POS, MAX_POS),
-                        randomizer.nextDouble(MIN_POS, MAX_POS));
-
-                double distance = readingsPositions[i].distanceTo(
-                        accessPointPosition);
-
-                double rssi = Utils.powerTodBm(receivedPower(
-                        transmittedPower, distance,
-                        accessPoint.getFrequency(),
-                        pathLossExponent));
-
-                double error;
-                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
-                    error = errorRandomizer.nextDouble();
-                } else {
-                    //inlier
-                    error = 0.0;
-                }
-
-                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
-
-                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi + error,
-                        readingsPositions[i]));
-            }
-
-            PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                    new PROMedSRobustRssiRadioSourceEstimator2D<>(
-                            qualityScores, readings, this);
-            estimator.setPositionEstimationEnabled(false);
-            estimator.setInitialPosition(accessPointPosition);
-            estimator.setTransmittedPowerEstimationEnabled(true);
-            estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
-            estimator.setPathLossEstimationEnabled(true);
-            estimator.setInitialPathLossExponent(pathLossExponent);
-
-            estimator.setResultRefined(true);
-
-            reset();
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-            assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    MAX_PATH_LOSS_EXPONENT, 0.0);
-            assertEquals(estimateStart, 0);
-            assertEquals(estimateEnd, 0);
-            assertEquals(estimateNextIteration, 0);
-            assertEquals(estimateProgressChange, 0);
-
-            estimator.estimate();
-
-            //check
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-            assertTrue(estimateNextIteration > 0);
-            assertTrue(estimateProgressChange >= 0);
-            assertTrue(estimator.isReady());
-            assertFalse(estimator.isLocked());
-
-            assertNotNull(estimator.getInliersData());
-            assertNotNull(estimator.getCovariance());
-            assertNull(estimator.getEstimatedPositionCovariance());
-            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
-            assertNotNull(estimator.getEstimatedPathLossExponentVariance());
-
-            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
-                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
-
-            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
-            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
-            assertNull(estimatedAccessPoint.getSsid());
-            assertEquals(estimatedAccessPoint.getTransmittedPower(),
-                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
-            assertEquals(estimatedAccessPoint.getPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedPosition(), accessPointPosition);
-            assertEquals(estimator.getEstimatedPathLossExponent(),
-                    estimatedAccessPoint.getPathLossExponent(), 0.0);
-            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
-            assertEquals(estimatedAccessPoint.getPathLossExponentStandardDeviation(),
-                    Math.sqrt(estimator.getEstimatedPathLossExponentVariance()), 0.0);
-            assertNull(estimatedAccessPoint.getPositionCovariance());
-
-            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
-            if (powerVariance <= 0.0) {
-                continue;
-            }
-            assertTrue(powerVariance > 0.0);
-            double pathLossVariance = estimator.getEstimatedPathLossExponentVariance();
-            assertTrue(pathLossVariance > 0.0);
-
-            double powerStd = Math.sqrt(powerVariance);
-            double pathLossStd = Math.sqrt(pathLossVariance);
-
-            boolean validPower, validPathLoss;
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
-            }
-
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
-            }
-
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPower && validPathLoss) {
-                numValid++;
-            }
-
-            assertEquals(estimateStart, 1);
-            assertEquals(estimateEnd, 1);
-        }
-
-        assertTrue(numValidPower > 0);
-        assertTrue(numValidPathLoss > 0);
-        assertTrue(numValid > 0);
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
-        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
-
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
-        LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
-
-        //force NotReadyException
-        PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
-                new PROMedSRobustRssiRadioSourceEstimator2D<>();
+        PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new PROMedSRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -8236,29 +6977,27 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
     }
 
     @Override
-    public void onEstimateStart(RobustRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    public void onEstimateStart(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point3D> estimator) {
         estimateStart++;
-        checkLocked((PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     @Override
-    public void onEstimateEnd(RobustRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
+    public void onEstimateEnd(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point3D> estimator) {
         estimateEnd++;
-        checkLocked((PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     @Override
-    public void onEstimateNextIteration(RobustRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
-                                        int iteration) {
+    public void onEstimateNextIteration(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point3D> estimator, int iteration) {
         estimateNextIteration++;
-        checkLocked((PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     @Override
-    public void onEstimateProgressChange(RobustRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator,
-                                         float progress) {
+    public void onEstimateProgressChange(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point3D> estimator, float progress) {
         estimateProgressChange++;
-        checkLocked((PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint>)estimator);
+        checkLocked((PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint>)estimator);
     }
 
     private void reset() {
@@ -8276,17 +7015,13 @@ public class PROMedSRobustRssiRadioSourceEstimator2DTest implements
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(PROMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator) {
+    private void checkLocked(PROMedSRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator) {
         try {
             estimator.setPathLossEstimationEnabled(false);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {
             estimator.setTransmittedPowerEstimationEnabled(false);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
-        try {
-            estimator.setPositionEstimationEnabled(false);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

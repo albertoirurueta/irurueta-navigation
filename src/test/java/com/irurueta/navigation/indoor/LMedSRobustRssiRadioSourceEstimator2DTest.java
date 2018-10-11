@@ -7252,6 +7252,18 @@ public class LMedSRobustRssiRadioSourceEstimator2DTest implements
 
     private void checkLocked(LMedSRobustRssiRadioSourceEstimator2D<WifiAccessPoint> estimator) {
         try {
+            estimator.setPathLossEstimationEnabled(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setTransmittedPowerEstimationEnabled(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setPositionEstimationEnabled(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
             estimator.setStopThreshold(0.5);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
