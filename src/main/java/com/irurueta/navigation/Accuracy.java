@@ -120,6 +120,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D).
+     * This value is represented by the smallest semi axis representing the ellipse or ellipsoid of accuracy.
      * @return smallest accuracy in any direction.
      */
     public Distance getSmallestAccuracy() {
@@ -129,6 +130,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     /**
      * Gets smallest (best) accuracy in any direction (i.e. either 2D or 3D)
      * expressed in meters.
+     * This value is represented by the smallest semi axis representing the ellipse or ellipsoid of accuracy.
      * @return smallest accuracy in any direction expressed in meters.
      */
     public double getSmallestAccuracyMeters() {
@@ -137,6 +139,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Gets largest (worse) accuracy in any direction (i.e either 2D or 3D).
+     * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
      * @return largest accuracy in any direction.
      */
     public Distance getLargestAccuracy() {
@@ -146,6 +149,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
     /**
      * Gets largest (worse) accuracy in any direction (i.e. either 2D or 3D)
      * expressed in meters.
+     * This value is represented by the largest semi axis representing the ellipse or ellipsoid of accuracy.
      * @return largest accuracy in any direction expressed in meters.
      */
     public double getLargestAccuracyMeters() {
@@ -154,6 +158,8 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Gets average accuracy among all directions.
+     * This value is equal to the average value of all semi axes representing the ellipse or ellipsoid of
+     * accuracy.
      * @return average accuracy among all directions.
      */
     public Distance getAverageAccuracy() {
@@ -162,6 +168,8 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
 
     /**
      * Gets average accuracy among all directions expressed in meters.
+     * This value is equal to the average value of all semi axes representing the ellipse or ellipsoid of
+     * accuracy.
      * @return average accuracy among all directions expressed in meters.
      */
     public double getAverageAccuracyMeters() {
