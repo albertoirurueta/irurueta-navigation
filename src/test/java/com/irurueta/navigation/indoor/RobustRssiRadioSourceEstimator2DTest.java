@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class RobustRssiRadioSourceEstimator2DTest implements
         RobustRssiRadioSourceEstimatorListener<WifiAccessPoint, Point2D> {
 
