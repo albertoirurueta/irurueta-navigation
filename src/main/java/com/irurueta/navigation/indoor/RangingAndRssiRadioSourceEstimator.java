@@ -50,6 +50,10 @@ import java.util.List;
  * implementations of this class should be preferred instead as they can provide
  * greater accuracy.
  *
+ * Notice that implementations of this class assume that when retrieving the
+ * covariance of all parameters the cross correlation among position
+ * terms and pathloss or transmitted power is zero.
+ *
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
@@ -62,11 +66,6 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * Speed of light expressed in meters per second (m/s).
      */
     public static final double SPEED_OF_LIGHT = 299792458.0;
-
-    /**
-     * Default standard deviations assumed for RSSI readings being fitted.
-     */
-    public static final double DEFAULT_POWER_STANDARD_DEVIATION = 1.0;
 
     /**
      * Default exponent typically used on free space for path loss propagation in
@@ -85,6 +84,13 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * Indicates whether path loss estimation is enabled or not by default.
      */
     public static final boolean DEFAULT_PATHLOSS_ESTIMATION_ENABLED = false;
+
+    /**
+     * Indicates that by default position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard deviation
+     * assuming that both measures are statistically independent.
+     */
+    public static final boolean DEFAULT_USE_READING_POSITION_COVARIANCES = true;
 
     /**
      * RSSI radio source estimator.
@@ -167,6 +173,13 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * value.
      */
     private double mInitialPathLossExponent = DEFAULT_PATH_LOSS_EXPONENT;
+
+    /**
+     * Indicates whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard deviation
+     * assuming that both measures are statistically independent.
+     */
+    private boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
 
     /**
      * Constructor.
@@ -685,13 +698,39 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     }
 
     /**
+     * Indicates whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard
+     * deviation assuming that both measures are statistically independent.
+     * @return true to take into account reading position covariances, false otherwise.
+     */
+    public boolean getUseReadingPositionCovariance() {
+        return mUseReadingPositionCovariances;
+    }
+
+    /**
+     * Specifies whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard
+     * deviation assuming that both measures are statistically independent.
+     * @param useReadingPositionCovariances true to take into account reading position covariances, false
+     *                                      otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setUseReadingPositionCovariances(boolean useReadingPositionCovariances)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mUseReadingPositionCovariances = useReadingPositionCovariances;
+    }
+
+    /**
      * Gets minimum required number of readings to estimate
      * power, position and pathloss exponent.
      * This value depends on the number of parameters to
      * be estimated, but for position only, this is 3
      * readings.
      * @return minimum required number of readings.
-     * @throws if inner RSSI estimator is busy.
+     * @throws IllegalStateException if inner RSSI estimator is busy.
      */
     @Override
     public int getMinReadings() throws IllegalStateException {
@@ -772,6 +811,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
             }
 
             //estimate position using ranging data
+            mRangingInnerEstimator.setUseReadingPositionCovariances(
+                    mUseReadingPositionCovariances);
             mRangingInnerEstimator.setReadings(rangingReadings);
             mRangingInnerEstimator.setInitialPosition(mInitialPosition);
 

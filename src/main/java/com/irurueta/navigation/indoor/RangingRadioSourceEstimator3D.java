@@ -16,6 +16,7 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.Accuracy3D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
@@ -219,6 +220,19 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
     protected void buildNonLinearSolverIfNeeded() {
         if (mNonLinearSolver == null && mNonLinearSolverEnabled) {
             mNonLinearSolver = new NonLinearLeastSquaresTrilateration3DSolver();
+        }
+    }
+
+    /**
+     * Build an instance of accuracy if needed.
+     */
+    @Override
+    protected void buildAccuracyIfNeeded() {
+        if (mAccuracy == null && mUseReadingPositionCovariances) {
+            mAccuracy = new Accuracy3D();
+
+            //to work with standard deviations, we need a unitary factor
+            mAccuracy.setStandardDeviationFactor(1.0);
         }
     }
 

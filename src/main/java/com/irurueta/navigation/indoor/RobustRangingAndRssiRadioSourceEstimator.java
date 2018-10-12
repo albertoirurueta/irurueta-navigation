@@ -56,6 +56,13 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
         RobustRangingAndRssiRadioSourceEstimatorListener<S, P>> {
 
     /**
+     * Indicates that by default position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard deviation
+     * assuming that both measures are statistically independent.
+     */
+    public static final boolean DEFAULT_USE_READING_POSITION_COVARIANCES = true;
+
+    /**
      * Initially transmitted power to start the estimation of radio source
      * transmitted power.
      * If not defined, average value of received power readings will be used.
@@ -129,6 +136,13 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      * exponent estimation is enabled.
      */
     protected Double mEstimatedPathLossExponentVariance;
+
+    /**
+     * Indicates whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard deviation
+     * assuming that both measures are statistically independent.
+     */
+    protected boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
 
     /**
      * Constructor.
@@ -613,6 +627,32 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
             throw new LockedException();
         }
         mPathLossEstimationEnabled = pathLossEstimationEnabled;
+    }
+
+    /**
+     * Indicates whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard
+     * deviation assuming that both measures are statistically independent.
+     * @return true to take into account reading position covariances, false otherwise.
+     */
+    public boolean getUseReadingPositionCovariance() {
+        return mUseReadingPositionCovariances;
+    }
+
+    /**
+     * Specifies whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard
+     * deviation assuming that both measures are statistically independent.
+     * @param useReadingPositionCovariances true to take into account reading position covariances, false
+     *                                      otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setUseReadingPositionCovariances(boolean useReadingPositionCovariances)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mUseReadingPositionCovariances = useReadingPositionCovariances;
     }
 
     /**

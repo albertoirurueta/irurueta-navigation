@@ -2,7 +2,6 @@ package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
@@ -2741,10 +2740,15 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator3D<S extends Radio
             mInnerEstimator.setInitialPosition(mInitialPosition);
             mInnerEstimator.setInitialPathLossExponent(mInitialPathLossExponent);
 
-            mInnerEstimator.setTransmittedPowerEstimationEnabled(mTransmittedPowerEstimationEnabled);
+            mInnerEstimator.setTransmittedPowerEstimationEnabled(
+                    mTransmittedPowerEstimationEnabled);
             mInnerEstimator.setPathLossEstimationEnabled(mPathLossEstimationEnabled);
 
             mInnerEstimator.setReadings(mInnerReadings);
+
+            //indicastes whether readings position covariances must be taken into account
+            mInnerEstimator.setUseReadingPositionCovariances(
+                    mUseReadingPositionCovariances);
 
             mInnerEstimator.estimate();
 
@@ -2793,9 +2797,13 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator3D<S extends Radio
                 mInnerEstimator.setInitialPosition(initialPosition);
                 mInnerEstimator.setInitialTransmittedPowerdBm(initialTransmittedPowerdBm);
                 mInnerEstimator.setInitialPathLossExponent(initialPathLossExponent);
-                mInnerEstimator.setTransmittedPowerEstimationEnabled(mTransmittedPowerEstimationEnabled);
-                mInnerEstimator.setPathLossEstimationEnabled(mPathLossEstimationEnabled);
+                mInnerEstimator.setTransmittedPowerEstimationEnabled(
+                        mTransmittedPowerEstimationEnabled);
+                mInnerEstimator.setPathLossEstimationEnabled(
+                        mPathLossEstimationEnabled);
                 mInnerEstimator.setReadings(mInnerReadings);
+                mInnerEstimator.setUseReadingPositionCovariances(
+                        mUseReadingPositionCovariances);
 
                 mInnerEstimator.estimate();
 

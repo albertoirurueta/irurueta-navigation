@@ -15,6 +15,8 @@
  */
 package com.irurueta.navigation.indoor;
 
+import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
+import com.irurueta.geometry.Accuracy;
 import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
@@ -32,9 +34,17 @@ import java.util.List;
  * measures travel time of signal and converts the result into distances by taking into
  * account the speed of light as the propagation speed.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class RangingRadioSourceEstimator<S extends RadioSource, P extends Point>
         extends RadioSourceEstimator<P, RangingReadingLocated<S, P>,
         RangingRadioSourceEstimatorListener<S, P>> {
+
+    /**
+     * Indicates that by default position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard deviation
+     * assuming that both measures are statistically independent.
+     */
+    public static final boolean DEFAULT_USE_READING_POSITION_COVARIANCES = true;
 
     /**
      * Internal linear solver to find radio source position when no initial
@@ -49,6 +59,13 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     protected NonLinearLeastSquaresTrilaterationSolver<P> mNonLinearSolver;
 
     /**
+     * Contains accuracy of a reading position.
+     * This is used internally to compute additional distance standard deviation due to position
+     * accuracy.
+     */
+    protected Accuracy mAccuracy;
+
+    /**
      * Initial position to start the estimation of radio source position.
      */
     protected P mInitialPosition;
@@ -59,6 +76,13 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
      * covariance is not computed.
      */
     protected boolean mNonLinearSolverEnabled = true;
+
+    /**
+     * Indicates whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard deviation
+     * assuming that both measures are statistically independent.
+     */
+    protected boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
 
     /**
      * Constructor.
@@ -207,6 +231,32 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     }
 
     /**
+     * Indicates whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard
+     * deviation assuming that both measures are statistically independent.
+     * @return true to take into account reading position covariances, false otherwise.
+     */
+    public boolean getUseReadingPositionCovariance() {
+        return mUseReadingPositionCovariances;
+    }
+
+    /**
+     * Specifies whether position covariances of readings must be taken into account to increase
+     * the amount of standard deviation of each ranging measure by the amount of position standard
+     * deviation assuming that both measures are statistically independent.
+     * @param useReadingPositionCovariances true to take into account reading position covariances, false
+     *                                      otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setUseReadingPositionCovariances(boolean useReadingPositionCovariances)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mUseReadingPositionCovariances = useReadingPositionCovariances;
+    }
+
+    /**
      * Indicates whether this instance is ready to start the estimation.
      * @return true if this instance is ready, false otherwise.
      */
@@ -261,7 +311,8 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
             } else {
                 //non linear solver disabled
                 mEstimatedPositionCoordinates =
-                        mLinearSolver.getEstimatedPositionCoordinates();
+                        mLinearSolver != null ?
+                                mLinearSolver.getEstimatedPositionCoordinates() : null;
                 mEstimatedPositionCovariance = mEstimatedCovariance = null;
             }
 
@@ -287,6 +338,11 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     protected abstract void buildNonLinearSolverIfNeeded();
 
     /**
+     * Build an instance of accuracy if needed.
+     */
+    protected abstract void buildAccuracyIfNeeded();
+
+    /**
      * Sets positions, distances and standard deviations of distances on internal
      * trilateration solver.
      * @param positions positions to be set.
@@ -305,6 +361,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     private void buildSolversIfNeeded() {
         buildLinearSolverIfNeeded();
         buildNonLinearSolverIfNeeded();
+        buildAccuracyIfNeeded();
     }
 
     /**
@@ -329,11 +386,30 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
                 return;
             }
 
+            double positionDistanceStandardDeviation = 0.0;
+            if (mUseReadingPositionCovariances && mAccuracy != null && reading.getPositionCovariance() != null) {
+                try {
+                    mAccuracy.setCovarianceMatrix(reading.getPositionCovariance());
+                    positionDistanceStandardDeviation = mAccuracy.getAverageAccuracy();
+                } catch (NonSymmetricPositiveDefiniteMatrixException e) {
+                    positionDistanceStandardDeviation = 0.0;
+                }
+            }
+
             double distance = reading.getDistance();
             Double distanceStandardDeviation = reading.getDistanceStandardDeviation();
             if (distanceStandardDeviation == null) {
                 distanceStandardDeviation =
                         NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
+            }
+
+            if (mUseReadingPositionCovariances) {
+                //assuming that ranging measure and position measure are statistically independent, the
+                //resulting variance would be the sum of their variances, when the resulting standard
+                //deviation is the square root of the resulting variance (which is the sum of the square of
+                //the standard deviations)
+                distanceStandardDeviation = Math.sqrt(Math.pow(distanceStandardDeviation, 2.0) +
+                        Math.pow(positionDistanceStandardDeviation, 2.0));
             }
 
             positions.add(position);

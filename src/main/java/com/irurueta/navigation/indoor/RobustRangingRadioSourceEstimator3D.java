@@ -722,6 +722,9 @@ public abstract class RobustRangingRadioSourceEstimator3D<S extends RadioSource>
             //required)
             mInnerEstimator.setNonLinearSolverEnabled(mInitialPosition != null);
 
+            //indicastes whether readings position covariances must be taken into account
+            mInnerEstimator.setUseReadingPositionCovariances(mUseReadingPositionCovariances);
+
             mInnerEstimator.estimate();
 
             Point3D estimatedPosition = mInnerEstimator.getEstimatedPosition();
@@ -762,6 +765,8 @@ public abstract class RobustRangingRadioSourceEstimator3D<S extends RadioSource>
                 mInnerEstimator.setReadings(mInnerReadings);
 
                 mInnerEstimator.setNonLinearSolverEnabled(true);
+                mInnerEstimator.setUseReadingPositionCovariances(
+                        mUseReadingPositionCovariances);
                 mInnerEstimator.estimate();
 
                 Matrix cov = mInnerEstimator.getEstimatedCovariance();

@@ -16,6 +16,7 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.Accuracy2D;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
@@ -222,6 +223,20 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
             mNonLinearSolver = new NonLinearLeastSquaresTrilateration2DSolver();
         }
     }
+
+    /**
+     * Build an instance of accuracy if needed.
+     */
+    @Override
+    protected void buildAccuracyIfNeeded() {
+        if (mAccuracy == null && mUseReadingPositionCovariances) {
+            mAccuracy = new Accuracy2D();
+
+            //to work with standard deviations, we need a unitary factor
+            mAccuracy.setStandardDeviationFactor(1.0);
+        }
+    }
+
 
     /**
      * Sets positions, distances and standard deviations of distances on internal
