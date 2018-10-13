@@ -42,7 +42,7 @@ import java.util.List;
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  *
- * Althouth RobustRssiRadioSourceEstimator can estimate the same parameters of a radio
+ * Although RobustRssiRadioSourceEstimator can estimate the same parameters of a radio
  * source, when ranging measures are available along with RSSI measurements,
  * implementations of this class should be preferred instead as they can provide
  * greater accuracy.

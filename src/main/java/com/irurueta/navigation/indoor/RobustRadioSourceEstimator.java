@@ -32,7 +32,7 @@ import java.util.List;
  *
  * @param <P> a {@link Point} type.
  * @param <R> a {@link ReadingLocated} type.
- * @param <L> a {@link RadioSourceEstimatorListener} type.
+ * @param <L> a {@link RobustRadioSourceEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class RobustRadioSourceEstimator<P extends Point,
@@ -434,7 +434,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
             throws IllegalArgumentException, LockedException { }
 
     /**
-     * Gets covariance for estimated position and power.
+     * Gets covariance for estimated position, power and pathloss.
      * Matrix contains information in the following order:
      * Top-left submatrix contains covariance of position,
      * then follows transmitted power variance, and finally
