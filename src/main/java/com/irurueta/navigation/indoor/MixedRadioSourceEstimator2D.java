@@ -353,6 +353,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
      * Gets estimated located radio source.
      * @return estimated located radio source or null.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public RadioSourceLocated<Point2D> getEstimatedRadioSource() {
         List<? extends ReadingLocated<Point2D>> readings = getReadings();

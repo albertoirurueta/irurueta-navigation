@@ -19,31 +19,29 @@ import com.irurueta.geometry.Point;
 
 /**
  * Listener to be notified of events produced by a sequential robust radio source
- * estimator when estimation starts, ends or when progress changes.
+ * estimator using mixed readings when estimation starts, ends or when progress
+ * changes.
  */
-public interface SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S extends RadioSource,
+public interface SequentialRobustMixedRadioSourceEstimatorListener<S extends RadioSource,
         P extends Point> {
 
     /**
      * Called when estimation starts.
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
+    void onEstimateStart(SequentialRobustMixedRadioSourceEstimator<S, P> estimator);
 
     /**
      * Called when estimation ends.
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
+    void onEstimateEnd(SequentialRobustMixedRadioSourceEstimator<S, P> estimator);
 
     /**
      * Called when estimation progress significantly changes.
      * @param estimator estimator raising the event.
      * @param progress progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onEstimateProgressChange(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator,
-            float progress);
+    void onEstimateProgressChange(SequentialRobustMixedRadioSourceEstimator<S, P> estimator,
+                                  float progress);
 }

@@ -19,12 +19,11 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Robustly estimates 2D position, transmitted power and pathloss exponent of a radio
- * source (e.g. WiFi access point or bluetooth beacon), by discarging
+ * source (e.g. WiFi access point or bluetooth beacon), by discarding
  * outliers and assuming that the ranging data is available to obtain position with
  * greater accuracy and that the radio source emits isotropically following the
  * expression below:
@@ -50,7 +49,7 @@ import java.util.List;
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  *
  * Implementations of this class might produce more stable positions of estimated
- * radio sources than implementations of RobustRangingAndRssiRadioSourceEstimator.
+ * radio sources than implementations of RobustRangingAndRssiRadioSourceEstimator2D.
  *
  * @param <S> a {@link RadioSource} type.
  */
@@ -846,11 +845,17 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
 
     /**
      * build RSSI estimator.
+     * @throws LockedException if estimator is locked.
      */
     @Override
-    protected void buildRssiEstimatorIfNeeded() {
+    protected void buildRssiEstimatorIfNeeded() throws LockedException {
         if (mRssiEstimator == null || mRssiEstimator.getMethod() != mRssiRobustMethod) {
             mRssiEstimator = RobustRssiRadioSourceEstimator2D.create(mRssiRobustMethod);
+
+            //rssi estimator will never need position estimator, but to
+            //ensure it is ready we need to provide an initial position
+            mRssiEstimator.setPositionEstimationEnabled(false);
+            mRssiEstimator.setInitialPosition(Point2D.create());
         }
     }
 

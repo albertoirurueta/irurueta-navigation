@@ -2,18 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimatorListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2DTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3DTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimatorListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2DTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3DTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimatorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimatorListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimatorListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimatorListener.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -83,7 +84,7 @@
     <session id="-718880302">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="9" />
+          <entry key="project.closed" value="10" />
           <entry key="project.open.time.10" value="3" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="1" />
@@ -97,7 +98,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CLASS" value="4" />
-          <entry key="JAVA" value="534" />
+          <entry key="JAVA" value="582" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
@@ -105,19 +106,19 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="class" value="4" />
-          <entry key="java" value="534" />
+          <entry key="java" value="582" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="141244" />
+          <entry key="java" value="144659" />
           <entry key="xml" value="48" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="141244" />
+          <entry key="JAVA" value="144659" />
           <entry key="XML" value="48" />
         </counts>
       </usages-collector>
@@ -130,30 +131,28 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRadioSourceEstimator.java">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="246">
-                  <caret line="473" column="19" selection-start-line="473" selection-start-column="19" selection-end-line="473" selection-end-column="19" />
+                <state relative-caret-position="162">
+                  <caret line="1963" column="32" lean-forward="true" selection-start-line="1963" selection-start-column="32" selection-end-line="1963" selection-end-column="32" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3DTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="465">
-                  <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
+                <state relative-caret-position="150">
+                  <caret line="2762" column="45" selection-start-line="2762" selection-start-column="45" selection-end-line="2762" selection-end-column="45" />
                   <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#2365#2366#0" expanded="true" />
-                    <element signature="e#2388#2389#0" expanded="true" />
-                    <element signature="e#3940#3941#0" expanded="true" />
-                    <element signature="e#3978#3979#0" expanded="true" />
-                    <element signature="e#6163#6164#0" expanded="true" />
-                    <element signature="e#6212#6213#0" expanded="true" />
-                    <element signature="e#16002#16003#0" expanded="true" />
-                    <element signature="e#16073#16074#0" expanded="true" />
+                    <element signature="e#1505#1551#0" expanded="true" />
+                    <element signature="e#370597#370598#0" expanded="true" />
+                    <element signature="e#370669#370670#0" expanded="true" />
+                    <element signature="e#371334#375276#0" />
                   </folding>
                 </state>
               </provider>
@@ -162,27 +161,78 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="470">
-                  <caret line="373" lean-forward="true" selection-start-line="364" selection-end-line="373" />
-                  <folding>
-                    <element signature="imports" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
+        <leaf>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator.java">
+            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2DTest.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="52">
-                  <caret line="728" column="15" selection-start-line="728" selection-start-column="15" selection-end-line="728" selection-end-column="15" />
+                <state relative-caret-position="319">
+                  <caret line="7278" lean-forward="true" selection-end-line="7686" />
                   <folding>
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#31685#33766#0" />
+                    <element signature="e#2939#2999#0" />
+                    <element signature="e#3005#3057#0" />
+                    <element signature="e#3063#3117#0" />
+                    <element signature="e#3123#3158#0" />
+                    <element signature="e#3164#3201#0" />
+                    <element signature="e#3207#137414#0" />
+                    <element signature="e#52815#52892#0" />
+                    <element signature="e#56612#56689#0" />
+                    <element signature="e#60342#60409#0" />
+                    <element signature="e#63308#63376#0" />
+                    <element signature="e#66296#66374#0" />
+                    <element signature="e#106140#106215#0" />
+                    <element signature="e#109968#110038#0" />
+                    <element signature="e#113777#113845#0" />
+                    <element signature="e#116822#116887#0" />
+                    <element signature="e#119889#119966#0" />
+                    <element signature="e#123735#123812#0" />
+                    <element signature="e#127534#127601#0" />
+                    <element signature="e#130546#130614#0" />
+                    <element signature="e#133580#133658#0" />
+                    <element signature="e#137420#138366#0" />
+                    <element signature="e#138372#138992#0" />
+                    <element signature="e#138998#139603#0" />
+                    <element signature="e#139609#140082#0" />
+                    <element signature="e#140088#140549#0" />
+                    <element signature="e#140555#141533#0" />
+                    <element signature="e#141539#142499#0" />
+                    <element signature="e#142505#143284#0" />
+                    <element signature="e#143290#144054#0" />
+                    <element signature="e#144060#144752#0" />
+                    <element signature="e#144758#145460#0" />
+                    <element signature="e#145466#146932#0" />
+                    <element signature="e#146938#147348#0" />
+                    <element signature="e#147354#148269#0" />
+                    <element signature="e#148275#149076#0" />
+                    <element signature="e#149082#149923#0" />
+                    <element signature="e#149929#150441#0" />
+                    <element signature="e#150447#151008#0" />
+                    <element signature="e#151014#151807#0" />
+                    <element signature="e#151813#152547#0" />
+                    <element signature="e#152553#153366#0" />
+                    <element signature="e#153372#154572#0" />
+                    <element signature="e#154578#155767#0" />
+                    <element signature="e#155773#164429#0" />
+                    <element signature="e#164435#177259#0" />
+                    <element signature="e#177265#190230#0" />
+                    <element signature="e#190236#203548#0" />
+                    <element signature="e#203554#216697#0" />
+                    <element signature="e#216703#230230#0" />
+                    <element signature="e#230236#243498#0" />
+                    <element signature="e#243504#259224#0" />
+                    <element signature="e#259230#272063#0" />
+                    <element signature="e#272069#284426#0" />
+                    <element signature="e#284432#295307#0" />
+                    <element signature="e#295313#306145#0" />
+                    <element signature="e#306151#317015#0" />
+                    <element signature="e#317021#330058#0" />
+                    <element signature="e#330064#343273#0" />
+                    <element signature="e#343279#356460#0" />
+                    <element signature="e#356470#356717#0" />
+                    <element signature="e#356723#356966#0" />
+                    <element signature="e#356972#357294#0" />
+                    <element signature="e#357400#358052#0" />
+                    <element signature="e#357567#357637#0" />
+                    <element signature="e#358058#362000#0" />
                   </folding>
                 </state>
               </provider>
@@ -204,12 +254,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getMinReadi</find>
-      <find>positionStandardDeviation</find>
-      <find>createInnerEstimatorsIfNeeded</find>
-      <find>propage</find>
-      <find>quali</find>
-      <find>testGetSetReadi</find>
       <find>attemptRe</find>
       <find>RangingAndRangingAndRssiReadingLocated</find>
       <find>RobustRssiRadioSourceEstimatorListener</find>
@@ -219,21 +263,27 @@
       <find>RssiReadingLocated2D</find>
       <find>setInitialPo</find>
       <find>mUseReadingPositionCovariances</find>
-      <find>getMinRe</find>
       <find>void estima</find>
-      <find>isRead</find>
       <find>setProgr</find>
       <find>dBmTo</find>
       <find>mInitialPa</find>
-      <find>getNumberOfD</find>
       <find>source</find>
       <find>getEstimatedRadioSource</find>
       <find>getMinRead</find>
       <find>getMinRea</find>
-      <find>2D</find>
-      <find>areValid</find>
       <find>areValidRe</find>
       <find>abstract</find>
+      <find>getNumberOfD</find>
+      <find>areValid</find>
+      <find>DEFAULT_PATH</find>
+      <find>mRssiEstimator.setPosi</find>
+      <find>buildRssiEstimatorIfNeeded</find>
+      <find>getMinRe</find>
+      <find>SequentialRobustRangingAndRssiRadioSourceEstimator2D</find>
+      <find>isRead</find>
+      <find>readingsPositions</find>
+      <find>isReady</find>
+      <find>2D</find>
     </findStrings>
     <replaceStrings>
       <replace>MSAC</replace>
@@ -248,6 +298,7 @@
       <replace>Ranging</replace>
       <replace>RANSACRobustRangingAndRssiRadioSourceEstimator2D</replace>
       <replace>RangingAndRssiReadingLocated2D</replace>
+      <replace>SequentialRobustMixedRadioSourceEstimator2D</replace>
       <replace>3D</replace>
     </replaceStrings>
   </component>
@@ -261,12 +312,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator3DTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingRadioSourceEstimator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingRadioSourceEstimator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingRadioSourceEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingRadioSourceEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LMedSRobustRangingAndRssiRadioSourceEstimator2DTest.java" />
@@ -290,13 +335,9 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RANSACRobustRangingRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RANSACRobustRangingRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRadioSourceEstimatorListener.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimatorListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRadioSourceEstimator.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROSACRobustRangingAndRssiRadioSourceEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROSACRobustRangingAndRssiRadioSourceEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimatorListener.java" />
@@ -304,14 +345,24 @@
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator2D.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingAndRssiRadioSourceEstimator3D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustMixedRadioSourceEstimatorListener.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustMixedRadioSourceEstimator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimatorListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimatorListener.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2D.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3D.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2DTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3DTest.java" />
       </list>
     </option>
   </component>
@@ -545,7 +596,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/albertoirurueta/irurueta2/common/irurueta-navigation/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimatorHelper.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539538965148" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539556539173" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs.jest.jest_package" value="" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -574,7 +625,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.MixedRadioSourceEstimator3DTest">
+  <component name="RunManager" selected="JUnit.SequentialRobustMixedRadioSourceEstimator3DTest">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -587,7 +638,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MixedRadioSourceEstimator2DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="irurueta-navigation" />
       <extension name="coverage">
         <pattern>
@@ -596,13 +647,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.MixedRadioSourceEstimator2DTest" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.SequentialRobustMixedRadioSourceEstimator2DTest" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MixedRadioSourceEstimator2DTest.testEstimateWithInitialPositionWithoutError" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="irurueta-navigation" />
       <extension name="coverage">
         <pattern>
@@ -611,24 +662,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.MixedRadioSourceEstimator2DTest" />
-      <option name="METHOD_NAME" value="testEstimateWithInitialPositionWithoutError" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="irurueta-navigation" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.indoor.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.MixedRadioSourceEstimator2DTest" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.SequentialRobustMixedRadioSourceEstimator2DTest" />
       <option name="METHOD_NAME" value="testEstimateWithMixedRangingAndRssiReadings" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -636,7 +670,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MixedRadioSourceEstimator2DTest.testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SequentialRobustMixedRadioSourceEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="irurueta-navigation" />
       <extension name="coverage">
         <pattern>
@@ -645,15 +679,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.MixedRadioSourceEstimator2DTest" />
-      <option name="METHOD_NAME" value="testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.SequentialRobustMixedRadioSourceEstimator3DTest" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MixedRadioSourceEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SequentialRobustRangingAndRssiRadioSourceEstimator2DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="irurueta-navigation" />
       <extension name="coverage">
         <pattern>
@@ -662,7 +694,22 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.MixedRadioSourceEstimator3DTest" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.SequentialRobustRangingAndRssiRadioSourceEstimator2DTest" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SequentialRobustRangingAndRssiRadioSourceEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="irurueta-navigation" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.irurueta.navigation.indoor.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.SequentialRobustRangingAndRssiRadioSourceEstimator3DTest" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -692,19 +739,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest" />
-      <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest.testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError" />
-      <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest.testEstimateWithInitialPositionWithoutError" />
-      <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" />
-      <item itemvalue="JUnit.MixedRadioSourceEstimator3DTest" />
+      <item itemvalue="JUnit.SequentialRobustMixedRadioSourceEstimator2DTest" />
+      <item itemvalue="JUnit.SequentialRobustRangingAndRssiRadioSourceEstimator2DTest" />
+      <item itemvalue="JUnit.SequentialRobustRangingAndRssiRadioSourceEstimator3DTest" />
+      <item itemvalue="JUnit.SequentialRobustMixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" />
+      <item itemvalue="JUnit.SequentialRobustMixedRadioSourceEstimator3DTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.MixedRadioSourceEstimator3DTest" />
-        <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest" />
-        <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" />
-        <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest.testEstimateWithInitialPositionWithoutError" />
-        <item itemvalue="JUnit.MixedRadioSourceEstimator2DTest.testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError" />
+        <item itemvalue="JUnit.SequentialRobustMixedRadioSourceEstimator3DTest" />
+        <item itemvalue="JUnit.SequentialRobustMixedRadioSourceEstimator2DTest" />
+        <item itemvalue="JUnit.SequentialRobustMixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" />
+        <item itemvalue="JUnit.SequentialRobustRangingAndRssiRadioSourceEstimator3DTest" />
+        <item itemvalue="JUnit.SequentialRobustRangingAndRssiRadioSourceEstimator2DTest" />
       </list>
     </recent_temporary>
   </component>
@@ -834,7 +881,7 @@
       <workItem from="1538658509926" duration="74882000" />
       <workItem from="1539001030565" duration="147832000" />
       <workItem from="1539534945983" duration="2034000" />
-      <workItem from="1539537562029" duration="1387000" />
+      <workItem from="1539537562029" duration="16544000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -847,39 +894,39 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="MixedRadioSourceEstimator2DTest - 2018.10.14 at 01h 44m 10s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustRangingAndRssiRadioSourceEstimator3DTest - 2018.10.15 at 00h 05m 55s.xml">
+      <configuration name="SequentialRobustRangingAndRssiRadioSourceEstimator3DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest - 2018.10.14 at 01h 48m 59s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest - 2018.10.15 at 00h 10m 56s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest_testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError - 2018.10.14 at 01h 53m 16s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest.testEstimateWithoutInitialPositionAndInitialTransmittedPowerAndWithoutError" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest - 2018.10.15 at 00h 12m 56s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest_testEstimateWithInitialPositionWithoutError - 2018.10.14 at 01h 54m 56s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest.testEstimateWithInitialPositionWithoutError" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest - 2018.10.15 at 00h 14m 12s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest - 2018.10.14 at 02h 13m 26s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest_testEstimateWithMixedRangingAndRssiReadings - 2018.10.15 at 00h 18m 40s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest_testEstimateWithMixedRangingAndRssiReadings - 2018.10.14 at 18h 32m 51s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest_testEstimateWithMixedRangingAndRssiReadings - 2018.10.15 at 00h 23m 30s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest - 2018.10.14 at 18h 33m 15s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest_testEstimateWithMixedRangingAndRssiReadings - 2018.10.15 at 00h 25m 03s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest.testEstimateWithMixedRangingAndRssiReadings" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator2DTest - 2018.10.14 at 18h 36m 20s.xml">
-      <configuration name="MixedRadioSourceEstimator2DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator2DTest - 2018.10.15 at 00h 25m 22s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator2DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator3DTest - 2018.10.14 at 18h 51m 33s.xml">
-      <configuration name="MixedRadioSourceEstimator3DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator3DTest - 2018.10.15 at 00h 35m 16s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator3DTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="MixedRadioSourceEstimator3DTest - 2018.10.14 at 18h 53m 24s.xml">
-      <configuration name="MixedRadioSourceEstimator3DTest" configurationId="JUnit" />
+    <history-entry file="SequentialRobustMixedRadioSourceEstimator3DTest - 2018.10.15 at 00h 36m 19s.xml">
+      <configuration name="SequentialRobustMixedRadioSourceEstimator3DTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1603833000" />
+    <option name="totallyTimeSpent" value="1618990000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -893,7 +940,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="877" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4986842" visible="true" weight="0.2532189" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986842" weight="0.2532189" />
       <window_info id="Structure" order="1" sideWeight="0.5013158" side_tool="true" weight="0.29169676" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -1006,69 +1053,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RangingReadingLocated2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="83" column="11" selection-start-line="83" selection-start-column="11" selection-end-line="83" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LMedSRobustRangingAndRssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="5687" lean-forward="true" selection-start-line="5687" selection-end-line="5687" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LMedSRobustRangingRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="1760" column="23" lean-forward="true" selection-start-line="1760" selection-start-column="23" selection-end-line="1760" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MSACRobustRangingRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="83" column="30" lean-forward="true" selection-start-line="83" selection-start-column="30" selection-end-line="83" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MSACRobustRangingRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="1716" column="28" lean-forward="true" selection-start-line="1716" selection-start-column="28" selection-end-line="1716" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/PROMedSRobustRangingRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="1832" column="27" selection-start-line="1832" selection-start-column="27" selection-end-line="1832" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/PROSACRobustRangingRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="2121" column="13" selection-start-line="2121" selection-start-column="13" selection-end-line="2121" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/PROSACRobustRangingRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="2300" column="13" lean-forward="true" selection-start-line="2300" selection-start-column="13" selection-end-line="2300" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/LMedSRobustRangingRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="1222" column="9" lean-forward="true" selection-start-line="1222" selection-start-column="9" selection-end-line="1222" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RANSACRobustRangingRadioSourceEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="118">
@@ -1104,13 +1088,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingRadioSourceEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="32" column="19" lean-forward="true" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRadioSourceEstimatorListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -1139,27 +1116,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimatorListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="23" column="75" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="901" column="36" lean-forward="true" selection-start-line="901" selection-start-column="36" selection-end-line="901" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustRangingRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="408" selection-start-line="408" selection-end-line="408" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-numerical/1.0-SNAPSHOT/irurueta-numerical-1.0-20180811.222210-3.jar!/com/irurueta/numerical/robust/InliersData.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -1181,44 +1137,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="748" column="5" lean-forward="true" selection-start-line="748" selection-start-column="5" selection-end-line="748" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="1896" column="7" lean-forward="true" selection-start-line="1896" selection-start-column="7" selection-end-line="1896" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#62995#62996#0" expanded="true" />
-            <element signature="e#63027#63028#0" expanded="true" />
-            <element signature="e#69302#69303#0" expanded="true" />
-            <element signature="e#69349#69350#0" expanded="true" />
-            <element signature="e#70620#70621#0" expanded="true" />
-            <element signature="e#70677#70678#0" expanded="true" />
-            <element signature="e#71486#71487#0" expanded="true" />
-            <element signature="e#71535#71536#0" expanded="true" />
-            <element signature="e#72506#72507#0" expanded="true" />
-            <element signature="e#72559#72560#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="2764" column="15" lean-forward="true" selection-start-line="2764" selection-start-column="15" selection-end-line="2764" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
         </state>
       </provider>
     </entry>
@@ -1375,13 +1297,65 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1586">
           <caret line="7550" lean-forward="true" selection-start-line="1789" selection-end-line="7550" />
+          <folding>
+            <element signature="e#2742#2795#0" />
+            <element signature="e#2801#2853#0" />
+            <element signature="e#2859#2913#0" />
+            <element signature="e#2919#2954#0" />
+            <element signature="e#2960#2997#0" />
+            <element signature="e#3003#49890#0" />
+            <element signature="e#30947#31001#0" />
+            <element signature="e#35592#35663#0" />
+            <element signature="e#37609#37668#0" />
+            <element signature="e#40365#40424#0" />
+            <element signature="e#45064#45135#0" />
+            <element signature="e#47076#47135#0" />
+            <element signature="e#49896#51091#0" />
+            <element signature="e#51097#51735#0" />
+            <element signature="e#51741#52820#0" />
+            <element signature="e#52826#53555#0" />
+            <element signature="e#53561#54340#0" />
+            <element signature="e#54346#54854#0" />
+            <element signature="e#54860#55335#0" />
+            <element signature="e#55341#56111#0" />
+            <element signature="e#56117#57322#0" />
+            <element signature="e#57328#58919#0" />
+            <element signature="e#58925#59340#0" />
+            <element signature="e#59346#71429#0" />
+            <element signature="e#71435#83769#0" />
+            <element signature="e#83775#96035#0" />
+            <element signature="e#96041#108577#0" />
+            <element signature="e#108583#120641#0" />
+            <element signature="e#120647#132960#0" />
+            <element signature="e#132966#145172#0" />
+            <element signature="e#145178#157628#0" />
+            <element signature="e#157634#172436#0" />
+            <element signature="e#172442#187488#0" />
+            <element signature="e#187494#199610#0" />
+            <element signature="e#199616#211284#0" />
+            <element signature="e#211290#221406#0" />
+            <element signature="e#221412#231632#0" />
+            <element signature="e#231638#241869#0" />
+            <element signature="e#241875#254273#0" />
+            <element signature="e#254279#266847#0" />
+            <element signature="e#266853#279181#0" />
+            <element signature="e#279187#291512#0" />
+            <element signature="e#291518#304163#0" />
+            <element signature="e#304169#316627#0" />
+            <element signature="e#316633#329390#0" />
+            <element signature="e#329396#342150#0" />
+            <element signature="e#342156#355044#0" />
+            <element signature="e#355515#356167#0" />
+            <element signature="e#355682#355752#0" />
+            <element signature="e#356173#358100#0" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2DTest.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="174">
-          <caret line="1367" lean-forward="true" selection-start-line="1367" selection-end-line="1367" />
+        <state relative-caret-position="405">
+          <caret line="7517" column="34" lean-forward="true" selection-start-line="7517" selection-start-column="34" selection-end-line="7517" selection-end-column="34" />
           <folding>
             <element signature="e#2627#2671#0" />
             <element signature="e#2677#2729#0" />
@@ -1395,7 +1369,6 @@
             <element signature="e#41512#41571#0" />
             <element signature="e#46377#46448#0" />
             <element signature="e#48493#48552#0" />
-            <element signature="e#51375#52552#0" />
             <element signature="e#52558#53178#0" />
             <element signature="e#53184#54245#0" />
             <element signature="e#54251#54962#0" />
@@ -1405,7 +1378,6 @@
             <element signature="e#56694#57425#0" />
             <element signature="e#57431#60981#0" />
             <element signature="e#60987#62560#0" />
-            <element signature="e#62566#62963#0" />
             <element signature="e#62566#74613#0" />
             <element signature="e#74619#86917#0" />
             <element signature="e#86923#99147#0" />
@@ -1425,11 +1397,7 @@
             <element signature="e#256923#269455#0" />
             <element signature="e#269461#281753#0" />
             <element signature="e#281759#294048#0" />
-            <element signature="e#294054#306663#0" />
             <element signature="e#306669#319091#0" />
-            <element signature="e#319097#331818#0" />
-            <element signature="e#331824#344542#0" />
-            <element signature="e#344548#357418#0" />
             <element signature="e#357424#369668#0" />
             <element signature="e#370078#370247#0" />
             <element signature="e#370253#370418#0" />
@@ -1440,24 +1408,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="7517" column="34" lean-forward="true" selection-start-line="7517" selection-start-column="34" selection-end-line="7517" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="170" column="19" selection-start-line="170" selection-start-column="19" selection-end-line="170" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator2D.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="39422">
           <caret line="2732" lean-forward="true" selection-start-line="2677" selection-end-line="2732" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;class#RobustRangingAndRssiRadioSourceEstimator2D#0" />
+            <element signature="e#137224#139766#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1465,24 +1424,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="26" column="56" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2365#2366#0" expanded="true" />
-            <element signature="e#2388#2389#0" expanded="true" />
-            <element signature="e#3940#3941#0" expanded="true" />
-            <element signature="e#3978#3979#0" expanded="true" />
-            <element signature="e#6163#6164#0" expanded="true" />
-            <element signature="e#6212#6213#0" expanded="true" />
-            <element signature="e#16002#16003#0" expanded="true" />
-            <element signature="e#16073#16074#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1513,26 +1454,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="373" lean-forward="true" selection-start-line="364" selection-end-line="373" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11137">
-          <caret line="785" column="29" selection-start-line="785" selection-start-column="19" selection-end-line="785" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingAndRssiRadioSourceEstimator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="52">
@@ -1544,10 +1465,393 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimatorListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="42" column="87" selection-start-line="42" selection-start-column="87" selection-end-line="42" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimatorListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="20" column="62" lean-forward="true" selection-start-line="20" selection-start-column="62" selection-end-line="20" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3105">
+          <caret line="240" column="24" selection-start-line="240" selection-start-column="24" selection-end-line="240" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="348" column="10" selection-start-line="348" selection-start-column="10" selection-end-line="348" selection-end-column="10" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#15979#16009#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="146">
+          <caret line="347" column="40" lean-forward="true" selection-start-line="347" selection-start-column="40" selection-end-line="347" selection-end-column="40" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2117#2166#0" expanded="true" />
+            <element signature="e#2365#2366#0" expanded="true" />
+            <element signature="e#2388#2389#0" expanded="true" />
+            <element signature="e#3940#3941#0" expanded="true" />
+            <element signature="e#3978#3979#0" expanded="true" />
+            <element signature="e#6163#6164#0" expanded="true" />
+            <element signature="e#6212#6213#0" expanded="true" />
+            <element signature="e#16073#16074#0" expanded="true" />
+            <element signature="e#16195#16225#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="644" selection-start-line="644" selection-end-line="644" />
+          <folding>
+            <element signature="e#28811#28812#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRadioSourceEstimator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="473" column="19" selection-start-line="473" selection-start-column="19" selection-end-line="473" selection-end-column="19" />
+        <state relative-caret-position="291">
+          <caret line="474" selection-start-line="474" selection-end-line="474" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRangingRadioSourceEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="206" selection-start-line="206" selection-end-line="206" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustRssiRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="922" selection-start-line="922" selection-end-line="922" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/PROMedSRobustRangingRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="417" selection-start-line="417" selection-end-line="417" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RobustRssiRadioSourceEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="661" column="59" lean-forward="true" selection-start-line="661" selection-start-column="59" selection-end-line="661" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="65">
+          <caret line="769" lean-forward="true" selection-start-line="750" selection-end-line="769" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="65">
+          <caret line="769" lean-forward="true" selection-start-line="750" selection-end-line="769" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="584">
+          <caret line="769" lean-forward="true" selection-start-line="769" selection-end-line="769" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4947#4948#0" expanded="true" />
+            <element signature="e#4985#4986#0" expanded="true" />
+            <element signature="e#38829#38830#0" expanded="true" />
+            <element signature="e#38900#38901#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="7269" lean-forward="true" selection-start-line="2968" selection-end-line="7269" />
+          <folding>
+            <element signature="e#2878#2947#0" />
+            <element signature="e#2953#3005#0" />
+            <element signature="e#3011#3065#0" />
+            <element signature="e#3071#3106#0" />
+            <element signature="e#3112#3149#0" />
+            <element signature="e#3155#143532#0" />
+            <element signature="e#55165#55242#0" />
+            <element signature="e#59154#59231#0" />
+            <element signature="e#63067#63134#0" />
+            <element signature="e#66150#66218#0" />
+            <element signature="e#69255#69333#0" />
+            <element signature="e#110950#111025#0" />
+            <element signature="e#114970#115040#0" />
+            <element signature="e#118947#119015#0" />
+            <element signature="e#122118#122183#0" />
+            <element signature="e#125311#125388#0" />
+            <element signature="e#129325#129402#0" />
+            <element signature="e#133259#133326#0" />
+            <element signature="e#136388#136456#0" />
+            <element signature="e#139539#139617#0" />
+            <element signature="e#143538#144502#0" />
+            <element signature="e#144508#145146#0" />
+            <element signature="e#145152#145775#0" />
+            <element signature="e#145781#146272#0" />
+            <element signature="e#146278#146757#0" />
+            <element signature="e#146763#147759#0" />
+            <element signature="e#147765#148743#0" />
+            <element signature="e#148749#149546#0" />
+            <element signature="e#149552#150334#0" />
+            <element signature="e#150340#151050#0" />
+            <element signature="e#151056#151776#0" />
+            <element signature="e#151782#153266#0" />
+            <element signature="e#153272#153700#0" />
+            <element signature="e#153706#154639#0" />
+            <element signature="e#154645#155464#0" />
+            <element signature="e#155470#156329#0" />
+            <element signature="e#156335#156865#0" />
+            <element signature="e#156871#157450#0" />
+            <element signature="e#157456#158267#0" />
+            <element signature="e#158273#159025#0" />
+            <element signature="e#159031#159862#0" />
+            <element signature="e#159868#161086#0" />
+            <element signature="e#161092#162299#0" />
+            <element signature="e#162305#170997#0" />
+            <element signature="e#171003#183863#0" />
+            <element signature="e#183869#196870#0" />
+            <element signature="e#196876#210224#0" />
+            <element signature="e#210230#223409#0" />
+            <element signature="e#223415#236978#0" />
+            <element signature="e#236984#250282#0" />
+            <element signature="e#250288#266044#0" />
+            <element signature="e#266050#278919#0" />
+            <element signature="e#278925#291318#0" />
+            <element signature="e#291324#302235#0" />
+            <element signature="e#302241#313109#0" />
+            <element signature="e#313115#324015#0" />
+            <element signature="e#324021#337094#0" />
+            <element signature="e#337100#350345#0" />
+            <element signature="e#350351#363568#0" />
+            <element signature="e#364558#365210#0" />
+            <element signature="e#364725#364795#0" />
+            <element signature="e#365216#369167#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-670">
+          <caret line="7681" column="52" lean-forward="true" selection-start-line="7681" selection-start-column="12" selection-end-line="7681" selection-end-column="52" />
+          <folding>
+            <element signature="e#2627#2671#0" />
+            <element signature="e#2677#2729#0" />
+            <element signature="e#2735#2789#0" />
+            <element signature="e#2795#2830#0" />
+            <element signature="e#2836#2873#0" />
+            <element signature="e#2879#51369#0" />
+            <element signature="e#31750#31804#0" />
+            <element signature="e#36567#36638#0" />
+            <element signature="e#38691#38750#0" />
+            <element signature="e#41512#41571#0" />
+            <element signature="e#46377#46448#0" />
+            <element signature="e#48493#48552#0" />
+            <element signature="e#51375#52552#0" />
+            <element signature="e#52558#53178#0" />
+            <element signature="e#53184#54245#0" />
+            <element signature="e#54251#54962#0" />
+            <element signature="e#54968#55729#0" />
+            <element signature="e#55735#56225#0" />
+            <element signature="e#56231#56688#0" />
+            <element signature="e#56694#57425#0" />
+            <element signature="e#57431#60981#0" />
+            <element signature="e#60987#62560#0" />
+            <element signature="e#62566#62963#0" />
+            <element signature="e#62969#75016#0" />
+            <element signature="e#75022#87320#0" />
+            <element signature="e#87326#99550#0" />
+            <element signature="e#99556#112056#0" />
+            <element signature="e#112062#124084#0" />
+            <element signature="e#124090#136367#0" />
+            <element signature="e#136373#148543#0" />
+            <element signature="e#148549#160963#0" />
+            <element signature="e#160969#175735#0" />
+            <element signature="e#175741#190751#0" />
+            <element signature="e#190757#202837#0" />
+            <element signature="e#202843#214475#0" />
+            <element signature="e#214481#224561#0" />
+            <element signature="e#224567#234751#0" />
+            <element signature="e#234757#244952#0" />
+            <element signature="e#244958#257320#0" />
+            <element signature="e#257326#269858#0" />
+            <element signature="e#269864#282156#0" />
+            <element signature="e#282162#294451#0" />
+            <element signature="e#294457#307066#0" />
+            <element signature="e#307072#319494#0" />
+            <element signature="e#319500#332221#0" />
+            <element signature="e#332227#344945#0" />
+            <element signature="e#344951#357821#0" />
+            <element signature="e#370077#370246#0" />
+            <element signature="e#370252#370417#0" />
+            <element signature="e#370498#371150#0" />
+            <element signature="e#370665#370735#0" />
+            <element signature="e#371156#373074#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="854" selection-start-line="854" selection-end-line="854" />
+          <folding>
+            <element signature="e#0#41490#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/MixedRadioSourceEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="241">
+          <caret line="817" column="29" lean-forward="true" selection-start-line="817" selection-start-column="29" selection-end-line="817" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustRangingAndRssiRadioSourceEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-89">
+          <caret line="1894" column="7" lean-forward="true" selection-start-line="1894" selection-start-column="7" selection-end-line="1894" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="1963" column="32" lean-forward="true" selection-start-line="1963" selection-start-column="32" selection-end-line="1963" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator2DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="7278" lean-forward="true" selection-end-line="7686" />
+          <folding>
+            <element signature="e#2939#2999#0" />
+            <element signature="e#3005#3057#0" />
+            <element signature="e#3063#3117#0" />
+            <element signature="e#3123#3158#0" />
+            <element signature="e#3164#3201#0" />
+            <element signature="e#3207#137414#0" />
+            <element signature="e#52815#52892#0" />
+            <element signature="e#56612#56689#0" />
+            <element signature="e#60342#60409#0" />
+            <element signature="e#63308#63376#0" />
+            <element signature="e#66296#66374#0" />
+            <element signature="e#106140#106215#0" />
+            <element signature="e#109968#110038#0" />
+            <element signature="e#113777#113845#0" />
+            <element signature="e#116822#116887#0" />
+            <element signature="e#119889#119966#0" />
+            <element signature="e#123735#123812#0" />
+            <element signature="e#127534#127601#0" />
+            <element signature="e#130546#130614#0" />
+            <element signature="e#133580#133658#0" />
+            <element signature="e#137420#138366#0" />
+            <element signature="e#138372#138992#0" />
+            <element signature="e#138998#139603#0" />
+            <element signature="e#139609#140082#0" />
+            <element signature="e#140088#140549#0" />
+            <element signature="e#140555#141533#0" />
+            <element signature="e#141539#142499#0" />
+            <element signature="e#142505#143284#0" />
+            <element signature="e#143290#144054#0" />
+            <element signature="e#144060#144752#0" />
+            <element signature="e#144758#145460#0" />
+            <element signature="e#145466#146932#0" />
+            <element signature="e#146938#147348#0" />
+            <element signature="e#147354#148269#0" />
+            <element signature="e#148275#149076#0" />
+            <element signature="e#149082#149923#0" />
+            <element signature="e#149929#150441#0" />
+            <element signature="e#150447#151008#0" />
+            <element signature="e#151014#151807#0" />
+            <element signature="e#151813#152547#0" />
+            <element signature="e#152553#153366#0" />
+            <element signature="e#153372#154572#0" />
+            <element signature="e#154578#155767#0" />
+            <element signature="e#155773#164429#0" />
+            <element signature="e#164435#177259#0" />
+            <element signature="e#177265#190230#0" />
+            <element signature="e#190236#203548#0" />
+            <element signature="e#203554#216697#0" />
+            <element signature="e#216703#230230#0" />
+            <element signature="e#230236#243498#0" />
+            <element signature="e#243504#259224#0" />
+            <element signature="e#259230#272063#0" />
+            <element signature="e#272069#284426#0" />
+            <element signature="e#284432#295307#0" />
+            <element signature="e#295313#306145#0" />
+            <element signature="e#306151#317015#0" />
+            <element signature="e#317021#330058#0" />
+            <element signature="e#330064#343273#0" />
+            <element signature="e#343279#356460#0" />
+            <element signature="e#356470#356717#0" />
+            <element signature="e#356723#356966#0" />
+            <element signature="e#356972#357294#0" />
+            <element signature="e#357400#358052#0" />
+            <element signature="e#357567#357637#0" />
+            <element signature="e#358058#362000#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/SequentialRobustMixedRadioSourceEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="2762" column="45" selection-start-line="2762" selection-start-column="45" selection-end-line="2762" selection-end-column="45" />
+          <folding>
+            <element signature="e#1505#1551#0" expanded="true" />
+            <element signature="e#370597#370598#0" expanded="true" />
+            <element signature="e#370669#370670#0" expanded="true" />
+            <element signature="e#371334#375276#0" />
+          </folding>
         </state>
       </provider>
     </entry>

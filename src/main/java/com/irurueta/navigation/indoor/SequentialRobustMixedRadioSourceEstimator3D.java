@@ -22,8 +22,8 @@ import com.irurueta.navigation.LockedException;
 import java.util.List;
 
 /**
- * Robustly estimates 3D position, transmitted power and pathloss exponent of a radio
- * source (e.g. WiFi access point or bluetooth beacon), by discarging
+ * Robustly estimate 3D position, transmitted power and pathloss exponent of a radio
+ * source (e.g. WiFi access point or bluetooth beacon), by discarding
  * outliers and assuming that the ranging data is available to obtain position with
  * greater accuracy and that the radio source emits isotropically following the
  * expression below:
@@ -48,19 +48,20 @@ import java.util.List;
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  *
- * Implementations of this class might produce more stable positions of estimated
- * radio sources than implementations of RobustRangingAndRssiRadioSourceEstimator3D.
+ * This implementation is like SequentialRobustRangingAndRssiRadioSourceEstimator but
+ * allows mixing different kinds of located radio source readings (ranging, RSSI
+ * and ranging+RSSI).
  *
  * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSource> extends
-        SequentialRobustRangingAndRssiRadioSourceEstimator<S, Point3D> {
+public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> extends
+        SequentialRobustMixedRadioSourceEstimator<S, Point3D> {
 
     /**
      * Constructor.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D() { }
+    public SequentialRobustMixedRadioSourceEstimator3D() { }
 
     /**
      * Constructor.
@@ -68,8 +69,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings)
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -78,8 +79,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(listener);
     }
 
@@ -90,9 +91,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
@@ -105,8 +106,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition) throws IllegalArgumentException {
         super(readings, initialPosition);
     }
@@ -116,7 +117,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition) {
+    public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition) {
         super(initialPosition);
     }
 
@@ -126,8 +127,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+    public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, listener);
     }
 
@@ -140,10 +141,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, listener);
     }
@@ -154,7 +155,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
     }
@@ -168,8 +169,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
     }
@@ -181,9 +182,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
@@ -197,10 +198,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm, listener);
     }
@@ -216,8 +217,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -231,8 +232,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-            Double initialTransmittedPowerdBm) {
+    public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
+                                                       Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -245,9 +246,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   (expressed in dBm's).
      * @param listener in charge of attenging events raised by this instance.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-            Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+    public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
+                                                       Double initialTransmittedPowerdBm,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -263,10 +264,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
@@ -283,8 +284,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
@@ -300,8 +301,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
+    public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
+                                                       Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent);
     }
 
@@ -315,9 +316,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+    public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
+                                                       Double initialTransmittedPowerdBm, double initialPathLossExponent,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent,
                 listener);
     }
@@ -335,11 +336,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+    public SequentialRobustMixedRadioSourceEstimator3D(
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -353,7 +354,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length of
      * quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores)
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores)
             throws IllegalArgumentException {
         super(qualityScores);
     }
@@ -368,9 +369,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores is
      * null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings)
+            List<? extends ReadingLocated<Point3D>> readings)
             throws IllegalArgumentException {
         super(qualityScores, readings);
     }
@@ -384,9 +385,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, listener);
     }
@@ -402,10 +403,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores is
      * null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            List<? extends ReadingLocated<Point3D>> readings,
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, readings, listener);
     }
@@ -422,9 +423,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores is
      * null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition) throws IllegalArgumentException {
         super(qualityScores, readings, initialPosition);
     }
@@ -439,8 +440,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            Point3D initialPosition) throws IllegalArgumentException {
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       Point3D initialPosition) throws IllegalArgumentException {
         super(qualityScores, initialPosition);
     }
 
@@ -455,9 +456,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores, Point3D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, initialPosition, listener);
     }
@@ -475,11 +476,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores,readings, initialPosition, listener);
     }
@@ -495,7 +496,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(qualityScores, initialTransmittedPowerdBm);
@@ -514,9 +515,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+            List<? extends ReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         super(qualityScores, readings, initialTransmittedPowerdBm);
     }
@@ -533,9 +534,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, initialTransmittedPowerdBm, listener);
     }
@@ -554,11 +555,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+            List<? extends ReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+            SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, readings, initialTransmittedPowerdBm, listener);
     }
@@ -578,9 +579,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
+            List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm);
@@ -599,7 +600,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(
+    public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores, Point3D initialPosition,
             Double initialTransmittedPowerdBm) throws IllegalArgumentException {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm);
@@ -619,9 +620,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            Point3D initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       Point3D initialPosition, Double initialTransmittedPowerdBm,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm, listener);
     }
@@ -642,10 +643,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       List<? extends ReadingLocated<Point3D>> readings,
+                                                       Point3D initialPosition, Double initialTransmittedPowerdBm,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
@@ -667,10 +668,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       List<? extends ReadingLocated<Point3D>> readings,
+                                                       Point3D initialPosition, Double initialTransmittedPowerdBm,
+                                                       double initialPathLossExponent) throws IllegalArgumentException {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -689,9 +690,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       Point3D initialPosition, Double initialTransmittedPowerdBm,
+                                                       double initialPathLossExponent) throws IllegalArgumentException {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -711,10 +712,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       Point3D initialPosition, Double initialTransmittedPowerdBm,
+                                                       double initialPathLossExponent,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -737,16 +738,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator3D(double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
+    public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
+                                                       List<? extends ReadingLocated<Point3D>> readings,
+                                                       Point3D initialPosition, Double initialTransmittedPowerdBm,
+                                                       double initialPathLossExponent,
+                                                       SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener)
             throws IllegalArgumentException {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
-
 
     /**
      * Gets minimum required number of readings to estimate
@@ -783,12 +783,23 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
      */
     @Override
     @SuppressWarnings("unchecked")
-    public RadioSourceWithPowerAndLocated<Point3D> getEstimatedRadioSource() {
-        List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings = getReadings();
+    public RadioSourceLocated<Point3D> getEstimatedRadioSource() {
+        List<? extends ReadingLocated<Point3D>> readings = getReadings();
         if (readings == null || readings.isEmpty()) {
             return null;
         }
-        S source = readings.get(0).getSource();
+
+        S source;
+        ReadingLocated<Point3D> reading = readings.get(0);
+        if (reading instanceof RangingReadingLocated) {
+            source = ((RangingReadingLocated<S, Point3D>)reading).getSource();
+        } else if (reading instanceof RssiReadingLocated) {
+            source = ((RssiReadingLocated<S, Point3D>)reading).getSource();
+        } else if (reading instanceof RangingAndRssiReadingLocated) {
+            source = ((RangingAndRssiReadingLocated<S, Point3D>)reading).getSource();
+        } else {
+            return null;
+        }
 
         Point3D estimatedPosition = getEstimatedPosition();
         if (estimatedPosition == null) {
@@ -856,80 +867,6 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3D<S extends Radi
             //ensure it is ready we need to provide an initial position
             mRssiEstimator.setPositionEstimationEnabled(false);
             mRssiEstimator.setInitialPosition(Point3D.create());
-        }
-    }
-
-    /**
-     * Setups ranging estimator.
-     * @throws LockedException if estimator is locked.
-     */
-    @Override
-    protected void setupRangingEstimator() throws LockedException {
-        super.setupRangingEstimator();
-
-        switch (mRangingRobustMethod) {
-            case RANSAC:
-                ((RANSACRobustRangingRadioSourceEstimator3D<S>)mRangingEstimator).
-                        setThreshold(mRangingThreshold != null ? mRangingThreshold :
-                                RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD);
-                break;
-            case LMedS:
-                ((LMedSRobustRangingRadioSourceEstimator3D<S>)mRangingEstimator).
-                        setStopThreshold(mRangingThreshold != null ? mRangingThreshold :
-                                LMedSRobustRangingRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD);
-                break;
-            case MSAC:
-                ((MSACRobustRangingRadioSourceEstimator3D<S>)mRangingEstimator).
-                        setThreshold(mRangingThreshold != null ? mRangingThreshold :
-                                MSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD);
-                break;
-            case PROSAC:
-                ((PROSACRobustRangingRadioSourceEstimator3D<S>)mRangingEstimator).
-                        setThreshold(mRangingThreshold != null ? mRangingThreshold :
-                                PROSACRobustRangingRadioSourceEstimator3D.DEFAULT_THRESHOLD);
-                break;
-            case PROMedS:
-                ((PROMedSRobustRangingRadioSourceEstimator3D<S>)mRangingEstimator).
-                        setStopThreshold(mRangingThreshold != null ? mRangingThreshold :
-                                PROMedSRobustRangingRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD);
-                break;
-        }
-    }
-
-    /**
-     * Setups RSSI estimator.
-     * @throws LockedException if estimator is locked.
-     */
-    @Override
-    protected void setupRssiEstimator() throws LockedException {
-        super.setupRssiEstimator();
-
-        switch (mRssiRobustMethod) {
-            case RANSAC:
-                ((RANSACRobustRssiRadioSourceEstimator3D<S>)mRssiEstimator).
-                        setThreshold(mRssiThreshold != null ? mRssiThreshold :
-                                RANSACRobustRssiRadioSourceEstimator3D.DEFAULT_THRESHOLD);
-                break;
-            case LMedS:
-                ((LMedSRobustRssiRadioSourceEstimator3D<S>)mRssiEstimator).
-                        setStopThreshold(mRssiThreshold != null ? mRssiThreshold :
-                                LMedSRobustRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD);
-                break;
-            case MSAC:
-                ((MSACRobustRssiRadioSourceEstimator3D<S>)mRssiEstimator).
-                        setThreshold(mRssiThreshold != null ? mRssiThreshold :
-                                MSACRobustRssiRadioSourceEstimator3D.DEFAULT_THRESHOLD);
-                break;
-            case PROSAC:
-                ((PROSACRobustRssiRadioSourceEstimator3D<S>)mRssiEstimator).
-                        setThreshold(mRssiThreshold != null ? mRssiThreshold :
-                                PROSACRobustRssiRadioSourceEstimator3D.DEFAULT_THRESHOLD);
-                break;
-            case PROMedS:
-                ((PROMedSRobustRssiRadioSourceEstimator3D<S>)mRssiEstimator).
-                        setStopThreshold(mRssiThreshold != null ? mRssiThreshold :
-                                PROMedSRobustRssiRadioSourceEstimator3D.DEFAULT_STOP_THRESHOLD);
-                break;
         }
     }
 }
