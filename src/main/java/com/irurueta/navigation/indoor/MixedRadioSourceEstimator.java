@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Estimates position, transmitted power and path loss exponent of a
- * radio source (e.g. WiFi access point or bluetooth beacon) assuming
- * that the ranging data is available to obtain position with greater
+ * This is an abstract class to robustly estimate position, transmitted power and
+ * path loss exponent of a radio source (e.g. WiFi access point or bluetooth
+ * beacon) assuming that the ranging data is available to obtain position with greater
  * accuracy and that the radio source emits isotropically following the
  * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
@@ -45,22 +45,16 @@ import java.util.List;
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  *
- * Although RssiRadioSourceEstimator can estimate the same parameters of a radio
- * source, when ranging measures are available along with RSSI measurements,
- * implementations of this class should be preferred instead as they can provide
- * greater accuracy.
- *
- * Notice that implementations of this class assume that when retrieving the
- * covariance of all parameters the cross correlation among position
- * terms and pathloss or transmitted power is zero.
+ * This implementation is like RangingAndRssiRadioSourceEstimator but allows mixing
+ * different kinds of located radio source readings (ranging, RSSI and ranging+RSSI).
  *
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, P extends Point>
-        extends RadioSourceEstimator<P, RangingAndRssiReadingLocated<S, P>,
-        RangingAndRssiRadioSourceEstimatorListener<S, P>> {
+public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends Point>
+        extends RadioSourceEstimator<P, ReadingLocated<P>,
+        MixedRadioSourceEstimatorListener<S, P>> {
 
     /**
      * Speed of light expressed in meters per second (m/s).
@@ -184,7 +178,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     /**
      * Constructor.
      */
-    public RangingAndRssiRadioSourceEstimator() {
+    public MixedRadioSourceEstimator() {
         super();
     }
 
@@ -195,8 +189,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                 radio sources.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings)
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -205,8 +199,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(
+            MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
     }
 
@@ -217,9 +211,9 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
+            MixedRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
@@ -229,7 +223,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public RangingAndRssiRadioSourceEstimator(P initialPosition) {
+    public MixedRadioSourceEstimator(P initialPosition) {
         mInitialPosition = initialPosition;
     }
 
@@ -241,8 +235,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             P initialPosition) throws IllegalArgumentException {
         super(readings);
         mInitialPosition = initialPosition;
@@ -254,8 +248,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator(P initialPosition,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(P initialPosition,
+            MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
     }
@@ -269,10 +263,10 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             P initialPosition,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
+            MixedRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         mInitialPosition = initialPosition;
@@ -284,8 +278,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RangingAndRssiRadioSourceEstimator(
-            Double initialTransmittedPowerDbm) {
+    public MixedRadioSourceEstimator(Double initialTransmittedPowerDbm) {
         mInitialTransmittedPowerdBm = initialTransmittedPowerDbm;
     }
 
@@ -298,8 +291,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings);
@@ -313,8 +306,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator(Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
+    public MixedRadioSourceEstimator(Double initialTransmittedPowerdBm,
+            MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -329,10 +322,10 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
+            MixedRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -349,8 +342,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings);
@@ -366,7 +359,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RangingAndRssiRadioSourceEstimator(P initialPosition,
+    public MixedRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm) {
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -381,9 +374,9 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator(P initialPosition,
+    public MixedRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
+            MixedRadioSourceEstimatorListener<S, P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -401,10 +394,10 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
+            MixedRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         super(readings, listener);
         mInitialPosition = initialPosition;
@@ -423,8 +416,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) throws IllegalArgumentException {
         this(readings, initialPosition, initialTransmittedPowerdBm);
@@ -440,7 +433,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public RangingAndRssiRadioSourceEstimator(P initialPosition,
+    public MixedRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         this(initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
@@ -456,9 +449,9 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator(P initialPosition,
+    public MixedRadioSourceEstimator(P initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
+            MixedRadioSourceEstimatorListener<S, P> listener) {
         this(initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -476,11 +469,11 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings,
+    public MixedRadioSourceEstimator(
+            List<? extends ReadingLocated<P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
+            MixedRadioSourceEstimatorListener<S, P> listener)
             throws IllegalArgumentException {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
@@ -724,6 +717,24 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     }
 
     /**
+     * Gets minimum required number of ranging or ranging+rssi readings
+     * required to start estimation.
+     * @return minimum required number of ranging or ranging+rssi readings.
+     */
+    public int getMinRangingReadings() {
+        return getNumberOfDimensions() + 1;
+    }
+
+    /**
+     * Gets minimum required number of rssi or ranging+rssi readings
+     * required to start estimation.
+     * @return minimum required number of rssi or ranging+rssi readings.
+     */
+    public int getMinRssiReadings() {
+        return getMinReadings();
+    }
+
+    /**
      * Gets minimum required number of readings to estimate
      * power, position and pathloss exponent.
      * This value depends on the number of parameters to
@@ -766,6 +777,38 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     }
 
     /**
+     * Indicates whether readings are valid or not.
+     * Readings are considered valid when there are enough readings.
+     * @param readings readings to be validated.
+     * @return true if readings are valid, false otherwise.
+     */
+    @Override
+    public boolean areValidReadings(
+            List<? extends ReadingLocated<P>> readings) {
+        if (readings == null) {
+            return false;
+        }
+
+        int numRanging = 0, numRssi = 0;
+        for (ReadingLocated<P> reading : readings) {
+            if (reading instanceof RangingReadingLocated) {
+                numRanging++;
+
+            } else if (reading instanceof RssiReadingLocated) {
+                numRssi++;
+
+            } else if (reading instanceof RangingAndRssiReadingLocated) {
+                numRanging++;
+                numRssi++;
+            }
+        }
+
+        return numRanging >= getMinRangingReadings() &&
+                numRssi >= getMinRssiReadings() &&
+                super.areValidReadings(readings);
+    }
+
+    /**
      * Indicates whether this instance is ready to start the estimation.
      * @return true if this instance is ready, false otherwise.
      */
@@ -804,9 +847,19 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
 
             List<RangingReadingLocated<S, P>> rangingReadings = new ArrayList<>();
             List<RssiReadingLocated<S, P>> rssiReadings = new ArrayList<>();
-            for (RangingAndRssiReadingLocated<S, P> reading : mReadings) {
-                rangingReadings.add(createRangingReading(reading));
-                rssiReadings.add(createRssiReading(reading));
+            for (ReadingLocated<P> reading : mReadings) {
+                if (reading instanceof RangingReadingLocated) {
+                    rangingReadings.add((RangingReadingLocated<S, P>)reading);
+
+                } else if (reading instanceof RssiReadingLocated) {
+                    rssiReadings.add((RssiReadingLocated<S, P>)reading);
+
+                } else if (reading instanceof RangingAndRssiReadingLocated) {
+                    rangingReadings.add(createRangingReading(
+                            (RangingAndRssiReadingLocated<S, P>)reading));
+                    rssiReadings.add(createRssiReading(
+                            (RangingAndRssiReadingLocated<S, P>)reading));
+                }
             }
 
             //estimate position using ranging data

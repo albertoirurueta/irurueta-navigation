@@ -41,21 +41,19 @@ import java.util.List;
  * If Readings contain RSSI standard deviations, those values will be used,
  * otherwise it will be asumed an RSSI standard deviation of 1 dB.
  *
- * Although RssiRadioSourceEstimator can estimate the same parameters of a radio
- * source, when ranging measures are available along with RSSI measurements,
- * implementations of this class should be preferred instead as they can provide
- * greater accuracy.
+ * This implementation is like RangingAndRssiRadioSourceEstimator2D but allows mixing
+ * different kinds of located radio source readings (ranging, RSSI and ranging+RSSI).
  *
  * @param <S> a {@link RadioSource} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
-        RangingAndRssiRadioSourceEstimator<S, Point2D> {
+public class MixedRadioSourceEstimator2D<S extends RadioSource>
+        extends MixedRadioSourceEstimator<S, Point2D> {
 
     /**
      * Constructor.
      */
-    public RangingAndRssiRadioSourceEstimator2D() {
+    public MixedRadioSourceEstimator2D() {
         super();
     }
 
@@ -66,8 +64,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                 radio sources.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings)
             throws IllegalArgumentException {
         super(readings);
     }
@@ -76,8 +74,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * Constructor.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public MixedRadioSourceEstimator2D(
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
     }
 
@@ -88,9 +86,9 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
+            MixedRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, listener);
     }
@@ -100,7 +98,7 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
-    public RangingAndRssiRadioSourceEstimator2D(Point2D initialPosition) {
+    public MixedRadioSourceEstimator2D(Point2D initialPosition) {
         super(initialPosition);
     }
 
@@ -112,8 +110,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                        source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition) throws IllegalArgumentException {
         super(readings, initialPosition);
     }
@@ -124,8 +122,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public MixedRadioSourceEstimator2D(Point2D initialPosition,
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -138,10 +136,10 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
+            MixedRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, listener);
     }
@@ -152,8 +150,7 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            Double initialTransmittedPowerDbm) {
+    public MixedRadioSourceEstimator2D(Double initialTransmittedPowerDbm) {
         super(initialTransmittedPowerDbm);
     }
 
@@ -166,8 +163,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm);
@@ -180,8 +177,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator2D(Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+    public MixedRadioSourceEstimator2D(Double initialTransmittedPowerdBm,
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
     }
 
@@ -195,10 +192,10 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
+            MixedRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialTransmittedPowerdBm, listener);
     }
@@ -214,8 +211,8 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm);
@@ -229,7 +226,7 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
      */
-    public RangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
+    public MixedRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
@@ -243,9 +240,9 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   (expressed in dBm's).
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
+    public MixedRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -261,10 +258,10 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
+            MixedRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
@@ -281,11 +278,11 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) throws IllegalArgumentException {
-        super(readings, initialPosition, initialTransmittedPowerdBm,
+        super(readings, initialPosition,initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
 
@@ -298,7 +295,7 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                   (expressed in dBm's).
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      */
-    public RangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
+    public MixedRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent);
     }
@@ -313,9 +310,9 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
      * @param listener listener in charge of attending events raised by this instance.
      */
-    public RangingAndRssiRadioSourceEstimator2D(Point2D initialPosition,
+    public MixedRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent,
                 listener);
     }
@@ -333,11 +330,11 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
+    public MixedRadioSourceEstimator2D(
+            List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
+            MixedRadioSourceEstimatorListener<S, Point2D> listener)
             throws IllegalArgumentException {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
@@ -345,7 +342,6 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
 
     /**
      * Gets number of dimensions of position points.
-     * This is always 2.
      * @return number of dimensions of position points.
      */
     @Override
@@ -359,11 +355,22 @@ public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
      */
     @Override
     public RadioSourceLocated<Point2D> getEstimatedRadioSource() {
-        List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings = getReadings();
+        List<? extends ReadingLocated<Point2D>> readings = getReadings();
         if (readings == null || readings.isEmpty()) {
             return null;
         }
-        S source = readings.get(0).getSource();
+
+        S source;
+        ReadingLocated<Point2D> reading = readings.get(0);
+        if (reading instanceof RangingReadingLocated) {
+            source = ((RangingReadingLocated<S, Point2D>)reading).getSource();
+        } else if (reading instanceof RssiReadingLocated) {
+            source = ((RssiReadingLocated<S, Point2D>)reading).getSource();
+        } else if (reading instanceof RangingAndRssiReadingLocated) {
+            source = ((RangingAndRssiReadingLocated<S, Point2D>)reading).getSource();
+        } else {
+            return null;
+        }
 
         Point2D estimatedPosition = getEstimatedPosition();
         if (estimatedPosition == null) {

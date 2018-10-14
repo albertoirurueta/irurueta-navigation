@@ -22,5 +22,5 @@ import com.irurueta.geometry.Point;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-public interface RangingAndRssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point>
-        extends RadioSourceEstimatorListener<RangingAndRssiRadioSourceEstimator<S, P>> { }
+public interface MixedRadioSourceEstimatorListener<S extends RadioSource, P extends Point>
+        extends RadioSourceEstimatorListener<MixedRadioSourceEstimator<S, P>> { }

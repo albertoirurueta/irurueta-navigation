@@ -354,21 +354,6 @@ public class RangingAndRssiRadioSourceEstimator3D<S extends RadioSource> extends
     }
 
     /**
-     * Creates inner estimators if needed.
-     */
-    @Override
-    protected void createInnerEstimatorsIfNeeded() {
-        if (mRangingInnerEstimator == null) {
-            mRangingInnerEstimator = new RangingRadioSourceEstimator3D<>();
-        }
-
-        if (mRssiInnerEstimator == null &&
-                (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled)) {
-            mRssiInnerEstimator = new RssiRadioSourceEstimator3D<>();
-        }
-    }
-
-    /**
      * Gets estimated located radio source.
      * @return estimated located radio source or null.
      */
@@ -419,6 +404,21 @@ public class RangingAndRssiRadioSourceEstimator3D<S extends RadioSource> extends
                     estimatedPositionCovariance);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Creates inner estimators if needed.
+     */
+    @Override
+    protected void createInnerEstimatorsIfNeeded() {
+        if (mRangingInnerEstimator == null) {
+            mRangingInnerEstimator = new RangingRadioSourceEstimator3D<>();
+        }
+
+        if (mRssiInnerEstimator == null &&
+                (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled)) {
+            mRssiInnerEstimator = new RssiRadioSourceEstimator3D<>();
         }
     }
 }

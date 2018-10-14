@@ -121,7 +121,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      * {@link RssiRadioSourceEstimator#DEFAULT_PATH_LOSS_EXPONENT}
      */
     protected double mEstimatedPathLossExponent =
-            RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
+            RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT;
 
     /**
      * Variance of estimated transmitted power.
