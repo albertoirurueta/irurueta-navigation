@@ -174,6 +174,13 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     protected Double mRssiThreshold;
 
     /**
+     * Indicates whether position is estimated using RSSI data.
+     * If enough ranging readings are available, this is false and position is estimated using ranging readings,
+     * otherwise this is true and position is estimated using RSSI data in a less reliable way.
+     */
+    protected boolean mRssiPositionEnabled;
+
+    /**
      * Signal readings belonging to the same radio source to be estimated.
      */
     private List<? extends ReadingLocated<P>> mReadings;
@@ -306,9 +313,9 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
             MixedRadioSourceEstimator.DEFAULT_PATHLOSS_ESTIMATION_ENABLED;
 
     /**
-     * Estimated transmitted power expressed in dBm's.
+     * Estimated transmitted power expressed in dBm's or null if not available.
      */
-    private double mEstimatedTransmittedPowerdBm;
+    private Double mEstimatedTransmittedPowerdBm;
 
     /**
      * Estimated exponent typically used on free space for path loss propagation in
@@ -344,6 +351,16 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * assuming that both measures are statistically independent.
      */
     private boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
+
+    /**
+     * Number of ranging readings available among all readings.
+     */
+    private int mNumRangingReadings;
+
+    /**
+     * Number of RSSI readings available among all readings.
+     */
+    private int mNumRssiReadings;
 
     /**
      * Constructor.
@@ -1705,22 +1722,17 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
             return false;
         }
 
-        int numRanging = 0, numRssi = 0;
-        for (ReadingLocated<P> reading : readings) {
-            if (reading instanceof RangingReadingLocated) {
-                numRanging++;
+        checkReadings(readings);
 
-            } else if (reading instanceof RssiReadingLocated) {
-                numRssi++;
-
-            } else if (reading instanceof RangingAndRssiReadingLocated) {
-                numRanging++;
-                numRssi++;
-            }
-        }
-
-        return numRanging >= getMinRangingReadings() &&
-                numRssi >= getMinRssiReadings() &&
+        //if enough ranging data is available, we check validity both for ranging and RSSI readings
+        return ((!mRssiPositionEnabled && mNumRangingReadings >= getMinRangingReadings() &&
+                mNumRssiReadings >= getMinRssiReadings()) ||
+                //if not enough ranging data is available, we check validity only for RSSI readings
+                (mRssiPositionEnabled && mNumRssiReadings >= getMinRssiReadings()) ||
+                //if only position is enabled, then only check for ranging readings
+                (!mTransmittedPowerEstimationEnabled && !mPathLossEstimationEnabled &&
+                mNumRangingReadings >= getMinRangingReadings())) &&
+                //in both upper cases enough general readings must be available
                 readings.size() >= getMinReadings();
     }
 
@@ -1730,6 +1742,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @throws LockedException if estimator is locked
      */
     public boolean isReady() throws LockedException {
+        checkReadings(mReadings);
+
         buildRangingEstimatorIfNeeded();
         setupRangingEstimator();
 
@@ -1738,9 +1752,13 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
             setupRssiEstimator();
         }
 
-        return mRangingEstimator.isReady() &&
-                ((!mTransmittedPowerEstimationEnabled && !mPathLossEstimationEnabled) ||
-                        mRssiEstimator.isReady());
+        if (mRssiPositionEnabled) {
+            return mRssiEstimator.isReady();
+        } else {
+            return mRangingEstimator.isReady() &&
+                    ((!mTransmittedPowerEstimationEnabled && !mPathLossEstimationEnabled) ||
+                            mRssiEstimator.isReady());
+        }
     }
 
     /**
@@ -1797,18 +1815,20 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     }
 
     /**
-     * Gets estimated transmitted power expressed in milli watts (mW).
-     * @return estimated transmitted power expressed in milli watts.
+     * Gets estimated transmitted power expressed in milli watts (mW) or null if
+     * not available.
+     * @return estimated transmitted power expressed in milli watts or null.
      */
-    public double getEstimatedTransmittedPower() {
-        return Utils.dBmToPower(mEstimatedTransmittedPowerdBm);
+    public Double getEstimatedTransmittedPower() {
+        return mEstimatedTransmittedPowerdBm != null ?
+                Utils.dBmToPower(mEstimatedTransmittedPowerdBm) : null;
     }
 
     /**
-     * Gets estimated transmitted power expressed in dBm's.
-     * @return estimated transmitted power expressed in dBm's.
+     * Gets estimated transmitted power expressed in dBm's or null if not available.
+     * @return estimated transmitted power expressed in dBm's or null.
      */
-    public double getEstimatedTransmittedPowerdBm() {
+    public Double getEstimatedTransmittedPowerdBm() {
         return mEstimatedTransmittedPowerdBm;
     }
 
@@ -1855,18 +1875,29 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
             }
 
             //estimate position
-            mRangingEstimator.estimate();
+            if (!mRssiPositionEnabled) {
+                mRangingEstimator.estimate();
 
-            mEstimatedPosition = mRangingEstimator.getEstimatedPosition();
-            mEstimatedPositionCovariance =
-                    mRangingEstimator.getEstimatedPositionCovariance();
+                mEstimatedPosition = mRangingEstimator.getEstimatedPosition();
+                mEstimatedPositionCovariance =
+                        mRangingEstimator.getEstimatedPositionCovariance();
+            } else {
+                mEstimatedPosition = null;
+            }
 
             //estimate transmitted power and/or pathloss if enabled
-            if (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled) {
-                mRssiEstimator.setPositionEstimationEnabled(false);
+            if (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled ||
+                    mRssiPositionEnabled) {
+                mRssiEstimator.setPositionEstimationEnabled(mRssiPositionEnabled);
                 mRssiEstimator.setInitialPosition(mEstimatedPosition);
 
                 mRssiEstimator.estimate();
+
+                if (mRssiPositionEnabled) {
+                    mEstimatedPosition = mRssiEstimator.getEstimatedPosition();
+                    mEstimatedPositionCovariance =
+                            mRssiEstimator.getEstimatedPositionCovariance();
+                }
 
                 if (mTransmittedPowerEstimationEnabled) {
                     //transmitted power estimation enabled
@@ -1876,9 +1907,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                             mRssiEstimator.getEstimatedTransmittedPowerVariance();
                 } else {
                     //transmitted power estimation disabled
-                    if (mInitialTransmittedPowerdBm != null) {
-                        mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
-                    }
+                    mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
                     mEstimatedTransmittedPowerVariance = null;
                 }
 
@@ -1895,33 +1924,39 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                 }
 
                 //build covariance matrix
-                Matrix rssiCov = mRssiEstimator.getCovariance();
-                if (mEstimatedPositionCovariance != null && rssiCov != null) {
-                    int dims = getNumberOfDimensions();
-                    int n = dims;
-                    if (mTransmittedPowerEstimationEnabled) {
-                        n++;
-                    }
-                    if (mPathLossEstimationEnabled) {
-                        n++;
-                    }
-
-                    int dimsMinus1 = dims - 1;
-                    int nMinus1 = n - 1;
-                    mCovariance = new Matrix(n, n);
-                    mCovariance.setSubmatrix(0, 0,
-                            dimsMinus1, dimsMinus1,
-                            mEstimatedPositionCovariance);
-                    mCovariance.setSubmatrix(dims, dims,
-                            nMinus1, nMinus1, rssiCov);
+                if (mRssiPositionEnabled) {
+                    //if only RSSI estimation is done, we use directly the available estimated covariance
+                    mCovariance = mRssiEstimator.getCovariance();
                 } else {
-                    mCovariance = null;
+                    //if both ranging and RSSI data is used, we build covariance matrix by setting
+                    //position covariance estimated by ranging estimator into top-left corner, and then
+                    //adding covariance terms related to pathloss exponent and transmitted power
+                    Matrix rssiCov = mRssiEstimator.getCovariance();
+                    if (mEstimatedPositionCovariance != null && rssiCov != null) {
+                        int dims = getNumberOfDimensions();
+                        int n = dims;
+                        if (mTransmittedPowerEstimationEnabled) {
+                            n++;
+                        }
+                        if (mPathLossEstimationEnabled) {
+                            n++;
+                        }
+
+                        int dimsMinus1 = dims - 1;
+                        int nMinus1 = n - 1;
+                        mCovariance = new Matrix(n, n);
+                        mCovariance.setSubmatrix(0, 0,
+                                dimsMinus1, dimsMinus1,
+                                mEstimatedPositionCovariance);
+                        mCovariance.setSubmatrix(dims, dims,
+                                nMinus1, nMinus1, rssiCov);
+                    } else {
+                        mCovariance = null;
+                    }
                 }
             } else {
                 mCovariance = mEstimatedPositionCovariance;
-                if (mInitialTransmittedPowerdBm != null) {
-                    mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
-                }
+                mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
                 mEstimatedTransmittedPowerVariance = null;
 
                 mEstimatedPathLossExponent = mInitialPathLossExponent;
@@ -1961,7 +1996,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @throws LockedException if estimator is locked.
      */
     protected void setupRangingEstimator() throws LockedException {
-        if (mReadings != null) {
+        if (mReadings != null && !mRssiPositionEnabled) {
             //build ranging readings
             List<RangingReadingLocated<S, P>> rangingReadings = new ArrayList<>();
             for (ReadingLocated<P> reading : mReadings) {
@@ -2031,6 +2066,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      */
     protected void setupRssiEstimator() throws LockedException {
         if (mReadings != null) {
+            mRssiEstimator.setPositionEstimationEnabled(mRssiPositionEnabled);
+
             //build RSSI readings
             List<RssiReadingLocated<S, P>> rssiReadings = new ArrayList<>();
             for (ReadingLocated<P> reading : mReadings) {
@@ -2155,5 +2192,33 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                 reading.getRssi(), reading.getPosition(),
                 reading.getRssiStandardDeviation(),
                 reading.getPositionCovariance());
+    }
+
+    /**
+     * Checks number of available ranging readings and number of available RSSI readings. Also determines
+     * whether position must be estimated using ranging data or RSSI data.
+     * @param readings readings to be checked.
+     */
+    private void checkReadings(List<? extends ReadingLocated<P>> readings) {
+        mNumRangingReadings = mNumRssiReadings = 0;
+
+        if (readings == null) {
+            return;
+        }
+
+        for (ReadingLocated<P> reading : readings) {
+            if (reading instanceof RangingReadingLocated) {
+                mNumRangingReadings++;
+
+            } else if (reading instanceof RssiReadingLocated) {
+                mNumRssiReadings++;
+
+            } else if (reading instanceof RangingAndRssiReadingLocated) {
+                mNumRangingReadings++;
+                mNumRssiReadings++;
+            }
+        }
+
+        mRssiPositionEnabled = mNumRangingReadings < getMinRangingReadings();
     }
 }

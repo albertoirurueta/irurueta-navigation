@@ -808,6 +808,8 @@ public class SequentialRobustMixedRadioSourceEstimator2D<S extends RadioSource> 
 
         Matrix estimatedPositionCovariance = getEstimatedPositionCovariance();
 
+        Double transmittedPowerdBm = getEstimatedTransmittedPowerdBm();
+
         Double transmittedPowerVariance =
                 getEstimatedTransmittedPowerVariance();
         Double transmittedPowerStandardDeviation = transmittedPowerVariance != null ?
@@ -820,18 +822,24 @@ public class SequentialRobustMixedRadioSourceEstimator2D<S extends RadioSource> 
 
         if (source instanceof WifiAccessPoint) {
             WifiAccessPoint accessPoint = (WifiAccessPoint) source;
-            return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
-                    source.getFrequency(), accessPoint.getSsid(),
-                    getEstimatedTransmittedPowerdBm(),
-                    transmittedPowerStandardDeviation,
-                    getEstimatedPathLossExponent(),
-                    pathlossExponentStandardDeviation,
-                    estimatedPosition,
-                    estimatedPositionCovariance);
+            if (transmittedPowerdBm != null) {
+                return new WifiAccessPointWithPowerAndLocated2D(accessPoint.getBssid(),
+                        source.getFrequency(), accessPoint.getSsid(),
+                        transmittedPowerdBm,
+                        transmittedPowerStandardDeviation,
+                        getEstimatedPathLossExponent(),
+                        pathlossExponentStandardDeviation,
+                        estimatedPosition,
+                        estimatedPositionCovariance);
+            } else {
+                return new WifiAccessPointLocated2D(accessPoint.getBssid(),
+                        source.getFrequency(), accessPoint.getSsid(),
+                        estimatedPosition, estimatedPositionCovariance);
+            }
         } else if(source instanceof Beacon) {
             Beacon beacon = (Beacon) source;
             return new BeaconWithPowerAndLocated2D(beacon.getIdentifiers(),
-                    getEstimatedTransmittedPowerdBm(), beacon.getFrequency(),
+                    beacon.getTransmittedPower(), beacon.getFrequency(),
                     beacon.getBluetoothAddress(), beacon.getBeaconTypeCode(),
                     beacon.getManufacturer(), beacon.getServiceUuid(),
                     beacon.getBluetoothName(),

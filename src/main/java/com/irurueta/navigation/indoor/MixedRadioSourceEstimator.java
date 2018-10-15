@@ -107,9 +107,9 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     protected boolean mPathLossEstimationEnabled = DEFAULT_PATHLOSS_ESTIMATION_ENABLED;
 
     /**
-     * Estimated transmitted power expressed in dBm's.
+     * Estimated transmitted power expressed in dBm's or null if not available.
      */
-    private double mEstimatedTransmittedPowerdBm;
+    private Double mEstimatedTransmittedPowerdBm;
 
     /**
      * Estimated exponent typically used on free space for path loss propagation in
@@ -174,6 +174,23 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * assuming that both measures are statistically independent.
      */
     private boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
+
+    /**
+     * Number of ranging readings available among all readings.
+     */
+    private int mNumRangingReadings;
+
+    /**
+     * Number of RSSI readings available among all readings.
+     */
+    private int mNumRssiReadings;
+
+    /**
+     * Indicates whether position is estimated using RSSI data.
+     * If enough ranging readings are available, this is false and position is estimated using ranging readings,
+     * otherwise this is true and position is estimated using RSSI data in a less reliable way.
+     */
+    private boolean mRssiPositionEnabled;
 
     /**
      * Constructor.
@@ -751,7 +768,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
         if (mRssiInnerEstimator != null &&
                 (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled)) {
             try {
-                mRssiInnerEstimator.setPositionEstimationEnabled(false);
+                mRssiInnerEstimator.setPositionEstimationEnabled(mRssiPositionEnabled);
                 mRssiInnerEstimator.setTransmittedPowerEstimationEnabled(
                         mTransmittedPowerEstimationEnabled);
                 mRssiInnerEstimator.setPathLossEstimationEnabled(
@@ -773,7 +790,9 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      * @return estimated radio source position.
      */
     public P getEstimatedPosition() {
-        return mRangingInnerEstimator.getEstimatedPosition();
+        return mRssiPositionEnabled ?
+                mRssiInnerEstimator.getEstimatedPosition() :
+                mRangingInnerEstimator.getEstimatedPosition();
     }
 
     /**
@@ -789,22 +808,17 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
             return false;
         }
 
-        int numRanging = 0, numRssi = 0;
-        for (ReadingLocated<P> reading : readings) {
-            if (reading instanceof RangingReadingLocated) {
-                numRanging++;
+        checkReadings(readings);
 
-            } else if (reading instanceof RssiReadingLocated) {
-                numRssi++;
-
-            } else if (reading instanceof RangingAndRssiReadingLocated) {
-                numRanging++;
-                numRssi++;
-            }
-        }
-
-        return numRanging >= getMinRangingReadings() &&
-                numRssi >= getMinRssiReadings() &&
+        //if enough ranging data is available, we check validity both for ranging and RSSI readings
+        return ((!mRssiPositionEnabled && mNumRangingReadings >= getMinRangingReadings() &&
+                mNumRssiReadings >= getMinRssiReadings()) ||
+                //if not enough ranging data is available, we check validity only for RSSI readings
+                (mRssiPositionEnabled && mNumRssiReadings >= getMinRssiReadings()) ||
+                //if only position is enabled, then only check for ranging readings
+                (!mTransmittedPowerEstimationEnabled && !mPathLossEstimationEnabled &&
+                mNumRangingReadings >= getMinRangingReadings())) &&
+                //in both upper cases enough general readings must be available
                 super.areValidReadings(readings);
     }
 
@@ -814,10 +828,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
      */
     @Override
     public boolean isReady() {
-        //if transmitted power estimation is disabled, an initial transmitted power must be provided
-        return !(!mTransmittedPowerEstimationEnabled && mInitialTransmittedPowerdBm == null) &&
-                //readings must also be valid
-                areValidReadings(mReadings);
+        return areValidReadings(mReadings);
     }
 
     /**
@@ -862,23 +873,26 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                 }
             }
 
-            //estimate position using ranging data
-            mRangingInnerEstimator.setUseReadingPositionCovariances(
-                    mUseReadingPositionCovariances);
-            mRangingInnerEstimator.setReadings(rangingReadings);
-            mRangingInnerEstimator.setInitialPosition(mInitialPosition);
+            //estimate position using ranging data, if possible
+            P estimatedPosition = null;
+            if (!mRssiPositionEnabled) {
+                mRangingInnerEstimator.setUseReadingPositionCovariances(
+                        mUseReadingPositionCovariances);
+                mRangingInnerEstimator.setReadings(rangingReadings);
+                mRangingInnerEstimator.setInitialPosition(mInitialPosition);
 
-            mRangingInnerEstimator.estimate();
+                mRangingInnerEstimator.estimate();
 
-            mEstimatedPositionCoordinates =
-                    mRangingInnerEstimator.getEstimatedPositionCoordinates();
-            mEstimatedPositionCovariance =
-                    mRangingInnerEstimator.getEstimatedPositionCovariance();
-            P estimatedPosition = mRangingInnerEstimator.getEstimatedPosition();
+                mEstimatedPositionCoordinates =
+                        mRangingInnerEstimator.getEstimatedPositionCoordinates();
+                mEstimatedPositionCovariance =
+                        mRangingInnerEstimator.getEstimatedPositionCovariance();
+                estimatedPosition = mRangingInnerEstimator.getEstimatedPosition();
+            }
 
             //estimate transmitted power and/or pathloss if enabled
-            if (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled) {
-                mRssiInnerEstimator.setPositionEstimationEnabled(false);
+            if (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled || mRssiPositionEnabled) {
+                mRssiInnerEstimator.setPositionEstimationEnabled(mRssiPositionEnabled);
                 mRssiInnerEstimator.setInitialPosition(estimatedPosition);
 
                 mRssiInnerEstimator.setTransmittedPowerEstimationEnabled(
@@ -895,6 +909,13 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
 
                 mRssiInnerEstimator.estimate();
 
+                if (mRssiPositionEnabled) {
+                    mEstimatedPositionCoordinates =
+                            mRssiInnerEstimator.getEstimatedPositionCoordinates();
+                    mEstimatedPositionCovariance =
+                            mRssiInnerEstimator.getEstimatedPositionCovariance();
+                }
+
                 if (mTransmittedPowerEstimationEnabled) {
                     //transmitted power estimation enabled
                     mEstimatedTransmittedPowerdBm =
@@ -903,9 +924,7 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                             mRssiInnerEstimator.getEstimatedTransmittedPowerVariance();
                 } else {
                     //transmitted power estimation disabled
-                    if (mInitialTransmittedPowerdBm != null) {
-                        mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
-                    }
+                    mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
                     mEstimatedTransmittedPowerVariance = null;
                 }
 
@@ -922,34 +941,41 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                 }
 
                 //build covariance matrix
-                Matrix rssiCov = mRssiInnerEstimator.getEstimatedCovariance();
-                if (mEstimatedPositionCovariance != null && rssiCov != null) {
-                    int dims = getNumberOfDimensions();
-                    int n = dims;
-                    if (mTransmittedPowerEstimationEnabled) {
-                        n++;
-                    }
-                    if (mPathLossEstimationEnabled) {
-                        n++;
-                    }
+                if (mRssiPositionEnabled) {
+                    //if only RSSI estimation is done, we use directly the available estimated covariance
+                    mEstimatedCovariance = mRssiInnerEstimator.getEstimatedCovariance();
 
-                    int dimsMinus1 = dims - 1;
-                    int nMinus1 = n - 1;
-                    mEstimatedCovariance = new Matrix(n, n);
-                    mEstimatedCovariance.setSubmatrix(0, 0,
-                            dimsMinus1, dimsMinus1,
-                            mEstimatedPositionCovariance);
-                    mEstimatedCovariance.setSubmatrix(dims, dims,
-                            nMinus1, nMinus1, rssiCov);
                 } else {
-                    mEstimatedCovariance = null;
+                    //if both ranging and RSSI data is used, we build covariance matrix by setting
+                    //position covariance estimated by ranging estimator into top-left corner, and then
+                    //adding covariance terms related to pathloss exponent and transmitted power
+                    Matrix rssiCov = mRssiInnerEstimator.getEstimatedCovariance();
+                    if (mEstimatedPositionCovariance != null && rssiCov != null) {
+                        int dims = getNumberOfDimensions();
+                        int n = dims;
+                        if (mTransmittedPowerEstimationEnabled) {
+                            n++;
+                        }
+                        if (mPathLossEstimationEnabled) {
+                            n++;
+                        }
+
+                        int dimsMinus1 = dims - 1;
+                        int nMinus1 = n - 1;
+                        mEstimatedCovariance = new Matrix(n, n);
+                        mEstimatedCovariance.setSubmatrix(0, 0,
+                                dimsMinus1, dimsMinus1,
+                                mEstimatedPositionCovariance);
+                        mEstimatedCovariance.setSubmatrix(dims, dims,
+                                nMinus1, nMinus1, rssiCov);
+                    } else {
+                        mEstimatedCovariance = null;
+                    }
                 }
 
             } else {
                 mEstimatedCovariance = mEstimatedPositionCovariance;
-                if (mInitialTransmittedPowerdBm != null) {
-                    mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
-                }
+                mEstimatedTransmittedPowerdBm = mInitialTransmittedPowerdBm;
                 mEstimatedTransmittedPowerVariance = null;
 
                 mEstimatedPathLossExponent = mInitialPathLossExponent;
@@ -968,18 +994,20 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
     }
 
     /**
-     * Gets estimated transmitted power expressed in milli watts (mW).
-     * @return estimated transmitted power expressed in milli watts.
+     * Gets estimated transmitted power expressed in milli watts (mW) or null if
+     * not available.
+     * @return estimated transmitted power expressed in milli watts or null.
      */
-    public double getEstimatedTransmittedPower() {
-        return Utils.dBmToPower(mEstimatedTransmittedPowerdBm);
+    public Double getEstimatedTransmittedPower() {
+        return mEstimatedTransmittedPowerdBm != null ?
+                Utils.dBmToPower(mEstimatedTransmittedPowerdBm) : null;
     }
 
     /**
-     * Gets estimated transmitted power expressed in dBm's.
-     * @return estimated transmitted power expressed in dBm's.
+     * Gets estimated transmitted power expressed in dBm's or null if not available.
+     * @return estimated transmitted power expressed in dBm's or null.
      */
-    public double getEstimatedTransmittedPowerdBm() {
+    public Double getEstimatedTransmittedPowerdBm() {
         return mEstimatedTransmittedPowerdBm;
     }
 
@@ -1046,5 +1074,33 @@ public abstract class MixedRadioSourceEstimator<S extends RadioSource, P extends
                 reading.getRssi(), reading.getPosition(),
                 reading.getRssiStandardDeviation(),
                 reading.getPositionCovariance());
+    }
+
+    /**
+     * Checks number of available ranging readings and number of available RSSI readings. Also determines
+     * whether position must be estimated using ranging data or RSSI data.
+     * @param readings readings to be checked.
+     */
+    private void checkReadings(List<? extends ReadingLocated<P>> readings) {
+        mNumRangingReadings = mNumRssiReadings = 0;
+
+        if (readings == null) {
+            return;
+        }
+
+        for (ReadingLocated<P> reading : readings) {
+            if (reading instanceof RangingReadingLocated) {
+                mNumRangingReadings++;
+
+            } else if (reading instanceof RssiReadingLocated) {
+                mNumRssiReadings++;
+
+            } else if (reading instanceof RangingAndRssiReadingLocated) {
+                mNumRangingReadings++;
+                mNumRssiReadings++;
+            }
+        }
+
+        mRssiPositionEnabled = mNumRangingReadings < getMinRangingReadings();
     }
 }

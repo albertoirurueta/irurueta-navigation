@@ -97,7 +97,8 @@ public class AltBeaconUtilsTest {
 
         double k = AltBeaconUtils.getK(coefficient1, coefficient2);
 
-        assertEquals(frequency, AltBeaconUtils.getFrequency(k), ABSOLUTE_ERROR);
+        assertEquals(frequency / 1e9,
+                AltBeaconUtils.getFrequency(k) / 1e9, ABSOLUTE_ERROR);
     }
 
     @Test

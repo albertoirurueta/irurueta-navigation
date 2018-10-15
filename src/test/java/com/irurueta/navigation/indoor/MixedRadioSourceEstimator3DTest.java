@@ -114,9 +114,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0, 0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -162,10 +161,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -214,10 +211,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -253,10 +248,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -311,10 +304,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -350,9 +341,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0, 0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -403,10 +393,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -442,10 +430,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -497,10 +483,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -537,10 +521,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -593,10 +575,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -633,10 +613,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -689,10 +667,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -744,10 +720,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -785,10 +759,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -826,10 +798,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -880,10 +850,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -935,10 +903,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -976,10 +942,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
         assertFalse(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -1017,10 +981,8 @@ public class MixedRadioSourceEstimator3DTest implements
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
         assertTrue(estimator.isReady());
-        assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                0.0);
-        assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                0.0);
+        assertNull(estimator.getEstimatedTransmittedPower());
+        assertNull(estimator.getEstimatedTransmittedPowerdBm());
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertEquals(estimator.getEstimatedPathLossExponent(),
                 MixedRadioSourceEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
@@ -1435,10 +1397,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -1704,10 +1664,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -1967,10 +1925,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -2236,10 +2192,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -2496,10 +2450,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -2760,10 +2712,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -3022,10 +2972,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -3288,10 +3236,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -3550,10 +3496,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -3874,10 +3818,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -4192,10 +4134,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -4451,10 +4391,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -4704,10 +4642,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -4917,10 +4853,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -5129,10 +5063,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -5347,10 +5279,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -5614,10 +5544,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -5879,10 +5807,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -6145,10 +6071,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -6421,10 +6345,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -6690,10 +6612,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -6967,10 +6887,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -7244,10 +7162,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -7525,10 +7441,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -7791,10 +7705,8 @@ public class MixedRadioSourceEstimator3DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
-            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
-                    0.0);
-            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
-                    0.0);
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
             assertNull(estimator.getEstimatedPositionCoordinates());
             assertEquals(estimator.getEstimatedPathLossExponent(),
                     MAX_PATH_LOSS_EXPONENT, 0.0);
@@ -7983,6 +7895,464 @@ public class MixedRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 avgPowerStd);
+
+        //force NotReadyException
+        MixedRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new MixedRadioSourceEstimator3D<>();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWithOnlyRssiReadings() throws LockedException,
+            NotReadyException, IndoorException, AlgebraException {
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPowerError = 0.0, avgValidPowerError = 0.0,
+                avgInvalidPowerError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
+                avgInvalidPowerStd = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<ReadingLocated<Point3D>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi,
+                        readingsPositions[i]));
+            }
+
+            MixedRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new MixedRadioSourceEstimator3D<>(readings,
+                            this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            //check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+            double powerStd = Math.sqrt(powerVariance);
+
+            boolean validPosition, validPower;
+            double positionDistance = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                        ABSOLUTE_ERROR));
+                validPosition = true;
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                validPosition = false;
+
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+
+            double powerError = Math.abs(
+                    estimator.getEstimatedTransmittedPowerdBm() -
+                            transmittedPowerdBm);
+            if (powerError <= ABSOLUTE_ERROR) {
+                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                        ABSOLUTE_ERROR);
+                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                        transmittedPowerdBm, ABSOLUTE_ERROR);
+                validPower = true;
+                numValidPower++;
+
+                avgValidPowerError += powerError;
+                avgValidPowerStd += powerStd;
+            } else {
+                validPower = false;
+
+                avgInvalidPowerError += powerError;
+                avgInvalidPowerStd += powerStd;
+            }
+
+            avgPowerError += powerError;
+            avgPowerStd += powerStd;
+
+            if (validPosition && validPower) {
+                numValid++;
+            }
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPowerError /= numValidPower;
+        avgInvalidPowerError /= (TIMES - numValidPower);
+        avgPowerError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        avgValidPowerStd /= numValidPower;
+        avgInvalidPowerStd /= (TIMES - numValidPower);
+        avgPowerStd /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
+                (double)numValidPower / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
+                (double)numValid / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
+                avgValidPowerError);
+        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
+                avgInvalidPowerError);
+        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
+                avgPowerError);
+
+        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
+                avgValidPowerStd);
+        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
+                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                avgPowerStd);
+
+        //force NotReadyException
+        MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new MixedRadioSourceEstimator2D<>();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWithOnlyRangingReadings() throws LockedException,
+            NotReadyException, IndoorException, AlgebraException {
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<ReadingLocated<Point3D>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                readings.add(new RangingReadingLocated3D<>(accessPoint, distance,
+                        readingsPositions[i]));
+            }
+
+            MixedRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new MixedRadioSourceEstimator3D<>(this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+
+            //because transmitted power is required, estimator is not ready without
+            //enough RSSI readings
+            try {
+                estimator.setReadings(readings);
+                fail("IllegalArgumentException expected but not thrown");
+            } catch (IllegalArgumentException ignore) { }
+            assertFalse(estimator.isReady());
+
+            //if we enable only position estimation, then estimator becomes ready
+            //when readings are set
+            estimator.setTransmittedPowerEstimationEnabled(false);
+            estimator.setPathLossEstimationEnabled(false);
+
+            estimator.setReadings(readings);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            //check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointLocated3D estimatedAccessPoint =
+                    (WifiAccessPointLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+
+            assertNull(estimator.getEstimatedTransmittedPowerVariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                        ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
         MixedRadioSourceEstimator3D<WifiAccessPoint> estimator =

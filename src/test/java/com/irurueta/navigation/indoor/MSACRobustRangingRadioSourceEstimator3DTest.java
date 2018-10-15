@@ -57,6 +57,7 @@ public class MSACRobustRangingRadioSourceEstimator3DTest implements
 
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_POSITION_ERROR = 0.5;
+    private static final double VERY_LARGE_POSITION_ERROR = 1.0;
 
     private static final int TIMES = 50;
 
@@ -1130,9 +1131,9 @@ public class MSACRobustRangingRadioSourceEstimator3DTest implements
 
             double positionDistance = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= LARGE_POSITION_ERROR) {
+            if (positionDistance <= VERY_LARGE_POSITION_ERROR) {
                 assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        LARGE_POSITION_ERROR));
+                        VERY_LARGE_POSITION_ERROR));
                 numValidPosition++;
 
                 avgValidPositionError += positionDistance;
