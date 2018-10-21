@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class UtilsTest {
 
     private static final Logger LOGGER = Logger.getLogger(

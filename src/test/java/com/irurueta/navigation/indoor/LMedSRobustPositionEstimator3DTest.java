@@ -16,7 +16,7 @@
 package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.AlgebraException;
-import com.irurueta.algebra.SingularValueDecomposer;
+import com.irurueta.geometry.Accuracy3D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
@@ -29,6 +29,8 @@ import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
 
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,6 +39,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("Duplicates")
 public class LMedSRobustPositionEstimator3DTest implements
         RobustPositionEstimatorListener<Point3D> {
 
@@ -73,6 +76,7 @@ public class LMedSRobustPositionEstimator3DTest implements
     private static final double TX_POWER_VARIANCE = 0.1;
     private static final double RX_POWER_VARIANCE = 0.5;
     private static final double PATHLOSS_EXPONENT_VARIANCE = 0.001;
+    private static final double RANGING_STD = 1.0;
 
     private int estimateStart;
     private int estimateEnd;
@@ -706,7 +710,7 @@ public class LMedSRobustPositionEstimator3DTest implements
     }
 
     @Test
-    public void testEstimate() throws LockedException, NotReadyException,
+    public void testEstimateRssi() throws LockedException, NotReadyException,
             RobustEstimatorException, AlgebraException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
@@ -716,7 +720,9 @@ public class LMedSRobustPositionEstimator3DTest implements
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -803,15 +809,16 @@ public class LMedSRobustPositionEstimator3DTest implements
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    estimator.getCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance <= ABSOLUTE_ERROR) {
@@ -820,13 +827,18 @@ public class LMedSRobustPositionEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
         }
 
         assertTrue(numValidPosition > 0);
@@ -838,6 +850,12 @@ public class LMedSRobustPositionEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -849,16 +867,32 @@ public class LMedSRobustPositionEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        RANSACRobustPositionEstimator3D estimator =
-                new RANSACRobustPositionEstimator3D();
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -866,7 +900,7 @@ public class LMedSRobustPositionEstimator3DTest implements
     }
 
     @Test
-    public void testEstimateWithInlierError() throws LockedException, NotReadyException,
+    public void testEstimateRssiWithInlierError() throws LockedException, NotReadyException,
             RobustEstimatorException, AlgebraException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
@@ -878,7 +912,9 @@ public class LMedSRobustPositionEstimator3DTest implements
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
         double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0;
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -968,15 +1004,16 @@ public class LMedSRobustPositionEstimator3DTest implements
             assertNotNull(estimator.getInliersData());
             assertNotNull(estimator.getCovariance());
 
-            SingularValueDecomposer decomposer = new SingularValueDecomposer(
-                    estimator.getCovariance());
-            decomposer.decompose();
-            double[] v = decomposer.getSingularValues();
-            double positionStd = 0.0;
-            for (double aV : v) {
-                positionStd += Math.sqrt(aV);
-            }
-            positionStd /= v.length;
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
             if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
@@ -985,13 +1022,18 @@ public class LMedSRobustPositionEstimator3DTest implements
 
                 avgValidPositionError += positionDistance;
                 avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
             } else {
                 avgInvalidPositionError += positionDistance;
                 avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
             }
 
             avgPositionError += positionDistance;
             avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
         }
 
         assertTrue(numValidPosition > 0);
@@ -1003,6 +1045,12 @@ public class LMedSRobustPositionEstimator3DTest implements
         avgValidPositionStd /= numValidPosition;
         avgInvalidPositionStd /= (TIMES - numValidPosition);
         avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
 
         LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
                 (double)numValidPosition / (double)TIMES * 100.0);
@@ -1014,16 +1062,1181 @@ public class LMedSRobustPositionEstimator3DTest implements
         LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
                 avgPositionError);
 
-        LOGGER.log(Level.INFO, "Valid position standard deviation {0} meters",
-                avgValidPositionStd);
-        LOGGER.log(Level.INFO, "Invalid position standard deviation {0} meters",
-                avgInvalidPositionStd);
-        LOGGER.log(Level.INFO, "Position standard deviation {0} meters",
-                avgPositionStd);
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
 
         //force NotReadyException
-        RANSACRobustPositionEstimator3D estimator =
-                new RANSACRobustPositionEstimator3D();
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateRanging() throws LockedException, NotReadyException,
+            RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+
+
+            List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointLocated3D locatedAccessPoint =
+                        new WifiAccessPointLocated3D(bssid,
+                                FREQUENCY, accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+            }
+
+            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+                    new RangingFingerprint<>(readings);
+
+
+            LMedSRobustPositionEstimator3D estimator =
+                    new LMedSRobustPositionEstimator3D(sources, fingerprint,
+                            this);
+            estimator.setResultRefined(true);
+
+            reset();
+
+            //check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        //force NotReadyException
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateRangingWithInlierError() throws LockedException, NotReadyException,
+            RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+        GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, INLIER_ERROR_STD);
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+
+
+            List<WifiAccessPointLocated3D> sources = new ArrayList<>();
+            List<RangingReading<WifiAccessPoint>> readings = new ArrayList<>();
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointLocated3D locatedAccessPoint =
+                        new WifiAccessPointLocated3D(bssid,
+                                FREQUENCY, accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+
+                error += inlierErrorRandomizer.nextDouble();
+
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+            }
+
+            RangingFingerprint<WifiAccessPoint, RangingReading<WifiAccessPoint>> fingerprint =
+                    new RangingFingerprint<>(readings);
+
+
+            LMedSRobustPositionEstimator3D estimator =
+                    new LMedSRobustPositionEstimator3D(sources, fingerprint,
+                            this);
+            estimator.setResultRefined(true);
+
+            reset();
+
+            //check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
+                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        //force NotReadyException
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateRangingAndRssi() throws LockedException, NotReadyException,
+            RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, FREQUENCY, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+                    new RangingAndRssiFingerprint<>(readings);
+
+
+            LMedSRobustPositionEstimator3D estimator =
+                    new LMedSRobustPositionEstimator3D(sources, fingerprint,
+                            this);
+            estimator.setResultRefined(true);
+
+            reset();
+
+            //check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange > 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        //force NotReadyException
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateRangingAndRssiWithInlierError() throws LockedException, NotReadyException,
+            RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+        GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, INLIER_ERROR_STD);
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, FREQUENCY, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+
+                error += inlierErrorRandomizer.nextDouble();
+
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+                    new RangingAndRssiFingerprint<>(readings);
+
+
+            LMedSRobustPositionEstimator3D estimator =
+                    new LMedSRobustPositionEstimator3D(sources, fingerprint,
+                            this);
+            estimator.setResultRefined(true);
+
+            reset();
+
+            //check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
+                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        //force NotReadyException
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateMixed() throws LockedException, NotReadyException,
+            RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, FREQUENCY, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            LMedSRobustPositionEstimator3D estimator =
+                    new LMedSRobustPositionEstimator3D(sources, fingerprint,
+                            this);
+            estimator.setResultRefined(true);
+
+            reset();
+
+            //check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange > 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance <= ABSOLUTE_ERROR) {
+                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        //force NotReadyException
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateMixedWithInlierError() throws LockedException, NotReadyException,
+            RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+        GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, INLIER_ERROR_STD);
+
+        int numValidPosition = 0;
+        double avgPositionError = 0.0, avgValidPositionError = 0.0,
+                avgInvalidPositionError = 0.0;
+        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
+                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
+        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
+                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, FREQUENCY, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+
+                error += inlierErrorRandomizer.nextDouble();
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+            LMedSRobustPositionEstimator3D estimator =
+                    new LMedSRobustPositionEstimator3D(sources, fingerprint,
+                            this);
+            estimator.setResultRefined(true);
+
+            reset();
+
+            //check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            double positionStd = accuracyStd.getAverageAccuracy();
+            double positionStdConfidence = accuracyStd.getConfidence();
+            double positionAccuracy = accuracy.getAverageAccuracy();
+            double positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
+                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+                numValidPosition++;
+
+                avgValidPositionError += positionDistance;
+                avgValidPositionStd += positionStd;
+                avgValidPositionAccuracy += positionAccuracy;
+            } else {
+                avgInvalidPositionError += positionDistance;
+                avgInvalidPositionStd += positionStd;
+                avgInvalidPositionAccuracy += positionAccuracy;
+            }
+
+            avgPositionError += positionDistance;
+            avgPositionStd += positionStd;
+            avgPositionStdConfidence += positionStdConfidence;
+            avgPositionAccuracy += positionAccuracy;
+            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        avgValidPositionError /= numValidPosition;
+        avgInvalidPositionError /= (TIMES - numValidPosition);
+        avgPositionError /= TIMES;
+
+        avgValidPositionStd /= numValidPosition;
+        avgInvalidPositionStd /= (TIMES - numValidPosition);
+        avgPositionStd /= TIMES;
+        avgPositionStdConfidence /= TIMES;
+
+        avgValidPositionAccuracy /= numValidPosition;
+        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
+        avgPositionAccuracy /= TIMES;
+        avgPositionAccuracyConfidence /= TIMES;
+
+        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
+                (double)numValidPosition / (double)TIMES * 100.0);
+
+        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
+                avgValidPositionError);
+        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
+                avgInvalidPositionError);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
+                avgPositionError);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(avgPositionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position standard deviation {0} meters ({1} confidence)",
+                avgValidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position standard deviation {0} meters ({1} confidence)",
+                avgInvalidPositionStd, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                avgPositionStd, formattedConfidence));
+
+        formattedConfidence = format.format(avgPositionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Valid position accuracy {0} meters ({1} confidence)",
+                avgValidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Invalid position accuracy {0} meters ({1} confidence)",
+                avgInvalidPositionAccuracy, formattedConfidence));
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                avgPositionAccuracy, formattedConfidence));
+
+        //force NotReadyException
+        LMedSRobustPositionEstimator3D estimator =
+                new LMedSRobustPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
