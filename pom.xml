@@ -218,69 +218,69 @@ mvn -s s3-settings.xml clean test site deploy site-deploy
                         <configuration>
                             <source>
                                 <![CDATA[
-                                    import java.util.Date;
-                                import java.util.Properties;
-                                import java.text.SimpleDateFormat;
-                                import java.io.File;
-                                import java.io.FileWriter;
+                                    import java.util.Date
+                                    import java.util.Properties
+                                    import java.text.SimpleDateFormat
+                                    import java.io.File
+                                    import java.io.FileWriter
 
-                                    println("Saving build info...");
-                                    def dateFormatter = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-                                    def buildTimestamp = dateFormatter.format(new Date());
+                                    println("Saving build info...")
+                                    def dateFormatter = new SimpleDateFormat("yy-MM-dd HH:mm:ss")
+                                    def buildTimestamp = dateFormatter.format(new Date())
 
-                                    def groupId = "${project.groupId}";
-                                    def artifactId = "${project.artifactId}";
-                                    def version = "${project.version}";
+                                    String groupId = "${project.groupId}"
+                                    String artifactId = "${project.artifactId}"
+                                    String version = "${project.version}"
 
                                     //JENKINS
-                                    def buildNumber = System.getenv("BUILD_NUMBER");
-                                    def commit = System.getenv("GIT_COMMIT");
-                                    def branch = System.getenv("GIT_BRANCH");
+                                    def buildNumber = System.getenv("BUILD_NUMBER")
+                                    def commit = System.getenv("GIT_COMMIT")
+                                    def branch = System.getenv("GIT_BRANCH")
 
                                     //TRAVIS CI
-                                    if(buildNumber == null){
-                                        buildNumber = System.getenv("TRAVIS_BUILD_NUMBER");
+                                    if (buildNumber == null) {
+                                        buildNumber = System.getenv("TRAVIS_BUILD_NUMBER")
                                     }
-                                    if(commit == null){
-                                        commit = System.getenv("TRAVIS_COMMIT");
+                                    if (commit == null) {
+                                        commit = System.getenv("TRAVIS_COMMIT")
                                     }
-                                    if(branch == null){
-                                        branch = System.getenv("TRAVIS_BRANCH");
+                                    if (branch == null) {
+                                        branch = System.getenv("TRAVIS_BRANCH")
                                     }
 
                                     //GITLAB
                                     if (buildNumber == null) {
-                                        buildNumber = System.getenv("CI_JOB_ID");
+                                        buildNumber = System.getenv("CI_JOB_ID")
                                     }
                                     if (commit == null) {
-                                        commit = System.getenv("CI_COMMIT_SHA");
+                                        commit = System.getenv("CI_COMMIT_SHA")
                                     }
                                     if (branch == null) {
-                                        branch = System.getenv("CI_COMMIT_REF_NAME");
+                                        branch = System.getenv("CI_COMMIT_REF_NAME")
                                     }
 
-                                    def props = new Properties();
-                                    props.setProperty("BUILD_TIMESTAMP", buildTimestamp);
-                                    props.setProperty("GROUP_ID", groupId);
-                                    props.setProperty("ARTIFACT_ID", artifactId);
-                                    props.setProperty("VERSION", version);
-                                    if(buildNumber != null){
-                                        props.setProperty("BUILD_NUMBER", buildNumber);
+                                    def props = new Properties()
+                                    props.setProperty("BUILD_TIMESTAMP", buildTimestamp)
+                                    props.setProperty("GROUP_ID", groupId)
+                                    props.setProperty("ARTIFACT_ID", artifactId)
+                                    props.setProperty("VERSION", version)
+                                    if (buildNumber != null) {
+                                        props.setProperty("BUILD_NUMBER", buildNumber)
                                     }
-                                    if(commit != null){
-                                        props.setProperty("COMMIT", commit);
+                                    if (commit != null) {
+                                        props.setProperty("COMMIT", commit)
                                     }
-                                    if(branch != null){
-                                        props.setProperty("BRANCH", branch);
+                                    if (branch != null) {
+                                        props.setProperty("BRANCH", branch)
                                     }
 
-                                    File dir = new File("src/main/resources/com/irurueta/navigation");
-                                    dir.mkdirs();
-                                    File file = new File(dir, "build-info.properties");
-                                    FileWriter writer = new FileWriter(file);
-                                    props.store(writer, null);
-                                    writer.close();
-                                    println("Build info saved at " + file);
+                                    File dir = new File("src/main/resources/com/irurueta/navigation")
+                                    dir.mkdirs()
+                                    File file = new File(dir, "build-info.properties")
+                                    FileWriter writer = new FileWriter(file)
+                                    props.store(writer, null)
+                                    writer.close()
+                                    println("Build info saved at " + file)
                                 ]]>
                             </source>
                         </configuration>

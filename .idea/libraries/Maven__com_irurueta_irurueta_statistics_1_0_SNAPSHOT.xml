@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.irurueta:irurueta-statistics:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20181019.101443-9.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20181022.220106-11.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20181019.101443-9-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20181022.220106-11-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20181019.101443-9-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-statistics/1.0-SNAPSHOT/irurueta-statistics-1.0-20181022.220106-11-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
