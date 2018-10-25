@@ -28,7 +28,7 @@ import java.util.List;
  * positions and distances among the provided ones using MSAC algorithm to
  * discard outliers.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver {
 
     /**

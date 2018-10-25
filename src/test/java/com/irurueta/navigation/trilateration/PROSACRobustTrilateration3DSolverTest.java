@@ -15,9 +15,9 @@
  */
 package com.irurueta.navigation.trilateration;
 
-import static org.junit.Assert.*;
-
-import com.irurueta.geometry.*;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -27,6 +27,9 @@ import org.junit.*;
 
 import java.util.Random;
 
+import static org.junit.Assert.*;
+
+@SuppressWarnings("Duplicates")
 public class PROSACRobustTrilateration3DSolverTest implements
         RobustTrilaterationSolverListener<Point3D> {
 
@@ -68,6 +71,7 @@ public class PROSACRobustTrilateration3DSolverTest implements
     public void tearDown() { }
 
     @Test
+    @SuppressWarnings("all")
     public void testConstructor() {
         //empty constructor
         PROSACRobustTrilateration3DSolver solver = new PROSACRobustTrilateration3DSolver();

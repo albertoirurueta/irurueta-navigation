@@ -18,6 +18,7 @@ package com.irurueta.navigation.geodesic;
 /**
  * A container for the results from PolygonArea.
  */
+@SuppressWarnings("WeakerAccess")
 public class PolygonResult {
 
     /**

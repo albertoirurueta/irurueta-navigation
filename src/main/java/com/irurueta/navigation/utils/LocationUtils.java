@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 /**
  * Location utility class based on Android's SDK Location class.
  */
+@SuppressWarnings("WeakerAccess")
 public class LocationUtils {
     /**
      * Constant used to specify formatting of a latitude or longitude
@@ -168,6 +169,7 @@ public class LocationUtils {
             }
 
             // min must be in [0, 59] if seconds are present, otherwise [0.0, 60.0)
+            //noinspection all
             if (min < 0 || min >= 60 || (secPresent && (min > 59))) {
                 throw new IllegalArgumentException("coordinate=" +
                         coordinate);

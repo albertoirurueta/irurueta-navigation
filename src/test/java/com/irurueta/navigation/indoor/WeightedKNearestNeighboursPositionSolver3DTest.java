@@ -31,8 +31,9 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.irurueta.navigation.indoor.Utils.dBmToPower;
+import static com.irurueta.navigation.indoor.Utils.powerTodBm;
 import static org.junit.Assert.*;
-import static com.irurueta.navigation.indoor.Utils.*;
 
 public class WeightedKNearestNeighboursPositionSolver3DTest implements
         WeightedKNearestNeighboursPositionSolverListener<Point3D> {

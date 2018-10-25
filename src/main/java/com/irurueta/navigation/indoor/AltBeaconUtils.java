@@ -48,6 +48,7 @@ package com.irurueta.navigation.indoor;
  * 2.0, but can usually range from 1.6 to 1.8 on indoor environments)
  * coefficient3 is a bias term calibrated for each device.
  */
+@SuppressWarnings("WeakerAccess")
 public class AltBeaconUtils {
 
     /**

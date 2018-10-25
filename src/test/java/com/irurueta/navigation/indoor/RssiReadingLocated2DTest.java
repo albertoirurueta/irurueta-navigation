@@ -19,6 +19,7 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import org.junit.*;
+
 import static org.junit.Assert.*;
 
 public class RssiReadingLocated2DTest {

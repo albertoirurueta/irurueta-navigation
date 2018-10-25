@@ -17,6 +17,7 @@ package com.irurueta.navigation.indoor;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
+import com.irurueta.navigation.indoor.radiosource.RssiRadioSourceEstimator;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.StatisticsException;
 
@@ -122,7 +123,7 @@ public class Utils {
      * @return a normal distribution containing both expected distance and its variance.
      * @throws IndoorException if something fails.
      */
-    protected static MultivariateNormalDist propagateVariancesToDistanceVariance(final double txPower,
+    public static MultivariateNormalDist propagateVariancesToDistanceVariance(final double txPower,
             final double rxPower, final double pathLossExponent, final double frequency,
             Double txPowerVariance, Double rxPowerVariance,
             Double pathLossExponentVariance) throws IndoorException {

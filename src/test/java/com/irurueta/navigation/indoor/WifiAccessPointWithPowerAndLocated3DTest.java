@@ -1226,8 +1226,8 @@ public class WifiAccessPointWithPowerAndLocated3DTest {
         //check
         //noinspection all
         assertTrue(ap1.equals(ap1));
-        assertTrue(ap1.equals(ap2));
-        assertFalse(ap1.equals(ap3));
+        assertEquals(ap1, ap2);
+        assertNotEquals(ap1, ap3);
     }
 
     @Test

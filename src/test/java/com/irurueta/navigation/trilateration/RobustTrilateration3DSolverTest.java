@@ -15,13 +15,13 @@
  */
 package com.irurueta.navigation.trilateration;
 
-import static org.junit.Assert.*;
-
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Sphere;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import org.junit.*;
+
+import static org.junit.Assert.*;
 
 public class RobustTrilateration3DSolverTest implements
         RobustTrilaterationSolverListener<Point3D> {

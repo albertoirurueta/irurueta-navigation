@@ -46,7 +46,7 @@ public class RangingReadingTest {
         assertNull(reading.getSource());
         assertEquals(reading.getDistance(), 0.0, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
-        assertEquals(reading.getType(), ReadingType.RANGING_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_READING);
 
 
         //test constructor with access point and distance
@@ -57,7 +57,7 @@ public class RangingReadingTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.2, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
-        assertEquals(reading.getType(), ReadingType.RANGING_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_READING);
 
         //force IllegalArgumentException
         reading = null;
@@ -79,7 +79,7 @@ public class RangingReadingTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.5, 0.0);
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
-        assertEquals(reading.getType(), ReadingType.RANGING_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_READING);
 
         reading = new RangingReading<>(ap, 1.5, null);
 
@@ -87,7 +87,7 @@ public class RangingReadingTest {
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.5, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
-        assertEquals(reading.getType(), ReadingType.RANGING_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_READING);
 
         //force IllegalArgumentException
         reading = null;

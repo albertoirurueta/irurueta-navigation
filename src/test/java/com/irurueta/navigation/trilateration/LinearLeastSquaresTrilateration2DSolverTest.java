@@ -1,8 +1,5 @@
 package com.irurueta.navigation.trilateration;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
@@ -13,6 +10,10 @@ import org.junit.*;
 
 import java.util.Random;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+
+@SuppressWarnings("Duplicates")
 public class LinearLeastSquaresTrilateration2DSolverTest implements TrilaterationSolverListener<Point2D> {
 
     private static final int MIN_CIRCLES = 3;

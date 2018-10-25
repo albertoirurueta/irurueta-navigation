@@ -17,7 +17,7 @@ package com.irurueta.navigation.geodesic;
 
 import org.junit.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class GnomonicDataTest {
 

@@ -48,7 +48,7 @@ public class RangingAndRssiReadingTest {
         assertNull(reading.getDistanceStandardDeviation());
         assertEquals(reading.getRssi(), 0.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
 
         //test constructor with access point, distance and RSSI
@@ -61,7 +61,7 @@ public class RangingAndRssiReadingTest {
         assertNull(reading.getDistanceStandardDeviation());
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertNull(reading.getRssiStandardDeviation());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         //Force IllegalArgumentException
         reading = null;
@@ -87,7 +87,7 @@ public class RangingAndRssiReadingTest {
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
         assertEquals(reading.getRssi(), -50.0, 0.0);
         assertEquals(reading.getRssiStandardDeviation(), 5.5, 0.0);
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         //Force IllegalArgumentException
         reading = null;

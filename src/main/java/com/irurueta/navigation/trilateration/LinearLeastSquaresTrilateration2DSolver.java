@@ -23,7 +23,7 @@ import com.irurueta.navigation.LockedException;
 /**
  * Linearly solves the trilateration problem.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresTrilaterationSolver<Point2D> {
 
     /**

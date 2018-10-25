@@ -59,6 +59,7 @@ package com.irurueta.navigation.geodesic;
  *   }
  * }}</pre>
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PolygonArea {
 
     private Geodesic mEarth;

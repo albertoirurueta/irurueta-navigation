@@ -2653,7 +2653,7 @@ public class BeaconWithPowerAndLocated3DTest {
         assertEquals(b1, b2);
         assertNotEquals(b1, b3);
 
-        assertFalse(b1.equals(new Object()));
+        assertNotEquals(b1, new Object());
 
         assertEquals(b1.hashCode(), b2.hashCode());
         assertNotEquals(b1.hashCode(), b3.hashCode());

@@ -23,18 +23,14 @@ import com.irurueta.geometry.*;
 import com.irurueta.statistics.NormalDist;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.DistanceUnit;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
 public class Accuracy3DTest {
-
-    private static final Logger LOGGER = Logger.getLogger(Accuracy3DTest.class.getName());
 
     private static final double MIN_ANGLE_DEGREES = 0.0;
     private static final double MAX_ANGLE_DEGREES = 90.0;

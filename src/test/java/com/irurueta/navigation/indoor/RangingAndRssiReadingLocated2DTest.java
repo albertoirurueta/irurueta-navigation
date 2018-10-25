@@ -53,7 +53,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading.getRssiStandardDeviation());
         assertNull(reading.getPosition());
         assertNull(reading.getPositionCovariance());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
 
         //test constructor with access point, distance, rssi and position
@@ -70,7 +70,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading.getRssiStandardDeviation());
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         //force IllegalArgumentException
         reading = null;
@@ -105,7 +105,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertEquals(reading.getRssiStandardDeviation(), 0.2, 0.0);
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5, -50.0,
                 position, null, null);
@@ -118,7 +118,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading.getRssiStandardDeviation());
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         //force IllegalArgumentException
         reading = null;
@@ -163,7 +163,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading.getRssiStandardDeviation());
         assertSame(reading.getPosition(), position);
         assertSame(reading.getPositionCovariance(), cov);
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         //force IllegalArgumentException
         reading = null;
@@ -204,7 +204,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertEquals(reading.getRssiStandardDeviation(), 0.2, 0.0);
         assertSame(reading.getPosition(), position);
         assertSame(reading.getPositionCovariance(), cov);
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
                 position, null, null, null);
@@ -217,7 +217,7 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading.getRssiStandardDeviation());
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
-        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);;
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
 
         //force IllegalArgumentException
         reading = null;

@@ -28,7 +28,7 @@ import java.util.List;
  * positions and distances among the provided ones using LMedS algorithm to
  * discard outliers.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolver {
 
     /**

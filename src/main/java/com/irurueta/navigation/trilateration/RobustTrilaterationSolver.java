@@ -30,7 +30,7 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
  * the best solution.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RobustTrilaterationSolver<P extends Point> {
 
     /**

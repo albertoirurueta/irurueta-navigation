@@ -15,8 +15,8 @@
  */
 package com.irurueta.navigation.trilateration;
 
-import com.irurueta.geometry.Sphere;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.numerical.robust.*;
@@ -28,7 +28,7 @@ import java.util.List;
  * positions and distances among the provided ones using PROSAC algorithm to
  * discard outliers.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PROSACRobustTrilateration3DSolver extends RobustTrilateration3DSolver {
 
     /**

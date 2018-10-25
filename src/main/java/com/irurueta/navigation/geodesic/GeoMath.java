@@ -19,6 +19,7 @@ package com.irurueta.navigation.geodesic;
  * Defines mathematical functions and constants.
  * Based on net.sf.geographiclib library.
  */
+@SuppressWarnings("WeakerAccess")
 public class GeoMath {
 
     /**

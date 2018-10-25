@@ -1,11 +1,8 @@
 package com.irurueta.navigation.trilateration;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import com.irurueta.geometry.Sphere;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.statistics.UniformRandomizer;
@@ -13,6 +10,10 @@ import org.junit.*;
 
 import java.util.Random;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+
+@SuppressWarnings("Duplicates")
 public class NonLinearLeastSquaresTrilateration3DSolverTest implements TrilaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 4;

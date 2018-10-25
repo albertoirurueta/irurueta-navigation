@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 /**
  * Contains build data of this library.
  */
+@SuppressWarnings("WeakerAccess")
 public class BuildInfo {
 
     /**
@@ -153,8 +154,8 @@ public class BuildInfo {
             if (stream != null) {
                 try {
                     stream.close();
-                } catch (IOException ignore) {
-                    LOGGER.log(Level.WARNING, "Could not properly close stream", ignore);
+                } catch (IOException e) {
+                    LOGGER.log(Level.WARNING, "Could not properly close stream", e);
                 }
             }
         }

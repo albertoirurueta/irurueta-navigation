@@ -1,7 +1,5 @@
 package com.irurueta.navigation.trilateration;
 
-import static org.junit.Assert.*;
-
 import com.irurueta.geometry.Circle;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
@@ -14,6 +12,9 @@ import org.junit.*;
 
 import java.util.Random;
 
+import static org.junit.Assert.*;
+
+@SuppressWarnings("Duplicates")
 public class RANSACRobustTrilateration2DSolverTest implements
         RobustTrilaterationSolverListener<Point2D> {
 

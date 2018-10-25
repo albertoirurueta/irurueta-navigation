@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.indoor;
 
+import com.irurueta.navigation.indoor.radiosource.RssiRadioSourceEstimator;
 import com.irurueta.numerical.*;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.UniformRandomizer;

@@ -14,6 +14,7 @@ import org.junit.*;
 
 import java.util.Random;
 
+@SuppressWarnings("Duplicates")
 public class LMedSRobustTrilateration2DSolverTest implements
         RobustTrilaterationSolverListener<Point2D> {
 

@@ -22,7 +22,7 @@ import com.irurueta.geometry.*;
 import com.irurueta.statistics.NormalDist;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.DistanceUnit;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.Random;
 

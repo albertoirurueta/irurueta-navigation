@@ -15,9 +15,9 @@
  */
 package com.irurueta.navigation;
 
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.*;
+
+import static org.junit.Assert.assertNotNull;
 
 public class LockedExceptionTest {
 

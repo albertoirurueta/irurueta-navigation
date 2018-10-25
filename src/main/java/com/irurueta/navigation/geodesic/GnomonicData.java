@@ -26,6 +26,7 @@ package com.irurueta.navigation.geodesic;
  * and it always includes the fields <i>x</i>, <i>y</i>, <i>azi</i>, and
  * <i>rk</i>.
  */
+@SuppressWarnings("WeakerAccess")
 public class GnomonicData {
 
     /**

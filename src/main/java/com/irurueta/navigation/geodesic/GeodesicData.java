@@ -25,6 +25,7 @@ package com.irurueta.navigation.geodesic;
  * {@link Geodesic#inverse(double, double, double, double)} and it always includes the field
  * <i>a12</i>.
  */
+@SuppressWarnings("WeakerAccess")
 public class GeodesicData {
 
     /**

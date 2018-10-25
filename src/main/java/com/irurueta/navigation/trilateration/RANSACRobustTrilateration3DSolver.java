@@ -28,6 +28,7 @@ import java.util.List;
  * positions and distances among the provided ones using RANSAC algorithm to
  * discard outliers.
  */
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class RANSACRobustTrilateration3DSolver extends RobustTrilateration3DSolver {
 
     /**

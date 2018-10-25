@@ -85,6 +85,7 @@ package com.irurueta.navigation.geodesic;
  *   }
  * }}</pre>
  */
+@SuppressWarnings("WeakerAccess")
 public class GeodesicLine {
 
     private static final int NC1 = Geodesic.NC1;

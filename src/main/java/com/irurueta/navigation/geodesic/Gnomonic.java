@@ -107,6 +107,7 @@ package com.irurueta.navigation.geodesic;
  * }
  * </pre>
  */
+@SuppressWarnings("WeakerAccess")
 public class Gnomonic {
     private static final double EPS = 0.01 * Math.sqrt(GeoMath.EPSILON);
     private static final int NUMIT = 10;

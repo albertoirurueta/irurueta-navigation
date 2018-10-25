@@ -182,6 +182,7 @@ package com.irurueta.navigation.geodesic;
  *     }
  * </pre>
  */
+@SuppressWarnings("WeakerAccess")
 public class Geodesic {
 
     /**
@@ -1533,6 +1534,7 @@ public class Geodesic {
      * @param f flattening of ellipsoid. Setting <i>f</i> = 0 gives a sphere. Negative <i>f</i> gives a prolate ellipsoid.
      * @return a new Geodesic instance or null if something fails.
      */
+    @SuppressWarnings("all")
     private static Geodesic safeInstance(double a, double f) {
         try {
             return new Geodesic(a, f);
