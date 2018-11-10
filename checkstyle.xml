@@ -60,8 +60,7 @@
 		<module name="MultipleStringLiterals"/>
 		<module name="OneStatementPerLine"/>
 		
-		<!-- imports -->		
-		<module name="AvoidStarImport"/>
+		<!-- imports -->
 		<module name="IllegalImport"/>
 		<module name="RedundantImport"/>		
     	<module name="UnusedImports"/> 
