@@ -23,7 +23,6 @@ import java.util.List;
  * @param <R> a {@link RssiReading} type.
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RangingFingerprint<S extends RadioSource, R extends RangingReading<S>>
         extends Fingerprint<S, R> {
 

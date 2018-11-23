@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * Data related to a beacon whose 3D location is known.
  */
-@SuppressWarnings("WeakerAccess")
 public class BeaconLocated3D extends BeaconLocated<Point3D> {
 
     /**

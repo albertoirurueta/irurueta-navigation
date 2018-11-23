@@ -52,7 +52,6 @@ public class PositionEstimatorHelper {
      * @param distances list where extracted distances will be stored.
      * @param <P> a {@link Point} type.
      */
-    @SuppressWarnings("unchecked")
     public static <P extends Point> void buildPositionsAndDistances(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
@@ -133,7 +132,6 @@ public class PositionEstimatorHelper {
      * fallback is negative.
      * @param <P> a {@link Point} type.
      */
-    @SuppressWarnings("unchecked")
     public static <P extends Point> void buildPositionsDistancesAndDistanceStandardDeviations(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
@@ -175,7 +173,6 @@ public class PositionEstimatorHelper {
      * fallback is negative.
      * @param <P> a {@link Point} type.
      */
-    @SuppressWarnings("unchecked")
     public static <P extends Point> void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,

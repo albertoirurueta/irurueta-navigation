@@ -150,7 +150,6 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
         }
 
         InhomogeneousPoint3D position = new InhomogeneousPoint3D();
-        //noinspection unchecked
         getEstimatedPosition(position);
         return position;
     }

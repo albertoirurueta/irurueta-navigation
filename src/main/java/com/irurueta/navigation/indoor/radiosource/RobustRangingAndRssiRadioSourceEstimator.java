@@ -53,7 +53,7 @@ import java.util.List;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSource, P extends Point>
         extends RobustRadioSourceEstimator<P, RangingAndRssiReadingLocated<S, P>,
         RobustRangingAndRssiRadioSourceEstimatorListener<S, P>> {

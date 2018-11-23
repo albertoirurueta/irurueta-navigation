@@ -47,12 +47,12 @@ import java.util.List;
  * remaining parameters are robustly estimated using former estimated position as
  * an initial guess.
  *
- * Because usually information about the antena of the radio source cannot be
- * retrieved (because many measurements are made on unkown devices where
+ * Because usually information about the antenna of the radio source cannot be
+ * retrieved (because many measurements are made on unknown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  * If Readings contain RSSI standard deviations, those values will be used,
- * otherwise it will be asumed an RSSI standard deviation of 1 dB.
+ * otherwise it will be assumed an RSSI standard deviation of 1 dB.
  *
  * This implementation is like SequentialRobustRangingAndRssiRadioSourceEstimator but
  * allows mixing different kinds of located radio source readings (ranging, RSSI

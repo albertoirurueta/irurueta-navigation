@@ -23,7 +23,6 @@ import com.irurueta.geometry.Point2D;
  * or bluetooth beacon) containing signal strength and distance to associated access point.
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RangingAndRssiReadingLocated2D<S extends RadioSource> extends
         RangingAndRssiReadingLocated<S, Point2D> {
 

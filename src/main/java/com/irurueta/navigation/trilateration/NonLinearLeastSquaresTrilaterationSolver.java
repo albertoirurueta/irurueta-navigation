@@ -36,7 +36,7 @@ import java.util.Arrays;
  * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> extends TrilaterationSolver<P> {
 
     /**
@@ -90,7 +90,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required 2 points.
      */
-    @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) throws IllegalArgumentException {
         super();
         internalSetPositionsAndDistances(positions, distances);
@@ -113,7 +112,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances, P initialPosition)
             throws IllegalArgumentException {
         this(initialPosition);
@@ -124,7 +122,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * Constructor.
      * @param listener listener to be notified of events raised by this instance.
      */
-    @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(TrilaterationSolverListener<P> listener) {
         super(listener);
     }
@@ -137,7 +134,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required 2 points.
      */
-    @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
             TrilaterationSolverListener<P> listener) throws IllegalArgumentException {
         super(listener);
@@ -149,7 +145,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @param initialPosition initial position to start trilateration solving.
      * @param listener listener to be notified of events raised by this instance.
      */
-    @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P initialPosition, TrilaterationSolverListener<P> listener) {
         super(listener);
         mInitialPosition = initialPosition;
@@ -164,7 +159,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    @SuppressWarnings("unchecked")
     public NonLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances, P initialPosition,
             TrilaterationSolverListener<P> listener) throws IllegalArgumentException {
         this(initialPosition, listener);
@@ -329,7 +323,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void solve() throws TrilaterationException, NotReadyException,
             LockedException {
         if (!isReady()) {

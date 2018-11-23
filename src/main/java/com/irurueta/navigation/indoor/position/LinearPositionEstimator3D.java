@@ -170,6 +170,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      * @throws IllegalArgumentException if something fails.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     protected void setPositionsAndDistances(List<Point3D> positions, List<Double> distances)
             throws IllegalArgumentException {
         int size = positions.size();

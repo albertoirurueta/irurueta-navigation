@@ -182,7 +182,7 @@ package com.irurueta.navigation.geodesic;
  *     }
  * </pre>
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class Geodesic {
 
     /**
@@ -194,30 +194,23 @@ public class Geodesic {
     /**
      * The order of the expansions used.
      */
-    @SuppressWarnings("WeakerAccess")
     protected static final int GEODESIC_ORDER = 6;
 
-    @SuppressWarnings("WeakerAccess")
     protected static final int NA1 = GEODESIC_ORDER;
     protected static final int NC1 = GEODESIC_ORDER;
     protected static final int NC1P = GEODESIC_ORDER;
 
-    @SuppressWarnings("WeakerAccess")
     protected static final int NA2 = GEODESIC_ORDER;
     protected static final int NC2 = GEODESIC_ORDER;
 
-    @SuppressWarnings("WeakerAccess")
     protected static final int NA3 = GEODESIC_ORDER;
 
-    @SuppressWarnings("WeakerAccess")
     protected static final int NA3X = NA3;
     protected static final int NC3 = GEODESIC_ORDER;
 
-    @SuppressWarnings("WeakerAccess")
     protected static final int NC3X = (NC3 * (NC3 - 1)) / 2;
     protected static final int NC4 = GEODESIC_ORDER;
 
-    @SuppressWarnings("WeakerAccess")
     protected static final int NC4X = (NC4 * (NC4 + 1)) / 2;
 
     /**
@@ -1080,7 +1073,6 @@ public class Geodesic {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     private InverseData inverseInt(double lat1, double lon1, double lat2, double lon2, int outmask) {
         InverseData result = new InverseData();
         GeodesicData r = result.mG;

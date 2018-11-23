@@ -23,7 +23,6 @@ import com.irurueta.geometry.Point2D;
  * (e.g. WiFi access point or bluetooth beacon).
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RssiReadingLocated2D<S extends RadioSource> extends
         RssiReadingLocated<S, Point2D> {
 

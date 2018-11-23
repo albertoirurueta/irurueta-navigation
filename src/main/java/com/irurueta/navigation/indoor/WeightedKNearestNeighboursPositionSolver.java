@@ -25,7 +25,7 @@ import com.irurueta.navigation.NotReadyException;
  * WkNN algorithm is based on https://github.com/ajnas/WiFiPS.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> {
 
     /**

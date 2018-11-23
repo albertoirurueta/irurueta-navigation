@@ -47,7 +47,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public class MixedRadioSourceEstimator2D<S extends RadioSource>
         extends MixedRadioSourceEstimator<S, Point2D> {
 

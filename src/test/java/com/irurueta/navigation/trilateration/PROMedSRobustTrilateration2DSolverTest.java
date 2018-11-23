@@ -71,6 +71,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
     public void tearDown() { }
 
     @Test
+    @SuppressWarnings("all")
     public void testConstructor() {
         //empty constructor
         PROMedSRobustTrilateration2DSolver solver = new PROMedSRobustTrilateration2DSolver();

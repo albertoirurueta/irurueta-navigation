@@ -36,7 +36,7 @@ import java.util.List;
  * @param <R> a {@link ReadingLocated} type.
  * @param <L> a {@link RobustRadioSourceEstimatorListener} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RobustRadioSourceEstimator<P extends Point,
         R extends ReadingLocated<P>,
         L extends RobustRadioSourceEstimatorListener<? extends RobustRadioSourceEstimator>> {

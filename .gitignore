@@ -1,1 +1,4 @@
 target
+.idea
+
+src/main/resources/com/irurueta/navigation/build-info.properties

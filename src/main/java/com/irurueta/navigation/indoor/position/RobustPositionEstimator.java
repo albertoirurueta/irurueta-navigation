@@ -42,7 +42,7 @@ import java.util.List;
  * to find the best solution.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class RobustPositionEstimator<P extends Point> {
 
     /**
@@ -570,7 +570,6 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * Builds positions, distances, standard deviation of distances and quality scores
      * for the internal trilateration solver.
      */
-    @SuppressWarnings("unchecked")
     protected void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores() {
         if (mTrilaterationSolver == null) {
             return;

@@ -21,7 +21,6 @@ package com.irurueta.navigation.indoor;
  * point.
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
 
     /**

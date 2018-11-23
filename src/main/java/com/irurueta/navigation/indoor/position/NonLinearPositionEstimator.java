@@ -328,7 +328,6 @@ public abstract class NonLinearPositionEstimator<P extends Point> extends Positi
      * Builds positions, distances and standard deviation of distances for the internal
      * trilateration solver.
      */
-    @SuppressWarnings("unchecked")
     private void buildPositionsDistancesAndDistanceStandardDeviations() {
         if (mTrilaterationSolver == null) {
             return;

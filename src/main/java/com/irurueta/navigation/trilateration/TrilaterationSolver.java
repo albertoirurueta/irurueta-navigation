@@ -25,7 +25,7 @@ import com.irurueta.navigation.NotReadyException;
  * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public abstract class TrilaterationSolver<P extends Point> {
 
     /**

@@ -108,7 +108,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
@@ -232,7 +232,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RangingAndRssiReading<>(accessPoint, distance, rssi));
             }
@@ -298,7 +298,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
@@ -355,7 +355,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
@@ -501,7 +501,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RangingAndRssiReading<>(accessPoint, distance, rssi,
                         FALLBACK_DISTANCE_STANDARD_DEVIATION,
@@ -578,7 +578,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
@@ -639,7 +639,7 @@ public class PositionEstimatorHelperTest {
             double distance = position.distanceTo(accessPointPosition);
 
             double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                    distance, FREQUENCY, pathLossExponent));
+                    distance, pathLossExponent));
 
             readings.add(new RssiReading<>(accessPoint, rssi,
                     Math.sqrt(RX_POWER_VARIANCE)));
@@ -700,7 +700,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
@@ -845,7 +845,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi));
             }
@@ -990,7 +990,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
@@ -1067,7 +1067,7 @@ public class PositionEstimatorHelperTest {
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
@@ -1107,14 +1107,13 @@ public class PositionEstimatorHelperTest {
     }
 
 
-    @SuppressWarnings("all")
     private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double frequency, double pathLossExponent) {
+                                 double distance, double pathLossExponent) {
         //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
+        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }

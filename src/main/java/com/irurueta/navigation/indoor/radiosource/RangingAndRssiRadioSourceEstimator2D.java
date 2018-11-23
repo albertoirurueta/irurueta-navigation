@@ -49,7 +49,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public class RangingAndRssiRadioSourceEstimator2D<S extends RadioSource> extends
         RangingAndRssiRadioSourceEstimator<S, Point2D> {
 

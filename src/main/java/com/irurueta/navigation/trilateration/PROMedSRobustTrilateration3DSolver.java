@@ -28,7 +28,7 @@ import java.util.List;
  * positions and distances among the provided ones using PROMedS algorithm to
  * discard outliers.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolver {
 
     /**

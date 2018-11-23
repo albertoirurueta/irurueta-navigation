@@ -20,7 +20,6 @@ package com.irurueta.navigation.indoor;
  * (e.g. WiFi access point or bluetooth beacon).
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RssiReading<S extends RadioSource> extends Reading<S> {
 
     /**

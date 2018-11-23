@@ -1,55 +1,44 @@
-<!--
-NOTE: to deploy we can use the following command:
-mvn -s ./s3-settings.xml clean test site deploy
-to also deploy site use command:
-mvn -s s3-settings.xml clean test site deploy site-deploy
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.irurueta</groupId>
     <artifactId>irurueta-navigation</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A GNSS/INS navigation library</description>
     <url>https://bitbucket.org/alberto_irurueta/irurueta-navigation</url>
     <inceptionYear>2018</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <developers>
         <developer>
             <name>Alberto Irurueta Carro</name>
             <email>alberto@irurueta.com</email>
-            <organizationUrl>https://bitbucket.org/alberto_irurueta</organizationUrl>
+            <organizationUrl>https://github.com/albertoirurueta</organizationUrl>
         </developer>
     </developers>
+    <scm>
+        <connection>scm:git@github.com:albertoirurueta/irurueta-navigation.git</connection>
+        <developerConnection>scm:git@github.com:albertoirurueta/irurueta-navigation.git</developerConnection>
+        <url>git@github.com:albertoirurueta/irurueta-navigation.git</url>
+    </scm>
 
     <distributionManagement>
+        <!-- maven central snapshot repository -->
         <snapshotRepository>
-            <id>irurueta-navigation</id>
-            <url>s3://artifacts.irurueta.com/snapshot</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <repository>
-            <id>irurueta-navigation</id>
-            <url>s3://artifacts.irurueta.com/release</url>
-        </repository>
-        <site>
-            <id>irurueta-navigation</id>
-            <url>s3://artifacts.irurueta.com/site/com/irurueta/irurueta-navigation</url>
-        </site>
     </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>com.irurueta</id>
-            <url>http://s3.amazonaws.com/artifacts.irurueta.com/snapshot</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -95,6 +84,8 @@ mvn -s s3-settings.xml clean test site deploy site-deploy
           <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
+        <github.global.server>github</github.global.server>
+        <github.global.oauth2Token>${env.GITHUB_OAUTH_TOKEN}</github.global.oauth2Token>
     </properties>
 
     <profiles>
@@ -287,14 +278,19 @@ mvn -s s3-settings.xml clean test site deploy site-deploy
                     </execution>
                 </executions>
             </plugin>
+            <!-- deploys artifact to snapshots repository -->
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>org.kuali.maven.wagons</groupId>
-                <artifactId>maven-s3-wagon</artifactId>
-                <version>1.2.1</version>
-            </extension>
-        </extensions>
     </build>
 
     <reporting>

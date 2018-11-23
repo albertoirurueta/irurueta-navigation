@@ -175,7 +175,6 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
     /**
      * Builds positions and distances for the internal trilateration solver.
      */
-    @SuppressWarnings("unchecked")
     private void buildPositionsAndDistances() {
         if (mTrilaterationSolver == null) {
             return;

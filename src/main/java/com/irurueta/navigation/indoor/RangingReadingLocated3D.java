@@ -24,7 +24,6 @@ import com.irurueta.geometry.Point3D;
  * to such radio source.
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RangingReadingLocated3D<S extends RadioSource> extends RangingReadingLocated<S, Point3D> {
 
     /**

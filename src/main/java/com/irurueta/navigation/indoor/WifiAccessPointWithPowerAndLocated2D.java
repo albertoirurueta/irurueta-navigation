@@ -22,7 +22,6 @@ import com.irurueta.geometry.Point2D;
  * Data related to a WiFi access point with estimated transmitted power and
  * known 2D location.
  */
-@SuppressWarnings("WeakerAccess")
 public class WifiAccessPointWithPowerAndLocated2D extends
         WifiAccessPointWithPowerAndLocated<Point2D> {
 

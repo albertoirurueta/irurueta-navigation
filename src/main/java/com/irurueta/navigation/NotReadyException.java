@@ -18,7 +18,6 @@ package com.irurueta.navigation;
 /**
  * Exception raised when attempting to perform an operation when not ready.
  */
-@SuppressWarnings("WeakerAccess")
 public class NotReadyException extends NavigationException {
 
     /**

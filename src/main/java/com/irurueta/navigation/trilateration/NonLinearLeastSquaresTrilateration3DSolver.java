@@ -23,7 +23,7 @@ import com.irurueta.navigation.LockedException;
 /**
  * Solves a Trilateration problem with an instance of a least squares optimizer.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSquaresTrilaterationSolver<Point3D> {
 
     /**
@@ -340,7 +340,6 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
         }
 
         InhomogeneousPoint3D position = new InhomogeneousPoint3D();
-        //noinspection unchecked
         getEstimatedPosition(position);
         return position;
     }

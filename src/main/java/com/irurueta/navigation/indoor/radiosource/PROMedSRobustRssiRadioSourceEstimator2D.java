@@ -58,7 +58,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public class PROMedSRobustRssiRadioSourceEstimator2D<S extends RadioSource> extends
         RobustRssiRadioSourceEstimator2D<S> {
 

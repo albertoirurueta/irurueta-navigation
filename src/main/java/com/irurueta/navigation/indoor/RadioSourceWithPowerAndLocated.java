@@ -22,6 +22,5 @@ import com.irurueta.geometry.Point;
  * Bluetooth beacon) whose transmitted power and location are known.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
 public interface RadioSourceWithPowerAndLocated<P extends Point>
         extends RadioSourceWithPower, RadioSourceLocated<P> { }

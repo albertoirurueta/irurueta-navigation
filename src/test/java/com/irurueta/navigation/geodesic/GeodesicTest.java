@@ -27,7 +27,7 @@ public class GeodesicTest {
     private static final PolygonArea POLYLINE =
             new PolygonArea(Geodesic.WGS84, true);
 
-    private static final double TESTCASES[][] = {
+    private static final double[][] TESTCASES = {
             {35.60777, -139.44815, 111.098748429560326,
                     -11.17491, -69.95921, 129.289270889708762,
                     8935244.5604818305, 80.50729714281974, 6273170.2055303837,
@@ -965,22 +965,22 @@ public class GeodesicTest {
     @Test
     public void testPlanimeter0() {
         // Check fix for pole-encircling bug found 2011-03-16
-        double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
+        double[][] pa = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
         PolygonResult a = Planimeter(pa);
         assertEquals(a.perimeter, 631819.8745, 1e-4);
         assertEquals(a.area, 24952305678.0, 1);
 
-        double pb[][] = {{-89, 0}, {-89, 90}, {-89, 180}, {-89, 270}};
+        double[][] pb = {{-89, 0}, {-89, 90}, {-89, 180}, {-89, 270}};
         a = Planimeter(pb);
         assertEquals(a.perimeter, 631819.8745, 1e-4);
         assertEquals(a.area, -24952305678.0, 1);
 
-        double pc[][] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+        double[][] pc = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
         a = Planimeter(pc);
         assertEquals(a.perimeter, 627598.2731, 1e-4);
         assertEquals(a.area, 24619419146.0, 1);
 
-        double pd[][] = {{90, 0}, {0, 0}, {0, 90}};
+        double[][] pd = {{90, 0}, {0, 0}, {0, 90}};
         a = Planimeter(pd);
         assertEquals(a.perimeter, 30022685, 1);
         assertEquals(a.area, 63758202715511.0, 1);
@@ -992,7 +992,7 @@ public class GeodesicTest {
     @Test
     public void testPlanimeter5() {
         // Check fix for Planimeter pole crossing bug found 2011-06-24
-        double points[][] = {{89, 0.1}, {89, 90.1}, {89, -179.9}};
+        double[][] points = {{89, 0.1}, {89, 90.1}, {89, -179.9}};
         PolygonResult a = Planimeter(points);
         assertEquals(a.perimeter, 539297, 1);
         assertEquals(a.area, 12476152838.5, 1);
@@ -1001,19 +1001,19 @@ public class GeodesicTest {
     @Test
     public void testPlanimeter6() {
         // Check fix for Planimeter lon12 rounding bug found 2012-12-03
-        double pa[][] = {{9, -0.00000000000001}, {9, 180}, {9, 0}};
+        double[][] pa = {{9, -0.00000000000001}, {9, 180}, {9, 0}};
         PolygonResult a = Planimeter(pa);
         assertEquals(a.perimeter, 36026861, 1);
         assertEquals(a.area, 0, 1);
-        double pb[][] = {{9, 0.00000000000001}, {9, 0}, {9, 180}};
+        double[][] pb = {{9, 0.00000000000001}, {9, 0}, {9, 180}};
         a = Planimeter(pb);
         assertEquals(a.perimeter, 36026861, 1);
         assertEquals(a.area, 0, 1);
-        double pc[][] = {{9, 0.00000000000001}, {9, 180}, {9, 0}};
+        double[][] pc = {{9, 0.00000000000001}, {9, 180}, {9, 0}};
         a = Planimeter(pc);
         assertEquals(a.perimeter, 36026861, 1);
         assertEquals(a.area, 0, 1);
-        double pd[][] = {{9, -0.00000000000001}, {9, 0}, {9, 180}};
+        double[][] pd = {{9, -0.00000000000001}, {9, 0}, {9, 180}};
         a = Planimeter(pd);
         assertEquals(a.perimeter, 36026861, 1);
         assertEquals(a.area, 0, 1);
@@ -1022,7 +1022,7 @@ public class GeodesicTest {
     @Test
     public void testPlanimeter12() {
         // Area of arctic circle (not really -- adjunct to rhumb-area test)
-        double points[][] = {{66.562222222, 0}, {66.562222222, 180}};
+        double[][] points = {{66.562222222, 0}, {66.562222222, 180}};
         PolygonResult a = Planimeter(points);
         assertEquals(a.perimeter, 10465729, 1);
         assertEquals(a.area, 0, 1);
@@ -1031,8 +1031,8 @@ public class GeodesicTest {
     @Test
     public void testPlanimeter13() {
         // Check encircling pole twice
-        double points[][] = {{89,-360}, {89,-240}, {89,-120},
-                {89,0}, {89,120}, {89,240}};
+        double[][] points = {{89, -360}, {89, -240}, {89, -120},
+                {89, 0}, {89, 120}, {89, 240}};
         PolygonResult a =  Planimeter(points);
         assertEquals(a.perimeter, 1160741, 1);
         assertEquals(a.area, 32415230256.0, 1);
@@ -1042,7 +1042,7 @@ public class GeodesicTest {
         return x != x;
     }
 
-    private static PolygonResult Planimeter(double points[][]) {
+    private static PolygonResult Planimeter(double[][] points) {
         POLYGON.clear();
         for (double[] point : points) {
             POLYGON.addPoint(point[0], point[1]);
@@ -1050,7 +1050,7 @@ public class GeodesicTest {
         return POLYGON.compute(false, true);
     }
 
-    private static PolygonResult polyLength(double points[][]) {
+    private static PolygonResult polyLength(double[][] points) {
         POLYLINE.clear();
         for (double[] point : points) {
             POLYLINE.addPoint(point[0], point[1]);

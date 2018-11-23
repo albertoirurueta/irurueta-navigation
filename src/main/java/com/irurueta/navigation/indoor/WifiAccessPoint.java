@@ -20,7 +20,6 @@ import java.io.Serializable;
 /**
  * Data related to a WiFi access point.
  */
-@SuppressWarnings("WeakerAccess")
 public class WifiAccessPoint implements Serializable, RadioSource {
 
     /**

@@ -20,7 +20,6 @@ package com.irurueta.navigation.indoor;
  * access point or bluetooth beacon), indicating the distance to such source.
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RangingReading<S extends RadioSource> extends Reading<S> {
 
     /**

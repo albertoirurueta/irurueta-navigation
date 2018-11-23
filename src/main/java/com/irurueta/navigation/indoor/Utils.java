@@ -21,7 +21,7 @@ import com.irurueta.navigation.indoor.radiosource.RssiRadioSourceEstimator;
 import com.irurueta.statistics.MultivariateNormalDist;
 import com.irurueta.statistics.StatisticsException;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings("Duplicates")
 public class Utils {
 
     /**

@@ -150,7 +150,6 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
         }
 
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
-        //noinspection unchecked
         getEstimatedPosition(position);
         return position;
     }

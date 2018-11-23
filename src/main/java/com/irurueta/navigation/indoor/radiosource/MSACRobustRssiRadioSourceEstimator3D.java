@@ -58,7 +58,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.*
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public class MSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> extends
         RobustRssiRadioSourceEstimator3D<S> {
 

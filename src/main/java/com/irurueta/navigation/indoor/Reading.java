@@ -21,7 +21,6 @@ import java.io.Serializable;
  * Contains a reading related to a given WiFi access point.
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class Reading<S extends RadioSource> implements Serializable {
 
     /**

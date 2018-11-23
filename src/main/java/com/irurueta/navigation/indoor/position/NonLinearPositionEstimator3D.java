@@ -277,6 +277,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * @param distanceStandardDeviations standard deviations of distances to be set.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     protected void setPositionsDistancesAndDistanceStandardDeviations(List<Point3D> positions,
             List<Double> distances, List<Double> distanceStandardDeviations) {
         int size = positions.size();

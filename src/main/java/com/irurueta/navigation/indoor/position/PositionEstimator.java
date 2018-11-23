@@ -208,6 +208,7 @@ public abstract class PositionEstimator<P extends Point> {
      * @throws IllegalArgumentException if provided value is null or the number of provided sources is less
      * than the required minimum.
      */
+    @SuppressWarnings("Duplicates")
     protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources)
             throws IllegalArgumentException {
         if (sources == null) {

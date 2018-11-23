@@ -24,7 +24,6 @@ import java.util.List;
  * Data related to a beacon whose transmitted power, standard deviation of such
  * transmitted power and its 3D location are known.
  */
-@SuppressWarnings("WeakerAccess")
 public class BeaconWithPowerAndLocated3D extends BeaconWithPowerAndLocated<Point3D> {
 
     /**

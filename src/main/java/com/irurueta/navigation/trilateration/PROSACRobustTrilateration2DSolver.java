@@ -28,7 +28,7 @@ import java.util.List;
  * positions and distances among the provided ones using PROSAC algorithm to
  * discard outliers.
  */
-@SuppressWarnings({"WeakerAccess", "Duplicates"})
+@SuppressWarnings("Duplicates")
 public class PROSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver {
 
     /**
