@@ -66,7 +66,7 @@ public class PROSACRobustRssiRadioSourceEstimator3DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -4740,7 +4740,7 @@ public class PROSACRobustRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -5901,7 +5901,7 @@ public class PROSACRobustRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -9782,7 +9782,7 @@ public class PROSACRobustRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
                 avgInvalidPathLossStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 

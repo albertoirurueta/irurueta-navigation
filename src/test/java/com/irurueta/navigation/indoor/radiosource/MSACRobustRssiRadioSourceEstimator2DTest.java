@@ -66,7 +66,7 @@ public class MSACRobustRssiRadioSourceEstimator2DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -2076,7 +2076,7 @@ public class MSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3123,7 +3123,7 @@ public class MSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -4297,7 +4297,7 @@ public class MSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint2D beaconPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),

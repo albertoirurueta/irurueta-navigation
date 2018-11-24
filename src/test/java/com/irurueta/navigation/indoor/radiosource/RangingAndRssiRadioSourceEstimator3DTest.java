@@ -67,7 +67,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private int estimateStart;
     private int estimateEnd;
@@ -5724,7 +5724,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
@@ -6798,7 +6798,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);
@@ -7346,7 +7346,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             UniformRandomizer randomizer = new UniformRandomizer(new Random());
             GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                     0.0, ERROR_STD);

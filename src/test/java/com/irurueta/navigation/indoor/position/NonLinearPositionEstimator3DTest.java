@@ -50,7 +50,7 @@ public class NonLinearPositionEstimator3DTest implements PositionEstimatorListen
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private int estimateStart;
     private int estimateEnd;

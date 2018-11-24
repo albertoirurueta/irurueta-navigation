@@ -59,7 +59,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_POSITION_ERROR = 0.5;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -1570,7 +1570,7 @@ public class PROSACRobustRangingRadioSourceEstimator3DTest implements
                 avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),

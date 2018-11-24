@@ -67,7 +67,7 @@ public class MSACRobustPositionEstimator3DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 2.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -917,7 +917,7 @@ public class MSACRobustPositionEstimator3DTest implements
                 avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
@@ -1708,7 +1708,7 @@ public class MSACRobustPositionEstimator3DTest implements
                 avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
@@ -2122,7 +2122,7 @@ public class MSACRobustPositionEstimator3DTest implements
                 avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(

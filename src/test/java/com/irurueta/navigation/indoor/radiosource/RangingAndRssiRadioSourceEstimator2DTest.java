@@ -67,7 +67,7 @@ public class RangingAndRssiRadioSourceEstimator2DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private int estimateStart;
     private int estimateEnd;

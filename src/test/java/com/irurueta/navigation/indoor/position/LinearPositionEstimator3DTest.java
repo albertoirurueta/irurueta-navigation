@@ -54,7 +54,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
 
     private static final double ERROR_STD = 1e-3;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private int estimateStart;
     private int estimateEnd;

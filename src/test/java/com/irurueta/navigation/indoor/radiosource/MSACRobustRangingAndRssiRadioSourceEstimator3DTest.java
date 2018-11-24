@@ -67,7 +67,7 @@ public class MSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -2102,7 +2102,7 @@ public class MSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3161,7 +3161,7 @@ public class MSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),

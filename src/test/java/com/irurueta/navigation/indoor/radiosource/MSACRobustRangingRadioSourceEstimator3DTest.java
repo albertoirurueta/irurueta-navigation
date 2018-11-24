@@ -59,7 +59,7 @@ public class MSACRobustRangingRadioSourceEstimator3DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double VERY_LARGE_POSITION_ERROR = 1.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -1055,7 +1055,7 @@ public class MSACRobustRangingRadioSourceEstimator3DTest implements
         int numValidPosition = 0;
         double avgPositionError = 0.0, avgValidPositionError = 0.0,
                 avgInvalidPositionError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),

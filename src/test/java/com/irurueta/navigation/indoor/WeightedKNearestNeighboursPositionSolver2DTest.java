@@ -59,7 +59,7 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
-    private static final int TIMES = 1000;
+    private static final int TIMES = 100;
     private static final int SHORT_TIMES = 25;
 
     private static final double FREQUENCY = 2.4e9; //(Hz)

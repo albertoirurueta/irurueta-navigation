@@ -66,7 +66,7 @@ public class MSACRobustRssiRadioSourceEstimator3DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 5;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -5272,7 +5272,7 @@ public class MSACRobustRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerError = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10*TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
