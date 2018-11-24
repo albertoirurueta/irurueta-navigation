@@ -304,7 +304,7 @@ public class AltBeaconUtilsTest {
         double c2 = AltBeaconUtils.getCoefficient2(pathLossExponent);
 
         assertEquals(frequency, AltBeaconUtils.getFrequency(c1, c2),
-                ABSOLUTE_ERROR);
+                10.0 * ABSOLUTE_ERROR);
     }
 
     @Test
