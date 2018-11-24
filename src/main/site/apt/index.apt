@@ -1,0 +1,25 @@
+About
+
+    A GNSS/INS navigation library
+
+Set up dependencies
+
+    To use this library add the following dependency to your pom.xml file:
+
++--
+<project>
+    ...
+    <dependencies>
+        ...
+        <dependency>
+            <groupId>com.irurueta</groupId>
+            <artifactId>irurueta-navigation</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        <dependency>
+        ...
+    </dependencies>
+    ...
+</project>
++--
+
+
