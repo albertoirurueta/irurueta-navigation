@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinderTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinderTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RssiFingerprint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RssiFingerprint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/WifiKNearestFinder.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RssiFingerprintTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RssiFingerprintTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/WeightedKNearestNeighboursPositionSolver2DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/WeightedKNearestNeighboursPositionSolver2DTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/WeightedKNearestNeighboursPositionSolver3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/WeightedKNearestNeighboursPositionSolver3DTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/WifiKNearestFinderTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -82,111 +72,33 @@
     <favorites_list name="irurueta-navigation" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinder.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="480">
-                  <caret line="32" column="44" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="44" />
-                  <folding>
-                    <element signature="e#0#728#0" expanded="true" />
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#1187#1220#0" expanded="true" />
-                    <element signature="e#5238#5269#0" expanded="true" />
-                    <element signature="e#8366#8397#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinderTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="603">
-                  <caret line="1156" lean-forward="true" selection-start-line="1063" selection-end-line="1156" />
-                  <folding>
-                    <element signature="e#0#57022#0" expanded="true" />
-                    <element signature="method#RadioSourceKNearestFinderTest#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#setUpClass#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#tearDownClass#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#setUp#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#tearDown#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testConstructorWifi2D#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testConstructorWifi3D#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testConstructorBeacon2D#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testConstructorBeacon3D#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestTo#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindKNearestTo#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindKNearestToAll#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestToWithError#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindBestK#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindBestKWithError#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestToUniformFingerprints#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestToWithErrorUniformFingerprints#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindBestKUniformFingerprints#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#testFindBestKWithErrorUniformFingerprints#0;class#RadioSourceKNearestFinderTest#0" />
-                    <element signature="method#receivedPower#0;class#RadioSourceKNearestFinderTest#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinder.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="434">
-                  <caret line="29" column="38" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="38" />
-                  <folding>
-                    <element signature="e#0#715#0" expanded="true" />
-                    <element signature="imports" expanded="true" />
-                    <element signature="e#998#1031#0" expanded="true" />
-                    <element signature="e#4838#4869#0" expanded="true" />
-                    <element signature="e#8006#8037#0" expanded="true" />
-                    <element signature="method#findKNearestTo#4;class#RadioSourceKNearestFinder#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinderTest.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="273">
-                  <caret line="1141" column="21" lean-forward="true" selection-start-line="1141" selection-start-column="21" selection-end-line="1141" selection-end-column="21" />
-                  <folding>
-                    <element signature="e#0#732#0" expanded="true" />
-                    <element signature="imports" expanded="true" />
-                    <element signature="method#setUpClass#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#tearDownClass#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#setUp#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#tearDown#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testConstructorWifi2D#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testConstructorWifi3D#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testConstructorBeacon2D#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testConstructorBeacon3D#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestTo#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindKNearestTo#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindKNearestToAll#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestToWithError#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindBestK#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindBestKWithError#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestToUniformFingerprints#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindNearestToWithErrorUniformFingerprints#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                    <element signature="method#testFindBestKUniformFingerprints#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="28" column="35" lean-forward="true" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+              <folding>
+                <element signature="e#0#728#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1187#1220#0" expanded="true" />
+                <element signature="e#5238#5269#0" expanded="true" />
+                <element signature="e#8366#8397#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="356">
+              <caret line="2504" column="33" selection-start-line="2504" selection-start-column="33" selection-end-line="2504" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -200,7 +112,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>SequentialRobustRangingAndRssiRadioSourceEstimator2D</find>
       <find>isRead</find>
       <find>readingsPositions</find>
       <find>2D</find>
@@ -230,6 +141,7 @@
       <find>Import</find>
       <find>mFingerprints</find>
       <find>RadioSourceKNearestFinder</find>
+      <find>RANSACRobustRssiRadioSourceEstimator3DTest</find>
     </findStrings>
     <replaceStrings>
       <replace>MSAC</replace>
@@ -290,7 +202,6 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/PROSACRobustRssiRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator2DTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/position/RANSACRobustPositionEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/PROSACRobustRangingAndRssiRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRangingAndRssiRadioSourceEstimator2DTest.java" />
@@ -309,6 +220,7 @@
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinder.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinder.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinderTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java" />
       </list>
     </option>
   </component>
@@ -501,6 +413,16 @@
               <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="navigation" type="462c0819:PsiDirectoryNode" />
+              <item name="indoor" type="462c0819:PsiDirectoryNode" />
+              <item name="position" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="site" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -552,7 +474,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/albertoirurueta/irurueta2/common/irurueta-navigation/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimatorHelper.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543106869025" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543156149324" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs.jest.jest_package" value="" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -586,7 +508,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.RadioSourceNoMeanKNearestFinderTest">
+  <component name="RunManager" selected="JUnit.RANSACRobustRssiRadioSourceEstimator3DTest">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -595,6 +517,21 @@
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RANSACRobustRssiRadioSourceEstimator3DTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="irurueta-navigation" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.irurueta.navigation.indoor.radiosource.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor.radiosource" />
+      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.radiosource.RANSACRobustRssiRadioSourceEstimator3DTest" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -624,21 +561,6 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
       <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.RadioSourceNoMeanKNearestFinderTest" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RssiFingerprintTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="irurueta-navigation" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.irurueta.navigation.indoor.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.irurueta.navigation.indoor" />
-      <option name="MAIN_CLASS_NAME" value="com.irurueta.navigation.indoor.RssiFingerprintTest" />
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -698,19 +620,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.RssiFingerprintTest" />
       <item itemvalue="JUnit.RadioSourceKNearestFinderTest" />
       <item itemvalue="JUnit.WeightedKNearestNeighboursPositionSolver3DTest" />
       <item itemvalue="JUnit.WeightedKNearestNeighboursPositionSolver2DTest" />
       <item itemvalue="JUnit.RadioSourceNoMeanKNearestFinderTest" />
+      <item itemvalue="JUnit.RANSACRobustRssiRadioSourceEstimator3DTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.RANSACRobustRssiRadioSourceEstimator3DTest" />
         <item itemvalue="JUnit.RadioSourceNoMeanKNearestFinderTest" />
         <item itemvalue="JUnit.WeightedKNearestNeighboursPositionSolver2DTest" />
         <item itemvalue="JUnit.WeightedKNearestNeighboursPositionSolver3DTest" />
         <item itemvalue="JUnit.RadioSourceKNearestFinderTest" />
-        <item itemvalue="JUnit.RssiFingerprintTest" />
       </list>
     </recent_temporary>
   </component>
@@ -858,7 +780,7 @@
       <workItem from="1540478012560" duration="77000" />
       <workItem from="1541867780916" duration="360000" />
       <workItem from="1542923652584" duration="7188000" />
-      <workItem from="1542992169637" duration="33949000" />
+      <workItem from="1542992169637" duration="34523000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -903,7 +825,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1726715000" />
+    <option name="totallyTimeSpent" value="1727289000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -918,7 +840,7 @@
     <frame x="0" y="23" width="1440" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986842" weight="0.28397712" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4986842" visible="true" weight="0.28397712" />
       <window_info id="Structure" order="1" sideWeight="0.5013158" side_tool="true" weight="0.29169676" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -1221,13 +1143,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="4789" column="31" selection-start-line="4789" selection-start-column="31" selection-end-line="4789" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/position/RANSACRobustPositionEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -1388,35 +1303,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="44" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#728#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#1187#1220#0" expanded="true" />
-            <element signature="e#5238#5269#0" expanded="true" />
-            <element signature="e#8366#8397#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="29" column="38" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#715#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#998#1031#0" expanded="true" />
-            <element signature="e#4838#4869#0" expanded="true" />
-            <element signature="e#8006#8037#0" expanded="true" />
-            <element signature="method#findKNearestTo#4;class#RadioSourceKNearestFinder#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinderTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="603">
@@ -1472,6 +1358,42 @@
             <element signature="method#testFindNearestToWithErrorUniformFingerprints#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
             <element signature="method#testFindBestKUniformFingerprints#0;class#RadioSourceNoMeanKNearestFinderTest#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceKNearestFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="29" column="38" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#715#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#998#1031#0" expanded="true" />
+            <element signature="e#4838#4869#0" expanded="true" />
+            <element signature="e#8006#8037#0" expanded="true" />
+            <element signature="method#findKNearestTo#4;class#RadioSourceKNearestFinder#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/irurueta/navigation/indoor/RadioSourceNoMeanKNearestFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" column="35" lean-forward="true" selection-start-line="28" selection-start-column="35" selection-end-line="28" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#728#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1187#1220#0" expanded="true" />
+            <element signature="e#5238#5269#0" expanded="true" />
+            <element signature="e#8366#8397#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRssiRadioSourceEstimator3DTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="2504" column="33" selection-start-line="2504" selection-start-column="33" selection-end-line="2504" selection-end-column="33" />
         </state>
       </provider>
     </entry>
