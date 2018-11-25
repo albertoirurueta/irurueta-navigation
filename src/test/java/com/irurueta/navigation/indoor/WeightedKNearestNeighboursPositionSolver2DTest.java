@@ -327,8 +327,8 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -514,8 +514,8 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -641,8 +641,8 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //generate measurement at random position
             Point2D position = new InhomogeneousPoint2D(
@@ -752,8 +752,8 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
                 }
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(fingerprintsPositionsList);
@@ -878,8 +878,8 @@ public class WeightedKNearestNeighboursPositionSolver2DTest implements
                 }
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //generate measurement at random position
             Point2D position = new InhomogeneousPoint2D(

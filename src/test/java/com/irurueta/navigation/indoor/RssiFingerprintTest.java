@@ -160,4 +160,89 @@ public class RssiFingerprintTest {
         assertEquals(f.sqrDistanceTo(null), Double.MAX_VALUE,
                 0.0);
     }
+
+    @Test
+    public void testGetMeanRssi() {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        int numReadings = randomizer.nextInt(MIN_READINGS, MAX_READINGS);
+        List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+        double meanRssi = 0.0;
+        for (int i = 0; i < numReadings; i++) {
+            WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
+            int rssi = randomizer.nextInt(MIN_RSSI, MAX_RSSI);
+            meanRssi += (double)rssi / (double)numReadings;
+
+            RssiReading<WifiAccessPoint> reading = new RssiReading<>(ap, rssi);
+            readings.add(reading);
+        }
+
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f =
+                new RssiFingerprint<>(readings);
+        assertEquals(f.getMeanRssi(), meanRssi, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testNoMeanDistanceToAndSqrDistanceTo() {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        //test fingerprint with empty readings
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f = new RssiFingerprint<>();
+
+        assertEquals(f.noMeanSqrDistanceTo(f), Double.MAX_VALUE, 0.0);
+
+        //test equal fingerprints
+        int numReadings = randomizer.nextInt(MIN_READINGS, MAX_READINGS);
+        List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+        for (int i = 0; i < numReadings; i++) {
+            WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
+            int rssi = randomizer.nextInt(MIN_RSSI, MAX_RSSI);
+            RssiReading<WifiAccessPoint> reading = new RssiReading<>(ap, rssi);
+            readings.add(reading);
+        }
+
+        f = new RssiFingerprint<>(readings);
+
+        assertEquals(f.noMeanSqrDistanceTo(f), 0.0, ABSOLUTE_ERROR);
+        assertEquals(f.noMeanDistanceTo(f), 0.0, ABSOLUTE_ERROR);
+
+        //test different fingerprint RSSI values
+        List<RssiReading<WifiAccessPoint>> readings2 = new ArrayList<>();
+        for (int i = 0; i < numReadings; i++) {
+            WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
+            double rssi = readings.get(i).getRssi() + 1.0;
+            RssiReading<WifiAccessPoint> reading = new RssiReading<>(ap, rssi);
+            readings2.add(reading);
+        }
+
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f2 =
+                new RssiFingerprint<>(readings2);
+
+        assertEquals(f.noMeanSqrDistanceTo(f2), 0.0, ABSOLUTE_ERROR);
+        assertEquals(f.noMeanDistanceTo(f2), 0.0, ABSOLUTE_ERROR);
+
+        //test different fingerprint access points
+        List<RssiReading<WifiAccessPoint>> readings3 = new ArrayList<>();
+        for (int i = 0; i < numReadings + 1; i++) {
+            WifiAccessPoint ap = new WifiAccessPoint(String.valueOf(i), FREQUENCY);
+            double rssi;
+            if (i < numReadings) {
+                rssi = readings.get(i).getRssi();
+            } else {
+                rssi = randomizer.nextInt(MIN_RSSI, MAX_RSSI);
+            }
+            RssiReading<WifiAccessPoint> reading = new RssiReading<>(ap, rssi);
+            readings3.add(reading);
+        }
+
+        RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> f3 =
+                new RssiFingerprint<>(readings3);
+
+        assertEquals(f.noMeanSqrDistanceTo(f3), 0.0, ABSOLUTE_ERROR);
+        assertEquals(f.noMeanDistanceTo(f3), 0.0, ABSOLUTE_ERROR);
+
+        //test with null fingerprints
+        assertEquals(f.noMeanSqrDistanceTo(null), Double.MAX_VALUE,
+                0.0);
+    }
 }

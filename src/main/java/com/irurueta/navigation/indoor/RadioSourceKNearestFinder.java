@@ -22,23 +22,24 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Finds k-nearest WiFi fingerprints based on their signal euclidean distances (not their actual location).
+ * Finds k-nearest radio source fingerprints based on their signal euclidean distances (not their actual location).
+ * @param <P> a {@link Point} type.
+ * @param <S> a {@link RadioSource type}.
  */
 @SuppressWarnings("WeakerAccess")
-public class WifiKNearestFinder<P extends Point> {
+public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
 
     /**
      * Collection of fingerprints to match against.
      */
-    private Collection<? extends RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> mFingerprints;
+    private Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> mFingerprints;
 
     /**
      * Constructor.
      * @param fingerprints collection of fingerprints to match against.
      * @throws IllegalArgumentException if collection of fingerprints is null.
      */
-    public WifiKNearestFinder(
-            Collection<? extends RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> fingerprints)
+    public RadioSourceKNearestFinder(Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints)
             throws IllegalArgumentException {
         if (fingerprints == null) {
             throw new IllegalArgumentException();
@@ -52,27 +53,25 @@ public class WifiKNearestFinder<P extends Point> {
      * @param fingerprint fingerprint to find the nearest to.
      * @return nearest fingerprint or null if none could be found.
      */
-    public RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>
-            findNearestTo(RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint) {
+    public RssiFingerprintLocated<S, RssiReading<S>, P> findNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint) {
         return findNearestTo(fingerprint, mFingerprints);
     }
 
     /**
-     * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances, within the collection of
-     * provided fingerprints.
+     * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances, within the collection
+     * of provided fingerprints.
      * @param fingerprint fingerprint to find the k-nearest ones to.
-     * @param k number of nearest fingerprints to be found.
+     * @param k number of nearest fingerprints to find.
      * @return nearest fingerprints ordered from closest to farthest or an empty list if none could be found.
-     * @throws IllegalArgumentException if either fingerprint is null or k is less than 1.
+     * @throws IllegalArgumentException if either fingerprint is null or k is les than 1.
      */
-    public List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>>
-            findKNearestTo(RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint,
-            int k) throws IllegalArgumentException {
+    public List<RssiFingerprintLocated<S, RssiReading<S>, P>> findKNearestTo(
+            RssiFingerprint<S, RssiReading<S>> fingerprint, int k) throws IllegalArgumentException {
         return findKNearestTo(fingerprint, mFingerprints, k);
     }
 
     /**
-     * Finds k-nearest fingerprints to provided on, in terms of signal euclidean distances, within the collection
+     * Finds k-nearest fingerprints to provided one, in terms of signal euclidean distances, within the collection
      * of provided fingerprints.
      * @param fingerprint fingerprint to find the k-nearest ones to.
      * @param k number of nearest fingerprints to find.
@@ -82,9 +81,9 @@ public class WifiKNearestFinder<P extends Point> {
      *                            be stored or an empty list if no fingerprint is found.
      * @throws IllegalArgumentException if any parameter is null or k is less than 1.
      */
-    public void findKNearestTo(RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint, int k,
-                               List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> nearestFingerprints,
-                               List<Double> nearestSqrDistances) throws IllegalArgumentException {
+    public void findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint, int k,
+            List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
+            List<Double> nearestSqrDistances) throws IllegalArgumentException {
         findKNearestTo(fingerprint, mFingerprints, k, nearestFingerprints, nearestSqrDistances);
     }
 
@@ -92,7 +91,7 @@ public class WifiKNearestFinder<P extends Point> {
      * Gets collection of fingerprints to match against.
      * @return collection of fingerprints to match against.
      */
-    public Collection<? extends RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> getFingerprints() {
+    public Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> getFingerprints() {
         return mFingerprints;
     }
 
@@ -105,18 +104,18 @@ public class WifiKNearestFinder<P extends Point> {
      * @throws IllegalArgumentException if either fingerprint or collection of fingerprints is null.
      * @param <P> a {@link Point} type.
      */
-    public static <P extends Point>
-    RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>
-            findNearestTo(RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> fingerprints)
+    @SuppressWarnings("Duplicates")
+    public static <P extends Point, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P>
+            findNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
+            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints)
             throws IllegalArgumentException {
         if (fingerprint == null || fingerprints == null) {
             throw new IllegalArgumentException();
         }
 
         double bestSqrDist = Double.MAX_VALUE;
-        RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P> result = null;
-        for(RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P> f : fingerprints) {
+        RssiFingerprintLocated<S, RssiReading<S>, P> result = null;
+        for(RssiFingerprintLocated<S, RssiReading<S>, P> f : fingerprints) {
             double sqrDist = f.sqrDistanceTo(fingerprint);
             if (sqrDist < bestSqrDist) {
                 bestSqrDist = sqrDist;
@@ -137,13 +136,14 @@ public class WifiKNearestFinder<P extends Point> {
      * @throws IllegalArgumentException if either fingerprint or collection of fingerprints is null, or k is less than
      * 1.
      * @param <P> a {@link Point} type.
+     * @param <S> a {@link RadioSource} type.
      */
-    public static <P extends Point> List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>>
-            findKNearestTo(RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> fingerprints,
+    public static <P extends Point, S extends RadioSource> List<RssiFingerprintLocated<S, RssiReading<S>, P>>
+            findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
+            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
             int k) throws IllegalArgumentException {
 
-        List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> result =
+        List<RssiFingerprintLocated<S, RssiReading<S>, P>> result =
                 new ArrayList<>();
         List<Double> nearestSqrDistances = new ArrayList<>();
         findKNearestTo(fingerprint, fingerprints, k, result, nearestSqrDistances);
@@ -164,10 +164,11 @@ public class WifiKNearestFinder<P extends Point> {
      * @throws IllegalArgumentException if any parameter is null or k is less than 1.
      * @param <P> a {@link Point} type.
      */
-    public static <P extends Point> void findKNearestTo(
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> fingerprints,
-            int k, List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>> nearestFingerprints,
+    @SuppressWarnings("Duplicates")
+    public static <P extends Point, S extends RadioSource> void findKNearestTo(
+            RssiFingerprint<S, RssiReading<S>> fingerprint,
+            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
+            int k, List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
             List<Double> nearestSqrDistances) throws IllegalArgumentException {
 
         if (fingerprint == null || fingerprints == null || k < 1 || nearestFingerprints == null ||
@@ -179,7 +180,7 @@ public class WifiKNearestFinder<P extends Point> {
         nearestFingerprints.clear();
 
         double maxSqrDist = Double.MAX_VALUE;
-        for (RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P> f : fingerprints) {
+        for (RssiFingerprintLocated<S, RssiReading<S>, P> f : fingerprints) {
             double sqrDist = f.sqrDistanceTo(fingerprint);
             if (sqrDist < maxSqrDist || nearestSqrDistances.size() < k) {
 

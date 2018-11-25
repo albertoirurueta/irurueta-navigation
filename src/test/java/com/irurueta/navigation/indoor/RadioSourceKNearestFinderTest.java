@@ -18,6 +18,7 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.KDTree2D;
 import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
@@ -33,11 +34,10 @@ import static com.irurueta.navigation.indoor.Utils.dBmToPower;
 import static com.irurueta.navigation.indoor.Utils.powerTodBm;
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
-public class WifiKNearestFinderTest {
+public class RadioSourceKNearestFinderTest {
 
     private static final Logger LOGGER = Logger.getLogger(
-            WifiKNearestFinderTest.class.getName());
+            RadioSourceKNearestFinderTest.class.getName());
 
     private static final int MIN_RSSI = -100;
     private static final int MAX_RSSI = -50;
@@ -65,7 +65,7 @@ public class WifiKNearestFinderTest {
 
     private static final int MAX_K = 20;
 
-    public WifiKNearestFinderTest() { }
+    public RadioSourceKNearestFinderTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -80,10 +80,10 @@ public class WifiKNearestFinderTest {
     public void tearDown() { }
 
     @Test
-    public void testConstructor() {
+    public void testConstructorWifi2D() {
         List<RssiFingerprintLocated2D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
                 new ArrayList<>();
-        WifiKNearestFinder<Point2D> finder = new WifiKNearestFinder<>(
+        RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder = new RadioSourceKNearestFinder<>(
                 fingerprints);
 
         //check
@@ -92,7 +92,64 @@ public class WifiKNearestFinderTest {
         //Force IllegalArgumentException
         finder = null;
         try {
-            finder = new WifiKNearestFinder<>(null);
+            finder = new RadioSourceKNearestFinder<>(null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(finder);
+    }
+
+    @Test
+    public void testConstructorWifi3D() {
+        List<RssiFingerprintLocated3D<WifiAccessPoint, RssiReading<WifiAccessPoint>>> fingerprints =
+                new ArrayList<>();
+        RadioSourceKNearestFinder<Point3D, WifiAccessPoint> finder = new RadioSourceKNearestFinder<>(
+                fingerprints);
+
+        //check
+        assertSame(finder.getFingerprints(), fingerprints);
+
+        //Force IllegalArgumentException
+        finder = null;
+        try {
+            finder = new RadioSourceKNearestFinder<>(null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(finder);
+    }
+
+    @Test
+    public void testConstructorBeacon2D() {
+        List<RssiFingerprintLocated2D<Beacon, RssiReading<Beacon>>> fingerprints =
+                new ArrayList<>();
+        RadioSourceKNearestFinder<Point2D, Beacon> finder = new RadioSourceKNearestFinder<>(
+                fingerprints);
+
+        //check
+        assertSame(finder.getFingerprints(), fingerprints);
+
+        //Force IllegalArgumentException
+        finder = null;
+        try {
+            finder = new RadioSourceKNearestFinder<>(null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(finder);
+    }
+
+    @Test
+    public void testConstructorBeacon3D() {
+        List<RssiFingerprintLocated3D<Beacon, RssiReading<Beacon>>> fingerprints =
+                new ArrayList<>();
+        RadioSourceKNearestFinder<Point3D, Beacon> finder = new RadioSourceKNearestFinder<>(
+                fingerprints);
+
+        //check
+        assertSame(finder.getFingerprints(), fingerprints);
+
+        //Force IllegalArgumentException
+        finder = null;
+        try {
+            finder = new RadioSourceKNearestFinder<>(null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(finder);
@@ -143,8 +200,8 @@ public class WifiKNearestFinderTest {
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -165,9 +222,9 @@ public class WifiKNearestFinderTest {
 
             //find closest fingerprint
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint1 =
-                     finder.findNearestTo(fingerprint);
+                    finder.findNearestTo(fingerprint);
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint2 =
-                    WifiKNearestFinder.findNearestTo(fingerprint, fingerprints);
+                    RadioSourceKNearestFinder.findNearestTo(fingerprint, fingerprints);
 
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints1 =
                     finder.findKNearestTo(fingerprint, 1);
@@ -206,11 +263,11 @@ public class WifiKNearestFinderTest {
 
             //force IllegalArgumentException
             try {
-                WifiKNearestFinder.findNearestTo(null, fingerprints);
+                RadioSourceKNearestFinder.findNearestTo(null, fingerprints);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
             try {
-                WifiKNearestFinder.findNearestTo(fingerprint, null);
+                RadioSourceKNearestFinder.findNearestTo(fingerprint, null);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
         }
@@ -269,8 +326,8 @@ public class WifiKNearestFinderTest {
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -294,7 +351,7 @@ public class WifiKNearestFinderTest {
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints1 =
                     finder.findKNearestTo(fingerprint, k);
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints2 =
-                    WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k);
+                    RadioSourceKNearestFinder.findKNearestTo(fingerprint, fingerprints, k);
 
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints3 =
                     new ArrayList<>();
@@ -305,7 +362,7 @@ public class WifiKNearestFinderTest {
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> kClosestFingerprints4 =
                     new ArrayList<>();
             List<Double> nearestSqrDistances4 = new ArrayList<>();
-            WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
+            RadioSourceKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
                     kClosestFingerprints4, nearestSqrDistances4);
 
             //check
@@ -354,22 +411,22 @@ public class WifiKNearestFinderTest {
 
             //force IllegalArgumentException
             try {
-                WifiKNearestFinder.findKNearestTo(null, fingerprints, k,
+                RadioSourceKNearestFinder.findKNearestTo(null, fingerprints, k,
                         kClosestFingerprints4, nearestSqrDistances4);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
             try {
-                WifiKNearestFinder.findKNearestTo(fingerprint, null, k,
+                RadioSourceKNearestFinder.findKNearestTo(fingerprint, null, k,
                         kClosestFingerprints4, nearestSqrDistances4);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
             try {
-                WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
+                RadioSourceKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
                         null, nearestSqrDistances4);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
             try {
-                WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
+                RadioSourceKNearestFinder.findKNearestTo(fingerprint, fingerprints, k,
                         kClosestFingerprints4, null);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
@@ -436,7 +493,7 @@ public class WifiKNearestFinderTest {
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints =
                     new ArrayList<>();
             List<Double> nearestSqrDistances = new ArrayList<>();
-            WifiKNearestFinder.findKNearestTo(fingerprint, fingerprints,
+            RadioSourceKNearestFinder.findKNearestTo(fingerprint, fingerprints,
                     numFingerprints, closestFingerprints, nearestSqrDistances);
 
             //check
@@ -499,8 +556,8 @@ public class WifiKNearestFinderTest {
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -524,7 +581,7 @@ public class WifiKNearestFinderTest {
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint1 =
                     finder.findNearestTo(fingerprint);
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D> closestFingerprint2 =
-                    WifiKNearestFinder.findNearestTo(fingerprint, fingerprints);
+                    RadioSourceKNearestFinder.findNearestTo(fingerprint, fingerprints);
 
             List<RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, Point2D>> closestFingerprints1 =
                     finder.findKNearestTo(fingerprint, 1);
@@ -616,8 +673,8 @@ public class WifiKNearestFinderTest {
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -705,8 +762,8 @@ public class WifiKNearestFinderTest {
                 fingerprints.add(new RssiFingerprintLocated2D<>(readings, fingerprintsPositions[i]));
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(Arrays.asList(fingerprintsPositions));
@@ -793,8 +850,8 @@ public class WifiKNearestFinderTest {
                 }
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //generate measurement at random position
             Point2D position = new InhomogeneousPoint2D(
@@ -876,8 +933,8 @@ public class WifiKNearestFinderTest {
                 }
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //generate measurement at random position
             Point2D position = new InhomogeneousPoint2D(
@@ -957,8 +1014,8 @@ public class WifiKNearestFinderTest {
                 }
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(fingerprintsPositionsList);
@@ -1050,8 +1107,8 @@ public class WifiKNearestFinderTest {
                 }
             }
 
-            WifiKNearestFinder<Point2D> finder =
-                    new WifiKNearestFinder<>(fingerprints);
+            RadioSourceKNearestFinder<Point2D, WifiAccessPoint> finder =
+                    new RadioSourceKNearestFinder<>(fingerprints);
 
             //build tree of fingerprint positions
             KDTree2D tree = new KDTree2D(fingerprintsPositionsList);

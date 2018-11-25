@@ -81,4 +81,83 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
 
         return result;
     }
+
+    /**
+     * Gets average RSSI (received signal strength indicator) of all readings contained in this fingerprint
+     * expressed in dB's.
+     * @return average RSSI of all readings.
+     */
+    public double getMeanRssi() {
+        if (mReadings == null || mReadings.isEmpty()) {
+            return Double.MAX_VALUE;
+        }
+
+        double result = 0.0;
+        for (R reading : mReadings) {
+            result += reading.getRssi() / (double)mReadings.size();
+        }
+
+        return result;
+    }
+
+    /**
+     * Gets euclidean distance of signal readings from another fingerprint.
+     * @param otherFingerprint other fingerprint to compare.
+     * @return euclidean distance of signal readings from another fingerprint.
+     */
+    public double noMeanDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
+        return Math.sqrt(noMeanSqrDistanceTo(otherFingerprint));
+    }
+
+    /**
+     * Gets squared euclidean distance of signal readings with mean RSSI removed from another fingerprint.
+     * Mean RSSI's are taken into account so that bias effects introduced by different device's hardware is
+     * partially removed.
+     * @param otherFingerprint other fingerprint to compare.
+     * @return squared euclidean distance of signal readings from another
+     * fingerprint with average RSSI's removed.
+     */
+    public double noMeanSqrDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
+        if (otherFingerprint == null) {
+            return Double.MAX_VALUE;
+        }
+
+        List<R> otherReadings = otherFingerprint.getReadings();
+        int numAccessPoints = 0;
+        double avgRssiThis = 0.0, avgRssiOther = 0.0;
+        for (R reading : mReadings) {
+            for (R otherReading : otherReadings) {
+                if (reading.hasSameSource(otherReading)) {
+                    avgRssiThis += reading.getRssi();
+                    avgRssiOther += otherReading.getRssi();
+
+                    numAccessPoints++;
+                }
+            }
+
+        }
+
+        if (numAccessPoints == 0) {
+            return Double.MAX_VALUE;
+        }
+
+        avgRssiThis /= (double)numAccessPoints;
+        avgRssiOther /= (double)numAccessPoints;
+
+
+        numAccessPoints = 0;
+        double result = 0.0, diff;
+        for (R reading : mReadings) {
+            for (R otherReading : otherReadings) {
+                if (reading.hasSameSource(otherReading)) {
+                    diff = (reading.getRssi() - avgRssiThis) -
+                            (otherReading.getRssi() - avgRssiOther);
+                    result += diff * diff;
+                    numAccessPoints++;
+                }
+            }
+        }
+
+        return result;
+    }
 }
