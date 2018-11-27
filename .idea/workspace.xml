@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="16ceb571-5d65-42d6-ba92-cc47ba78c89e" name="Default" comment="Added RobustTrilateration3DSolver tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator2DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator2DTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator3DTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRangingAndRssiRadioSourceEstimator3DTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRangingAndRssiRadioSourceEstimator3DTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sonar-project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/sonar-project.properties" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -76,32 +74,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator2DTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="3692" column="48" lean-forward="true" selection-start-line="3692" selection-start-column="48" selection-end-line="3692" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator3DTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="2293" column="45" lean-forward="true" selection-start-line="2293" selection-start-column="45" selection-end-line="2293" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRangingAndRssiRadioSourceEstimator3DTest.java">
+        <entry file="file://$PROJECT_DIR$/sonar-project.properties">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="3649" column="33" selection-start-line="3649" selection-start-column="33" selection-end-line="3649" selection-end-column="33" />
+            <state relative-caret-position="60">
+              <caret line="4" column="21" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -178,7 +155,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/SequentialRobustMixedRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/SequentialRobustMixedRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/SequentialRobustRangingAndRssiRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/SequentialRobustRangingAndRssiRadioSourceEstimator3DTest.java" />
@@ -229,6 +205,7 @@
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator2DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator3DTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRangingAndRssiRadioSourceEstimator3DTest.java" />
+        <option value="$PROJECT_DIR$/sonar-project.properties" />
       </list>
     </option>
   </component>
@@ -255,8 +232,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="20" />
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="877" />
@@ -373,6 +349,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -381,108 +358,17 @@
               <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
               <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="indoor" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="indoor" type="462c0819:PsiDirectoryNode" />
-              <item name="position" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="site" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="site" type="462c0819:PsiDirectoryNode" />
-              <item name="apt" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="irurueta-navigation" type="b2602c69:ProjectViewProjectNode" />
-              <item name="irurueta-navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="navigation" type="462c0819:PsiDirectoryNode" />
-              <item name="indoor" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/albertoirurueta/irurueta2/common/irurueta-navigation/src/main/java/com/irurueta/navigation/fingerprinting/LinearPositionEstimatorHelper.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543158072308" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543308303346" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs.jest.jest_package" value="" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -789,7 +675,8 @@
       <workItem from="1541867780916" duration="360000" />
       <workItem from="1542923652584" duration="7188000" />
       <workItem from="1542992169637" duration="34649000" />
-      <workItem from="1543157961044" duration="112000" />
+      <workItem from="1543157961044" duration="186000" />
+      <workItem from="1543308287982" duration="19000" />
     </task>
     <task id="LOCAL-00001" summary="Added RobustTrilateration3DSolver tests">
       <created>1518732938535</created>
@@ -834,7 +721,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1727527000" />
+    <option name="totallyTimeSpent" value="1727620000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -846,10 +733,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="23" width="1440" height="877" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4986842" visible="true" weight="0.28755364" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4986842" visible="true" weight="0.2918455" />
       <window_info id="Structure" order="1" sideWeight="0.5013158" side_tool="true" weight="0.29169676" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -953,13 +840,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRangingAndRssiRadioSourceEstimator3DTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="2104" column="31" selection-start-line="2104" selection-start-column="31" selection-end-line="2104" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RssiRadioSourceEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="412">
@@ -1348,8 +1228,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator2DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="3692" column="48" lean-forward="true" selection-start-line="3692" selection-start-column="48" selection-end-line="3692" selection-end-column="48" />
+        <state relative-caret-position="54885">
+          <caret line="3692" column="48" selection-start-line="3692" selection-start-column="48" selection-end-line="3692" selection-end-column="48" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1358,15 +1238,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/MSACRobustRssiRadioSourceEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="2293" column="45" lean-forward="true" selection-start-line="2293" selection-start-column="45" selection-end-line="2293" selection-end-column="45" />
+        <state relative-caret-position="33900">
+          <caret line="2293" column="45" selection-start-line="2293" selection-start-column="45" selection-end-line="2293" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/irurueta/navigation/indoor/radiosource/RANSACRobustRangingAndRssiRadioSourceEstimator3DTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="3649" column="33" selection-start-line="3649" selection-start-column="33" selection-end-line="3649" selection-end-column="33" />
+        <state relative-caret-position="330">
+          <caret line="3659" column="49" selection-start-line="3659" selection-start-column="49" selection-end-line="3659" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sonar-project.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="21" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
         </state>
       </provider>
     </entry>
