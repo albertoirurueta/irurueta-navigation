@@ -2093,7 +2093,7 @@ public class MSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 avgInvalidPositionError = 0.0;
         double avgPowerError = 0.0, avgValidPowerError = 0.0,
                 avgInvalidPowerError = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 10 * TIMES; t++) {
             InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
