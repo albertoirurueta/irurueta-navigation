@@ -166,23 +166,23 @@ public class PolygonAreaTest {
 
         polyArea.addPoint(lat2, lon2);
         area.addPoint(lat2, lon2);
-        polyAreaEdge.addEdge(data1.azi1, data1.s12);
-        areaEdge.addEdge(data1.azi1, data1.s12);
+        polyAreaEdge.addEdge(data1.getAzi1(), data1.getS12());
+        areaEdge.addEdge(data1.getAzi1(), data1.getS12());
 
         polyArea.addPoint(lat3, lon3);
         area.addPoint(lat3, lon3);
-        polyAreaEdge.addEdge(data2.azi1, data2.s12);
-        areaEdge.addEdge(data2.azi1, data2.s12);
+        polyAreaEdge.addEdge(data2.getAzi1(), data2.getS12());
+        areaEdge.addEdge(data2.getAzi1(), data2.getS12());
 
         polyArea.addPoint(lat4, lon4);
         area.addPoint(lat4, lon4);
-        polyAreaEdge.addEdge(data3.azi1, data3.s12);
-        areaEdge.addEdge(data3.azi1, data3.s12);
+        polyAreaEdge.addEdge(data3.getAzi1(), data3.getS12());
+        areaEdge.addEdge(data3.getAzi1(), data3.getS12());
 
         polyArea.addPoint(lat1, lon1);
         area.addPoint(lat1, lon1);
-        polyAreaEdge.addEdge(data4.azi1, data4.s12);
-        areaEdge.addEdge(data4.azi1, data4.s12);
+        polyAreaEdge.addEdge(data4.getAzi1(), data4.getS12());
+        areaEdge.addEdge(data4.getAzi1(), data4.getS12());
 
         PolygonResult polyResult = polyArea.compute();
         PolygonResult areaResult = area.compute();
@@ -379,33 +379,37 @@ public class PolygonAreaTest {
         polyAreaEdge.addPoint(lat1, lon1);
         areaEdge.addPoint(lat1, lon1);
 
-        polyAreaEdge.addEdge(data1.azi1, data1.s12);
-        areaEdge.addEdge(data1.azi1, data1.s12);
+        polyAreaEdge.addEdge(data1.getAzi1(), data1.getS12());
+        areaEdge.addEdge(data1.getAzi1(), data1.getS12());
 
-        polyAreaEdge.addEdge(data2.azi1, data2.s12);
-        areaEdge.addEdge(data2.azi1, data2.s12);
+        polyAreaEdge.addEdge(data2.getAzi1(), data2.getS12());
+        areaEdge.addEdge(data2.getAzi1(), data2.getS12());
 
-        polyAreaEdge.addEdge(data3.azi1, data3.s12);
-        areaEdge.addEdge(data3.azi1, data3.s12);
+        polyAreaEdge.addEdge(data3.getAzi1(), data3.getS12());
+        areaEdge.addEdge(data3.getAzi1(), data3.getS12());
 
         //test
-        PolygonResult testPolyResult1 = polyAreaEdge.testEdge(data4.azi1, data4.s12, false, true);
-        PolygonResult testAreaResult1 = areaEdge.testEdge(data4.azi1, data4.s12, false, true);
+        PolygonResult testPolyResult1 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
+                true);
+        PolygonResult testAreaResult1 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, true);
 
         //test reversed
-        PolygonResult testPolyResult2 = polyAreaEdge.testEdge(data4.azi1, data4.s12, true, true);
-        PolygonResult testAreaResult2 = areaEdge.testEdge(data4.azi1, data4.s12, true, true);
+        PolygonResult testPolyResult2 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
+                true);
+        PolygonResult testAreaResult2 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, true);
 
         //test remaining earth surface
-        PolygonResult testPolyResult3 = polyAreaEdge.testEdge(data4.azi1, data4.s12, true, false);
-        PolygonResult testAreaResult3 = areaEdge.testEdge(data4.azi1, data4.s12, true, false);
+        PolygonResult testPolyResult3 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), true,
+                false);
+        PolygonResult testAreaResult3 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), true, false);
 
-        PolygonResult testPolyResult4 = polyAreaEdge.testEdge(data4.azi1, data4.s12, false, false);
-        PolygonResult testAreaResult4 = areaEdge.testEdge(data4.azi1, data4.s12, false, false);
+        PolygonResult testPolyResult4 = polyAreaEdge.testEdge(data4.getAzi1(), data4.getS12(), false,
+                false);
+        PolygonResult testAreaResult4 = areaEdge.testEdge(data4.getAzi1(), data4.getS12(), false, false);
 
 
-        polyAreaEdge.addEdge(data4.azi1, data4.s12);
-        areaEdge.addEdge(data4.azi1, data4.s12);
+        polyAreaEdge.addEdge(data4.getAzi1(), data4.getS12());
+        areaEdge.addEdge(data4.getAzi1(), data4.getS12());
 
         //test
         PolygonResult polyEdgeResult1 = polyAreaEdge.compute(false, true);

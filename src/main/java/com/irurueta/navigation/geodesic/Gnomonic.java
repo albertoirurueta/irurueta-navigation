@@ -160,11 +160,11 @@ public class Gnomonic {
                 GeodesicMask.AZIMUTH | GeodesicMask.GEODESIC_SCALE |
                         GeodesicMask.REDUCED_LENGTH);
         GnomonicData fwd = new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
-                inv.azi2, inv.M12);
+                inv.getAzi2(), inv.getScaleM12());
 
-        if (inv.M12 > 0) {
-            double rho = inv.m12 / inv.M12;
-            Pair p = GeoMath.sincosd(inv.azi1);
+        if (inv.getScaleM12() > 0) {
+            double rho = inv.getM12() / inv.getScaleM12();
+            Pair p = GeoMath.sincosd(inv.getAzi1());
             fwd.x = rho * p.first;
             fwd.y = rho * p.second;
         }
@@ -222,8 +222,8 @@ public class Gnomonic {
                 break;
             }
 
-            double ds = little ? ((pos.m12 / pos.M12) - rho) * pos.M12 * pos.M12 :
-                    (rho - (pos.M12 / pos.m12)) * pos.m12 * pos.m12;
+            double ds = little ? ((pos.getM12() / pos.getScaleM12()) - rho) * pos.getScaleM12() * pos.getScaleM12() :
+                    (rho - (pos.getScaleM12() / pos.getM12())) * pos.getM12() * pos.getM12();
             s -= ds;
 
             if (Math.abs(ds) <= EPS * mA) {
@@ -235,10 +235,10 @@ public class Gnomonic {
             return rev;
         }
 
-        rev.lat = pos.lat2;
-        rev.lon = pos.lon2;
-        rev.azi = pos.azi2;
-        rev.rk = pos.M12;
+        rev.lat = pos.getLat2();
+        rev.lon = pos.getLon2();
+        rev.azi = pos.getAzi2();
+        rev.rk = pos.getScaleM12();
 
         return rev;
     }

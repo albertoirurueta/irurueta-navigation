@@ -202,13 +202,13 @@ public class LocationUtils {
                                                   double endLatitude, double endLongitude, BearingDistance results) {
         //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
-        results.mStartLatitude = data.lat1;
-        results.mStartLongitude = data.lon1;
-        results.mEndLatitude = data.lat2;
-        results.mEndLongitude = data.lon2;
-        results.mDistance = data.s12;
-        results.mInitialBearing = data.azi1;
-        results.mFinalBearing = data.azi2;
+        results.mStartLatitude = data.getLat1();
+        results.mStartLongitude = data.getLon1();
+        results.mEndLatitude = data.getLat2();
+        results.mEndLongitude = data.getLon2();
+        results.mDistance = data.getS12();
+        results.mInitialBearing = data.getAzi1();
+        results.mFinalBearing = data.getAzi2();
     }
 
     /**
@@ -245,11 +245,11 @@ public class LocationUtils {
         }
         //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
-        results[0] = data.s12;
+        results[0] = data.getS12();
         if (results.length > 1) {
-            results[1] = data.azi1;
+            results[1] = data.getAzi1();
             if (results.length > 2) {
-                results[2] = data.azi2;
+                results[2] = data.getAzi2();
             }
         }
     }
@@ -265,7 +265,7 @@ public class LocationUtils {
     public static double distanceBetweenMeters(double startLatitude, double startLongitude, double endLatitude,
                                          double endLongitude) {
         //noinspection all
-        return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).s12;
+        return Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude).getS12();
     }
 
     /**

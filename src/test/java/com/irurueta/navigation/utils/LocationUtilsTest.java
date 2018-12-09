@@ -180,17 +180,17 @@ public class LocationUtilsTest {
         assertEquals(bd1.getStartLongitude(), lon1, 0.0);
         assertEquals(bd1.getEndLatitude(), lat2, 0.0);
         assertEquals(bd1.getEndLongitude(), lon2, 0.0);
-        assertEquals(bd1.getDistanceMeters(), data.s12, 0.0);
-        assertEquals(bd1.getInitialBearing(), data.azi1, 0.0);
-        assertEquals(bd1.getFinalBearing(), data.azi2, 0.0);
+        assertEquals(bd1.getDistanceMeters(), data.getS12(), 0.0);
+        assertEquals(bd1.getInitialBearing(), data.getAzi1(), 0.0);
+        assertEquals(bd1.getFinalBearing(), data.getAzi2(), 0.0);
 
         assertEquals(bd2.getStartLatitude(), lat1, 0.0);
         assertEquals(bd2.getStartLongitude(), lon1, 0.0);
         assertEquals(bd2.getEndLatitude(), lat2, 0.0);
         assertEquals(bd2.getEndLongitude(), lon2, 0.0);
-        assertEquals(bd2.getDistanceMeters(), data.s12, 0.0);
-        assertEquals(bd2.getInitialBearing(), data.azi1, 0.0);
-        assertEquals(bd2.getFinalBearing(), data.azi2, 0.0);
+        assertEquals(bd2.getDistanceMeters(), data.getS12(), 0.0);
+        assertEquals(bd2.getInitialBearing(), data.getAzi1(), 0.0);
+        assertEquals(bd2.getFinalBearing(), data.getAzi2(), 0.0);
     }
 
     @Test
@@ -217,14 +217,14 @@ public class LocationUtilsTest {
         LocationUtils.distanceAndBearing(lat1, lon1, lat2, lon2, result3);
 
         //check
-        assertEquals(result1[0], data.s12, 0.0);
-        assertEquals(result2[0], data.s12, 0.0);
-        assertEquals(result3[0], data.s12, 0.0);
+        assertEquals(result1[0], data.getS12(), 0.0);
+        assertEquals(result2[0], data.getS12(), 0.0);
+        assertEquals(result3[0], data.getS12(), 0.0);
 
-        assertEquals(result2[1], data.azi1, 0.0);
-        assertEquals(result3[1], data.azi1, 0.0);
+        assertEquals(result2[1], data.getAzi1(), 0.0);
+        assertEquals(result3[1], data.getAzi1(), 0.0);
 
-        assertEquals(result3[2], data.azi2, 0.0);
+        assertEquals(result3[2], data.getAzi2(), 0.0);
 
         //force IllegalArgumentException
         try {
@@ -249,15 +249,15 @@ public class LocationUtilsTest {
         GeodesicData data = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
         assertEquals(LocationUtils.distanceBetweenMeters(lat1, lon1, lat2, lon2),
-                data.s12, 0.0);
+                data.getS12(), 0.0);
 
         Distance d1 = LocationUtils.distanceBetween(lat1, lon1, lat2, lon2);
-        assertEquals(d1.getValue(), data.s12);
+        assertEquals(d1.getValue(), data.getS12());
         assertEquals(d1.getUnit(), DistanceUnit.METER);
 
         Distance d2 = new Distance(0.0, DistanceUnit.MILLIMETER);
         assertSame(LocationUtils.distanceBetween(lat1, lon1, lat2, lon2, d2), d2);
-        assertEquals(d2.getValue(), data.s12);
+        assertEquals(d2.getValue(), data.getS12());
         assertEquals(d2.getUnit(), DistanceUnit.METER);
     }
 

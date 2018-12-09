@@ -149,32 +149,32 @@ public class GeodesicTest {
                     GeodesicMask.ALL |
                             GeodesicMask.LONG_UNROLL);
 
-            assertEquals(lat2, dir1.lat2, 1e-13);
-            assertEquals(lon2, dir1.lon2, 1e-13);
-            assertEquals(azi2, dir1.azi2, 1e-13);
-            assertEquals(a12, dir1.a12, 1e-13);
-            assertEquals(m12, dir1.m12, 1e-8);
-            assertEquals(M12, dir1.M12, 1e-15);
-            assertEquals(M21, dir1.M21, 1e-15);
-            assertEquals(S12, dir1.S12, 0.1);
+            assertEquals(lat2, dir1.getLat2(), 1e-13);
+            assertEquals(lon2, dir1.getLon2(), 1e-13);
+            assertEquals(azi2, dir1.getAzi2(), 1e-13);
+            assertEquals(a12, dir1.getA12(), 1e-13);
+            assertEquals(m12, dir1.getM12(), 1e-8);
+            assertEquals(M12, dir1.getScaleM12(), 1e-15);
+            assertEquals(M21, dir1.getScaleM21(), 1e-15);
+            assertEquals(S12, dir1.getAreaS12(), 0.1);
 
-            assertEquals(lat2, dir2.lat2, 1e-13);
-            assertEquals(azi2, dir2.azi2, 1e-13);
-            assertEquals(a12, dir2.a12, 1e-13);
+            assertEquals(lat2, dir2.getLat2(), 1e-13);
+            assertEquals(azi2, dir2.getAzi2(), 1e-13);
+            assertEquals(a12, dir2.getA12(), 1e-13);
 
-            assertEquals(lat2, dir3.lat2, 1e-13);
-            assertEquals(lon2, dir3.lon2, 1e-13);
-            assertEquals(azi2, dir3.azi2, 1e-13);
-            assertEquals(a12, dir3.a12, 1e-13);
-            assertEquals(m12, dir3.m12, 1e-8);
-            assertEquals(M12, dir3.M12, 1e-15);
-            assertEquals(M21, dir3.M21, 1e-15);
-            assertEquals(S12, dir3.S12, 0.1);
+            assertEquals(lat2, dir3.getLat2(), 1e-13);
+            assertEquals(lon2, dir3.getLon2(), 1e-13);
+            assertEquals(azi2, dir3.getAzi2(), 1e-13);
+            assertEquals(a12, dir3.getA12(), 1e-13);
+            assertEquals(m12, dir3.getM12(), 1e-8);
+            assertEquals(M12, dir3.getScaleM12(), 1e-15);
+            assertEquals(M21, dir3.getScaleM21(), 1e-15);
+            assertEquals(S12, dir3.getAreaS12(), 0.1);
 
-            if(Math.abs(lon2 - dir2.lon2) > 1e-13) {
+            if(Math.abs(lon2 - dir2.getLon2()) > 1e-13) {
                 continue;
             }
-            assertEquals(lon2, dir2.lon2, 1e-13);
+            assertEquals(lon2, dir2.getLon2(), 1e-13);
 
             numValid++;
         }
@@ -200,32 +200,32 @@ public class GeodesicTest {
                     true, a12, GeodesicMask.ALL |
                     GeodesicMask.LONG_UNROLL);
 
-            assertEquals(lat2, dir1.lat2, 1e-13);
-            assertEquals(lon2, dir1.lon2, 1e-13);
-            assertEquals(azi2, dir1.azi2, 1e-13);
-            assertEquals(s12, dir1.s12, 1e-8);
-            assertEquals(m12, dir1.m12, 1e-8);
-            assertEquals(M12, dir1.M12, 1e-15);
-            assertEquals(M21, dir1.M21, 1e-15);
-            assertEquals(S12, dir1.S12, 0.1);
+            assertEquals(lat2, dir1.getLat2(), 1e-13);
+            assertEquals(lon2, dir1.getLon2(), 1e-13);
+            assertEquals(azi2, dir1.getAzi2(), 1e-13);
+            assertEquals(s12, dir1.getS12(), 1e-8);
+            assertEquals(m12, dir1.getM12(), 1e-8);
+            assertEquals(M12, dir1.getScaleM12(), 1e-15);
+            assertEquals(M21, dir1.getScaleM21(), 1e-15);
+            assertEquals(S12, dir1.getAreaS12(), 0.1);
 
-            assertEquals(lat2, dir2.lat2, 1e-13);
-            assertEquals(azi2, dir2.azi2, 1e-13);
-            assertEquals(s12, dir2.s12, 1e-8);
+            assertEquals(lat2, dir2.getLat2(), 1e-13);
+            assertEquals(azi2, dir2.getAzi2(), 1e-13);
+            assertEquals(s12, dir2.getS12(), 1e-8);
 
-            assertEquals(lat2, dir3.lat2, 1e-13);
-            assertEquals(lon2, dir3.lon2, 1e-13);
-            assertEquals(azi2, dir3.azi2, 1e-13);
-            assertEquals(s12, dir3.s12, 1e-8);
-            assertEquals(m12, dir3.m12, 1e-8);
-            assertEquals(M12, dir3.M12, 1e-15);
-            assertEquals(M21, dir3.M21, 1e-15);
-            assertEquals(S12, dir3.S12, 0.1);
+            assertEquals(lat2, dir3.getLat2(), 1e-13);
+            assertEquals(lon2, dir3.getLon2(), 1e-13);
+            assertEquals(azi2, dir3.getAzi2(), 1e-13);
+            assertEquals(s12, dir3.getS12(), 1e-8);
+            assertEquals(m12, dir3.getM12(), 1e-8);
+            assertEquals(M12, dir3.getScaleM12(), 1e-15);
+            assertEquals(M21, dir3.getScaleM21(), 1e-15);
+            assertEquals(S12, dir3.getAreaS12(), 0.1);
 
-            if(Math.abs(lon2 - dir2.lon2) > 1e-13) {
+            if(Math.abs(lon2 - dir2.getLon2()) > 1e-13) {
                 continue;
             }
-            assertEquals(lon2, dir2.lon2, 1e-13);
+            assertEquals(lon2, dir2.getLon2(), 1e-13);
 
             numValid++;
         }
@@ -248,16 +248,16 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line1 = Geodesic.WGS84.directLine(lat1, lon1, data1.azi1, data1.s12);
-        GeodesicLine line2 = Geodesic.WGS84.directLine(lat1, lon1, data1.azi1, data1.s12,
+        GeodesicLine line1 = Geodesic.WGS84.directLine(lat1, lon1, data1.getAzi1(), data1.getS12());
+        GeodesicLine line2 = Geodesic.WGS84.directLine(lat1, lon1, data1.getAzi1(), data1.getS12(),
                 GeodesicMask.ALL);
-        GeodesicLine line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.azi1,
-                false, data1.s12, GeodesicMask.ALL);
+        GeodesicLine line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.getAzi1(),
+                false, data1.getS12(), GeodesicMask.ALL);
 
         //check
         assertEquals(line1.getLatitude(), lat1, 0.0);
         assertEquals(line1.getLongitude(), lon1, 0.0);
-        assertEquals(line1.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line1.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line1.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line1.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -266,17 +266,17 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2 = line1.position(data1.s12);
+        GeodesicData data2 = line1.position(data1.getS12());
 
-        assertEquals(data2.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon2(), lon2, ABSOLUTE_ERROR);
 
 
         assertEquals(line2.getLatitude(), lat1, 0.0);
         assertEquals(line2.getLongitude(), lon1, 0.0);
-        assertEquals(line2.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line2.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line2.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line2.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -285,17 +285,17 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2b = line2.position(data1.s12);
+        GeodesicData data2b = line2.position(data1.getS12());
 
-        assertEquals(data2b.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon2(), lon2, ABSOLUTE_ERROR);
 
 
         assertEquals(line3.getLatitude(), lat1, 0.0);
         assertEquals(line3.getLongitude(), lon1, 0.0);
-        assertEquals(line3.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line3.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line3.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line3.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -304,12 +304,12 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2c = line3.position(data1.s12);
+        GeodesicData data2c = line3.position(data1.getS12());
 
-        assertEquals(data2c.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2c.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2c.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2c.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLon2(), lon2, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -327,16 +327,16 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line1 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.azi1, data1.a12);
-        GeodesicLine line2 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.azi1, data1.a12,
+        GeodesicLine line1 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.getAzi1(), data1.getA12());
+        GeodesicLine line2 = Geodesic.WGS84.arcDirectLine(lat1, lon1, data1.getAzi1(), data1.getA12(),
                 GeodesicMask.ALL);
-        GeodesicLine line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.azi1, true, data1.a12,
+        GeodesicLine line3 = Geodesic.WGS84.genDirectLine(lat1, lon1, data1.getAzi1(), true, data1.getA12(),
                 GeodesicMask.ALL);
 
         //check
         assertEquals(line1.getLatitude(), lat1, 0.0);
         assertEquals(line1.getLongitude(), lon1, 0.0);
-        assertEquals(line1.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line1.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line1.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line1.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -345,17 +345,17 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2 = line1.arcPosition(data1.a12);
+        GeodesicData data2 = line1.arcPosition(data1.getA12());
 
-        assertEquals(data2.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon2(), lon2, ABSOLUTE_ERROR);
 
 
         assertEquals(line2.getLatitude(), lat1, 0.0);
         assertEquals(line2.getLongitude(), lon1, 0.0);
-        assertEquals(line2.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line2.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line2.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line2.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -364,17 +364,17 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2b = line2.arcPosition(data1.a12);
+        GeodesicData data2b = line2.arcPosition(data1.getA12());
 
-        assertEquals(data2b.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon2(), lon2, ABSOLUTE_ERROR);
 
 
         assertEquals(line3.getLatitude(), lat1, 0.0);
         assertEquals(line3.getLongitude(), lon1, 0.0);
-        assertEquals(line3.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line3.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line3.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line3.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -383,12 +383,12 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2c = line3.arcPosition(data1.a12);
+        GeodesicData data2c = line3.arcPosition(data1.getA12());
 
-        assertEquals(data2c.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2c.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2c.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2c.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2c.getLon2(), lon2, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -406,25 +406,25 @@ public class GeodesicTest {
                             GeodesicMask.LONG_UNROLL);
             GeodesicData inv2 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-            assertEquals(lon2, inv1.lon2, 1e-13);
-            assertEquals(azi1, inv1.azi1, 1e-13);
-            assertEquals(azi2, inv1.azi2, 1e-13);
-            assertEquals(s12, inv1.s12, 1e-8);
-            assertEquals(a12, inv1.a12, 1e-13);
-            assertEquals(m12, inv1.m12, 1e-8);
-            assertEquals(M12, inv1.M12, 1e-15);
-            assertEquals(M21, inv1.M21, 1e-15);
-            assertEquals(S12, inv1.S12, 0.1);
+            assertEquals(lon2, inv1.getLon2(), 1e-13);
+            assertEquals(azi1, inv1.getAzi1(), 1e-13);
+            assertEquals(azi2, inv1.getAzi2(), 1e-13);
+            assertEquals(s12, inv1.getS12(), 1e-8);
+            assertEquals(a12, inv1.getA12(), 1e-13);
+            assertEquals(m12, inv1.getM12(), 1e-8);
+            assertEquals(M12, inv1.getScaleM12(), 1e-15);
+            assertEquals(M21, inv1.getScaleM21(), 1e-15);
+            assertEquals(S12, inv1.getAreaS12(), 0.1);
 
-            assertEquals(azi1, inv2.azi1, 1e-13);
-            assertEquals(azi2, inv2.azi2, 1e-13);
-            assertEquals(s12, inv2.s12, 1e-8);
-            assertEquals(a12, inv2.a12, 1e-13);
+            assertEquals(azi1, inv2.getAzi1(), 1e-13);
+            assertEquals(azi2, inv2.getAzi2(), 1e-13);
+            assertEquals(s12, inv2.getS12(), 1e-8);
+            assertEquals(a12, inv2.getA12(), 1e-13);
 
-            if(Math.abs(lon2 - inv2.lon2) > 1e-13) {
+            if(Math.abs(lon2 - inv2.getLon2()) > 1e-13) {
                 continue;
             }
-            assertEquals(lon2, inv2.lon2, 1e-13);
+            assertEquals(lon2, inv2.getLon2(), 1e-13);
 
             numValid++;
         }
@@ -454,7 +454,7 @@ public class GeodesicTest {
         //check
         assertEquals(line1.getLatitude(), lat1, 0.0);
         assertEquals(line1.getLongitude(), lon1, 0.0);
-        assertEquals(line1.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line1.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line1.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line1.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -463,17 +463,17 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2 = line1.position(data1.s12);
+        GeodesicData data2 = line1.position(data1.getS12());
 
-        assertEquals(data2.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon2(), lon2, ABSOLUTE_ERROR);
 
 
         assertEquals(line2.getLatitude(), lat1, 0.0);
         assertEquals(line2.getLongitude(), lon1, 0.0);
-        assertEquals(line2.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line2.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line2.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line2.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -482,12 +482,12 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2b = line2.position(data1.s12);
+        GeodesicData data2b = line2.position(data1.getS12());
 
-        assertEquals(data2b.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon2(), lon2, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -505,14 +505,14 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData data1 = Geodesic.WGS84.inverse(lat1, lon1, lat2, lon2);
 
-        GeodesicLine line1 = Geodesic.WGS84.line(lat1, lon1, data1.azi1);
-        GeodesicLine line2 = Geodesic.WGS84.line(lat1, lon1, data1.azi1,
+        GeodesicLine line1 = Geodesic.WGS84.line(lat1, lon1, data1.getAzi1());
+        GeodesicLine line2 = Geodesic.WGS84.line(lat1, lon1, data1.getAzi1(),
                 GeodesicMask.ALL);
 
         //check
         assertEquals(line1.getLatitude(), lat1, 0.0);
         assertEquals(line1.getLongitude(), lon1, 0.0);
-        assertEquals(line1.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line1.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line1.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line1.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -521,17 +521,17 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2 = line1.arcPosition(data1.a12);
+        GeodesicData data2 = line1.arcPosition(data1.getA12());
 
-        assertEquals(data2.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon2(), lon2, ABSOLUTE_ERROR);
 
 
         assertEquals(line2.getLatitude(), lat1, 0.0);
         assertEquals(line2.getLongitude(), lon1, 0.0);
-        assertEquals(line2.getAzimuth(), data1.azi2, 1e-3);
+        assertEquals(line2.getAzimuth(), data1.getAzi2(), 1e-3);
         assertEquals(line2.getMajorRadius(), Geodesic.WGS84.getMajorRadius(),
                 ABSOLUTE_ERROR);
         assertEquals(line2.getFlattening(), Geodesic.WGS84.getFlattening(),
@@ -540,12 +540,12 @@ public class GeodesicTest {
                 GeodesicMask.LATITUDE | GeodesicMask.AZIMUTH |
                 GeodesicMask.LONG_UNROLL);
 
-        GeodesicData data2b = line2.arcPosition(data1.a12);
+        GeodesicData data2b = line2.arcPosition(data1.getA12());
 
-        assertEquals(data2b.lat1, lat1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon1, lon1, ABSOLUTE_ERROR);
-        assertEquals(data2b.lat2, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2b.lon2, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat1(), lat1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon1(), lon1, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLat2(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2b.getLon2(), lon2, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -553,9 +553,9 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(40.6, -73.8,
                 49.01666667, 2.55);
-        assertEquals(inv.azi1, 53.47022, 0.5e-5);
-        assertEquals(inv.azi2, 111.59367, 0.5e-5);
-        assertEquals(inv.s12, 5853226, 0.5);
+        assertEquals(inv.getAzi1(), 53.47022, 0.5e-5);
+        assertEquals(inv.getAzi2(), 111.59367, 0.5e-5);
+        assertEquals(inv.getS12(), 5853226, 0.5);
     }
 
     @Test
@@ -563,9 +563,9 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData dir = Geodesic.WGS84.direct(40.63972222, -73.77888889,
                 53.5, 5850e3);
-        assertEquals(dir.lat2, 49.01467, 0.5e-5);
-        assertEquals(dir.lon2, 2.56106, 0.5e-5);
-        assertEquals(dir.azi2, 111.62947, 0.5e-5);
+        assertEquals(dir.getLat2(), 49.01467, 0.5e-5);
+        assertEquals(dir.getLon2(), 2.56106, 0.5e-5);
+        assertEquals(dir.getAzi2(), 111.62947, 0.5e-5);
     }
 
     @Test
@@ -573,13 +573,13 @@ public class GeodesicTest {
         // Check fix for antipodal prolate bug found 2010-09-04
         Geodesic geod = new Geodesic(6.4e6, -1/150.0);
         GeodesicData inv = geod.inverse(0.07476, 0, -0.07476, 180);
-        assertEquals(inv.azi1, 90.00078, 0.5e-5);
-        assertEquals(inv.azi2, 90.00078, 0.5e-5);
-        assertEquals(inv.s12, 20106193, 0.5);
+        assertEquals(inv.getAzi1(), 90.00078, 0.5e-5);
+        assertEquals(inv.getAzi2(), 90.00078, 0.5e-5);
+        assertEquals(inv.getS12(), 20106193, 0.5);
         inv = geod.inverse(0.1, 0, -0.1, 180);
-        assertEquals(inv.azi1, 90.00105, 0.5e-5);
-        assertEquals(inv.azi2, 90.00105, 0.5e-5);
-        assertEquals(inv.s12, 20106193, 0.5);
+        assertEquals(inv.getAzi1(), 90.00105, 0.5e-5);
+        assertEquals(inv.getAzi2(), 90.00105, 0.5e-5);
+        assertEquals(inv.getS12(), 20106193, 0.5);
     }
 
     @Test
@@ -588,7 +588,7 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(36.493349428792, 0,
                 36.49334942879201, .0000008);
-        assertEquals(inv.s12, 0.072, 0.5e-3);
+        assertEquals(inv.getS12(), 0.072, 0.5e-3);
     }
 
     @Test
@@ -596,13 +596,13 @@ public class GeodesicTest {
         // Check fix for point2=pole bug found 2010-05-03
         assertNotNull(Geodesic.WGS84);
         GeodesicData dir = Geodesic.WGS84.direct(0.01777745589997, 30, 0, 10e6);
-        assertEquals(dir.lat2, 90, 0.5e-5);
-        if (dir.lon2 < 0) {
-            assertEquals(dir.lon2, -150, 0.5e-5);
-            assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
+        assertEquals(dir.getLat2(), 90, 0.5e-5);
+        if (dir.getLon2() < 0) {
+            assertEquals(dir.getLon2(), -150, 0.5e-5);
+            assertEquals(Math.abs(dir.getAzi2()), 180, 0.5e-5);
         } else {
-            assertEquals(dir.lon2, 30, 0.5e-5);
-            assertEquals(dir.azi2, 0, 0.5e-5);
+            assertEquals(dir.getLon2(), 30, 0.5e-5);
+            assertEquals(dir.getAzi2(), 0, 0.5e-5);
         }
     }
 
@@ -614,13 +614,13 @@ public class GeodesicTest {
         GeodesicData inv =
                 Geodesic.WGS84.inverse(88.202499451857, 0,
                         -88.202499451857, 179.981022032992859592);
-        assertEquals(inv.s12, 20003898.214, 0.5e-3);
+        assertEquals(inv.getS12(), 20003898.214, 0.5e-3);
         inv = Geodesic.WGS84.inverse(89.262080389218, 0,
                 -89.262080389218, 179.992207982775375662);
-        assertEquals(inv.s12, 20003925.854, 0.5e-3);
+        assertEquals(inv.getS12(), 20003925.854, 0.5e-3);
         inv = Geodesic.WGS84.inverse(89.333123580033, 0, -89.333123580032997687,
                 179.99295812360148422);
-        assertEquals(inv.s12, 20003926.881, 0.5e-3);
+        assertEquals(inv.getS12(), 20003926.881, 0.5e-3);
     }
 
     @Test
@@ -630,7 +630,7 @@ public class GeodesicTest {
         GeodesicData inv =
                 Geodesic.WGS84.inverse(56.320923501171, 0,
                         -56.320923501171, 179.664747671772880215);
-        assertEquals(inv.s12, 19993558.287, 0.5e-3);
+        assertEquals(inv.getS12(), 19993558.287, 0.5e-3);
     }
 
     @Test
@@ -641,7 +641,7 @@ public class GeodesicTest {
         GeodesicData inv =
                 Geodesic.WGS84.inverse(52.784459512564, 0,
                         -52.784459512563990912, 179.634407464943777557);
-        assertEquals(inv.s12, 19991596.095, 0.5e-3);
+        assertEquals(inv.getS12(), 19991596.095, 0.5e-3);
     }
 
     @Test
@@ -652,7 +652,7 @@ public class GeodesicTest {
         GeodesicData inv =
                 Geodesic.WGS84.inverse(48.522876735459, 0,
                         -48.52287673545898293, 179.599720456223079643);
-        assertEquals(inv.s12, 19989144.774, 0.5e-3);
+        assertEquals(inv.getS12(), 19989144.774, 0.5e-3);
     }
 
     @Test
@@ -662,9 +662,9 @@ public class GeodesicTest {
         // <stefan.gunther@embl.de>; fixed 2012-10-07
         Geodesic geod = new Geodesic(89.8, -1.83);
         GeodesicData inv = geod.inverse(0, 0, -10, 160);
-        assertEquals(inv.azi1, 120.27, 1e-2);
-        assertEquals(inv.azi2, 105.15, 1e-2);
-        assertEquals(inv.s12, 266.7, 1e-1);
+        assertEquals(inv.getAzi1(), 120.27, 1e-2);
+        assertEquals(inv.getAzi2(), 105.15, 1e-2);
+        assertEquals(inv.getS12(), 266.7, 1e-1);
     }
 
     @Test
@@ -672,9 +672,9 @@ public class GeodesicTest {
         // Check fix for inverse ignoring lon12 = nan
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(0, 0, 1, Double.NaN);
-        assertTrue(isNaN(inv.azi1));
-        assertTrue(isNaN(inv.azi2));
-        assertTrue(isNaN(inv.s12));
+        assertTrue(isNaN(inv.getAzi1()));
+        assertTrue(isNaN(inv.getAzi2()));
+        assertTrue(isNaN(inv.getS12()));
     }
 
     @Test
@@ -683,7 +683,7 @@ public class GeodesicTest {
         // checks that this is fixed.
         Geodesic geod = new Geodesic(6.4e6, -1/150.0);
         GeodesicData dir = geod.direct(1, 2, 3, 4, GeodesicMask.AREA);
-        assertEquals(dir.S12, 23700, 0.5);
+        assertEquals(dir.getAreaS12(), 23700, 0.5);
     }
 
     @Test
@@ -693,22 +693,22 @@ public class GeodesicTest {
         GeodesicData dir =
                 Geodesic.WGS84.direct(40, -75, -10, 2e7,
                         GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, -39, 1);
-        assertEquals(dir.lon2, -254, 1);
-        assertEquals(dir.azi2, -170, 1);
+        assertEquals(dir.getLat2(), -39, 1);
+        assertEquals(dir.getLon2(), -254, 1);
+        assertEquals(dir.getAzi2(), -170, 1);
         GeodesicLine line = Geodesic.WGS84.line(40, -75, -10);
         dir = line.position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, -39, 1);
-        assertEquals(dir.lon2, -254, 1);
-        assertEquals(dir.azi2, -170, 1);
+        assertEquals(dir.getLat2(), -39, 1);
+        assertEquals(dir.getLon2(), -254, 1);
+        assertEquals(dir.getAzi2(), -170, 1);
         dir = Geodesic.WGS84.direct(40, -75, -10, 2e7);
-        assertEquals(dir.lat2, -39, 1);
-        assertEquals(dir.lon2, 105, 1);
-        assertEquals(dir.azi2, -170, 1);
+        assertEquals(dir.getLat2(), -39, 1);
+        assertEquals(dir.getLon2(), 105, 1);
+        assertEquals(dir.getAzi2(), -170, 1);
         dir = line.position(2e7);
-        assertEquals(dir.lat2, -39, 1);
-        assertEquals(dir.lon2, 105, 1);
-        assertEquals(dir.azi2, -170, 1);
+        assertEquals(dir.getLat2(), -39, 1);
+        assertEquals(dir.getLon2(), 105, 1);
+        assertEquals(dir.getAzi2(), -170, 1);
     }
 
     @Test
@@ -716,7 +716,7 @@ public class GeodesicTest {
         // Check 0/0 problem with area calculation on sphere 2015-09-08
         Geodesic geod = new Geodesic(6.4e6, 0);
         GeodesicData inv = geod.inverse(1, 2, 3, 4, GeodesicMask.AREA);
-        assertEquals(inv.S12, 49911046115.0, 0.5);
+        assertEquals(inv.getAreaS12(), 49911046115.0, 0.5);
     }
 
     @Test
@@ -725,7 +725,7 @@ public class GeodesicTest {
         // Java implementation fixed on 2015-05-19).
         Geodesic geod = new Geodesic(6.4e6, 0.1);
         GeodesicData dir = geod.direct(1, 2, 10, 5e6);
-        assertEquals(dir.a12, 48.55570690, 0.5e-8);
+        assertEquals(dir.getA12(), 48.55570690, 0.5e-8);
     }
 
     @Test
@@ -733,15 +733,15 @@ public class GeodesicTest {
         // Check longitude unrolling with inverse calculation 2015-09-16
         assertNotNull(Geodesic.WGS84);
         GeodesicData dir = Geodesic.WGS84.inverse(0, 539, 0, 181);
-        assertEquals(dir.lon1, 179, 1e-10);
-        assertEquals(dir.lon2, -179, 1e-10);
-        assertEquals(dir.s12, 222639, 0.5);
+        assertEquals(dir.getLon1(), 179, 1e-10);
+        assertEquals(dir.getLon2(), -179, 1e-10);
+        assertEquals(dir.getS12(), 222639, 0.5);
         dir = Geodesic.WGS84.inverse(0, 539, 0, 181,
                 GeodesicMask.STANDARD |
                         GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lon1, 539, 1e-10);
-        assertEquals(dir.lon2, 541, 1e-10);
-        assertEquals(dir.s12, 222639, 0.5);
+        assertEquals(dir.getLon1(), 539, 1e-10);
+        assertEquals(dir.getLon2(), 541, 1e-10);
+        assertEquals(dir.getS12(), 222639, 0.5);
     }
 
     @Test
@@ -751,51 +751,51 @@ public class GeodesicTest {
         // fmod(-0.0, 360.0) = +0.0.
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(0, 0, 0, 179);
-        assertEquals(inv.azi1, 90.00000, 0.5e-5);
-        assertEquals(inv.azi2, 90.00000, 0.5e-5);
-        assertEquals(inv.s12, 19926189, 0.5);
+        assertEquals(inv.getAzi1(), 90.00000, 0.5e-5);
+        assertEquals(inv.getAzi2(), 90.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 19926189, 0.5);
         inv = Geodesic.WGS84.inverse(0, 0, 0, 179.5);
-        assertEquals(inv.azi1, 55.96650, 0.5e-5);
-        assertEquals(inv.azi2, 124.03350, 0.5e-5);
-        assertEquals(inv.s12, 19980862, 0.5);
+        assertEquals(inv.getAzi1(), 55.96650, 0.5e-5);
+        assertEquals(inv.getAzi2(), 124.03350, 0.5e-5);
+        assertEquals(inv.getS12(), 19980862, 0.5);
         inv = Geodesic.WGS84.inverse(0, 0, 0, 180);
-        assertEquals(inv.azi1, 0.00000, 0.5e-5);
-        assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
-        assertEquals(inv.s12, 20003931, 0.5);
+        assertEquals(inv.getAzi1(), 0.00000, 0.5e-5);
+        assertEquals(Math.abs(inv.getAzi2()), 180.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 20003931, 0.5);
         inv = Geodesic.WGS84.inverse(0, 0, 1, 180);
-        assertEquals(inv.azi1, 0.00000, 0.5e-5);
-        assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
-        assertEquals(inv.s12, 19893357, 0.5);
+        assertEquals(inv.getAzi1(), 0.00000, 0.5e-5);
+        assertEquals(Math.abs(inv.getAzi2()), 180.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 19893357, 0.5);
         Geodesic geod = new Geodesic(6.4e6, 0);
         inv = geod.inverse(0, 0, 0, 179);
-        assertEquals(inv.azi1, 90.00000, 0.5e-5);
-        assertEquals(inv.azi2, 90.00000, 0.5e-5);
-        assertEquals(inv.s12, 19994492, 0.5);
+        assertEquals(inv.getAzi1(), 90.00000, 0.5e-5);
+        assertEquals(inv.getAzi2(), 90.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 19994492, 0.5);
         inv = geod.inverse(0, 0, 0, 180);
-        assertEquals(inv.azi1, 0.00000, 0.5e-5);
-        assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
-        assertEquals(inv.s12, 20106193, 0.5);
+        assertEquals(inv.getAzi1(), 0.00000, 0.5e-5);
+        assertEquals(Math.abs(inv.getAzi2()), 180.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 20106193, 0.5);
         inv = geod.inverse(0, 0, 1, 180);
-        assertEquals(inv.azi1, 0.00000, 0.5e-5);
-        assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
-        assertEquals(inv.s12, 19994492, 0.5);
+        assertEquals(inv.getAzi1(), 0.00000, 0.5e-5);
+        assertEquals(Math.abs(inv.getAzi2()), 180.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 19994492, 0.5);
         geod = new Geodesic(6.4e6, -1/300.0);
         inv = geod.inverse(0, 0, 0, 179);
-        assertEquals(inv.azi1, 90.00000, 0.5e-5);
-        assertEquals(inv.azi2, 90.00000, 0.5e-5);
-        assertEquals(inv.s12, 19994492, 0.5);
+        assertEquals(inv.getAzi1(), 90.00000, 0.5e-5);
+        assertEquals(inv.getAzi2(), 90.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 19994492, 0.5);
         inv = geod.inverse(0, 0, 0, 180);
-        assertEquals(inv.azi1, 90.00000, 0.5e-5);
-        assertEquals(inv.azi2, 90.00000, 0.5e-5);
-        assertEquals(inv.s12, 20106193, 0.5);
+        assertEquals(inv.getAzi1(), 90.00000, 0.5e-5);
+        assertEquals(inv.getAzi2(), 90.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 20106193, 0.5);
         inv = geod.inverse(0, 0, 0.5, 180);
-        assertEquals(inv.azi1, 33.02493, 0.5e-5);
-        assertEquals(inv.azi2, 146.97364, 0.5e-5);
-        assertEquals(inv.s12, 20082617, 0.5);
+        assertEquals(inv.getAzi1(), 33.02493, 0.5e-5);
+        assertEquals(inv.getAzi2(), 146.97364, 0.5e-5);
+        assertEquals(inv.getS12(), 20082617, 0.5);
         inv = geod.inverse(0, 0, 1, 180);
-        assertEquals(inv.azi1, 0.00000, 0.5e-5);
-        assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
-        assertEquals(inv.s12, 20027270, 0.5);
+        assertEquals(inv.getAzi1(), 0.00000, 0.5e-5);
+        assertEquals(Math.abs(inv.getAzi2()), 180.00000, 0.5e-5);
+        assertEquals(inv.getS12(), 20027270, 0.5);
     }
 
     @Test
@@ -804,13 +804,13 @@ public class GeodesicTest {
         // Geodesic::Inverse, found 2015-09-23.
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(Double.NaN, 0, 0, 90);
-        assertTrue(isNaN(inv.azi1));
-        assertTrue(isNaN(inv.azi2));
-        assertTrue(isNaN(inv.s12));
+        assertTrue(isNaN(inv.getAzi1()));
+        assertTrue(isNaN(inv.getAzi2()));
+        assertTrue(isNaN(inv.getS12()));
         inv = Geodesic.WGS84.inverse(Double.NaN, 0, 90, 3);
-        assertTrue(isNaN(inv.azi1));
-        assertTrue(isNaN(inv.azi2));
-        assertTrue(isNaN(inv.s12));
+        assertTrue(isNaN(inv.getAzi1()));
+        assertTrue(isNaN(inv.getAzi2()));
+        assertTrue(isNaN(inv.getS12()));
     }
 
     @Test
@@ -818,9 +818,9 @@ public class GeodesicTest {
         // Check for points close with longitudes close to 180 deg apart.
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(5, 0.00000000000001, 10, 180);
-        assertEquals(inv.azi1, 0.000000000000035, 1.5e-14);
-        assertEquals(inv.azi2, 179.99999999999996, 1.5e-14);
-        assertEquals(inv.s12, 18345191.174332713, 4e-9);
+        assertEquals(inv.getAzi1(), 0.000000000000035, 1.5e-14);
+        assertEquals(inv.getAzi2(), 179.99999999999996, 1.5e-14);
+        assertEquals(inv.getS12(), 18345191.174332713, 4e-9);
     }
 
     @Test
@@ -830,15 +830,15 @@ public class GeodesicTest {
         GeodesicData dir =
                 Geodesic.WGS84.direct(45, 0, -0.000000000000000003, 1e7,
                         GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, 45.30632, 0.5e-5);
-        assertEquals(dir.lon2, -180, 0.5e-5);
-        assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
+        assertEquals(dir.getLat2(), 45.30632, 0.5e-5);
+        assertEquals(dir.getLon2(), -180, 0.5e-5);
+        assertEquals(Math.abs(dir.getAzi2()), 180, 0.5e-5);
         GeodesicLine line = Geodesic.WGS84.inverseLine(45, 0, 80,
                 -0.000000000000000003);
         dir = line.position(1e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, 45.30632, 0.5e-5);
-        assertEquals(dir.lon2, -180, 0.5e-5);
-        assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
+        assertEquals(dir.getLat2(), 45.30632, 0.5e-5);
+        assertEquals(dir.getLon2(), -180, 0.5e-5);
+        assertEquals(Math.abs(dir.getAzi2()), 180, 0.5e-5);
     }
 
     @Test
@@ -851,31 +851,31 @@ public class GeodesicTest {
                 -31, 180);
         GeodesicData dir =
                 line.position(1e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat1, 30.00000  , 0.5e-5);
-        assertEquals(dir.lon1, -0.00000  , 0.5e-5);
-        assertEquals(Math.abs(dir.azi1), 180.00000, 0.5e-5);
-        assertEquals(dir.lat2, -60.23169 , 0.5e-5);
-        assertEquals(dir.lon2, -0.00000  , 0.5e-5);
-        assertEquals(Math.abs(dir.azi2), 180.00000, 0.5e-5);
-        assertEquals(dir.s12 , 10000000  , 0.5);
-        assertEquals(dir.a12 , 90.06544  , 0.5e-5);
-        assertEquals(dir.m12 , 6363636   , 0.5);
-        assertEquals(dir.M12 , -0.0012834, 0.5e7);
-        assertEquals(dir.M21 , 0.0013749 , 0.5e-7);
-        assertEquals(dir.S12 , 0         , 0.5);
+        assertEquals(dir.getLat1(), 30.00000  , 0.5e-5);
+        assertEquals(dir.getLon1(), -0.00000  , 0.5e-5);
+        assertEquals(Math.abs(dir.getAzi1()), 180.00000, 0.5e-5);
+        assertEquals(dir.getLat2(), -60.23169 , 0.5e-5);
+        assertEquals(dir.getLon2(), -0.00000  , 0.5e-5);
+        assertEquals(Math.abs(dir.getAzi2()), 180.00000, 0.5e-5);
+        assertEquals(dir.getS12(), 10000000  , 0.5);
+        assertEquals(dir.getA12() , 90.06544  , 0.5e-5);
+        assertEquals(dir.getM12() , 6363636   , 0.5);
+        assertEquals(dir.getScaleM12() , -0.0012834, 0.5e7);
+        assertEquals(dir.getScaleM21() , 0.0013749 , 0.5e-7);
+        assertEquals(dir.getAreaS12() , 0         , 0.5);
         dir = line.position(2e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat1, 30.00000  , 0.5e-5);
-        assertEquals(dir.lon1, -0.00000  , 0.5e-5);
-        assertEquals(Math.abs(dir.azi1), 180.00000, 0.5e-5);
-        assertEquals(dir.lat2, -30.03547 , 0.5e-5);
-        assertEquals(dir.lon2, -180.00000, 0.5e-5);
-        assertEquals(dir.azi2, -0.00000  , 0.5e-5);
-        assertEquals(dir.s12 , 20000000  , 0.5);
-        assertEquals(dir.a12 , 179.96459 , 0.5e-5);
-        assertEquals(dir.m12 , 54342     , 0.5);
-        assertEquals(dir.M12 , -1.0045592, 0.5e7);
-        assertEquals(dir.M21 , -0.9954339, 0.5e-7);
-        assertEquals(dir.S12 , 127516405431022.0, 0.5);
+        assertEquals(dir.getLat1(), 30.00000  , 0.5e-5);
+        assertEquals(dir.getLon1(), -0.00000  , 0.5e-5);
+        assertEquals(Math.abs(dir.getAzi1()), 180.00000, 0.5e-5);
+        assertEquals(dir.getLat2(), -30.03547 , 0.5e-5);
+        assertEquals(dir.getLon2(), -180.00000, 0.5e-5);
+        assertEquals(dir.getAzi2(), -0.00000  , 0.5e-5);
+        assertEquals(dir.getS12() , 20000000  , 0.5);
+        assertEquals(dir.getA12() , 179.96459 , 0.5e-5);
+        assertEquals(dir.getM12() , 54342     , 0.5);
+        assertEquals(dir.getScaleM12() , -1.0045592, 0.5e7);
+        assertEquals(dir.getScaleM21() , -0.9954339, 0.5e-7);
+        assertEquals(dir.getAreaS12() , 127516405431022.0, 0.5);
     }
 
     @Test
@@ -887,14 +887,14 @@ public class GeodesicTest {
                 Geodesic.WGS84.inverseLine(-5, -0.000000000000002, -10, 180);
         GeodesicData dir =
                 line.position(2e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, 4.96445   , 0.5e-5);
-        assertEquals(dir.lon2, -180.00000, 0.5e-5);
-        assertEquals(dir.azi2, -0.00000  , 0.5e-5);
+        assertEquals(dir.getLat2(), 4.96445   , 0.5e-5);
+        assertEquals(dir.getLon2(), -180.00000, 0.5e-5);
+        assertEquals(dir.getAzi2(), -0.00000  , 0.5e-5);
         dir = line.position(0.5 * line.getDistance(),
                 GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, -87.52461 , 0.5e-5);
-        assertEquals(dir.lon2, -0.00000  , 0.5e-5);
-        assertEquals(dir.azi2, -180.00000, 0.5e-5);
+        assertEquals(dir.getLat2(), -87.52461 , 0.5e-5);
+        assertEquals(dir.getLon2(), -0.00000  , 0.5e-5);
+        assertEquals(dir.getAzi2(), -180.00000, 0.5e-5);
     }
 
     @Test
@@ -905,9 +905,9 @@ public class GeodesicTest {
         GeodesicData dir =
                 line.position(0.5 * line.getDistance(),
                         GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
-        assertEquals(dir.lat2, 30.92625, 0.5e-5);
-        assertEquals(dir.lon2, 37.54640, 0.5e-5);
-        assertEquals(dir.azi2, 55.43104, 0.5e-5);
+        assertEquals(dir.getLat2(), 30.92625, 0.5e-5);
+        assertEquals(dir.getLon2(), 37.54640, 0.5e-5);
+        assertEquals(dir.getAzi2(), 55.43104, 0.5e-5);
     }
 
     @Test
@@ -917,9 +917,9 @@ public class GeodesicTest {
         // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
         assertNotNull(Geodesic.WGS84);
         GeodesicData dir = Geodesic.WGS84.direct(90, 10, 180, -1e6);
-        assertEquals(dir.lat2, 81.04623, 0.5e-5);
-        assertEquals(dir.lon2, -170, 0.5e-5);
-        assertEquals(dir.azi2, 0, 0.5e-5);
+        assertEquals(dir.getLat2(), 81.04623, 0.5e-5);
+        assertEquals(dir.getLon2(), -170, 0.5e-5);
+        assertEquals(dir.getAzi2(), 0, 0.5e-5);
     }
 
     @Test
@@ -930,14 +930,14 @@ public class GeodesicTest {
         GeodesicData inv = Geodesic.WGS84.inverse(54.1589, 15.3872,
                 54.1591, 15.3877,
                 GeodesicMask.ALL);
-        assertEquals(inv.azi1, 55.723110355, 5e-9);
-        assertEquals(inv.azi2, 55.723515675, 5e-9);
-        assertEquals(inv.s12,  39.527686385, 5e-9);
-        assertEquals(inv.a12,   0.000355495, 5e-9);
-        assertEquals(inv.m12,  39.527686385, 5e-9);
-        assertEquals(inv.M12,   0.999999995, 5e-9);
-        assertEquals(inv.M21,   0.999999995, 5e-9);
-        assertEquals(inv.S12, 286698586.30197, 5e-4);
+        assertEquals(inv.getAzi1(), 55.723110355, 5e-9);
+        assertEquals(inv.getAzi2(), 55.723515675, 5e-9);
+        assertEquals(inv.getS12(),  39.527686385, 5e-9);
+        assertEquals(inv.getA12(),   0.000355495, 5e-9);
+        assertEquals(inv.getM12(),  39.527686385, 5e-9);
+        assertEquals(inv.getScaleM12(),   0.999999995, 5e-9);
+        assertEquals(inv.getScaleM21(),   0.999999995, 5e-9);
+        assertEquals(inv.getAreaS12(), 286698586.30197, 5e-4);
     }
 
     @Test
@@ -947,19 +947,19 @@ public class GeodesicTest {
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(-(41+19/60.0), 174+49/60.0,
                 40+58/60.0, -(5+30/60.0));
-        assertEquals(inv.azi1, 160.39137649664, 0.5e-11);
-        assertEquals(inv.azi2,  19.50042925176, 0.5e-11);
-        assertEquals(inv.s12,  19960543.857179, 0.5e-6);
+        assertEquals(inv.getAzi1(), 160.39137649664, 0.5e-11);
+        assertEquals(inv.getAzi2(),  19.50042925176, 0.5e-11);
+        assertEquals(inv.getS12(),  19960543.857179, 0.5e-6);
     }
 
     @Test
     public void testGeodSolve78() {
-        // An example where the NGS calculator fails to converge */
+        // An example where the NGS calculator fails to converge
         assertNotNull(Geodesic.WGS84);
         GeodesicData inv = Geodesic.WGS84.inverse(27.2, 0.0, -27.1, 179.5);
-        assertEquals(inv.azi1,  45.82468716758, 0.5e-11);
-        assertEquals(inv.azi2, 134.22776532670, 0.5e-11);
-        assertEquals(inv.s12,  19974354.765767, 0.5e-6);
+        assertEquals(inv.getAzi1(),  45.82468716758, 0.5e-11);
+        assertEquals(inv.getAzi2(), 134.22776532670, 0.5e-11);
+        assertEquals(inv.getS12(),  19974354.765767, 0.5e-6);
     }
 
     @Test

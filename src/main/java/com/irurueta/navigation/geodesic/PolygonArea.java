@@ -129,9 +129,9 @@ public class PolygonArea {
             mLon0 = mLon1 = lon;
         } else {
             GeodesicData g = mEarth.inverse(mLat1, mLon1, lat, lon, mMask);
-            mPerimetersum.add(g.s12);
+            mPerimetersum.add(g.getS12());
             if (!mPolyline) {
-                mAreasum.add(g.S12);
+                mAreasum.add(g.getAreaS12());
                 mCrossings += transit(mLon1, lon);
             }
             mLat1 = lat;
@@ -151,13 +151,13 @@ public class PolygonArea {
         //do nothing if mNum is zero
         if (mNum > 0) {
             GeodesicData g = mEarth.direct(mLat1, mLon1, azi, s, mMask);
-            mPerimetersum.add(g.s12);
+            mPerimetersum.add(g.getS12());
             if (!mPolyline) {
-                mAreasum.add(g.S12);
-                mCrossings += transitDirect(mLon1, g.lon2);
+                mAreasum.add(g.getAreaS12());
+                mCrossings += transitDirect(mLon1, g.getLon2());
             }
-            mLat1 = g.lat2;
-            mLon1 = g.lon2;
+            mLat1 = g.getLat2();
+            mLon1 = g.getLon2();
             ++mNum;
         }
     }
@@ -198,7 +198,7 @@ public class PolygonArea {
 
         GeodesicData g = mEarth.inverse(mLat1, mLon1, mLat0, mLon0, mMask);
         Accumulator tempsum = new Accumulator(mAreasum);
-        tempsum.add(g.S12);
+        tempsum.add(g.getAreaS12());
         int crossings = mCrossings + transit(mLon1, mLon0);
         if ((crossings & 1) != 0) {
             tempsum.add((tempsum.getSum() < 0 ? 1 : -1) * mArea0 / 2);
@@ -223,7 +223,7 @@ public class PolygonArea {
                 tempsum.add(+mArea0);
             }
         }
-        return new PolygonResult(mNum, mPerimetersum.sum(g.s12), 0 + tempsum.getSum());
+        return new PolygonResult(mNum, mPerimetersum.sum(g.getS12()), 0 + tempsum.getSum());
     }
 
     /**
@@ -259,9 +259,9 @@ public class PolygonArea {
                     i == 0 ? mLon1 : lon,
                     i != 0 ? mLat0 : lat,
                     i != 0 ? mLon0 : lon, mMask);
-            perimeter += g.s12;
+            perimeter += g.getS12();
             if (!mPolyline) {
-                tempsum += g.S12;
+                tempsum += g.getAreaS12();
                 crossings += transit(i == 0 ? mLon1 : lon, i != 0 ? mLon0 : lon);
             }
         }
@@ -329,12 +329,12 @@ public class PolygonArea {
         int crossings = mCrossings;
 
         GeodesicData g = mEarth.direct(mLat1, mLon1, azi, false, s, mMask);
-        tempsum += g.S12;
-        crossings += transitDirect(mLon1, g.lon2);
-        g = mEarth.inverse(g.lat2, g.lon2, mLat0, mLon0, mMask);
-        perimeter += g.s12;
-        tempsum += g.S12;
-        crossings += transit(g.lon2, mLon0);
+        tempsum += g.getAreaS12();
+        crossings += transitDirect(mLon1, g.getLon2());
+        g = mEarth.inverse(g.getLat2(), g.getLon2(), mLat0, mLon0, mMask);
+        perimeter += g.getS12();
+        tempsum += g.getAreaS12();
+        crossings += transit(g.getLon2(), mLon0);
 
         if ((crossings & 1) != 0) {
             tempsum += (tempsum < 0 ? 1 : -1) * mArea0/2;

@@ -338,15 +338,15 @@ public class GeodesicLine {
             return r;
         }
 
-        r.lat1 = mLat1;
-        r.azi1 = mAzi1;
-        r.lon1 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ? mLon1 : GeoMath.angNormalize(mLon1);
+        r.setLat1(mLat1);
+        r.setAzi1(mAzi1);
+        r.setLon1(((outmask & GeodesicMask.LONG_UNROLL) != 0) ? mLon1 : GeoMath.angNormalize(mLon1));
 
         //avoid warning about uninitialized b12
         double sig12, ssig12, csig12, b12 = 0, ab1 = 0;
         if (arcmode) {
             //interpret s12A12 as spherical arc length
-            r.a12 = s12A12;
+            r.setA12(s12A12);
             sig12 = Math.toRadians(s12A12);
             {
                 Pair p = GeoMath.sincosd(s12A12);
@@ -355,7 +355,7 @@ public class GeodesicLine {
             }
         } else {
             //interpret s12A12 as distance
-            r.s12 = s12A12;
+            r.setS12(s12A12);
 
             double tau12 = s12A12 / (mB * (1 + mA1m1)),
                     s = Math.sin(tau12),
@@ -400,7 +400,7 @@ public class GeodesicLine {
                 csig12 = Math.cos(sig12);
                 //update b12 below
             }
-            r.a12 = Math.toDegrees(sig12);
+            r.setA12(Math.toDegrees(sig12));
         }
 
         double ssig2, csig2, sbet2, cbet2, salp2, calp2;
@@ -432,7 +432,7 @@ public class GeodesicLine {
         calp2 = mCalp0 * csig2;
 
         if ((outmask & GeodesicMask.DISTANCE) != 0 && arcmode) {
-            r.s12 = mB * ((1 + mA1m1) * sig12 + ab1);
+            r.setS12(mB * ((1 + mA1m1) * sig12 + ab1));
         }
 
         if ((outmask & GeodesicMask.LONGITUDE) != 0) {
@@ -454,16 +454,16 @@ public class GeodesicLine {
             double lam12 = omg12 + mA3c * (sig12 +
                     (Geodesic.sinCosSeries(true, ssig2, csig2, mC3a) - mB31));
             double lon12 = Math.toDegrees(lam12);
-            r.lon2 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ? mLon1 + lon12 :
-                    GeoMath.angNormalize(r.lon1 + GeoMath.angNormalize(lon12));
+            r.setLon2(((outmask & GeodesicMask.LONG_UNROLL) != 0) ? mLon1 + lon12 :
+                    GeoMath.angNormalize(r.getLon1() + GeoMath.angNormalize(lon12)));
         }
 
         if ((outmask & GeodesicMask.LATITUDE) != 0) {
-            r.lat2 = GeoMath.atan2d(sbet2, mF1 * cbet2);
+            r.setLat2(GeoMath.atan2d(sbet2, mF1 * cbet2));
         }
 
         if ((outmask & GeodesicMask.AZIMUTH) != 0) {
-            r.azi2 = GeoMath.atan2d(salp2, calp2);
+            r.setAzi2(GeoMath.atan2d(salp2, calp2));
         }
 
         if ((outmask & (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {
@@ -473,13 +473,13 @@ public class GeodesicLine {
             if ((outmask & GeodesicMask.REDUCED_LENGTH) != 0) {
                 //add parens around (mCsig1 * ssig2) and (mSsig1 * csig2) to ensure
                 //accurate cancellation in the case of coincident points
-                r.m12 = mB * ((dn2 * (mCsig1 * ssig2) - mDn1 * (mSsig1 * csig2)) -
-                        mCsig1 * csig2 * j12);
+                r.setM12(mB * ((dn2 * (mCsig1 * ssig2) - mDn1 * (mSsig1 * csig2)) -
+                        mCsig1 * csig2 * j12));
             }
             if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
                 double t = mK2 * (ssig2 - mSsig1) * (ssig2 + mSsig1) / (mDn1 + dn2);
-                r.M12 = csig12 + (t * ssig2 - csig2 * j12) * mSsig1 / mDn1;
-                r.M21 = csig12 - (t * mSsig1 - mCsig1 * j12) * ssig2 / dn2;
+                r.setScaleM12(csig12 + (t * ssig2 - csig2 * j12) * mSsig1 / mDn1);
+                r.setScaleM21(csig12 - (t * mSsig1 - mCsig1 * j12) * ssig2 / dn2);
             }
         }
 
@@ -504,7 +504,7 @@ public class GeodesicLine {
                         ssig12 * (mCsig1 * ssig12 / (1 + csig12) + mSsig1));
                 calp12 = GeoMath.sq(mSalp0) + GeoMath.sq(mCalp0) * mCsig1 * csig2;
             }
-            r.S12 = mC2 * Math.atan2(salp12, calp12) + mA4 * (b42 - mB41);
+            r.setAreaS12(mC2 * Math.atan2(salp12, calp12) + mA4 * (b42 - mB41));
         }
 
         return r;
@@ -519,7 +519,7 @@ public class GeodesicLine {
     public void setDistance(double s13) {
         mS13 = s13;
         GeodesicData g = position(false, mS13, 0);
-        mA13 = g.a12;
+        mA13 = g.getA12();
     }
 
     /**
@@ -673,7 +673,7 @@ public class GeodesicLine {
     void setArc(double a13) {
         mA13 = a13;
         GeodesicData g = position(true, mA13, GeodesicMask.DISTANCE);
-        mS13 = g.s12;
+        mS13 = g.getS12();
     }
 
     /**

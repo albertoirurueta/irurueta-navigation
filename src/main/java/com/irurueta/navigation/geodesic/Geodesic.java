@@ -598,8 +598,8 @@ public class Geodesic {
         GeodesicData r = result.mG;
 
         if ((outmask & GeodesicMask.AZIMUTH) != 0) {
-            r.azi1 = GeoMath.atan2d(result.mSalp1, result.mCalp1);
-            r.azi2 = GeoMath.atan2d(result.mSalp2, result.mCalp2);
+            r.setAzi1(GeoMath.atan2d(result.mSalp1, result.mCalp1));
+            r.setAzi2(GeoMath.atan2d(result.mSalp2, result.mCalp2));
         }
         return r;
     }
@@ -640,7 +640,7 @@ public class Geodesic {
         double salp1 = result.mSalp1;
         double calp1 = result.mCalp1;
         double azi1 = GeoMath.atan2d(salp1, calp1);
-        double a12 = result.mG.a12;
+        double a12 = result.mG.getA12();
         //ensure that a12 can be converted to a distance
         if ((caps & (GeodesicMask.OUT_MASK & GeodesicMask.DISTANCE_IN)) != 0) {
             caps |= GeodesicMask.DISTANCE;
@@ -1087,8 +1087,8 @@ public class Geodesic {
 
         //Compute longitude difference (angDiff does this carefully). Result is in [-180, 180] but
         //-180 is only for west-going geodesics. 180 is for east-going and meridional geodesics.
-        r.lat1 = lat1 = GeoMath.latFix(lat1);
-        r.lat2 = lat2 = GeoMath.latFix(lat2);
+        r.setLat1(lat1 = GeoMath.latFix(lat1));
+        r.setLat2(lat2 = GeoMath.latFix(lat2));
 
         //if really close to the equator, treat as on equator
         lat1 = GeoMath.angRound(lat1);
@@ -1102,11 +1102,11 @@ public class Geodesic {
         lon12s = p.second;
 
         if ((outmask & GeodesicMask.LONG_UNROLL) != 0) {
-            r.lon1 = lon1;
-            r.lon2 = (lon1 + lon12) + lon12s;
+            r.setLon1(lon1);
+            r.setLon2((lon1 + lon12) + lon12s);
         } else {
-            r.lon1 = GeoMath.angNormalize(lon1);
-            r.lon2 = GeoMath.angNormalize(lon2);
+            r.setLon1(GeoMath.angNormalize(lon1));
+            r.setLon2(GeoMath.angNormalize(lon2));
         }
 
         //make longitude difference positive
@@ -1241,8 +1241,8 @@ public class Geodesic {
             m12x = v.mM12b;
 
             if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
-                r.M12 = v.mM12;
-                r.M21 = v.mM21;
+                r.setScaleM12(v.mM12);
+                r.setScaleM21(v.mM21);
             }
 
             //add the check for sig12 since zero length geodesics might yield m12 < 0. Test case was
@@ -1274,7 +1274,9 @@ public class Geodesic {
             sig12 = omg12 = lam12 / mF1;
             m12x = mB * Math.sin(sig12);
             if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
-                r.M12 = r.M21 = Math.cos(sig12);
+                double value = Math.cos(sig12);
+                r.setScaleM12(value);
+                r.setScaleM21(value);
             }
             a12 = lon12 / mF1;
 
@@ -1298,7 +1300,9 @@ public class Geodesic {
                 s12x = sig12 * mB * dnm;
                 m12x = GeoMath.sq(dnm) * mB * Math.sin(sig12 / dnm);
                 if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
-                    r.M12 = r.M21 = Math.cos(sig12 / dnm);
+                    double value = Math.cos(sig12 / dnm);
+                    r.setScaleM12(value);
+                    r.setScaleM21(value);
                 }
                 a12 = Math.toDegrees(sig12);
                 omg12 = lam12 / (mF1 * dnm);
@@ -1412,8 +1416,8 @@ public class Geodesic {
                 s12x = v.mS12b;
                 m12x = v.mM12b;
                 if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
-                    r.M12 = v.mM12;
-                    r.M21 = v.mM21;
+                    r.setScaleM12(v.mM12);
+                    r.setScaleM21(v.mM21);
                 }
 
                 m12x *= mB;
@@ -1431,12 +1435,12 @@ public class Geodesic {
 
         if ((outmask & GeodesicMask.DISTANCE) != 0) {
             //convert -0 to 0
-            r.s12 = 0 + s12x;
+            r.setS12(0.0 + s12x);
         }
 
         if ((outmask & GeodesicMask.REDUCED_LENGTH) != 0) {
             //convert -0 to 0
-            r.m12 = 0 + m12x;
+            r.setM12(0.0 + m12x);
         }
 
         if ((outmask & GeodesicMask.AREA) != 0) {
@@ -1468,10 +1472,10 @@ public class Geodesic {
                 c4f(eps, c4a);
                 double b41 = sinCosSeries(false, ssig1, csig1, c4a);
                 double b42 = sinCosSeries(false, ssig2, csig2, c4a);
-                r.S12 = a4 * (b42 - b41);
+                r.setAreaS12(a4 * (b42 - b41));
             } else {
                 //avoid problems with indeterminate sig1, sig2 on equator
-                r.S12 = 0;
+                r.setAreaS12(0.0);
             }
 
             if (!meridian && somg12 > 1) {
@@ -1502,11 +1506,11 @@ public class Geodesic {
                 }
                 alp12 = Math.atan2(salp12, calp12);
             }
-            r.S12 += mC2 * alp12;
-            r.S12 *= swapp * lonsign * latsign;
+            r.setAreaS12(r.getAreaS12() + mC2 * alp12);
+            r.setAreaS12(r.getAreaS12() * swapp * lonsign * latsign);
 
             //convert -0 to 0
-            r.S12 += 0;
+            r.setAreaS12(r.getAreaS12() + 0.0);
         }
 
         //convert calp, salp to azimuth accounting for lonsign, swapp, latsign
@@ -1522,9 +1526,9 @@ public class Geodesic {
                 calp2 = t;
             }
             if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
-                double t = r.M12;
-                r.M12 = r.M21;
-                r.M21 = t;
+                double t = r.getScaleM12();
+                r.setScaleM12(r.getScaleM21());
+                r.setScaleM21(t);
             }
         }
 
@@ -1534,7 +1538,7 @@ public class Geodesic {
         calp2 *= swapp * latsign;
 
         //returned value in [0, 180]
-        r.a12 = a12;
+        r.setA12(a12);
         result.mSalp1 = salp1;
         result.mCalp1 = calp1;
         result.mSalp2 = salp2;
