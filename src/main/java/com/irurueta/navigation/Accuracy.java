@@ -67,7 +67,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * and positive definite.
      */
     public void setCovarianceMatrix(Matrix covarianceMatrix)
-            throws IllegalArgumentException, NonSymmetricPositiveDefiniteMatrixException {
+            throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy.setCovarianceMatrix(covarianceMatrix);
     }
 
@@ -92,8 +92,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @param standardDeviationFactor standard deviation factor to be set.
      * @throws IllegalArgumentException if provided value is zero or negative.
      */
-    public void setStandardDeviationFactor(double standardDeviationFactor)
-            throws IllegalArgumentException {
+    public void setStandardDeviationFactor(double standardDeviationFactor) {
         mInternalAccuracy.setStandardDeviationFactor(standardDeviationFactor);
     }
 
@@ -114,7 +113,7 @@ public abstract class Accuracy<A extends com.irurueta.geometry.Accuracy> {
      * @param confidence confidence of provided accuracy of estimated point or measure.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
-    public void setConfidence(double confidence) throws IllegalArgumentException {
+    public void setConfidence(double confidence) {
         mInternalAccuracy.setConfidence(confidence);
     }
 

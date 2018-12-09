@@ -65,7 +65,8 @@ public class GeoMath {
         x = Math.abs(x);
         y = Math.abs(y);
 
-        double a = Math.max(x, y), b = Math.min(x, y) / (a != 0 ? a : 1);
+        double a = Math.max(x, y);
+        double b = Math.min(x, y) / (a != 0 ? a : 1);
         return a * Math.sqrt(1 + b * b);
         //For an alternative method see
         //C. Moler and D. Morrisin (1983) https://doi.org/10.1147/rd.276.0577
@@ -85,7 +86,8 @@ public class GeoMath {
      * @return log(1 + <i>x</i>).
      */
     public static double log1p(double x) {
-        double y = 1 + x, z = y - 1;
+        double y = 1 + x;
+        double z = y - 1;
         //Here's the explanation for this magic: y = 1 + z, exactly, and z approx x, thus log(y)/z
         //(which is nearly constant near z = 0) returns a good approximation to the true log(1 + x)/x.
         //The multiplication of x * (log(y)/z) introduces little additional error.
@@ -113,7 +115,7 @@ public class GeoMath {
      * @return value with the magnitude of <i>x</i> and with the sign of <i>y</i>.
      */
     public static double copysign(double x, double y) {
-        return Math.abs(x) * (y < 0 || (y == 0 && 1 / y < 0) ? -1 : 1);
+        return Math.abs(x) * (y < 0 || y == 0 ? -1 : 1);
     }
 
     /**
@@ -131,10 +133,16 @@ public class GeoMath {
      * @param sinx sinus of x.
      * @param cosx cosinus of x.
      * @return normalized values.
+     * @throws IllegalArgumentException if provided sinus and cosinus values have zero
+     * norm.
      */
-    public static Pair norm(double sinx, double cosx) {
+    public static Pair norm(double sinx, double cosx) throws IllegalArgumentException {
         double r = hypot(sinx, cosx);
-        return new Pair(sinx/r, cosx/r);
+        if (r == 0.0) {
+            throw new IllegalArgumentException();
+        }
+
+        return new Pair(sinx / r, cosx / r);
     }
 
     /**
@@ -206,7 +214,11 @@ public class GeoMath {
      */
     public static double angNormalize(double x) {
         x = x % 360.0;
-        return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
+        if (x <= -180 ) {
+            return x + 360;
+        } else {
+            return x <= 180 ? x : x - 360;
+        }
     }
 
     /**
@@ -228,7 +240,8 @@ public class GeoMath {
      * @return Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded difference and <i>e</i> being the error.
      */
     public static Pair angDiff(double x, double y) {
-        double d, t;
+        double d;
+        double t;
 
         //noinspection all
         Pair r = sum(angNormalize(-x), angNormalize(y));
@@ -256,8 +269,10 @@ public class GeoMath {
         //now abs(r) <= 45
         r = Math.toRadians(r);
         //Possibly could call the gnu extension sincos
-        double s = Math.sin(r), c = Math.cos(r);
-        double sinx, cosx;
+        double s = Math.sin(r);
+        double c = Math.cos(r);
+        double sinx;
+        double cosx;
         switch (q & 3) {
             case 0:
                 sinx = s;
@@ -312,7 +327,7 @@ public class GeoMath {
         double ang = Math.toDegrees(Math.atan2(y, x));
         switch (q) {
             //Note that atan2d(-0.0, 1.0) will return -0. However, we expect that atan2d will not be called with y = -0.
-            //If need be, include case 0: ang = 0 + ang; break;
+            //If need be, include case 0: ang = 0 + ang; break
             //and handle mpfr as in angRound.
             case 1:
                 ang = (y >= 0 ? 180 : -180) - ang;
@@ -322,6 +337,8 @@ public class GeoMath {
                 break;
             case 3:
                 ang = -90 + ang;
+                break;
+            default:
                 break;
         }
         return ang;

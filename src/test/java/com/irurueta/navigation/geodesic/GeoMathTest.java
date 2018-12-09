@@ -131,6 +131,12 @@ public class GeoMathTest {
 
         assertEquals(p.first, sinX, ABSOLUTE_ERROR);
         assertEquals(p.second, cosX, ABSOLUTE_ERROR);
+
+        //force IllegalArgumentException
+        try {
+            GeoMath.norm(0.0, 0.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
     }
 
     @Test

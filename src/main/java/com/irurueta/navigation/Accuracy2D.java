@@ -43,8 +43,8 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @throws NonSymmetricPositiveDefiniteMatrixException if provided matrix is not
      * symmetric and positive definite.
      */
-    public Accuracy2D(Matrix covarianceMatrix) throws IllegalArgumentException,
-            NonSymmetricPositiveDefiniteMatrixException {
+    public Accuracy2D(Matrix covarianceMatrix)
+            throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix);
     }
 
@@ -53,7 +53,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @param confidence confidence of provided accuracy of an estimated position.
      * @throws IllegalArgumentException if provided value is not within 0 and 1.
      */
-    public Accuracy2D(double confidence) throws IllegalArgumentException {
+    public Accuracy2D(double confidence) {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(confidence);
     }
 
@@ -69,7 +69,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * symmetric and positive definite.
      */
     public Accuracy2D(Matrix covarianceMatrix, double confidence)
-            throws IllegalArgumentException, NonSymmetricPositiveDefiniteMatrixException {
+            throws NonSymmetricPositiveDefiniteMatrixException {
         mInternalAccuracy = new com.irurueta.geometry.Accuracy2D(covarianceMatrix, confidence);
     }
 
@@ -89,7 +89,7 @@ public class Accuracy2D extends Accuracy<com.irurueta.geometry.Accuracy2D> {
      * @throws NullPointerException if covariance matrix has not been provided yet.
      * @throws InvalidRotationMatrixException if rotation cannot be properly determined.
      */
-    public Ellipse toEllipse() throws NullPointerException, InvalidRotationMatrixException {
+    public Ellipse toEllipse() throws InvalidRotationMatrixException {
         return mInternalAccuracy.toEllipse();
     }
 }
