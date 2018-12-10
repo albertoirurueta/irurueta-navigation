@@ -43,7 +43,7 @@ public class Fingerprint<S extends RadioSource, R extends Reading<S>>
      * @param readings non-located readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public Fingerprint(List<R> readings) throws IllegalArgumentException {
+    public Fingerprint(List<R> readings) {
         if (readings == null) {
             throw new IllegalArgumentException();
         }
@@ -63,8 +63,7 @@ public class Fingerprint<S extends RadioSource, R extends Reading<S>>
      * @param readings non-located ranging readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public void setReadings(List<R> readings)
-            throws IllegalArgumentException {
+    public void setReadings(List<R> readings) {
         if (readings == null) {
             throw new IllegalArgumentException();
         }

@@ -39,8 +39,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
      * @param fingerprints collection of fingerprints to match against.
      * @throws IllegalArgumentException if collection of fingerprints is null.
      */
-    public RadioSourceKNearestFinder(Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints)
-            throws IllegalArgumentException {
+    public RadioSourceKNearestFinder(Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
         if (fingerprints == null) {
             throw new IllegalArgumentException();
         }
@@ -66,7 +65,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
      * @throws IllegalArgumentException if either fingerprint is null or k is les than 1.
      */
     public List<RssiFingerprintLocated<S, RssiReading<S>, P>> findKNearestTo(
-            RssiFingerprint<S, RssiReading<S>> fingerprint, int k) throws IllegalArgumentException {
+            RssiFingerprint<S, RssiReading<S>> fingerprint, int k) {
         return findKNearestTo(fingerprint, mFingerprints, k);
     }
 
@@ -83,7 +82,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
      */
     public void findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint, int k,
             List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
-            List<Double> nearestSqrDistances) throws IllegalArgumentException {
+            List<Double> nearestSqrDistances) {
         findKNearestTo(fingerprint, mFingerprints, k, nearestFingerprints, nearestSqrDistances);
     }
 
@@ -107,8 +106,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
     @SuppressWarnings("Duplicates")
     public static <P extends Point, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P>
             findNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
-            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints)
-            throws IllegalArgumentException {
+            Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
         if (fingerprint == null || fingerprints == null) {
             throw new IllegalArgumentException();
         }
@@ -141,7 +139,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
     public static <P extends Point, S extends RadioSource> List<RssiFingerprintLocated<S, RssiReading<S>, P>>
             findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
             Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
-            int k) throws IllegalArgumentException {
+            int k) {
 
         List<RssiFingerprintLocated<S, RssiReading<S>, P>> result =
                 new ArrayList<>();
@@ -169,7 +167,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
             RssiFingerprint<S, RssiReading<S>> fingerprint,
             Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
             int k, List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,
-            List<Double> nearestSqrDistances) throws IllegalArgumentException {
+            List<Double> nearestSqrDistances) {
 
         if (fingerprint == null || fingerprints == null || k < 1 || nearestFingerprints == null ||
                 nearestSqrDistances == null) {
