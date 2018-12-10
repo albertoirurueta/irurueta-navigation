@@ -60,7 +60,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      * @throws IllegalArgumentException if identifiers is null.
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
-            double transmittedPower) throws IllegalArgumentException {
+            double transmittedPower) {
         super(identifiers, transmittedPower);
     }
 
@@ -78,8 +78,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
-            int serviceUuid, String bluetoothName)
-            throws IllegalArgumentException {
+            int serviceUuid, String bluetoothName) {
         super(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -94,8 +93,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      * @throws IllegalArgumentException if identifiers is null or standard deviation is negative.
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
-            double transmittedPower, Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            double transmittedPower, Double transmittedPowerStandardDeviation) {
         super(identifiers, transmittedPower);
 
         if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
@@ -121,8 +119,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             double transmittedPower, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName,
-            Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            Double transmittedPowerStandardDeviation) {
         super(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -148,8 +145,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, double frequency, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
-            int serviceUuid, String bluetoothName)
-            throws IllegalArgumentException {
+            int serviceUuid, String bluetoothName) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -165,8 +161,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      * @throws IllegalArgumentException if identifiers is null.
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
-            double transmittedPower, double frequency, Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            double transmittedPower, double frequency, Double transmittedPowerStandardDeviation) {
         super(identifiers, transmittedPower, frequency);
 
         if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
@@ -193,8 +188,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             double transmittedPower, double frequency,
             String bluetoothAddress, int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName,
-            Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            Double transmittedPowerStandardDeviation) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -213,7 +207,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      * @throws IllegalArgumentException if identifiers is null.
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
-            double transmittedPower, double pathLossExponent) throws IllegalArgumentException {
+            double transmittedPower, double pathLossExponent) {
         this(identifiers, transmittedPower);
         mPathLossExponent = pathLossExponent;
     }
@@ -234,8 +228,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             double transmittedPower, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName,
-            double pathLossExponent)
-            throws IllegalArgumentException {
+            double pathLossExponent) {
         this(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -253,7 +246,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent) throws IllegalArgumentException {
+            double pathLossExponent) {
         this(identifiers, transmittedPower, pathLossExponent);
 
         if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
@@ -281,8 +274,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName,
             double pathLossExponent,
-            Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            Double transmittedPowerStandardDeviation) {
         this(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName, pathLossExponent);
@@ -309,8 +301,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, double frequency, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
-            int serviceUuid, String bluetoothName, double pathLossExponent)
-            throws IllegalArgumentException {
+            int serviceUuid, String bluetoothName, double pathLossExponent) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -329,8 +320,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, double frequency, double pathLossExponent,
-            Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            Double transmittedPowerStandardDeviation) {
         this(identifiers, transmittedPower, frequency, transmittedPowerStandardDeviation);
         mPathLossExponent = pathLossExponent;
     }
@@ -354,8 +344,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             double transmittedPower, double frequency,
             String bluetoothAddress, int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName, double pathLossExponent,
-            Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            Double transmittedPowerStandardDeviation) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -380,8 +369,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
      */
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation)
-            throws IllegalArgumentException {
+            double pathLossExponent, Double pathLossExponentStandardDeviation) {
         this(identifiers, transmittedPower, pathLossExponent);
 
         if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
@@ -417,8 +405,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             int serviceUuid, String bluetoothName,
             double pathLossExponent,
             Double transmittedPowerStandardDeviation,
-            Double pathLossExponentStandardDeviation)
-            throws IllegalArgumentException {
+            Double pathLossExponentStandardDeviation) {
         this(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName, pathLossExponent);
@@ -449,8 +436,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
     public BeaconWithPower(List<BeaconIdentifier> identifiers,
             double transmittedPower, double frequency, double pathLossExponent,
             Double transmittedPowerStandardDeviation,
-            Double pathLossExponentStandardDeviation)
-            throws IllegalArgumentException {
+            Double pathLossExponentStandardDeviation) {
         this(identifiers, transmittedPower, frequency, transmittedPowerStandardDeviation);
         mPathLossExponent = pathLossExponent;
 
@@ -483,8 +469,7 @@ public class BeaconWithPower extends Beacon implements RadioSourceWithPower {
             String bluetoothAddress, int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName, double pathLossExponent,
             Double transmittedPowerStandardDeviation,
-            Double pathLossExponentStandardDeviation)
-            throws IllegalArgumentException {
+            Double pathLossExponentStandardDeviation) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);

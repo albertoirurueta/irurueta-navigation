@@ -47,7 +47,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
     public BeaconWithPowerAndLocated(List<BeaconIdentifier> identifiers,
-            double transmittedPower, P position) throws IllegalArgumentException {
+            double transmittedPower, P position) {
         super(identifiers, transmittedPower);
 
         if (position == null) {
@@ -72,8 +72,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
     public BeaconWithPowerAndLocated(List<BeaconIdentifier> identifiers,
             double transmittedPower, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
-            int serviceUuid, String bluetoothName, P position)
-            throws IllegalArgumentException {
+            int serviceUuid, String bluetoothName, P position) {
         super(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName);
@@ -96,7 +95,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
      */
     public BeaconWithPowerAndLocated(List<BeaconIdentifier> identifiers,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(identifiers, transmittedPower, transmittedPowerStandardDeviation);
 
         if (position == null) {
@@ -124,8 +123,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
             double transmittedPower, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName,
-            Double transmittedPowerStandardDeviation, P position)
-            throws IllegalArgumentException {
+            Double transmittedPowerStandardDeviation, P position) {
         super(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName, transmittedPowerStandardDeviation);
@@ -148,8 +146,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
      * covariance has invalid size.
      */
     public BeaconWithPowerAndLocated(List<BeaconIdentifier> identifiers,
-            double transmittedPower, P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double transmittedPower, P position, Matrix positionCovariance) {
         this(identifiers, transmittedPower, position);
 
         if(positionCovariance != null &&
@@ -179,7 +176,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
             double transmittedPower, String bluetoothAddress,
             int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName, P position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         this(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName, position);
@@ -205,7 +202,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
      */
     public BeaconWithPowerAndLocated(List<BeaconIdentifier> identifiers,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            P position, Matrix positionCovariance) throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(identifiers, transmittedPower, transmittedPowerStandardDeviation,
                 position);
 
@@ -238,7 +235,7 @@ public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
             int beaconTypeCode, int manufacturer,
             int serviceUuid, String bluetoothName,
             Double transmittedPowerStandardDeviation, P position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         this(identifiers, transmittedPower, bluetoothAddress,
                 beaconTypeCode, manufacturer, serviceUuid,
                 bluetoothName, transmittedPowerStandardDeviation, position);
