@@ -34,7 +34,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(identifiers, transmittedPower, position);
     }
 
@@ -53,7 +53,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
             String bluetoothAddress, int beaconTypeCode,
             int manufacturer, int serviceUuid, String bluetoothName,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(identifiers, transmittedPower, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position);
     }
@@ -69,8 +69,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(identifiers, transmittedPower, position, positionCovariance);
     }
 
@@ -91,8 +90,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
             String bluetoothAddress, int beaconTypeCode,
             int manufacturer, int serviceUuid, String bluetoothName,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(identifiers, transmittedPower, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position,
                 positionCovariance);
@@ -108,7 +106,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
      * frequency is negative.
      */
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, Point3D position) throws IllegalArgumentException {
+            double frequency, Point3D position) {
         super(identifiers, transmittedPower, frequency, position);
     }
 
@@ -128,8 +126,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
      */
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
             double frequency, String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, Point3D position)
-            throws IllegalArgumentException {
+            int manufacturer, int serviceUuid, String bluetoothName, Point3D position) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position);
     }
@@ -147,8 +144,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
      * frequency is negative.
      */
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double frequency, Point3D position, Matrix positionCovariance) {
         super(identifiers, transmittedPower, frequency, position, positionCovariance);
     }
 
@@ -170,7 +166,7 @@ public class BeaconLocated3D extends BeaconLocated<Point3D> {
     public BeaconLocated3D(List<BeaconIdentifier> identifiers, double transmittedPower,
             double frequency, String bluetoothAddress, int beaconTypeCode,
             int manufacturer, int serviceUuid, String bluetoothName, Point3D position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position, positionCovariance);
     }

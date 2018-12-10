@@ -1642,7 +1642,8 @@ public class Geodesic {
 
             //s = r^3 * s
             double  s = p * q / 4;
-            double r2 = GeoMath.sq(r), r3 = r * r2;
+            double r2 = GeoMath.sq(r);
+            double r3 = r * r2;
             //the discriminant of the quadratic equation for T3. This is zero on the
             //evolute curve p^(1/3) + q^(1/3) = 1
             double disc = s * (s + 2 * r3);

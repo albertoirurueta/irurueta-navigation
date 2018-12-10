@@ -47,7 +47,7 @@ public class BeaconLocated<P extends Point> extends Beacon
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(identifiers, transmittedPower);
 
         if (position == null) {
@@ -71,8 +71,7 @@ public class BeaconLocated<P extends Point> extends Beacon
      */
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
             String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, P position)
-            throws IllegalArgumentException {
+            int manufacturer, int serviceUuid, String bluetoothName, P position) {
         super(identifiers, transmittedPower, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName);
 
@@ -94,8 +93,7 @@ public class BeaconLocated<P extends Point> extends Beacon
      * @throws IllegalArgumentException if either identifiers or position are null.
      */
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(identifiers, transmittedPower, position);
 
         if (positionCovariance != null) {
@@ -125,7 +123,7 @@ public class BeaconLocated<P extends Point> extends Beacon
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
             String bluetoothAddress, int beaconTypeCode,
             int manufacturer, int serviceUuid, String bluetoothName, P position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         this(identifiers, transmittedPower, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position);
 
@@ -150,7 +148,7 @@ public class BeaconLocated<P extends Point> extends Beacon
      * frequency is negative..
      */
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, P position) throws IllegalArgumentException {
+            double frequency, P position) {
         super(identifiers, transmittedPower, frequency);
 
         if (position == null) {
@@ -176,8 +174,7 @@ public class BeaconLocated<P extends Point> extends Beacon
      */
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
             double frequency, String bluetoothAddress, int beaconTypeCode,
-            int manufacturer, int serviceUuid, String bluetoothName, P position)
-            throws IllegalArgumentException {
+            int manufacturer, int serviceUuid, String bluetoothName, P position) {
         super(identifiers, transmittedPower, frequency, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName);
 
@@ -201,8 +198,7 @@ public class BeaconLocated<P extends Point> extends Beacon
      * frequency is negative.
      */
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
-            double frequency, P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double frequency, P position, Matrix positionCovariance) {
         this(identifiers, transmittedPower, frequency, position);
 
         if (positionCovariance != null) {
@@ -234,7 +230,7 @@ public class BeaconLocated<P extends Point> extends Beacon
     public BeaconLocated(List<BeaconIdentifier> identifiers, double transmittedPower,
             double frequency, String bluetoothAddress, int beaconTypeCode,
             int manufacturer, int serviceUuid, String bluetoothName, P position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         this(identifiers, transmittedPower, frequency, bluetoothAddress, beaconTypeCode,
                 manufacturer, serviceUuid, bluetoothName, position);
 

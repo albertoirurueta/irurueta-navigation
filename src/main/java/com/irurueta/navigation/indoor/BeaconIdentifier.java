@@ -77,7 +77,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @param value value to use.
      * @throws NullPointerException if provided value is null.
      */
-    protected BeaconIdentifier(byte[] value) throws NullPointerException {
+    protected BeaconIdentifier(byte[] value) {
         if (value == null) {
             throw new NullPointerException(
                     "Identifiers cannot be constructed from null pointers but \"value\" is null.");
@@ -117,8 +117,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @throws NullPointerException if string value is null.
      * @throws IllegalArgumentException if parsing fails for some other reason (invalid format, etc).
      */
-    public static BeaconIdentifier parse(String stringValue, int desiredByteLength) throws NullPointerException,
-            IllegalArgumentException {
+    public static BeaconIdentifier parse(String stringValue, int desiredByteLength) {
         if (stringValue == null) {
             throw new NullPointerException(
                     "Identifiers cannot be constructed from null pointers but \"stringValue\" is null.");
@@ -136,7 +135,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
 
         if (DECIMAL_PATTERN.matcher(stringValue).matches()) {
             //parse decimal format
-            int value = Integer.valueOf(stringValue);
+            int value = Integer.parseInt(stringValue);
             if (desiredByteLength <= 0 || desiredByteLength == 2) {
                 return fromInt(value);
             } else {
@@ -159,8 +158,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @return the parsed identifier.
      * @throws IllegalArgumentException if desired number of bytes is negative.
      */
-    public static BeaconIdentifier fromLong(long longValue, int desiredByteLength)
-            throws IllegalArgumentException {
+    public static BeaconIdentifier fromLong(long longValue, int desiredByteLength) {
         if (desiredByteLength < 0) {
             throw new IllegalArgumentException("identifier length must be > 0");
         }
@@ -178,7 +176,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @return an identifier with the specified value.
      * @throws IllegalArgumentException if provided value is out of valid range (from 0 to 65535).
      */
-    public static BeaconIdentifier fromInt(int intValue) throws IllegalArgumentException {
+    public static BeaconIdentifier fromInt(int intValue) {
         if (intValue < 0 || intValue > MAX_INTEGER) {
             throw new IllegalArgumentException(
                     "Identifiers can only be constructed from integers between 0 and " + MAX_INTEGER + " (inclusive).");
@@ -203,8 +201,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @throws ArrayIndexOutOfBoundsException if start or end are outside the bounds of the array.
      * @throws IllegalArgumentException start is larger than end.
      */
-    public static BeaconIdentifier fromBytes(byte[] bytes, int start, int end, boolean littleEndian)
-            throws NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException {
+    public static BeaconIdentifier fromBytes(byte[] bytes, int start, int end, boolean littleEndian) {
         if (bytes == null) {
             throw new NullPointerException(
                     "Identifiers cannot be constructed from null pointers but \"bytes\" is null.");
@@ -269,7 +266,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @return value represented as int.
      * @throws UnsupportedOperationException when value length is longer than 2.
      */
-    public int toInt() throws UnsupportedOperationException {
+    public int toInt() {
         if (mValue == null) {
             return 0;
         }
@@ -339,7 +336,7 @@ public class BeaconIdentifier implements Comparable<BeaconIdentifier>, Serializa
      * @return the identifier as a UUID.
      * @throws UnsupportedOperationException if conversion to UUID fails.
      */
-    public UUID toUuid() throws UnsupportedOperationException {
+    public UUID toUuid() {
         if (mValue == null) {
             return null;
         }
