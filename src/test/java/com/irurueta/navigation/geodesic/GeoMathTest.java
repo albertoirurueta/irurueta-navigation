@@ -129,8 +129,8 @@ public class GeoMathTest {
 
         Pair p = GeoMath.norm(r * sinX, r * cosX);
 
-        assertEquals(p.first, sinX, ABSOLUTE_ERROR);
-        assertEquals(p.second, cosX, ABSOLUTE_ERROR);
+        assertEquals(p.getFirst(), sinX, ABSOLUTE_ERROR);
+        assertEquals(p.getSecond(), cosX, ABSOLUTE_ERROR);
 
         //force IllegalArgumentException
         try {
@@ -147,7 +147,7 @@ public class GeoMathTest {
 
         Pair p = GeoMath.sum(u, v);
 
-        assertEquals(p.first, u + v, ABSOLUTE_ERROR);
+        assertEquals(p.getFirst(), u + v, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -203,7 +203,7 @@ public class GeoMathTest {
         double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         Pair p = GeoMath.angDiff(x, y);
 
-        assertEquals(p.first, y - x, ABSOLUTE_ERROR);
+        assertEquals(p.getFirst(), y - x, ABSOLUTE_ERROR);
     }
 
     @Test
@@ -214,8 +214,8 @@ public class GeoMathTest {
 
         Pair p = GeoMath.sincosd(x);
 
-        assertEquals(p.first, Math.sin(Math.toRadians(x)), ABSOLUTE_ERROR);
-        assertEquals(p.second, Math.cos(Math.toRadians(x)), ABSOLUTE_ERROR);
+        assertEquals(p.getFirst(), Math.sin(Math.toRadians(x)), ABSOLUTE_ERROR);
+        assertEquals(p.getSecond(), Math.cos(Math.toRadians(x)), ABSOLUTE_ERROR);
     }
 
     @Test

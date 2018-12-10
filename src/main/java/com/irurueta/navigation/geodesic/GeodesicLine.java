@@ -205,12 +205,13 @@ public class GeodesicLine {
     public GeodesicLine(Geodesic g, double lat1, double lon1, double azi1, int caps) {
         azi1 = GeoMath.angNormalize(azi1);
 
-        double salp1, calp1;
-        {
-            Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));
-            salp1 = p.first;
-            calp1 = p.second;
-        }
+        double salp1;
+        double calp1;
+
+        Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));
+        salp1 = p.getFirst();
+        calp1 = p.getSecond();
+
         lineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
     }
 
@@ -343,23 +344,26 @@ public class GeodesicLine {
         r.setLon1(((outmask & GeodesicMask.LONG_UNROLL) != 0) ? mLon1 : GeoMath.angNormalize(mLon1));
 
         //avoid warning about uninitialized b12
-        double sig12, ssig12, csig12, b12 = 0, ab1 = 0;
+        double sig12;
+        double ssig12;
+        double csig12;
+        double b12 = 0.0;
+        double ab1 = 0.0;
         if (arcmode) {
             //interpret s12A12 as spherical arc length
             r.setA12(s12A12);
             sig12 = Math.toRadians(s12A12);
-            {
-                Pair p = GeoMath.sincosd(s12A12);
-                ssig12 = p.first;
-                csig12 = p.second;
-            }
+
+            Pair p = GeoMath.sincosd(s12A12);
+            ssig12 = p.getFirst();
+            csig12 = p.getSecond();
         } else {
             //interpret s12A12 as distance
             r.setS12(s12A12);
 
-            double tau12 = s12A12 / (mB * (1 + mA1m1)),
-                    s = Math.sin(tau12),
-                    c = Math.cos(tau12);
+            double tau12 = s12A12 / (mB * (1 + mA1m1));
+            double s = Math.sin(tau12);
+            double c = Math.cos(tau12);
 
             //tau2 = tau1 + tau12
             b12 = -Geodesic.sinCosSeries(true, mStau1 * c + mCtau1 * s,
@@ -390,8 +394,8 @@ public class GeodesicLine {
                 //  1/10    829e3       22e6        1.5e6
                 //  1/5     157e6       3.8e9       280e6
 
-                double ssig2 = mSsig1 * csig12 + mCsig1 * ssig12,
-                        csig2 = mCsig1 * csig12 - mSsig1 * ssig12;
+                double ssig2 = mSsig1 * csig12 + mCsig1 * ssig12;
+                double csig2 = mCsig1 * csig12 - mSsig1 * ssig12;
                 b12 = Geodesic.sinCosSeries(true, ssig2, csig2, mC1a);
 
                 double serr = (1 + mA1m1) * (sig12 + (b12 - mB11)) - s12A12 / mB;
@@ -403,10 +407,14 @@ public class GeodesicLine {
             r.setA12(Math.toDegrees(sig12));
         }
 
-        double ssig2, csig2, sbet2, cbet2, salp2, calp2;
+        double ssig2 = mSsig1 * csig12 + mCsig1 * ssig12;
+        double csig2 = mCsig1 * csig12 - mSsig1 * ssig12;
+        double sbet2;
+        double cbet2;
+        double salp2;
+        double calp2;
         //sig2 = sig1 + sig12
-        ssig2 = mSsig1 * csig12 + mCsig1 * ssig12;
-        csig2 = mCsig1 * csig12 - mSsig1 * ssig12;
+
 
         double dn2 = Math.sqrt(1 + mK2 * GeoMath.sq(ssig2));
         if ((outmask & (GeodesicMask.DISTANCE | GeodesicMask.REDUCED_LENGTH |
@@ -419,7 +427,7 @@ public class GeodesicLine {
 
         //sin(bet2) = cos(alp0) * sin(sig2)
         sbet2 = mCalp0 * ssig2;
-        //alt: cbet2 = hypot(csig2, salp0 * ssig2);
+        //alt: cbet2 = hypot(csig2, salp0 * ssig2)
         cbet2 = GeoMath.hypot(mSalp0, mCalp0 * csig2);
         if (cbet2 == 0) {
             //i.e., salp0 = 0, csig2 = 0. Break the degeneracy in this case
@@ -440,16 +448,15 @@ public class GeodesicLine {
 
             //no need to normalize east or west going?
             //noinspection all
-            double somg2 = mSalp0 * ssig2,
-                    comg2 = csig2,
-                    e = GeoMath.copysign(1, mSalp0);
+            double somg2 = mSalp0 * ssig2;
+            double e = GeoMath.copysign(1, mSalp0);
 
             //omg12 = omg2 - omg1
             double omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0) ?
                     e * (sig12 - (Math.atan2(ssig2, csig2) - Math.atan2(mSsig1, mCsig1)) +
-                            (Math.atan2(e * somg2, comg2) - Math.atan2(e * mSomg1, mComg1))) :
-                    Math.atan2(somg2 * mComg1 - comg2 * mSomg1,
-                            comg2 * mComg1 + somg2 * mSomg1);
+                            (Math.atan2(e * somg2, csig2) - Math.atan2(e * mSomg1, mComg1))) :
+                    Math.atan2(somg2 * mComg1 - csig2 * mSomg1,
+                            csig2 * mComg1 + somg2 * mSomg1);
 
             double lam12 = omg12 + mA3c * (sig12 +
                     (Geodesic.sinCosSeries(true, ssig2, csig2, mC3a) - mB31));
@@ -467,9 +474,9 @@ public class GeodesicLine {
         }
 
         if ((outmask & (GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE)) != 0) {
-            double b22 = Geodesic.sinCosSeries(true, ssig2, csig2, mC2a),
-                    ab2 = (1 + mA2m1) * (b22 - mB21),
-                    j12 = (mA1m1 - mA2m1) * sig12 + (ab1 - ab2);
+            double b22 = Geodesic.sinCosSeries(true, ssig2, csig2, mC2a);
+            double ab2 = (1 + mA2m1) * (b22 - mB21);
+            double j12 = (mA1m1 - mA2m1) * sig12 + (ab1 - ab2);
             if ((outmask & GeodesicMask.REDUCED_LENGTH) != 0) {
                 //add parens around (mCsig1 * ssig2) and (mSsig1 * csig2) to ensure
                 //accurate cancellation in the case of coincident points
@@ -485,7 +492,8 @@ public class GeodesicLine {
 
         if ((outmask & GeodesicMask.AREA) != 0) {
             double b42 = Geodesic.sinCosSeries(false, ssig2, csig2, mC4a);
-            double salp12, calp12;
+            double salp12;
+            double calp12;
             if (mCalp0 == 0 || mSalp0 == 0) {
                 //alp12 = alp2 - alp1, used in atan2 so no need to normalize
                 salp12 = salp2 * mCalp1 - calp2 * mSalp1;
@@ -645,7 +653,8 @@ public class GeodesicLine {
      * @return <i>s13</i> if <i>arcmode</i> is false; <i>a13</i> if <i>arcmode</i> is true.
      */
     public double genDistance(boolean arcmode) {
-        return init() ? (arcmode ? mA13 : mS13) : Double.NaN;
+        double tmp = arcmode ? mA13 : mS13;
+        return init() ? tmp : Double.NaN;
     }
 
     /**
@@ -701,19 +710,18 @@ public class GeodesicLine {
         mSalp1 = salp1;
         mCalp1 = calp1;
 
-        double cbet1, sbet1;
-        {
-            Pair p = GeoMath.sincosd(GeoMath.angRound(mLat1));
-            sbet1 = mF1 * p.first;
-            cbet1 = p.second;
-        }
+        double cbet1;
+        double sbet1;
+
+        Pair p = GeoMath.sincosd(GeoMath.angRound(mLat1));
+        sbet1 = mF1 * p.getFirst();
+        cbet1 = p.getSecond();
 
         //ensure cbet1 = +epsilon at poles
-        {
-            Pair p = GeoMath.norm(sbet1, cbet1);
-            sbet1 = p.first;
-            cbet1 = Math.max(Geodesic.TINY, p.second);
-        }
+        p = GeoMath.norm(sbet1, cbet1);
+        sbet1 = p.getFirst();
+        cbet1 = Math.max(Geodesic.TINY, p.getSecond());
+
         mDn1 = Math.sqrt(1 + g.mEp2 * GeoMath.sq(sbet1));
 
         //evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -738,12 +746,11 @@ public class GeodesicLine {
         mSomg1 = mSalp0 * sbet1;
         mCsig1 = mComg1 = sbet1 != 0 || mCalp1 != 0 ? cbet1 * mCalp1 : 1;
 
-        {
-            Pair p = GeoMath.norm(mSsig1, mCsig1);
-            mSsig1 = p.first;
-            //sig 1 in (-pi, pi]
-            mCsig1 = p.second;
-        }
+        p = GeoMath.norm(mSsig1, mCsig1);
+        mSsig1 = p.getFirst();
+        //sig 1 in (-pi, pi]
+        mCsig1 = p.getSecond();
+
         //GeoMath.norm(mSomg1, mComg1); -- don't need to normalize!
 
         mK2 = GeoMath.sq(mCalp0) * g.mEp2;
@@ -754,12 +761,13 @@ public class GeodesicLine {
             mC1a = new double[NC1 + 1];
             Geodesic.c1f(eps, mC1a);
             mB11 = Geodesic.sinCosSeries(true, mSsig1, mCsig1, mC1a);
-            double s = Math.sin(mB11), c = Math.cos(mB11);
+            double s = Math.sin(mB11);
+            double c = Math.cos(mB11);
             //tau1 = sig1 + b11
             mStau1 = mSsig1 * c + mCsig1 * s;
             mCtau1 = mCsig1 * c - mSsig1 * s;
             //not necessary because c1pa rverts c1a
-            //mB11 = -sinCosSeries(true, mStau1, mCtau1, mC1pa, NC1P);
+            //mB11 = -sinCosSeries(true, mStau1, mCtau1, mC1pa, NC1P)
         }
 
         if ((mCaps & GeodesicMask.CAP_C1P) != 0) {

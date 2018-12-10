@@ -398,9 +398,12 @@ public class PolygonArea {
         lon1 = GeoMath.angNormalize(lon1);
         lon2 = GeoMath.angNormalize(lon2);
 
-        double lon12 = GeoMath.angDiff(lon1, lon2).first;
-        return lon1 <= 0 && lon2 > 0 && lon12 > 0 ?
-                1 : (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
+        double lon12 = GeoMath.angDiff(lon1, lon2).getFirst();
+        if (lon1 <= 0 && lon2 > 0 && lon12 > 0 ) {
+            return 1;
+        } else {
+            return lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0;
+        }
     }
 
     //an alternate version of transit to deal with longitudes in the direct problem.

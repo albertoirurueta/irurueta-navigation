@@ -24,17 +24,17 @@ public class PolygonResult {
     /**
      * The number of vertices in the polygon.
      */
-    public int num;
+    private int num;
 
     /**
      * The perimeter of the polygon or the length of the polyline (meters).
      */
-    public double perimeter;
+    private double perimeter;
 
     /**
      * The area of the polygon (meters<sup>2</sup>).
      */
-    public double area;
+    private double area;
 
     /**
      * Constructor.
@@ -46,6 +46,54 @@ public class PolygonResult {
     public PolygonResult(int num, double perimeter, double area) {
         this.num = num;
         this.perimeter = perimeter;
+        this.area = area;
+    }
+
+    /**
+     * Gets the number of vertices in the polygon.
+     * @return number of vertices in the polygon.
+     */
+    public int getNum() {
+        return num;
+    }
+
+    /**
+     * Sets the number of vertices in the polygon.
+     * @param num number of vertices in the polygon.
+     */
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    /**
+     * Gets the perimeter of the polygon or the length of the polyline (meters).
+     * @return the perimeter of the polygon or the length of the polyline.
+     */
+    public double getPerimeter() {
+        return perimeter;
+    }
+
+    /**
+     * Sets the perimeter of the polygon or the length of the polyline (meters).
+     * @param perimeter the perimeter of the polygon or the length of the polyline.
+     */
+    public void setPerimeter(double perimeter) {
+        this.perimeter = perimeter;
+    }
+
+    /**
+     * Gets the area of the polygon (meters<sup>2</sup>).
+     * @return area of the polygon.
+     */
+    public double getArea() {
+        return area;
+    }
+
+    /**
+     * Sets the area of the polygon (meters<sup>2</sup>).
+     * @param area area of the polygon.
+     */
+    public void setArea(double area) {
         this.area = area;
     }
 }

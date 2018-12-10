@@ -136,7 +136,7 @@ public class GeoMath {
      * @throws IllegalArgumentException if provided sinus and cosinus values have zero
      * norm.
      */
-    public static Pair norm(double sinx, double cosx) throws IllegalArgumentException {
+    public static Pair norm(double sinx, double cosx) {
         double r = hypot(sinx, cosx);
         if (r == 0.0) {
             throw new IllegalArgumentException();
@@ -245,8 +245,8 @@ public class GeoMath {
 
         //noinspection all
         Pair r = sum(angNormalize(-x), angNormalize(y));
-        d = angNormalize(r.first);
-        t = r.second;
+        d = angNormalize(r.getFirst());
+        t = r.getSecond();
 
         return sum(d == 180 && t > 0 ? -180 : d, t);
     }

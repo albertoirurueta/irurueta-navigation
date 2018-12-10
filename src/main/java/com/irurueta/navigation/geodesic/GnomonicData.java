@@ -32,42 +32,42 @@ public class GnomonicData {
     /**
      * Latitude of center point of projection (degrees).
      */
-    public double lat0;
+    private double lat0;
 
     /**
      * Longitude of center point of projection (degrees).
      */
-    public double lon0;
+    private double lon0;
 
     /**
      * Latitude of point (degrees).
      */
-    public double lat;
+    private double lat;
 
     /**
      * Longitude of point (degrees).
      */
-    public double lon;
+    private double lon;
 
     /**
      * Easting of point (meters).
      */
-    public double x;
+    private double x;
 
     /**
      * Northing of point (meters).
      */
-    public double y;
+    private double y;
 
     /**
-     * Aximuth of geodesic at point (degrees).
+     * Azimuth of geodesic at point (degrees).
      */
-    public double azi;
+    private double azi;
 
     /**
      * Reciprocal of azimuthal scale at point.
      */
-    public double rk;
+    private double rk;
 
     /**
      * Initialize all the fields to Double.NaN.
@@ -100,6 +100,134 @@ public class GnomonicData {
         this.x = x;
         this.y = y;
         this.azi = azi;
+        this.rk = rk;
+    }
+
+    /**
+     * Gets latitude of center point of projection (degrees).
+     * @return latitude of center point of projection.
+     */
+    public double getLat0() {
+        return lat0;
+    }
+
+    /**
+     * Sets latitude of center point of projection (degrees).
+     * @param lat0 latitude of center point of projection.
+     */
+    public void setLat0(double lat0) {
+        this.lat0 = lat0;
+    }
+
+    /**
+     * Gets longitude of center point of projection (degrees).
+     * @return longitude of center point of projection.
+     */
+    public double getLon0() {
+        return lon0;
+    }
+
+    /**
+     * Sets longitude of center point of projection (degrees).
+     * @param lon0 longitude of center point of projection.
+     */
+    public void setLon0(double lon0) {
+        this.lon0 = lon0;
+    }
+
+    /**
+     * Gets latitude of point (degrees).
+     * @return latitude of point.
+     */
+    public double getLat() {
+        return lat;
+    }
+
+    /**
+     * Sets latitude of point (degrees).
+     * @param lat latitude of point.
+     */
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    /**
+     * Gets longitude of point (degrees).
+     * @return longitude of point.
+     */
+    public double getLon() {
+        return lon;
+    }
+
+    /**
+     * Sets longitude of point (degrees).
+     * @param lon longitude of point.
+     */
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    /**
+     * Gets easting of point (meters).
+     * @return easting of point.
+     */
+    public double getX() {
+        return x;
+    }
+
+    /**
+     * Sets easting of point (meters).
+     * @param x easting of point.
+     */
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    /**
+     * Gets northing of point (meters).
+     * @return northing of point.
+     */
+    public double getY() {
+        return y;
+    }
+
+    /**
+     * Sets northing of point (meters).
+     * @param y northing of point.
+     */
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    /**
+     * Gets azimuth of geodesic at point (degrees).
+     * @return azimuth of geodesic at point.
+     */
+    public double getAzi() {
+        return azi;
+    }
+
+    /**
+     * Sets azimuth of geodesic at point (degrees).
+     * @param azi azimuth of geodesic at point.
+     */
+    public void setAzi(double azi) {
+        this.azi = azi;
+    }
+
+    /**
+     * Gets reciprocal of azimuthal scale at point.
+     * @return reciprocal of azimuthal scale at point.
+     */
+    public double getRk() {
+        return rk;
+    }
+
+    /**
+     * Sets reciprocal of azimuthal scale at point.
+     * @param rk reciprocal of azimuthal scale at point.
+     */
+    public void setRk(double rk) {
         this.rk = rk;
     }
 }

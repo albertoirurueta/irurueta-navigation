@@ -17,6 +17,8 @@ package com.irurueta.navigation.geodesic;
 
 import org.junit.*;
 
+import java.util.Random;
+
 import static org.junit.Assert.assertEquals;
 
 public class GnomonicDataTest {
@@ -41,27 +43,147 @@ public class GnomonicDataTest {
         GnomonicData data = new GnomonicData();
 
         //check getters
-        assertEquals(data.lat0, Double.NaN, 0.0);
-        assertEquals(data.lon0, Double.NaN, 0.0);
-        assertEquals(data.lat, Double.NaN, 0.0);
-        assertEquals(data.lon, Double.NaN, 0.0);
-        assertEquals(data.x, Double.NaN, 0.0);
-        assertEquals(data.y, Double.NaN, 0.0);
-        assertEquals(data.azi, Double.NaN, 0.0);
-        assertEquals(data.rk, Double.NaN, 0.0);
+        assertEquals(data.getLat0(), Double.NaN, 0.0);
+        assertEquals(data.getLon0(), Double.NaN, 0.0);
+        assertEquals(data.getLat(), Double.NaN, 0.0);
+        assertEquals(data.getLon(), Double.NaN, 0.0);
+        assertEquals(data.getX(), Double.NaN, 0.0);
+        assertEquals(data.getY(), Double.NaN, 0.0);
+        assertEquals(data.getAzi(), Double.NaN, 0.0);
+        assertEquals(data.getRk(), Double.NaN, 0.0);
 
 
         //constructor with values
         data = new GnomonicData(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0);
 
         //check getters
-        assertEquals(data.lat0, 0.0, 0.0);
-        assertEquals(data.lon0, 1.0, 0.0);
-        assertEquals(data.lat, 2.0, 0.0);
-        assertEquals(data.lon, 3.0, 0.0);
-        assertEquals(data.x, 4.0, 0.0);
-        assertEquals(data.y, 5.0, 0.0);
-        assertEquals(data.azi, 6.0, 0.0);
-        assertEquals(data.rk, 7.0, 0.0);
+        assertEquals(data.getLat0(), 0.0, 0.0);
+        assertEquals(data.getLon0(), 1.0, 0.0);
+        assertEquals(data.getLat(), 2.0, 0.0);
+        assertEquals(data.getLon(), 3.0, 0.0);
+        assertEquals(data.getX(), 4.0, 0.0);
+        assertEquals(data.getY(), 5.0, 0.0);
+        assertEquals(data.getAzi(), 6.0, 0.0);
+        assertEquals(data.getRk(), 7.0, 0.0);
+    }
+
+    @Test
+    public void testGetSetLat0() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getLat0(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setLat0(value);
+
+        //check
+        assertEquals(data.getLat0(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetLon0() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getLon0(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setLon0(value);
+
+        //check
+        assertEquals(data.getLon0(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetLat() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getLat(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setLat(value);
+
+        //check
+        assertEquals(data.getLat(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetLon() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getLon(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setLon(value);
+
+        //check
+        assertEquals(data.getLon(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetX() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getX(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setX(value);
+
+        //check
+        assertEquals(data.getX(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetY() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getY(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setY(value);
+
+        //check
+        assertEquals(data.getY(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetAzi() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getAzi(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setAzi(value);
+
+        //check
+        assertEquals(data.getAzi(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRk() {
+        GnomonicData data = new GnomonicData();
+
+        //check default value
+        assertEquals(data.getRk(), Double.NaN, 0.0);
+
+        //set new value
+        double value = new Random().nextDouble();
+        data.setRk(value);
+
+        //check
+        assertEquals(data.getRk(), value, 0.0);
     }
 }

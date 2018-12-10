@@ -520,8 +520,8 @@ public class Geodesic {
 
         //Guard against underflow in salp0. Also -0 is converted to +0.
         Pair p = GeoMath.sincosd(GeoMath.angRound(azi1));
-        salp1 = p.first;
-        calp1 = p.second;
+        salp1 = p.getFirst();
+        calp1 = p.getSecond();
 
         //Automatically supply DISTANCE_IN if necessary
         if (!arcmode) {
@@ -1087,8 +1087,10 @@ public class Geodesic {
 
         //Compute longitude difference (angDiff does this carefully). Result is in [-180, 180] but
         //-180 is only for west-going geodesics. 180 is for east-going and meridional geodesics.
-        r.setLat1(lat1 = GeoMath.latFix(lat1));
-        r.setLat2(lat2 = GeoMath.latFix(lat2));
+        lat1 = GeoMath.latFix(lat1);
+        lat2 = GeoMath.latFix(lat2);
+        r.setLat1(lat1);
+        r.setLat2(lat2);
 
         //if really close to the equator, treat as on equator
         lat1 = GeoMath.angRound(lat1);
@@ -1098,8 +1100,8 @@ public class Geodesic {
         double lon12s;
 
         Pair p = GeoMath.angDiff(lon1, lon2);
-        lon12 = p.first;
-        lon12s = p.second;
+        lon12 = p.getFirst();
+        lon12s = p.getSecond();
 
         if ((outmask & GeodesicMask.LONG_UNROLL) != 0) {
             r.setLon1(lon1);
@@ -1120,8 +1122,8 @@ public class Geodesic {
         double clam12;
 
         p = GeoMath.sincosd(lon12 > 90 ? lon12s : lon12);
-        slam12 = p.first;
-        clam12 = (lon12 > 90 ? -1 : 1) * p.second;
+        slam12 = p.getFirst();
+        clam12 = (lon12 > 90 ? -1 : 1) * p.getSecond();
 
         //swap points so that point with higher (abs) latitude is point 1
         //if one latitude is a nan, then it becomes lat1
@@ -1157,25 +1159,25 @@ public class Geodesic {
         s12x = m12x = Double.NaN;
 
         p = GeoMath.sincosd(lat1);
-        sbet1 = mF1 * p.first;
-        cbet1 = p.second;
+        sbet1 = mF1 * p.getFirst();
+        cbet1 = p.getSecond();
 
         //ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12 will be <= 2*tiny
         //for two points at the same pole.
         p = GeoMath.norm(sbet1, cbet1);
-        sbet1 = p.first;
-        cbet1 = p.second;
+        sbet1 = p.getFirst();
+        cbet1 = p.getSecond();
 
         cbet1 = Math.max(TINY, cbet1);
 
         p = GeoMath.sincosd(lat2);
-        sbet2 = mF1 * p.first;
-        cbet2 = p.second;
+        sbet2 = mF1 * p.getFirst();
+        cbet2 = p.getSecond();
 
         //ensure cbet2 = +epsilon at poles
         p = GeoMath.norm(sbet2, cbet2);
-        sbet2 = p.first;
-        cbet2 = p.second;
+        sbet2 = p.getFirst();
+        cbet2 = p.getSecond();
 
         cbet2 = Math.max(TINY, cbet2);
 
@@ -1376,8 +1378,8 @@ public class Geodesic {
                             salp1 = nsalp1;
 
                             p = GeoMath.norm(salp1, calp1);
-                            salp1 = p.first;
-                            calp1 = p.second;
+                            salp1 = p.getFirst();
+                            calp1 = p.getSecond();
 
                             //in some regimes we don't get quadratic convergence because
                             //slope -> 0. So use convergence conditions based on epsilon
@@ -1398,8 +1400,8 @@ public class Geodesic {
                     calp1 = (calp1a + calp1b) / 2;
 
                     p = GeoMath.norm(salp1, calp1);
-                    salp1 = p.first;
-                    calp1 = p.second;
+                    salp1 = p.getFirst();
+                    calp1 = p.getSecond();
 
                     tripn = false;
                     tripb = (Math.abs(salp1a - salp1) + (calp1a - calp1) < TOLB ||
@@ -1461,12 +1463,12 @@ public class Geodesic {
                 double a4 = GeoMath.sq(mA) * calp0 * salp0 * mE2;
 
                 p = GeoMath.norm(ssig1, csig1);
-                ssig1 = p.first;
-                csig1 = p.second;
+                ssig1 = p.getFirst();
+                csig1 = p.getSecond();
 
                 p = GeoMath.norm(ssig2, csig2);
-                ssig2 = p.first;
-                csig2 = p.second;
+                ssig2 = p.getFirst();
+                csig2 = p.getSecond();
 
                 double[] c4a = new double[NC4];
                 c4f(eps, c4a);
@@ -1488,13 +1490,15 @@ public class Geodesic {
             if (!meridian && comg12 > -0.7071 && sbet2 - sbet1 < 1.75) {
                 //use tan(gamma/2) = tan(omg12/2) * (tan(bet1/2)+tan(bet2/2))/
                 //(1+tan(bet1/2)*tan(bet2/2)) with tan(x/2) = sin(x)/(1 + cos(x))
-                double domg12 = 1 + comg12, dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
+                double domg12 = 1 + comg12;
+                double dbet1 = 1 + cbet1;
+                double dbet2 = 1 + cbet2;
                 alp12 = 2 * Math.atan2(somg12 * (sbet1 * dbet2 + sbet2 * dbet1),
                         domg12 * (sbet1 * sbet2 + dbet1 * dbet2));
             } else {
                 //alp12 = alp2 - alp1, used in atan2 so no need to normalize
-                double salp12 = salp2 * calp1 - calp2 * salp1,
-                        calp12 = calp2 * calp1 + salp2 * salp1;
+                double salp12 = salp2 * calp1 - calp2 * salp1;
+                double calp12 = calp2 * calp1 + salp2 * salp1;
 
                 //the right thing appears to happed if alp1 = +/-180 and alp2 = 0, viz
                 //salp12 = -0 and alp12 = -180. However this depends on the sign
@@ -1515,18 +1519,16 @@ public class Geodesic {
 
         //convert calp, salp to azimuth accounting for lonsign, swapp, latsign
         if (swapp < 0) {
-            {
-                double t = salp1;
-                salp1 = salp2;
-                salp2 = t;
-            }
-            {
-                double t = calp1;
-                calp1 = calp2;
-                calp2 = t;
-            }
+            double t = salp1;
+            salp1 = salp2;
+            salp2 = t;
+
+            t = calp1;
+            calp1 = calp2;
+            calp2 = t;
+
             if ((outmask & GeodesicMask.GEODESIC_SCALE) != 0) {
-                double t = r.getScaleM12();
+                t = r.getScaleM12();
                 r.setScaleM12(r.getScaleM21());
                 r.setScaleM21(t);
             }
@@ -1572,7 +1574,10 @@ public class Geodesic {
         //to hold s12b, m12b, m0, M12, M21
         LengthsV v = new LengthsV();
 
-        double m0x = 0, j12 = 0, a1 = 0, a2 = 0;
+        double m0x = 0;
+        double j12 = 0;
+        double a1 = 0;
+        double a2 = 0;
         if ((outmask & (GeodesicMask.DISTANCE | GeodesicMask.REDUCED_LENGTH |
                 GeodesicMask.GEODESIC_SCALE)) != 0) {
             a1 = a1m1f(eps);
@@ -1626,18 +1631,21 @@ public class Geodesic {
         //solve k^4 + 2 * k^3 - (x^2 + y^2 - 1) * k^2 - 2 * y^2 * k - y^2 = 0 for positive root k.
         //this solution is adapted from Geocentric.reverse
         double k;
+        double p = GeoMath.sq(x);
         //noinspection all
-        double p = GeoMath.sq(x), q = GeoMath.sq(y), r = (p + q - 1) / 6;
+        double q = GeoMath.sq(y);
+        double r = (p + q - 1) / 6;
 
         if (!(q == 0 && r <= 0)) {
             //avoid possible division by zero when r = 0 by multiplying equations for s and t by
             //r^3 and r, resp.
 
             //s = r^3 * s
-            double  s = p * q / 4, r2 = GeoMath.sq(r), r3 = r * r2,
-                    //the discriminant of the quadratic equation for T3. This is zero on the
-                    //evolute curve p^(1/3) + q^(1/3) = 1
-                    disc = s * (s + 2 * r3);
+            double  s = p * q / 4;
+            double r2 = GeoMath.sq(r), r3 = r * r2;
+            //the discriminant of the quadratic equation for T3. This is zero on the
+            //evolute curve p^(1/3) + q^(1/3) = 1
+            double disc = s * (s + 2 * r3);
             double u = r;
             if (disc >= 0) {
                 double t3 = s + r3;
@@ -1664,12 +1672,12 @@ public class Geodesic {
             }
 
             //guaranteed positive
-            double v = Math.sqrt(GeoMath.sq(u) + q),
-                    //avoid loss of accuracy when u < 0
-                    //u + v, guardanteed positive
-                    uv = u < 0 ? q / (v - u) : u + v,
-                    //positive?
-                    w = (uv - q) / (2 * v);
+            double v = Math.sqrt(GeoMath.sq(u) + q);
+            //avoid loss of accuracy when u < 0
+            //u + v, guaranteed positive
+            double uv = u < 0 ? q / (v - u) : u + v;
+            //positive?
+            double w = (uv - q) / (2 * v);
 
             //rearrange expression for k to avoid loss of accuracy due to subtraction. Division
             //by 0 not possible because uv > 0, w >= 0
@@ -1701,12 +1709,13 @@ public class Geodesic {
         w.mSig12 = -1;
 
         //bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
-        double sbet12 = sbet2 * cbet1 - cbet2 * sbet1,
-                cbet12 = cbet2 * cbet1 + sbet2 * sbet1;
+        double sbet12 = sbet2 * cbet1 - cbet2 * sbet1;
+        double cbet12 = cbet2 * cbet1 + sbet2 * sbet1;
         double sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
         boolean shortline = cbet12 >= 0 && sbet12 < 0.5 &&
                 cbet2 * lam12 < 0.5;
-        double somg12, comg12;
+        double somg12;
+        double comg12;
         if (shortline) {
             double sbetm2 = GeoMath.sq(sbet1 + sbet2);
 
@@ -1727,19 +1736,18 @@ public class Geodesic {
                 sbet12 + cbet2 * sbet1 * GeoMath.sq(somg12) / (1 + comg12) :
                 sbet12a - cbet2 * sbet1 * GeoMath.sq(somg12) / (1 - comg12);
 
-        double ssig12 = GeoMath.hypot(w.mSalp1, w.mCalp1),
-                csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
+        double ssig12 = GeoMath.hypot(w.mSalp1, w.mCalp1);
+        double csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
 
         if (shortline && ssig12 < mEtol2) {
             //really short lines
             w.mSalp2 = cbet1 * somg12;
             w.mCalp2 = sbet12 - cbet1 * sbet2 * (comg12 >= 0 ?
                     GeoMath.sq(somg12) / (1 + comg12) : 1 - comg12);
-            {
-                Pair p = GeoMath.norm(w.mSalp2, w.mCalp2);
-                w.mSalp2 = p.first;
-                w.mCalp2 = p.second;
-            }
+
+            Pair p = GeoMath.norm(w.mSalp2, w.mCalp2);
+            w.mSalp2 = p.getFirst();
+            w.mCalp2 = p.getSecond();
 
             //set return value
             w.mSig12 = Math.atan2(ssig12, csig12);
@@ -1747,7 +1755,9 @@ public class Geodesic {
         } else if (!(Math.abs(mN) > 0.1 || csig12 >= 0 || ssig12 >= 6 * Math.abs(mN) * Math.PI * GeoMath.sq(cbet1))) {
             //scale lam12 and bet2 to x, y coordinate system where antipodal point is at origin and
             //singular point is at y = 0, x = -1
-            double y, lamscale, betscale;
+            double y;
+            double lamscale;
+            double betscale;
 
             //In C++ volatile declaration needed to fix inverse case
             //56.320923501171 0 -56.320923501171 179.664747671772880215
@@ -1758,11 +1768,10 @@ public class Geodesic {
                 //in fact f == 0 does not get here
 
                 //x = dlong, y = dlat
-                {
-                    double k2 = GeoMath.sq(sbet1) * mEp2,
-                            eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
-                    lamscale = mF * cbet1 * a3f(eps) * Math.PI;
-                }
+                double k2 = GeoMath.sq(sbet1) * mEp2;
+                double eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
+                lamscale = mF * cbet1 * a3f(eps) * Math.PI;
+
                 betscale = lamscale * cbet1;
 
                 x = lam12x / lamscale;
@@ -1770,9 +1779,10 @@ public class Geodesic {
             } else {
                 //mF < 0
                 //x = dlat, y = dlong
-                double cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
-                        bet12a = Math.atan2(sbet12a, cbet12a);
-                double m12b, m0;
+                double cbet12a = cbet2 * cbet1 - sbet2 * sbet1;
+                double bet12a = Math.atan2(sbet12a, cbet12a);
+                double m12b;
+                double m0;
 
                 //in the case of lon12 = 180, this repeats a calculation made in inverse
                 LengthsV v = lengths(mN, Math.PI + bet12a, sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
@@ -1830,7 +1840,7 @@ public class Geodesic {
 
                 //Because omg12 is near pi, estimate work with omg12a = pi - omg12
                 double k = astroid(x, y);
-                double omg12a = lamscale * (mF >= 0 ? -x * k / (1 + k) : -y * (1 + k) / k);
+                double omg12a = lamscale * (mF >= 0.0 ? -x * k / (1.0 + k) : -y * (1 + k) / k);
                 somg12 = Math.sin(omg12a);
                 comg12 = -Math.cos(omg12a);
 
@@ -1841,12 +1851,10 @@ public class Geodesic {
         }
 
         //sanity check on starting guess. Backwards check allows NaN through
-        if (!(w.mSalp1 <= 0)) {
-            {
-                Pair p = GeoMath.norm(w.mSalp1, w.mCalp1);
-                w.mSalp1 = p.first;
-                w.mCalp1 = p.second;
-            }
+        if (!(w.mSalp1 <= 0.0)) {
+            Pair p = GeoMath.norm(w.mSalp1, w.mCalp1);
+            w.mSalp1 = p.getFirst();
+            w.mCalp1 = p.getSecond();
         } else {
             w.mSalp1 = 1;
             w.mCalp1 = 0;
@@ -1870,21 +1878,26 @@ public class Geodesic {
         }
 
         //sin(alp1) * cos(bet1) = sin(alp0)
-        double salp0 = salp1 * cbet1,
-                //calp0 > 0
-                calp0 = GeoMath.hypot(calp1, salp1 * sbet1);
+        double salp0 = salp1 * cbet1;
+        //calp0 > 0
+        double calp0 = GeoMath.hypot(calp1, salp1 * sbet1);
 
-        double somg1, comg1, somg2, comg2, somg12, comg12;
+        double somg1;
+        double comg1;
+        double somg2;
+        double comg2;
+        double somg12;
+        double comg12;
         //tan(bet1) = tan(sig1) * cos(alp1)
         //tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1) = tan(alp1) * sin(bet1)
         w.mSsig1 = sbet1;
         somg1 = salp0 * sbet1;
         w.mCsig1 = comg1 = calp1 * cbet1;
-        {
-            Pair p = GeoMath.norm(w.mSsig1, w.mCsig1);
-            w.mSsig1 = p.first;
-            w.mCsig1 = p.second;
-        }
+
+        Pair p = GeoMath.norm(w.mSsig1, w.mCsig1);
+        w.mSsig1 = p.getFirst();
+        w.mCsig1 = p.getSecond();
+
         //GeoMath.norm(somg1, comg1); -- don't need to normalize!
 
         //Enforce symmetries in the case abs(bet2) = -bet1. Need to be careful about this case,
@@ -1895,22 +1908,21 @@ public class Geodesic {
         //      = sqrt(sq(calp0) - sq(sbet2)) / cbet2
         //and subst for calp0 and rearrange to give (choose positive sqrt
         //to give alp2 in [0, pi/2]).
+        double tmp = (cbet1 < -sbet1 ? (cbet2 - cbet1) * (cbet1 + cbet2) :
+                (sbet1 - sbet2) * (sbet1 + sbet2));
         w.mCalp2 = cbet2 != cbet1 || Math.abs(sbet2) != -sbet1 ?
-                Math.sqrt(GeoMath.sq(calp1 * cbet1) +
-                        (cbet1 < -sbet1 ?
-                                (cbet2 - cbet1) * (cbet1 + cbet2) :
-                                (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
+                Math.sqrt(GeoMath.sq(calp1 * cbet1) + tmp) / cbet2 :
                 Math.abs(calp1);
         //tan(bet2) = tan(sig2) * cos(alp2)
         //tan(omg2) = sin(alp0) * tan(sig2)
         w.mSsig2 = sbet2;
         somg2 = salp0 * sbet2;
         w.mCsig2 = comg2 = w.mCalp2 * cbet2;
-        {
-            Pair p = GeoMath.norm(w.mSsig2, w.mCsig2);
-            w.mSsig2 = p.first;
-            w.mCsig2 = p.second;
-        }
+
+        p = GeoMath.norm(w.mSsig2, w.mCsig2);
+        w.mSsig2 = p.getFirst();
+        w.mCsig2 = p.getSecond();
+
         //GeoMath.norm(somg2, comg2); -- don't need to normalize!
 
         //sig12 = sig2 - sig1, limit to [0, pi]

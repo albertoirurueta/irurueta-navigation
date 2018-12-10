@@ -96,13 +96,12 @@ public class Accumulator {
 
         //accumulate starting at least significant end
         Pair r = GeoMath.sum(y, mT);
-        y = r.first;
-        u = r.second;
+        y = r.getFirst();
+        u = r.getSecond();
 
-        //Pair r = GeoMath.sum(y, mS);
         r = GeoMath.sum(y, mS);
-        mS = r.first;
-        mT = r.second;
+        mS = r.getFirst();
+        mT = r.getSecond();
 
         //Start is mS, mT decreasing and non-adjacent. Sum is now (s + t + u) exactly with s, t, u
         //non-adjacent and in decreasing order (except for possible zeros). The following code tries

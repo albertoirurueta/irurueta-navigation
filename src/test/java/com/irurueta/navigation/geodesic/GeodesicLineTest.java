@@ -61,11 +61,11 @@ public class GeodesicLineTest {
         Pair p1 = GeoMath.sincosd(GeoMath.angRound(GeoMath.angNormalize(data1.getAzi1())));
         Pair p2 = line.getAzimuthCosines();
 
-        assertEquals(p1.first, p2.first, ABSOLUTE_ERROR);
-        assertEquals(p1.second, p2.second, ABSOLUTE_ERROR);
+        assertEquals(p1.getFirst(), p2.getFirst(), ABSOLUTE_ERROR);
+        assertEquals(p1.getSecond(), p2.getSecond(), ABSOLUTE_ERROR);
 
         Pair p = line.getEquatorialAzimuthCosines();
-        assertEquals(line.getEquatorialAzimuth(), GeoMath.atan2d(p.first, p.second),
+        assertEquals(line.getEquatorialAzimuth(), GeoMath.atan2d(p.getFirst(), p.getSecond()),
                 ABSOLUTE_ERROR);
 
         assertNotEquals(line.getEquatorialArc(), Double.NaN);

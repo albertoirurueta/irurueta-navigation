@@ -24,12 +24,12 @@ public class Pair {
     /**
      * The first member of the pair.
      */
-    public double first;
+    private double first;
 
     /**
      * The second member of the pair.
      */
-    public double second;
+    private double second;
 
     /**
      * Constructor.
@@ -38,6 +38,38 @@ public class Pair {
      */
     public Pair(double first, double second) {
         this.first = first;
+        this.second = second;
+    }
+
+    /**
+     * Gets the first member of the pair.
+     * @return first member of the pair.
+     */
+    public double getFirst() {
+        return first;
+    }
+
+    /**
+     * Sets the first member of the pair.
+     * @param first first member of the pair.
+     */
+    public void setFirst(double first) {
+        this.first = first;
+    }
+
+    /**
+     * Gets the second member of the pair.
+     * @return second member of the pair.
+     */
+    public double getSecond() {
+        return second;
+    }
+
+    /**
+     * Sets the second member of the pair.
+     * @param second second member of the pair.
+     */
+    public void setSecond(double second) {
         this.second = second;
     }
 }

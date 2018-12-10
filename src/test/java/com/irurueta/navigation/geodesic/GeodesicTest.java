@@ -967,26 +967,26 @@ public class GeodesicTest {
         // Check fix for pole-encircling bug found 2011-03-16
         double[][] pa = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
         PolygonResult a = Planimeter(pa);
-        assertEquals(a.perimeter, 631819.8745, 1e-4);
-        assertEquals(a.area, 24952305678.0, 1);
+        assertEquals(a.getPerimeter(), 631819.8745, 1e-4);
+        assertEquals(a.getArea(), 24952305678.0, 1);
 
         double[][] pb = {{-89, 0}, {-89, 90}, {-89, 180}, {-89, 270}};
         a = Planimeter(pb);
-        assertEquals(a.perimeter, 631819.8745, 1e-4);
-        assertEquals(a.area, -24952305678.0, 1);
+        assertEquals(a.getPerimeter(), 631819.8745, 1e-4);
+        assertEquals(a.getArea(), -24952305678.0, 1);
 
         double[][] pc = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
         a = Planimeter(pc);
-        assertEquals(a.perimeter, 627598.2731, 1e-4);
-        assertEquals(a.area, 24619419146.0, 1);
+        assertEquals(a.getPerimeter(), 627598.2731, 1e-4);
+        assertEquals(a.getArea(), 24619419146.0, 1);
 
         double[][] pd = {{90, 0}, {0, 0}, {0, 90}};
         a = Planimeter(pd);
-        assertEquals(a.perimeter, 30022685, 1);
-        assertEquals(a.area, 63758202715511.0, 1);
+        assertEquals(a.getPerimeter(), 30022685, 1);
+        assertEquals(a.getArea(), 63758202715511.0, 1);
         a = polyLength(pd);
-        assertEquals(a.perimeter, 20020719, 1);
-        assertTrue(isNaN(a.area));
+        assertEquals(a.getPerimeter(), 20020719, 1);
+        assertTrue(isNaN(a.getArea()));
     }
 
     @Test
@@ -994,8 +994,8 @@ public class GeodesicTest {
         // Check fix for Planimeter pole crossing bug found 2011-06-24
         double[][] points = {{89, 0.1}, {89, 90.1}, {89, -179.9}};
         PolygonResult a = Planimeter(points);
-        assertEquals(a.perimeter, 539297, 1);
-        assertEquals(a.area, 12476152838.5, 1);
+        assertEquals(a.getPerimeter(), 539297, 1);
+        assertEquals(a.getArea(), 12476152838.5, 1);
     }
 
     @Test
@@ -1003,20 +1003,20 @@ public class GeodesicTest {
         // Check fix for Planimeter lon12 rounding bug found 2012-12-03
         double[][] pa = {{9, -0.00000000000001}, {9, 180}, {9, 0}};
         PolygonResult a = Planimeter(pa);
-        assertEquals(a.perimeter, 36026861, 1);
-        assertEquals(a.area, 0, 1);
+        assertEquals(a.getPerimeter(), 36026861, 1);
+        assertEquals(a.getArea(), 0, 1);
         double[][] pb = {{9, 0.00000000000001}, {9, 0}, {9, 180}};
         a = Planimeter(pb);
-        assertEquals(a.perimeter, 36026861, 1);
-        assertEquals(a.area, 0, 1);
+        assertEquals(a.getPerimeter(), 36026861, 1);
+        assertEquals(a.getArea(), 0, 1);
         double[][] pc = {{9, 0.00000000000001}, {9, 180}, {9, 0}};
         a = Planimeter(pc);
-        assertEquals(a.perimeter, 36026861, 1);
-        assertEquals(a.area, 0, 1);
+        assertEquals(a.getPerimeter(), 36026861, 1);
+        assertEquals(a.getArea(), 0, 1);
         double[][] pd = {{9, -0.00000000000001}, {9, 0}, {9, 180}};
         a = Planimeter(pd);
-        assertEquals(a.perimeter, 36026861, 1);
-        assertEquals(a.area, 0, 1);
+        assertEquals(a.getPerimeter(), 36026861, 1);
+        assertEquals(a.getArea(), 0, 1);
     }
 
     @Test
@@ -1024,8 +1024,8 @@ public class GeodesicTest {
         // Area of arctic circle (not really -- adjunct to rhumb-area test)
         double[][] points = {{66.562222222, 0}, {66.562222222, 180}};
         PolygonResult a = Planimeter(points);
-        assertEquals(a.perimeter, 10465729, 1);
-        assertEquals(a.area, 0, 1);
+        assertEquals(a.getPerimeter(), 10465729, 1);
+        assertEquals(a.getArea(), 0, 1);
     }
 
     @Test
@@ -1034,8 +1034,8 @@ public class GeodesicTest {
         double[][] points = {{89, -360}, {89, -240}, {89, -120},
                 {89, 0}, {89, 120}, {89, 240}};
         PolygonResult a =  Planimeter(points);
-        assertEquals(a.perimeter, 1160741, 1);
-        assertEquals(a.area, 32415230256.0, 1);
+        assertEquals(a.getPerimeter(), 1160741, 1);
+        assertEquals(a.getArea(), 32415230256.0, 1);
     }
 
     private static boolean isNaN(double x) {

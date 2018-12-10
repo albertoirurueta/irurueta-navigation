@@ -165,8 +165,8 @@ public class Gnomonic {
         if (inv.getScaleM12() > 0) {
             double rho = inv.getM12() / inv.getScaleM12();
             Pair p = GeoMath.sincosd(inv.getAzi1());
-            fwd.x = rho * p.first;
-            fwd.y = rho * p.second;
+            fwd.setX(rho * p.getFirst());
+            fwd.setY(rho * p.getSecond());
         }
 
         return fwd;
@@ -210,7 +210,8 @@ public class Gnomonic {
                 GeodesicMask.LONGITUDE | GeodesicMask.AZIMUTH | GeodesicMask.DISTANCE_IN |
                 GeodesicMask.REDUCED_LENGTH | GeodesicMask.GEODESIC_SCALE);
 
-        int count = NUMIT, trip = 0;
+        int count = NUMIT;
+        int trip = 0;
         GeodesicData pos = null;
 
         while(count-- > 0) {
@@ -235,10 +236,10 @@ public class Gnomonic {
             return rev;
         }
 
-        rev.lat = pos.getLat2();
-        rev.lon = pos.getLon2();
-        rev.azi = pos.getAzi2();
-        rev.rk = pos.getScaleM12();
+        rev.setLat(pos.getLat2());
+        rev.setLon(pos.getLon2());
+        rev.setAzi(pos.getAzi2());
+        rev.setRk(pos.getScaleM12());
 
         return rev;
     }

@@ -76,12 +76,12 @@ public class GeodesicData {
     /**
      * Geodesic scale of point 2 relative to point 1 (dimensionless).
      */
-    public double scaleM12;
+    private double scaleM12;
 
     /**
      * Geodesic scale of point 1 relative to point 2 (dimensionless).
      */
-    public double scaleM21;
+    private double scaleM21;
 
     /**
      * Area under the geodesic (meters<sup>2</sup>).

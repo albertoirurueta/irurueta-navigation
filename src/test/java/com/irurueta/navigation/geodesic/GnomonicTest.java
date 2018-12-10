@@ -60,16 +60,16 @@ public class GnomonicTest {
         double lon2 = 2.176861;
 
         GnomonicData data1 = g.forward(lat1, lon1, lat2, lon2);
-        GnomonicData data2 = g.reverse(data1.lat0, data1.lon0, data1.x, data1.y);
+        GnomonicData data2 = g.reverse(data1.getLat0(), data1.getLon0(), data1.getX(), data1.getY());
 
-        assertEquals(data1.lat0, lat1, 0.0);
-        assertEquals(data1.lon0, lon1, 0.0);
-        assertEquals(data1.lat, lat2, 0.0);
-        assertEquals(data1.lon, lon2, 0.0);
+        assertEquals(data1.getLat0(), lat1, 0.0);
+        assertEquals(data1.getLon0(), lon1, 0.0);
+        assertEquals(data1.getLat(), lat2, 0.0);
+        assertEquals(data1.getLon(), lon2, 0.0);
 
-        assertEquals(data2.lat0, lat1, 0.0);
-        assertEquals(data2.lon0, lon1, 0.0);
-        assertEquals(data2.lat, lat2, ABSOLUTE_ERROR);
-        assertEquals(data2.lon, lon2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLat0(), lat1, 0.0);
+        assertEquals(data2.getLon0(), lon1, 0.0);
+        assertEquals(data2.getLat(), lat2, ABSOLUTE_ERROR);
+        assertEquals(data2.getLon(), lon2, ABSOLUTE_ERROR);
     }
 }
