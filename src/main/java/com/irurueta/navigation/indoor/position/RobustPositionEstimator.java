@@ -259,8 +259,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException if this solver is locked because an estimation is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    public void setProgressDelta(float progressDelta) throws LockedException {
         mTrilaterationSolver.setProgressDelta(progressDelta);
     }
 
@@ -284,8 +283,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException if solver is locked because an estimation is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    public void setConfidence(double confidence) throws LockedException {
         mTrilaterationSolver.setConfidence(confidence);
     }
 
@@ -308,8 +306,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * @throws LockedException if this estimator is locked because an estimation is being
      * computed.
      */
-    public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         mTrilaterationSolver.setMaxIterations(maxIterations);
     }
 
@@ -423,8 +420,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * @throws LockedException if robust solver is locked because an
      * estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException { }
+    public void setQualityScores(double[] qualityScores) throws LockedException { }
 
     /**
      * Gets estimated covariance of estimated position if available.
@@ -483,8 +479,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * @throws IllegalArgumentException if provided value is null or the number of provided sources is less
      * than the required minimum.
      */
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources)
-            throws IllegalArgumentException {
+    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
         if (sources == null) {
             throw new IllegalArgumentException();
         }
@@ -504,8 +499,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }

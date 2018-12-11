@@ -70,8 +70,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator2D(
-            List<? extends RssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -94,8 +93,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      */
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
-            RssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -119,8 +117,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      */
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition)
-            throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -131,7 +128,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator2D(Point2D initialPosition,
-                                      RssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
     }
 
@@ -148,8 +145,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -176,8 +172,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      */
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -208,8 +203,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -227,8 +221,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      */
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -241,7 +234,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      *                                (expressed in dBm's)
      */
     public RssiRadioSourceEstimator2D(Point2D initialPosition,
-                                      Double initialTransmittedPowerdBm) {
+            Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -255,8 +248,8 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RssiRadioSourceEstimator2D(Point2D initialPosition,
-                                      Double initialTransmittedPowerdBm,
-                                      RssiRadioSourceEstimatorListener<S, Point2D> listener) {
+            Double initialTransmittedPowerdBm,
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -276,8 +269,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
     }
@@ -298,8 +290,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
     public RssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -356,8 +347,7 @@ public class RssiRadioSourceEstimator2D<S extends RadioSource> extends
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }

@@ -92,7 +92,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(sources);
@@ -118,7 +118,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(fingerprint);
@@ -147,7 +147,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(sources, fingerprint);
@@ -199,7 +199,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(
             List<? extends RadioSourceLocated<Point2D>> sources,
             RobustPositionEstimatorListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(sources, listener);
@@ -227,7 +227,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             RobustPositionEstimatorListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(fingerprint, listener);
@@ -258,7 +258,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
             List<? extends RadioSourceLocated<Point2D>> source,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             RobustPositionEstimatorListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(source, fingerprint,
@@ -319,7 +319,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(sources);
@@ -351,7 +351,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(fingerprint);
@@ -386,7 +386,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(sources, fingerprint);
@@ -450,7 +450,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
             RobustPositionEstimatorListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(sources, listener);
@@ -484,7 +484,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(double[] qualityScores,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             RobustPositionEstimatorListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(fingerprint, listener);
@@ -521,7 +521,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
             List<? extends RadioSourceLocated<Point2D>> source,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             RobustPositionEstimatorListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustPositionEstimator2D(source, fingerprint,
@@ -558,8 +558,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      * of provided sources is less than the required minimum.
      */
     public static RobustPositionEstimator2D create(
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         return create(sources, DEFAULT_ROBUST_METHOD);
     }
 
@@ -571,8 +570,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public static RobustPositionEstimator2D create(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         return create(fingerprint, DEFAULT_ROBUST_METHOD);
     }
 
@@ -587,8 +585,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         return create(sources, fingerprint, DEFAULT_ROBUST_METHOD);
     }
 
@@ -612,8 +609,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         return create(sources, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -627,8 +623,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         return create(fingerprint, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -645,8 +640,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(
             List<? extends RadioSourceLocated<Point2D>> source,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         return create(source, fingerprint, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -674,8 +668,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      * of provided sources is less than the required minimum.
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         return create(qualityScores, sources, DEFAULT_ROBUST_METHOD);
     }
 
@@ -691,8 +684,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         return create(qualityScores, fingerprint, DEFAULT_ROBUST_METHOD);
     }
 
@@ -711,8 +703,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         return create(qualityScores, sources, fingerprint, DEFAULT_ROBUST_METHOD);
     }
 
@@ -744,8 +735,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         return create(qualityScores, sources, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -763,8 +753,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         return create(qualityScores, fingerprint, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -785,8 +774,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
     public static RobustPositionEstimator2D create(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> source,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         return create(qualityScores, source, fingerprint, listener,
                 DEFAULT_ROBUST_METHOD);
     }
