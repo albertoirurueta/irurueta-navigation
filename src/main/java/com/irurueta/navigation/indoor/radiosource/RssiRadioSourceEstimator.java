@@ -205,8 +205,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
+            List<? extends RssiReadingLocated<S, P>> readings) {
         super(readings);
     }
 
@@ -228,8 +227,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            RssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
@@ -252,7 +250,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition) throws IllegalArgumentException {
+            P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -281,8 +279,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition,
-            RssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }
@@ -309,8 +306,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -342,8 +338,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -361,8 +356,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      */
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            P initialPosition, Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -414,8 +408,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -436,7 +429,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     public RssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -490,8 +483,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RssiRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -570,7 +562,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setInitialTransmittedPower(Double initialTransmittedPower)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -984,7 +976,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                double sqrDistance = 0.0, diff;
+                double sqrDistance = 0.0;
+                double diff;
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
                     sqrDistance += diff * diff;
@@ -998,8 +991,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
-                for (int j = 0; j < dims; j++) {
-                    derivatives[j] /= ln10PerSqrDistance;
+                if (ln10PerSqrDistance != 0.0) {
+                    for (int j = 0; j < dims; j++) {
+                        derivatives[j] /= ln10PerSqrDistance;
+                    }
                 }
 
                 //d^2 = (x - xap)^2 + (y - yap)^2
@@ -1039,7 +1034,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -1128,7 +1125,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -1218,7 +1217,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -1277,7 +1278,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             @Override
             public double evaluate(int i, double[] point, double[] params,
                                    double[] derivatives) {
-                double sqrDistance = 0.0, diff;
+                double sqrDistance = 0.0;
+                double diff;
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
                     sqrDistance += diff * diff;
@@ -1293,8 +1295,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //df/dx = -5*n*2*(x - xap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffX/(ln(10)*sqrDistance)
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
-                for (int j = 0; j < dims; j++) {
-                    derivatives[j] /= ln10PerSqrDistance;
+                if (ln10PerSqrDistance != 0.0) {
+                    for (int j = 0; j < dims; j++) {
+                        derivatives[j] /= ln10PerSqrDistance;
+                    }
                 }
 
                 //derivative respect transmitted power
@@ -1338,7 +1342,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -1393,7 +1399,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                double sqrDistance = 0.0, diff;
+                double sqrDistance = 0.0;
+                double diff;
                 double pathLossExponent = params[dims];
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
@@ -1409,8 +1416,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 //df/dn = kdB -5*log((x - xap)^2 + (y - yap)^2) = kdB - 5*log(sqrDistance)
                 double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
-                for (int j = 0; j < dims; j++) {
-                    derivatives[j] /= ln10PerSqrDistance;
+                if (ln10PerSqrDistance != 0.0) {
+                    for (int j = 0; j < dims; j++) {
+                        derivatives[j] /= ln10PerSqrDistance;
+                    }
                 }
 
                 //derivative respect to path loss exponent
@@ -1457,7 +1466,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -1559,7 +1570,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
@@ -1622,7 +1635,8 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             @Override
             public double evaluate(int i, double[] point, double[] params,
                                    double[] derivatives) {
-                double sqrDistance = 0.0, diff;
+                double sqrDistance = 0.0;
+                double diff;
                 double pathLossExponent = params[dimsPlus1];
                 for (int j = 0; j < dims; j++) {
                     diff = params[j] - point[j];
@@ -1640,8 +1654,10 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
                 //df/dy = -5*n*2*(y - yap)/(ln(10)*((x - xap)^2 + (y - yap)^2)) = -10*n*diffY/(ln(10)*sqrDistance)
                 //df/dn = kdB -5*log((x - xap)^2 + (y - yap)^2) = kdB - 5*log(sqrDistance)
                 double ln10PerSqrDistance = Math.log(10.0) * sqrDistance;
-                for (int j = 0; j < dims; j++) {
-                    derivatives[j] /= ln10PerSqrDistance;
+                if (ln10PerSqrDistance != 0.0) {
+                    for (int j = 0; j < dims; j++) {
+                        derivatives[j] /= ln10PerSqrDistance;
+                    }
                 }
 
                 //derivative respect transmitted power
@@ -1692,7 +1708,9 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
             }
 
             mFitter.setInputData(x, y, standardDeviations);
-        } catch (AlgebraException ignore) { }
+        } catch (AlgebraException ignore) {
+            //never happens
+        }
     }
 
     /**
