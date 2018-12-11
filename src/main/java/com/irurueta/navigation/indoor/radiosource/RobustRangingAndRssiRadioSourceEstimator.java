@@ -161,8 +161,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings) {
         super(readings);
     }
 
@@ -184,8 +183,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      */
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
@@ -199,8 +197,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      */
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            P initialPosition)
-            throws IllegalArgumentException {
+            P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -238,8 +235,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }
@@ -266,8 +262,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      */
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -299,8 +294,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -318,8 +312,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      */
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            P initialPosition, Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -371,8 +364,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -393,8 +385,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
     public RobustRangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -448,8 +439,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
         mInitialPathLossExponent = initialPathLossExponent;
@@ -505,7 +495,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setInitialTransmittedPower(Double initialTransmittedPower)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -743,7 +733,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
     protected double residual(Solution<P> currentEstimation, int i) {
         //Model fitted internally is equal to:
         //Pr (dBm) = 10 * log(Pte * k^n / d^n) = 10*n*log(k) + 10*log(Pte) - 5*n*log(d^2)
-        //where;
+        //where:
         //Pr is received, expressed in dBm
         //Pte is equivalent transmitted power, expressed in dBm
         //k is a constant equal to k = c^2 / (pi * f)^2, where c is speed of light

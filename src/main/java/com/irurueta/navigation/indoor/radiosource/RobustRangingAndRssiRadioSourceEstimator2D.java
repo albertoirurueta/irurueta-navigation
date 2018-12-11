@@ -83,8 +83,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -106,8 +105,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -121,8 +119,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition)
-            throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -159,8 +156,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -186,8 +182,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -217,8 +212,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -235,8 +229,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -283,8 +276,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -303,8 +295,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public RobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -360,8 +351,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -399,7 +389,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -462,7 +452,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -495,8 +485,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Point2D initialPosition, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -595,7 +584,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -660,8 +649,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -732,7 +720,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -769,7 +757,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -878,7 +866,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -916,8 +904,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double initialPathLossExponent, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1046,7 +1033,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1114,7 +1101,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1185,7 +1172,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1222,8 +1209,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Point2D initialPosition, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1333,7 +1319,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1406,8 +1392,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1485,7 +1470,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1526,7 +1511,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1650,7 +1635,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1694,8 +1679,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double initialPathLossExponent, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1837,7 +1821,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
@@ -1884,8 +1868,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      * @param <S> a {@link RadioSource} type.
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         return create(readings, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1912,8 +1895,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(readings, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1929,7 +1911,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         return create(readings, initialPosition, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1975,8 +1957,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(readings, initialPosition, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -2007,7 +1988,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         return create(readings, initialTransmittedPowerdBm, DEFAULT_ROBUST_METHOD);
     }
 
@@ -2042,8 +2023,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(readings, initialTransmittedPowerdBm, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2063,8 +2043,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         return create(readings, initialPosition, initialTransmittedPowerdBm,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2122,8 +2101,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(readings, initialPosition, initialTransmittedPowerdBm, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2145,7 +2123,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         return create(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, DEFAULT_ROBUST_METHOD);
     }
@@ -2209,8 +2187,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener, DEFAULT_ROBUST_METHOD);
     }
@@ -2242,8 +2219,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
      */
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         return create(qualityScores, readings, DEFAULT_ROBUST_METHOD);
     }
 
@@ -2278,8 +2254,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(qualityScores, readings, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -2299,7 +2274,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         return create(qualityScores, readings, initialPosition,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2356,8 +2331,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(qualityScores, readings, initialPosition, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2397,7 +2371,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         return create(qualityScores, readings, initialTransmittedPowerdBm,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2441,8 +2415,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(qualityScores, readings, initialTransmittedPowerdBm, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -2466,8 +2439,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
     public static <S extends RadioSource> RobustRangingAndRssiRadioSourceEstimator2D<S> create(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         return create(qualityScores, readings, initialPosition,
                 initialTransmittedPowerdBm, DEFAULT_ROBUST_METHOD);
     }
@@ -2537,8 +2509,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(qualityScores, readings, initialPosition,
                 initialTransmittedPowerdBm, listener, DEFAULT_ROBUST_METHOD);
     }
@@ -2564,7 +2535,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         return create(qualityScores, readings, initialPosition,
                 initialTransmittedPowerdBm, initialPathLossExponent,
                 DEFAULT_ROBUST_METHOD);
@@ -2640,8 +2611,7 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator2D<S extends Radio
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         return create(qualityScores, readings, initialPosition,
                 initialTransmittedPowerdBm, initialPathLossExponent, listener,
                 DEFAULT_ROBUST_METHOD);

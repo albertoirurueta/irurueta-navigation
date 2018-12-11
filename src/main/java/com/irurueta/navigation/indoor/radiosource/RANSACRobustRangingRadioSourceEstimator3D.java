@@ -90,8 +90,7 @@ public class RANSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, Point3D>> readings) {
         super(readings);
     }
 
@@ -113,8 +112,7 @@ public class RANSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      */
     public RANSACRobustRangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
     }
 
@@ -137,7 +135,7 @@ public class RANSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      */
     public RANSACRobustRangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -164,8 +162,7 @@ public class RANSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     public RANSACRobustRangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -185,8 +182,7 @@ public class RANSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this estimator is locked.
      */
-    public void setThreshold(double threshold)
-            throws IllegalArgumentException, LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

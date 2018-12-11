@@ -105,8 +105,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
-            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings) {
         super(readings);
     }
 
@@ -128,8 +127,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
     }
 
@@ -143,8 +141,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition)
-            throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -164,7 +161,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-                                                            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, listener);
     }
 
@@ -180,8 +177,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -207,8 +203,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -238,8 +233,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -256,8 +250,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point3D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -270,7 +263,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      *                                   (expressed in dBm's).
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-                                                            Double initialTransmittedPowerdBm) {
+            Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -284,8 +277,8 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      * @param listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
-                                                            Double initialTransmittedPowerdBm,
-                                                            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
+            Double initialTransmittedPowerdBm,
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -304,8 +297,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -324,8 +316,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
     public RANSACRobustRangingAndRssiRadioSourceEstimator3D(
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -381,8 +372,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
             List<? extends RangingAndRssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -407,8 +397,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSou
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this estimator is locked.
      */
-    public void setThreshold(double threshold)
-            throws IllegalArgumentException, LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
