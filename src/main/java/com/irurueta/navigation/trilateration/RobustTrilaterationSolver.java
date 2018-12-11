@@ -194,8 +194,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public RobustTrilaterationSolver(P[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public RobustTrilaterationSolver(P[] positions, double[] distances) {
         internalSetPositionsAndDistances(positions, distances);
     }
 
@@ -208,8 +207,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * are null, don't have the same length or their length is smaller than required (3 for
      * 2D points or 4 for 3D points).
      */
-    public RobustTrilaterationSolver(P[] positions, double[] distances, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+    public RobustTrilaterationSolver(P[] positions, double[] distances, double[] distanceStandardDeviations) {
         internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
     }
 
@@ -224,7 +222,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */
     public RobustTrilaterationSolver(P[] positions, double[] distances,
-            RobustTrilaterationSolverListener<P> listener) throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<P> listener) {
         internalSetPositionsAndDistances(positions, distances);
         mListener = listener;
     }
@@ -239,7 +237,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */
     public RobustTrilaterationSolver(P[] positions, double[] distances, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<P> listener) throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<P> listener) {
         internalSetPositionsDistancesAndStandardDeviations(positions, distances, distanceStandardDeviations);
         mListener = listener;
     }
@@ -291,8 +289,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException if this solver is locked because an estimation is being computed.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -323,8 +320,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException if solver is locked because an estimation is being computed.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    public void setConfidence(double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -353,8 +349,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws LockedException if this solver is locked because an estimation is being
      * computed.
      */
-    public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -499,7 +494,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setPositionsAndDistances(P[] positions, double[] distances)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -518,7 +513,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setPositionsDistancesAndStandardDeviations(P[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException, LockedException {
+            double[] distanceStandardDeviations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -572,8 +567,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    protected void internalSetPositionsAndDistances(P[] positions, double[] distances)
-            throws IllegalArgumentException {
+    protected void internalSetPositionsAndDistances(P[] positions, double[] distances) {
         if(positions == null || distances == null) {
             throw new IllegalArgumentException();
         }
@@ -608,7 +602,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * length is smaller than required (2 points).
      */
     protected void internalSetPositionsDistancesAndStandardDeviations(P[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         if(distanceStandardDeviations == null || distances == null) {
             throw new IllegalArgumentException();
         }

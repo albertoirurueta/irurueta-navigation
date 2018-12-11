@@ -87,8 +87,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (4 points).
      */
-    public RobustTrilateration3DSolver(Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public RobustTrilateration3DSolver(Point3D[] positions, double[] distances) {
         super(positions, distances);
         init();
     }
@@ -103,7 +102,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * don't have the same length or their length is smaller than required (4 points).
      */
     public RobustTrilateration3DSolver(Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         init();
     }
@@ -119,8 +118,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * don't have the same length or their length is smaller than required (4 points).
      */
     public RobustTrilateration3DSolver(Point3D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
         init();
     }
@@ -138,8 +136,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public RobustTrilateration3DSolver(Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         init();
     }
@@ -150,7 +147,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
      * is less than required (4 points).
      */
-    public RobustTrilateration3DSolver(Sphere[] spheres) throws IllegalArgumentException {
+    public RobustTrilateration3DSolver(Sphere[] spheres) {
         this();
         internalSetSpheres(spheres);
     }
@@ -163,7 +160,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * than required (4 points) or don't have the same length.
      */
     public RobustTrilateration3DSolver(Sphere[] spheres,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         this();
         internalSetSpheresAndStandardDeviations(spheres,
                 distanceStandardDeviations);
@@ -178,8 +175,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * is less than required (4 points).
      */
     public RobustTrilateration3DSolver(Sphere[] spheres,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheres(spheres);
     }
@@ -195,8 +191,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public RobustTrilateration3DSolver(Sphere[] spheres,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         this(listener);
         internalSetSpheresAndStandardDeviations(spheres,
                 distanceStandardDeviations);
@@ -245,8 +240,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * is less than 4.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws IllegalArgumentException,
-            LockedException {
+    public void setSpheres(Sphere[] spheres) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -263,7 +257,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -327,8 +321,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * don't have the same length or their length is smaller than required (4 points).
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
-            double[] distances, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double[] distances, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances);
@@ -360,7 +353,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
             double[] distances, double[] distanceStandardDeviations,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances,
@@ -395,7 +388,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
             double[] distances, RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances,
@@ -434,7 +427,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
     public static RobustTrilateration3DSolver create(Point3D[] positions,
             double[] distances, double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances,
@@ -464,7 +457,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * is less than required (4 points) or don't have the same length.
      */
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres);
@@ -491,8 +484,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * is less than required (4 points) or don't have the same length.
      */
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
-            double[] distanceStandardDeviations, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres,
@@ -525,7 +517,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres, listener);
@@ -556,7 +548,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres,
@@ -588,7 +580,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * quality scores is less than required minimum (4 samples).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver();
@@ -618,7 +610,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(listener);
@@ -651,8 +643,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * required (4 points).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            Point3D[] positions, double[] distances, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Point3D[] positions, double[] distances, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances);
@@ -688,8 +679,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances,
@@ -731,7 +721,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
             Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances,
@@ -770,7 +760,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Point3D[] positions, double[] distances,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(positions, distances,
@@ -804,8 +794,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * (4 points).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            Sphere[] spheres, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Sphere[] spheres, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres);
@@ -839,7 +828,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Sphere[] spheres, double[] distanceStandardDeviations,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres,
@@ -930,7 +919,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * (4 points).
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
-            double[] distances) throws IllegalArgumentException {
+            double[] distances) {
         return create(positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -948,8 +937,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * (4 points).
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
-            double[] distances, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            double[] distances, double[] distanceStandardDeviations) {
         return create(positions, distances, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -967,8 +955,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * (4 points).
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
-            double[] distances, RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            double[] distances, RobustTrilaterationSolverListener<Point3D> listener) {
         return create(positions, distances, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -988,8 +975,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(Point3D[] positions,
             double[] distances, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(positions, distances, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1001,8 +987,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if spheres is null, length of spheres array
      * is less than required (4 points) or don't have the same length.
      */
-    public static RobustTrilateration3DSolver create(Sphere[] spheres)
-            throws IllegalArgumentException {
+    public static RobustTrilateration3DSolver create(Sphere[] spheres) {
         return create(spheres, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1016,7 +1001,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * is less than required (4 points) or don't have the same length.
      */
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         return create(spheres, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1031,8 +1016,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * array is less than required (4 points).
      */
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(spheres, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1049,8 +1033,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(Sphere[] spheres,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(spheres, distanceStandardDeviations, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1064,8 +1047,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if quality scores is null, length of
      * quality scores is less than required minimum (4 samples).
      */
-    public static RobustTrilateration3DSolver create(double[] qualityscores)
-            throws IllegalArgumentException {
+    public static RobustTrilateration3DSolver create(double[] qualityscores) {
         return create(qualityscores, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1081,8 +1063,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * quality scores is less than required minimum (4 samples).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1100,8 +1081,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * than required (4 points).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+            Point3D[] positions, double[] distances) {
         return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1122,8 +1102,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         return create(qualityScores, positions, distances,
                 distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
@@ -1147,8 +1126,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(qualityScores, positions, distances, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1169,8 +1147,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Point3D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(qualityScores, positions, distances, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1187,7 +1164,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * (4 points).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            Sphere[] spheres) throws IllegalArgumentException {
+            Sphere[] spheres) {
         return create(qualityScores, spheres, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1205,8 +1182,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * is less than required (4 points).
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
-            Sphere[] spheres, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            Sphere[] spheres, double[] distanceStandardDeviations) {
         return create(qualityScores, spheres, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1228,8 +1204,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Sphere[] spheres, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         return create(qualityScores, spheres, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1327,7 +1302,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
      * is less than {@link #getMinRequiredPositionsAndDistances()}
      */
-    private void internalSetSpheres(Sphere[] spheres) throws IllegalArgumentException {
+    private void internalSetSpheres(Sphere[] spheres) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -1352,7 +1327,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * 4 or don't have the same length.
      */
     private void internalSetSpheresAndStandardDeviations(Sphere[] spheres,
-            double[] radiusStandardDeviations) throws IllegalArgumentException {
+            double[] radiusStandardDeviations) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }

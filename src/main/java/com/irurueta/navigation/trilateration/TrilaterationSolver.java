@@ -71,7 +71,7 @@ public abstract class TrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public TrilaterationSolver(P[] positions, double[] distances) throws IllegalArgumentException {
+    public TrilaterationSolver(P[] positions, double[] distances) {
         internalSetPositionsAndDistances(positions, distances);
     }
 
@@ -92,8 +92,7 @@ public abstract class TrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points).
      */
-    public TrilaterationSolver(P[] positions, double[] distances, TrilaterationSolverListener<P> listener)
-            throws IllegalArgumentException {
+    public TrilaterationSolver(P[] positions, double[] distances, TrilaterationSolverListener<P> listener) {
         this(positions, distances);
         mListener = listener;
     }
@@ -161,8 +160,7 @@ public abstract class TrilaterationSolver<P extends Point> {
      * length is smaller than required (2 points).
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException,
-            LockedException {
+    public void setPositionsAndDistances(P[] positions, double[] distances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -232,7 +230,7 @@ public abstract class TrilaterationSolver<P extends Point> {
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    protected void internalSetPositionsAndDistances(P[] positions, double[] distances) throws IllegalArgumentException {
+    protected void internalSetPositionsAndDistances(P[] positions, double[] distances) {
         if(positions == null || distances == null) {
             throw new IllegalArgumentException();
         }

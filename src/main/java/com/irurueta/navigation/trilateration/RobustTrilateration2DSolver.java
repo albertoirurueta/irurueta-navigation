@@ -81,8 +81,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public RobustTrilateration2DSolver(Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public RobustTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
         init();
     }
@@ -97,7 +96,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * don't have the same length or their length is smaller than required (3 points).
      */
     public RobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         init();
     }
@@ -112,8 +111,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * don't have the same length or their length is smaller than required (3 points).
      */
     public RobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
         init();
     }
@@ -131,8 +129,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public RobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         init();
     }
@@ -143,7 +140,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if circles is null or if length of circles array
      * is less than required (3 points).
      */
-    public RobustTrilateration2DSolver(Circle[] circles) throws IllegalArgumentException {
+    public RobustTrilateration2DSolver(Circle[] circles) {
         this();
         internalSetCircles(circles);
     }
@@ -156,7 +153,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * than required (3 points) or don't have the same length.
      */
     public RobustTrilateration2DSolver(Circle[] circles,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         this();
         internalSetCirclesAndStandardDeviations(circles,
                 distanceStandardDeviations);
@@ -171,8 +168,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * is less than required (3 points).
      */
     public RobustTrilateration2DSolver(Circle[] circles,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCircles(circles);
     }
@@ -188,8 +184,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public RobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         this(listener);
         internalSetCirclesAndStandardDeviations(circles,
                 distanceStandardDeviations);
@@ -238,8 +233,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * is less than 3.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setCircles(Circle[] circles) throws IllegalArgumentException,
-            LockedException {
+    public void setCircles(Circle[] circles) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -256,7 +250,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -321,8 +315,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * (3 points).
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
-            double[] distances, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double[] distances, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances);
@@ -354,7 +347,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
             double[] distances, double[] distanceStandardDeviations,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances,
@@ -389,7 +382,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
             double[] distances, RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances,
@@ -428,7 +421,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     public static RobustTrilateration2DSolver create(Point2D[] positions,
             double[] distances, double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances,
@@ -458,7 +451,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * is less than required (3 points) or don't have the same length.
      */
     public static RobustTrilateration2DSolver create(Circle[] circles,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles);
@@ -485,8 +478,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * is less than required (3 points) or don't have the same length.
      */
     public static RobustTrilateration2DSolver create(Circle[] circles,
-            double[] distanceStandardDeviations, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles,
@@ -519,7 +511,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(Circle[] circles,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles, listener);
@@ -550,7 +542,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     public static RobustTrilateration2DSolver create(Circle[] circles,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles,
@@ -582,7 +574,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * quality scores is less than required minimum (3 samples).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver();
@@ -612,7 +604,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(listener);
@@ -645,8 +637,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * required (3 points).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            Point2D[] positions, double[] distances, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Point2D[] positions, double[] distances, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances);
@@ -682,8 +673,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances,
@@ -725,7 +715,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
             Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances,
@@ -764,7 +754,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Point2D[] positions, double[] distances,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(positions, distances,
@@ -798,8 +788,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * (3 points).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            Circle[] circles, RobustEstimatorMethod method)
-            throws IllegalArgumentException {
+            Circle[] circles, RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles);
@@ -833,7 +822,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Circle[] circles, double[] distanceStandardDeviations,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles,
@@ -873,7 +862,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Circle[] circles, double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point2D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration2DSolver(circles,
@@ -924,7 +913,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * (3 points).
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
-            double[] distances) throws IllegalArgumentException {
+            double[] distances) {
         return create(positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -942,8 +931,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * (3 points).
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
-            double[] distances, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            double[] distances, double[] distanceStandardDeviations) {
         return create(positions, distances, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -961,8 +949,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * (3 points).
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
-            double[] distances, RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            double[] distances, RobustTrilaterationSolverListener<Point2D> listener) {
         return create(positions, distances, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -982,8 +969,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(Point2D[] positions,
             double[] distances, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create(positions, distances, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -995,8 +981,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if circles is null, length of circles array
      * is less than required (3 points) or don't have the same length.
      */
-    public static RobustTrilateration2DSolver create(Circle[] circles)
-            throws IllegalArgumentException {
+    public static RobustTrilateration2DSolver create(Circle[] circles) {
         return create(circles, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1010,7 +995,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * is less than required (3 points) or don't have the same length.
      */
     public static RobustTrilateration2DSolver create(Circle[] circles,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         return create(circles, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1025,8 +1010,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * array is less than required (3 points).
      */
     public static RobustTrilateration2DSolver create(Circle[] circles,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create(circles, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1043,8 +1027,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(Circle[] circles,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create(circles, distanceStandardDeviations, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1058,8 +1041,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if quality scores is null, length of
      * quality scores is less than required (3 samples).
      */
-    public static RobustTrilateration2DSolver create(double[] qualityScores)
-            throws IllegalArgumentException {
+    public static RobustTrilateration2DSolver create(double[] qualityScores) {
         return create(qualityScores, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1075,8 +1057,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * quality scores is less than required minimum (3 samples).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create(qualityScores, listener, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1094,8 +1075,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * than required (3 points).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+            Point2D[] positions, double[] distances) {
         return create(qualityScores, positions, distances, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1116,8 +1096,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         return create(qualityScores, positions, distances,
                 distanceStandardDeviations, DEFAULT_ROBUST_METHOD);
     }
@@ -1141,8 +1120,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create (qualityScores, positions, distances,
                 distanceStandardDeviations,listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1163,8 +1141,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Point2D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create(qualityScores, positions, distances, listener,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1181,7 +1158,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * (3 points).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            Circle[] circles) throws IllegalArgumentException {
+            Circle[] circles) {
         return create(qualityScores, circles, DEFAULT_ROBUST_METHOD);
     }
 
@@ -1199,8 +1176,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * is less than required (3 points).
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
-            Circle[] circles, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            Circle[] circles, double[] distanceStandardDeviations) {
         return create(qualityScores, circles, distanceStandardDeviations,
                 DEFAULT_ROBUST_METHOD);
     }
@@ -1222,8 +1198,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      */
     public static RobustTrilateration2DSolver create(double[] qualityScores,
             Circle[] circles, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         return create(qualityScores, circles, distanceStandardDeviations,
                 listener, DEFAULT_ROBUST_METHOD);
     }
@@ -1321,7 +1296,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * @throws IllegalArgumentException if circles is null or length of array of circles
      * is less than {@link #getMinRequiredPositionsAndDistances}.
      */
-    private void internalSetCircles(Circle[] circles) throws IllegalArgumentException {
+    private void internalSetCircles(Circle[] circles) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
@@ -1346,7 +1321,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * 3 or don't have the same length.
      */
     private void internalSetCirclesAndStandardDeviations(Circle[] circles,
-            double[] radiusStandardDeviations) throws IllegalArgumentException {
+            double[] radiusStandardDeviations) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
