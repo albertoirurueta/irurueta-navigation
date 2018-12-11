@@ -45,7 +45,7 @@ public class WifiAccessPoint implements Serializable, RadioSource {
      * @param frequency frequency used by this Access Point (expressed in Hz).
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPoint(String bssid, double frequency) throws IllegalArgumentException {
+    public WifiAccessPoint(String bssid, double frequency) {
         if (bssid == null) {
             throw new IllegalArgumentException();
         }
@@ -66,7 +66,7 @@ public class WifiAccessPoint implements Serializable, RadioSource {
      * @param ssid service set identifier (SSID) of this 802.11 network.
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
-    public WifiAccessPoint(String bssid, double frequency, String ssid) throws IllegalArgumentException {
+    public WifiAccessPoint(String bssid, double frequency, String ssid) {
         this(bssid, frequency);
         mSsid = ssid;
     }

@@ -33,8 +33,7 @@ public abstract class Reading<S extends RadioSource> implements Serializable {
      * @param source radio source associated to this reading.
      * @throws IllegalArgumentException if radios source data is null.
      */
-    public Reading(S source)
-            throws IllegalArgumentException {
+    public Reading(S source) {
         if (source == null) {
             throw new IllegalArgumentException();
         }

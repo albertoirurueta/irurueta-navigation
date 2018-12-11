@@ -35,7 +35,7 @@ public class RssiReadingLocated2D<S extends RadioSource> extends
      * are null.
      */
     public RssiReadingLocated2D(S source, double rssi,
-            Point2D position) throws IllegalArgumentException {
+            Point2D position) {
         super(source, rssi, position);
     }
 
@@ -49,8 +49,7 @@ public class RssiReadingLocated2D<S extends RadioSource> extends
      * are null.
      */
     public RssiReadingLocated2D(S source, double rssi,
-            Point2D position, Double rssiStandardDeviation)
-            throws IllegalArgumentException {
+            Point2D position, Double rssiStandardDeviation) {
         super(source, rssi, position, rssiStandardDeviation);
     }
 
@@ -65,8 +64,7 @@ public class RssiReadingLocated2D<S extends RadioSource> extends
      * null, or covariance has invalid size.
      */
     public RssiReadingLocated2D(S source, double rssi,
-            Point2D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point2D position, Matrix positionCovariance) {
         super(source, rssi, position, positionCovariance);
     }
 
@@ -83,7 +81,7 @@ public class RssiReadingLocated2D<S extends RadioSource> extends
      */
     public RssiReadingLocated2D(S source, double rssi,
             Point2D position, Double rssiStandardDeviation,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(source, rssi, position, rssiStandardDeviation,
                 positionCovariance);
     }

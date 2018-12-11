@@ -57,8 +57,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * provided sources is less than the required minimum.
      */
     public PROMedSRobustPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -71,8 +70,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public PROMedSRobustPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -88,8 +86,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      */
     public PROMedSRobustPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -115,8 +112,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      */
     public PROMedSRobustPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustPositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -131,7 +127,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      */
     public PROMedSRobustPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -149,7 +145,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
     public PROMedSRobustPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -179,8 +175,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * provided sources is less than the required minimum.
      */
     public PROMedSRobustPositionEstimator3D(double[] qualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point3D>> sources) {
         this(sources);
         internalSetQualityScores(qualityScores);
     }
@@ -196,8 +191,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public PROMedSRobustPositionEstimator3D(double[] qualityScores,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(fingerprint);
         internalSetQualityScores(qualityScores);
     }
@@ -216,8 +210,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      */
     public PROMedSRobustPositionEstimator3D(double[] qualityScores,
             List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(sources, fingerprint);
         internalSetQualityScores(qualityScores);
     }
@@ -249,8 +242,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      */
     public PROMedSRobustPositionEstimator3D(double[] qualityScores,
             List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustPositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         this(sources, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -268,7 +260,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      */
     public PROMedSRobustPositionEstimator3D(double[] qualityScores,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         this(fingerprint, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -289,7 +281,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
     public PROMedSRobustPositionEstimator3D(double[] qualityScores,
             List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         this(sources, fingerprint, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -319,8 +311,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * estimation is already in progress.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -370,8 +361,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         ((PROMedSRobustTrilateration3DSolver)mTrilaterationSolver).
                 setStopThreshold(stopThreshold);
     }
@@ -401,8 +391,7 @@ public class PROMedSRobustPositionEstimator3D extends RobustPositionEstimator3D 
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinRequiredSources()) {
             throw new IllegalArgumentException();

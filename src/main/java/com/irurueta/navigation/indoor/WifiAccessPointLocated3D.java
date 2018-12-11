@@ -32,8 +32,7 @@ public class WifiAccessPointLocated3D extends WifiAccessPointLocated<Point3D> {
      * @throws IllegalArgumentException if either BSSID or position are null or
      * frequency is negative.
      */
-    public WifiAccessPointLocated3D(String bssid, double frequency, Point3D position)
-            throws IllegalArgumentException {
+    public WifiAccessPointLocated3D(String bssid, double frequency, Point3D position) {
         super(bssid, frequency, position);
     }
 
@@ -48,7 +47,7 @@ public class WifiAccessPointLocated3D extends WifiAccessPointLocated<Point3D> {
      * frequency is negative.
      */
     public WifiAccessPointLocated3D(String bssid, double frequency, String ssid,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(bssid, frequency, ssid, position);
     }
 
@@ -64,8 +63,7 @@ public class WifiAccessPointLocated3D extends WifiAccessPointLocated<Point3D> {
      * frequency is negative.
      */
     public WifiAccessPointLocated3D(String bssid, double frequency,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, position, positionCovariance);
     }
 
@@ -82,8 +80,7 @@ public class WifiAccessPointLocated3D extends WifiAccessPointLocated<Point3D> {
      * frequency is negative.
      */
     public WifiAccessPointLocated3D(String bssid, double frequency, String ssid,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, ssid, position, positionCovariance);
     }
 

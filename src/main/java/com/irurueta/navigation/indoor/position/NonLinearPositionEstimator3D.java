@@ -49,8 +49,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * @throws IllegalArgumentException if provided sources is null or the number of provided sources is less
      * than the required minimum.
      */
-    public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources)
-            throws IllegalArgumentException {
+    public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -62,8 +61,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public NonLinearPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -77,8 +75,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * sources is less than the required minimum.
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -102,7 +99,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
-            PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -116,7 +113,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -132,7 +129,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -156,7 +153,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(initialPosition);
         init();
         internalSetSources(sources);
@@ -170,7 +167,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(initialPosition);
         init();
         internalSetFingerprint(fingerprint);
@@ -186,7 +183,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(initialPosition);
         init();
         internalSetSources(sources);
@@ -213,8 +210,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
-            Point3D initialPosition, PositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            Point3D initialPosition, PositionEstimatorListener<Point3D> listener) {
         super(initialPosition, listener);
         init();
         internalSetSources(sources);
@@ -229,8 +225,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition, PositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            Point3D initialPosition, PositionEstimatorListener<Point3D> listener) {
         super(initialPosition, listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -247,8 +242,7 @@ public class NonLinearPositionEstimator3D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point3D initialPosition, PositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            Point3D initialPosition, PositionEstimatorListener<Point3D> listener) {
         super(initialPosition, listener);
         init();
         internalSetSources(sources);

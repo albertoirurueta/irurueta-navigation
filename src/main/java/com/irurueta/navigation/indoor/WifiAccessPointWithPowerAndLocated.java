@@ -47,7 +47,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
-            double transmittedPower, P position) throws IllegalArgumentException {
+            double transmittedPower, P position) {
         super(bssid, frequency, transmittedPower);
 
         if (position == null) {
@@ -68,7 +68,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
-            double transmittedPower, P position) throws IllegalArgumentException {
+            double transmittedPower, P position) {
         super(bssid, frequency, ssid, transmittedPower);
 
         if (position == null) {
@@ -92,7 +92,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(bssid, frequency, transmittedPower,
                 transmittedPowerStandardDeviation);
 
@@ -118,7 +118,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation);
 
@@ -142,8 +142,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      * covariance has invalid size.
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
-            double transmittedPower, P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double transmittedPower, P position, Matrix positionCovariance) {
         this(bssid, frequency, transmittedPower, position);
 
         if(positionCovariance != null &&
@@ -168,8 +167,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      * or covariance has invalid size.
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
-            double transmittedPower, P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double transmittedPower, P position, Matrix positionCovariance) {
         this(bssid, frequency, ssid, transmittedPower, position);
 
         if(positionCovariance != null &&
@@ -196,7 +194,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            P position, Matrix positionCovariance) throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 position);
 
@@ -225,7 +223,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            P position, Matrix positionCovariance) throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, position);
 
@@ -248,8 +246,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      * @throws IllegalArgumentException if either BSSID is null or frequency is negative
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
-            double transmittedPower, double pathLossExponent, P position)
-            throws IllegalArgumentException {
+            double transmittedPower, double pathLossExponent, P position) {
         super(bssid, frequency, transmittedPower, pathLossExponent);
 
         if (position == null) {
@@ -274,7 +271,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, P position) throws IllegalArgumentException {
+            double pathLossExponent, P position) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent);
 
@@ -301,7 +298,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, P position) throws IllegalArgumentException {
+            double pathLossExponent, P position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent);
 
@@ -327,7 +324,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, double pathLossExponent, P position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         this(bssid, frequency, transmittedPower, pathLossExponent, position);
 
         if(positionCovariance != null &&
@@ -355,8 +352,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double pathLossExponent, P position, Matrix positionCovariance) {
         this(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, position);
 
@@ -386,8 +382,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
      */
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double pathLossExponent, P position, Matrix positionCovariance) {
         this(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent, position);
 
@@ -417,7 +412,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation);
 
@@ -447,7 +442,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation);
@@ -479,8 +474,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation, position);
 
@@ -513,7 +507,7 @@ public class WifiAccessPointWithPowerAndLocated<P extends Point>
     public WifiAccessPointWithPowerAndLocated(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            P position, Matrix positionCovariance) throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation, position);

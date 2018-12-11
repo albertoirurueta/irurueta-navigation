@@ -83,7 +83,7 @@ public abstract class PositionEstimator<P extends Point> {
      * than the required minimum.
      */
     public void setSources(List<? extends RadioSourceLocated<P>> sources)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -209,8 +209,7 @@ public abstract class PositionEstimator<P extends Point> {
      * than the required minimum.
      */
     @SuppressWarnings("Duplicates")
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources)
-            throws IllegalArgumentException {
+    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
         if (sources == null) {
             throw new IllegalArgumentException();
         }
@@ -228,8 +227,7 @@ public abstract class PositionEstimator<P extends Point> {
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }

@@ -32,8 +32,7 @@ public class WifiAccessPointLocated2D extends WifiAccessPointLocated<Point2D> {
      * @throws IllegalArgumentException if either BSSID or position are null or
      * frequency is negative.
      */
-    public WifiAccessPointLocated2D(String bssid, double frequency, Point2D position)
-            throws IllegalArgumentException {
+    public WifiAccessPointLocated2D(String bssid, double frequency, Point2D position) {
         super(bssid, frequency, position);
     }
 
@@ -48,7 +47,7 @@ public class WifiAccessPointLocated2D extends WifiAccessPointLocated<Point2D> {
      * frequency is negative.
      */
     public WifiAccessPointLocated2D(String bssid, double frequency, String ssid,
-            Point2D position) throws IllegalArgumentException {
+            Point2D position) {
         super(bssid, frequency, ssid, position);
     }
 
@@ -64,8 +63,7 @@ public class WifiAccessPointLocated2D extends WifiAccessPointLocated<Point2D> {
      * frequency is negative.
      */
     public WifiAccessPointLocated2D(String bssid, double frequency,
-            Point2D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point2D position, Matrix positionCovariance) {
         super(bssid, frequency, position, positionCovariance);
     }
 
@@ -82,8 +80,7 @@ public class WifiAccessPointLocated2D extends WifiAccessPointLocated<Point2D> {
      * frequency is negative.
      */
     public WifiAccessPointLocated2D(String bssid, double frequency, String ssid,
-            Point2D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point2D position, Matrix positionCovariance) {
         super(bssid, frequency, ssid, position, positionCovariance);
     }
 

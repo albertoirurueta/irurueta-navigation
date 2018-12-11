@@ -76,7 +76,8 @@ public class PositionEstimatorHelper {
                 P position = locatedSource.getPosition();
 
                 //compute distance
-                Double distance1 = null, distance2 = null;
+                Double distance1 = null;
+                Double distance2 = null;
                 switch (reading.getType()) {
                     case RANGING_READING:
                         distance1 = computeDistanceRanging(
@@ -93,6 +94,8 @@ public class PositionEstimatorHelper {
                                 (RangingAndRssiReading<? extends RadioSource>)reading);
                         distance2 =  computeDistanceRssi(locatedSource,
                                 (RangingAndRssiReading<? extends RadioSource>)reading);
+                        break;
+                    default:
                         break;
                 }
 

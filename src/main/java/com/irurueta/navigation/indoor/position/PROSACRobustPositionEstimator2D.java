@@ -57,8 +57,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * provided sources is less than the required minimum.
      */
     public PROSACRobustPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -71,8 +70,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public PROSACRobustPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -88,8 +86,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public PROSACRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -115,8 +112,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public PROSACRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -131,7 +127,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public PROSACRobustPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -149,7 +145,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
     public PROSACRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -179,8 +175,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * provided sources is less than the required minimum.
      */
     public PROSACRobustPositionEstimator2D(double[] qualityScores,
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         this(sources);
         internalSetQualityScores(qualityScores);
     }
@@ -196,8 +191,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public PROSACRobustPositionEstimator2D(double[] qualityScores,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(fingerprint);
         internalSetQualityScores(qualityScores);
     }
@@ -216,8 +210,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public PROSACRobustPositionEstimator2D(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         this(sources, fingerprint);
         internalSetQualityScores(qualityScores);
     }
@@ -249,8 +242,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public PROSACRobustPositionEstimator2D(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         this(sources, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -268,7 +260,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public PROSACRobustPositionEstimator2D(double[] qualityScores,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         this(fingerprint, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -289,7 +281,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
     public PROSACRobustPositionEstimator2D(double[] qualityScores,
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         this(sources, fingerprint, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -319,8 +311,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * estimation is already in progress.
      */
     @Override
-    public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -346,8 +337,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
      */
-    public void setThreshold(double threshold)
-            throws IllegalArgumentException, LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 setThreshold(threshold);
     }
@@ -421,8 +411,7 @@ public class PROSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinRequiredSources()) {
             throw new IllegalArgumentException();

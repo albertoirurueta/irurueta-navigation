@@ -35,7 +35,7 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * are null.
      */
     public RssiReadingLocated3D(S source, double rssi,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(source, rssi, position);
     }
 
@@ -49,8 +49,7 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * are null.
      */
     public RssiReadingLocated3D(S source, double rssi,
-            Point3D position, Double rssiStandardDeviation)
-            throws IllegalArgumentException {
+            Point3D position, Double rssiStandardDeviation) {
         super(source, rssi, position, rssiStandardDeviation);
     }
 
@@ -65,8 +64,7 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      * null, or covariance has invalid size.
      */
     public RssiReadingLocated3D(S source, double rssi,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(source, rssi, position, positionCovariance);
     }
 
@@ -83,7 +81,7 @@ public class RssiReadingLocated3D<S extends RadioSource> extends
      */
     public RssiReadingLocated3D(S source, double rssi,
             Point3D position, Double rssiStandardDeviation,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(source, rssi, position, rssiStandardDeviation,
                 positionCovariance);
     }

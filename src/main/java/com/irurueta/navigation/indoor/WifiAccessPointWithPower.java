@@ -65,7 +65,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
-            double transmittedPower) throws IllegalArgumentException {
+            double transmittedPower) {
         super(bssid, frequency);
         mTransmittedPower = transmittedPower;
     }
@@ -80,7 +80,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
-            double transmittedPower) throws IllegalArgumentException {
+            double transmittedPower) {
         super(bssid, frequency, ssid);
         mTransmittedPower = transmittedPower;
     }
@@ -97,8 +97,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      * or transmitted power standard deviation is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
-            double transmittedPower, Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            double transmittedPower, Double transmittedPowerStandardDeviation) {
         this(bssid, frequency, transmittedPower);
 
         if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
@@ -119,8 +118,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      * or transmitted power standard deviation is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
-            double transmittedPower, Double transmittedPowerStandardDeviation)
-            throws IllegalArgumentException {
+            double transmittedPower, Double transmittedPowerStandardDeviation) {
         this(bssid, frequency, ssid, transmittedPower);
 
         if (transmittedPowerStandardDeviation != null && transmittedPowerStandardDeviation < 0.0) {
@@ -139,7 +137,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
-            double transmittedPower, double pathLossExponent) throws IllegalArgumentException {
+            double transmittedPower, double pathLossExponent) {
         this(bssid, frequency, transmittedPower);
         mPathLossExponent = pathLossExponent;
     }
@@ -158,7 +156,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent) throws IllegalArgumentException {
+            double pathLossExponent) {
         this(bssid, frequency, transmittedPower,
                 transmittedPowerStandardDeviation);
         mPathLossExponent = pathLossExponent;
@@ -179,7 +177,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      */
     public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent) throws IllegalArgumentException {
+            double pathLossExponent) {
         this(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation);
         mPathLossExponent = pathLossExponent;
@@ -201,8 +199,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      */
     public WifiAccessPointWithPower(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation)
-            throws IllegalArgumentException {
+            double pathLossExponent, Double pathLossExponentStandardDeviation) {
         this(bssid, frequency, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent);
 
@@ -229,8 +226,7 @@ public class WifiAccessPointWithPower extends WifiAccessPoint implements
      */
     public WifiAccessPointWithPower(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Double pathLossExponentStandardDeviation)
-            throws IllegalArgumentException {
+            double pathLossExponent, Double pathLossExponentStandardDeviation) {
         this(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent);
 

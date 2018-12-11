@@ -51,8 +51,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -64,8 +63,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public NonLinearPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -79,8 +77,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * sources is less than the required minimum.
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -104,7 +101,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -118,7 +115,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -134,7 +131,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -158,7 +155,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(initialPosition);
         init();
         internalSetSources(sources);
@@ -172,7 +169,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(initialPosition);
         init();
         internalSetFingerprint(fingerprint);
@@ -188,7 +185,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(initialPosition);
         init();
         internalSetSources(sources);
@@ -215,8 +212,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      * than the required minimum.
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
-            Point2D initialPosition, PositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            Point2D initialPosition, PositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
         internalSetSources(sources);
@@ -231,8 +227,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition, PositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            Point2D initialPosition, PositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -249,8 +244,7 @@ public class NonLinearPositionEstimator2D extends NonLinearPositionEstimator<Poi
      */
     public NonLinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            Point2D initialPosition, PositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            Point2D initialPosition, PositionEstimatorListener<Point2D> listener) {
         super(initialPosition, listener);
         init();
         internalSetSources(sources);

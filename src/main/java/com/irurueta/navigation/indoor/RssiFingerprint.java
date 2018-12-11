@@ -37,8 +37,7 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
      * @param readings non-located RSSI readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public RssiFingerprint(List<R> readings)
-            throws IllegalArgumentException {
+    public RssiFingerprint(List<R> readings) {
         super(readings);
     }
 
@@ -57,6 +56,7 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
      * @return squared euclidean distance of signal readings from another
      * fingerprint.
      */
+    @SuppressWarnings("Duplicates")
     public double sqrDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
         if (otherFingerprint == null) {
             return Double.MAX_VALUE;
@@ -64,7 +64,8 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
 
         List<R> otherReadings = otherFingerprint.getReadings();
         int numAccessPoints = 0;
-        double result = 0.0, diff;
+        double result = 0.0;
+        double diff;
         for (R reading : mReadings) {
             for (R otherReading : otherReadings) {
                 if (reading.hasSameSource(otherReading)) {
@@ -117,6 +118,7 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
      * @return squared euclidean distance of signal readings from another
      * fingerprint with average RSSI's removed.
      */
+    @SuppressWarnings("Duplicates")
     public double noMeanSqrDistanceTo(RssiFingerprint<S, R> otherFingerprint) {
         if (otherFingerprint == null) {
             return Double.MAX_VALUE;
@@ -124,7 +126,8 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
 
         List<R> otherReadings = otherFingerprint.getReadings();
         int numAccessPoints = 0;
-        double avgRssiThis = 0.0, avgRssiOther = 0.0;
+        double avgRssiThis = 0.0;
+        double avgRssiOther = 0.0;
         for (R reading : mReadings) {
             for (R otherReading : otherReadings) {
                 if (reading.hasSameSource(otherReading)) {
@@ -146,7 +149,8 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
 
 
         numAccessPoints = 0;
-        double result = 0.0, diff;
+        double result = 0.0;
+        double diff;
         for (R reading : mReadings) {
             for (R otherReading : otherReadings) {
                 if (reading.hasSameSource(otherReading)) {

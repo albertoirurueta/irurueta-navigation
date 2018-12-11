@@ -38,8 +38,7 @@ public class RssiReading<S extends RadioSource> extends Reading<S> {
      * @param rssi received signal strength indicator in dBm.
      * @throws IllegalArgumentException if radio source data is null.
      */
-    public RssiReading(S source, double rssi)
-            throws IllegalArgumentException {
+    public RssiReading(S source, double rssi) {
         super(source);
         mRssi = rssi;
     }
@@ -53,7 +52,7 @@ public class RssiReading<S extends RadioSource> extends Reading<S> {
      * standard deviation is zero or negative.
      */
     public RssiReading(S source, double rssi,
-            Double rssiStandardDeviation) throws IllegalArgumentException {
+            Double rssiStandardDeviation) {
         this(source, rssi);
 
         if (rssiStandardDeviation != null && rssiStandardDeviation <= 0.0) {

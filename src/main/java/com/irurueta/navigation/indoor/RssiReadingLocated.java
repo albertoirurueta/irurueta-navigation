@@ -46,8 +46,7 @@ public class RssiReadingLocated<S extends RadioSource, P extends Point> extends 
      * @throws IllegalArgumentException if either radio source data or position
      * are null.
      */
-    public RssiReadingLocated(S source, double rssi, P position)
-            throws IllegalArgumentException {
+    public RssiReadingLocated(S source, double rssi, P position) {
         super(source, rssi);
 
         if (position == null) {
@@ -67,8 +66,7 @@ public class RssiReadingLocated<S extends RadioSource, P extends Point> extends 
      * are null.
      */
     public RssiReadingLocated(S source, double rssi,
-            P position, Double rssiStandardDeviation)
-            throws IllegalArgumentException {
+            P position, Double rssiStandardDeviation) {
         super(source, rssi, rssiStandardDeviation);
 
         if (position == null) {
@@ -89,8 +87,7 @@ public class RssiReadingLocated<S extends RadioSource, P extends Point> extends 
      * null, or covariance has invalid size.
      */
     public RssiReadingLocated(S source, double rssi,
-            P position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(source, rssi, position);
 
         if (positionCovariance != null) {
@@ -115,8 +112,7 @@ public class RssiReadingLocated<S extends RadioSource, P extends Point> extends 
      * null, or covariance has invalid size.
      */
     public RssiReadingLocated(S source, double rssi,
-            P position, Double rssiStandardDeviation, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            P position, Double rssiStandardDeviation, Matrix positionCovariance) {
         this(source, rssi, position, rssiStandardDeviation);
 
         if (positionCovariance != null) {

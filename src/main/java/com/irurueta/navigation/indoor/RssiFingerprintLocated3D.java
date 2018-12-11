@@ -35,8 +35,7 @@ public class RssiFingerprintLocated3D<S extends RadioSource, R extends RssiReadi
      * @param position position where readings were made.
      * @throws IllegalArgumentException if either readings or position are null.
      */
-    public RssiFingerprintLocated3D(List<R> readings, Point3D position)
-            throws IllegalArgumentException {
+    public RssiFingerprintLocated3D(List<R> readings, Point3D position) {
         super(readings, position);
     }
 
@@ -49,7 +48,7 @@ public class RssiFingerprintLocated3D<S extends RadioSource, R extends RssiReadi
      * @throws IllegalArgumentException if either readings or position are null.
      */
     public RssiFingerprintLocated3D(List<R> readings, Point3D position,
-                                    Matrix positionCovariance) throws IllegalArgumentException {
+                                    Matrix positionCovariance) {
         super(readings, position, positionCovariance);
     }
 

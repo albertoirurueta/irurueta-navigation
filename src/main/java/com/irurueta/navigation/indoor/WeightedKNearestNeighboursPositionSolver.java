@@ -89,8 +89,8 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * don't have the same length or their length is smaller than 1.
      */
     public WeightedKNearestNeighboursPositionSolver(
-            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints, double[] distances)
-            throws IllegalArgumentException {
+            RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
+            double[] distances) {
         internalSetFingerprintsAndDistances(fingerprints, distances);
     }
 
@@ -116,8 +116,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      */
     public WeightedKNearestNeighboursPositionSolver(
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances, WeightedKNearestNeighboursPositionSolverListener<P> listener)
-            throws IllegalArgumentException {
+            double[] distances, WeightedKNearestNeighboursPositionSolverListener<P> listener) {
         this(fingerprints, distances);
         mListener = listener;
     }
@@ -191,7 +190,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      */
     public void setFingerprintsAndDistances(
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances) throws IllegalArgumentException, LockedException {
+            double[] distances) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -213,7 +212,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if instance is busy solving the indoor problem.
      */
-    public void setEpsilon(double epsilon) throws IllegalArgumentException, LockedException {
+    public void setEpsilon(double epsilon) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -257,7 +256,8 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
             } else {
                 //multiple fingerprints available
                 double[] coords = new double[dims];
-                double sum = 0.0, w;
+                double sum = 0.0;
+                double w;
                 for (int i = 0; i < num; i++) {
                     //weighted average and weight summation
                     w = 1.0 / mDistances[i];
@@ -270,8 +270,10 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
                 }
 
                 //normalize by weight summation
-                for (int j = 0; j < dims; j++) {
-                    coords[j] /= sum;
+                if (sum != 0.0) {
+                    for (int j = 0; j < dims; j++) {
+                        coords[j] /= sum;
+                    }
                 }
 
                 mEstimatedPositionCoordinates = coords;
@@ -329,7 +331,7 @@ public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> 
      */
     protected void internalSetFingerprintsAndDistances(
             RssiFingerprintLocated<WifiAccessPoint, RssiReading<WifiAccessPoint>, P>[] fingerprints,
-            double[] distances) throws IllegalArgumentException {
+            double[] distances) {
         if (fingerprints == null || distances == null) {
             throw new IllegalArgumentException();
         }
