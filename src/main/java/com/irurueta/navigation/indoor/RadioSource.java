@@ -15,10 +15,12 @@
  */
 package com.irurueta.navigation.indoor;
 
+import java.io.Serializable;
+
 /**
  * Interface defining any radio source (e.g. WiFi access point or Bluetooth beacon).
  */
-public interface RadioSource {
+public interface RadioSource extends Serializable {
 
     /**
      * Gets frequency used by this radio source (expressed in Hz).

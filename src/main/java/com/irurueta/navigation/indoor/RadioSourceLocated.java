@@ -18,12 +18,14 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
 
+import java.io.Serializable;
+
 /**
  * Interface defining any radio source (e.g. Wifi access point or
  * Bluetooth beacon) whose location is known.
  * @param <P> a {@link Point} type.
  */
-public interface RadioSourceLocated<P extends Point> {
+public interface RadioSourceLocated<P extends Point> extends Serializable {
     /**
      * Gets position where radio source is located.
      * @return position where radio source is located.

@@ -47,7 +47,7 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
      * or position is null.
      */
     public RangingReadingLocated(S source, double distance,
-            P position) throws IllegalArgumentException {
+            P position) {
         super(source, distance);
 
         if (position == null) {
@@ -67,8 +67,7 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
      * position is null or standard deviation is zero or negative.
      */
     public RangingReadingLocated(S source, double distance,
-            P position, Double distanceStandardDeviation)
-            throws IllegalArgumentException {
+            P position, Double distanceStandardDeviation) {
         super(source, distance, distanceStandardDeviation);
 
         if (position == null) {
@@ -89,7 +88,7 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
      * or position is null.
      */
     public RangingReadingLocated(S source, double distance,
-            P position, Matrix positionCovariance) throws IllegalArgumentException {
+            P position, Matrix positionCovariance) {
         this(source, distance, position);
 
         if (positionCovariance != null) {
@@ -115,7 +114,7 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
      */
     public RangingReadingLocated(S source, double distance,
             P position, Double distanceStandardDeviation,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         this(source, distance, position, distanceStandardDeviation);
 
         if (positionCovariance != null) {

@@ -3,11 +3,13 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
 
+import java.io.Serializable;
+
 /**
  * Contains a located reading from several radio sources.
  * @param <P> a {@link Point} type.
  */
-public interface FingerprintLocated<P extends Point> {
+public interface FingerprintLocated<P extends Point> extends Serializable {
 
     /**
      * Gets position where fingerprint readings were made.

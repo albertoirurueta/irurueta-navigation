@@ -37,8 +37,7 @@ public class RangingAndRssiFingerprintLocated3D<S extends RadioSource,
      * @throws IllegalArgumentException if either readings or position are
      * null.
      */
-    public RangingAndRssiFingerprintLocated3D(List<R> readings, Point3D position)
-            throws IllegalArgumentException {
+    public RangingAndRssiFingerprintLocated3D(List<R> readings, Point3D position) {
         super(readings, position);
     }
 
@@ -53,7 +52,7 @@ public class RangingAndRssiFingerprintLocated3D<S extends RadioSource,
      * covariance has invalid size.
      */
     public RangingAndRssiFingerprintLocated3D(List<R> readings, Point3D position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(readings, position, positionCovariance);
     }
 

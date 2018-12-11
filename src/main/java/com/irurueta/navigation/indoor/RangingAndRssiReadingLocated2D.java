@@ -36,8 +36,7 @@ public class RangingAndRssiReadingLocated2D<S extends RadioSource> extends
      * or position is null.
      */
     public RangingAndRssiReadingLocated2D(S source,
-            double distance, double rssi, Point2D position)
-            throws IllegalArgumentException {
+            double distance, double rssi, Point2D position) {
         super(source, distance, rssi, position);
     }
 
@@ -54,8 +53,7 @@ public class RangingAndRssiReadingLocated2D<S extends RadioSource> extends
      */
     public RangingAndRssiReadingLocated2D(S source,
             double distance, double rssi, Point2D position,
-            Double distanceStandardDeviation, Double rssiStandardDeviation)
-            throws IllegalArgumentException {
+            Double distanceStandardDeviation, Double rssiStandardDeviation) {
         super(source, distance, rssi, position, distanceStandardDeviation,
                 rssiStandardDeviation);
     }
@@ -73,7 +71,7 @@ public class RangingAndRssiReadingLocated2D<S extends RadioSource> extends
      */
     public RangingAndRssiReadingLocated2D(S source,
             double distance, double rssi, Point2D position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(source, distance, rssi, position, positionCovariance);
     }
 
@@ -93,8 +91,7 @@ public class RangingAndRssiReadingLocated2D<S extends RadioSource> extends
     public RangingAndRssiReadingLocated2D(S source,
             double distance, double rssi, Point2D position,
             Double distanceStandardDeviation, Double rssiStandardDeviation,
-            Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(source, distance, rssi, position, distanceStandardDeviation,
                 rssiStandardDeviation, positionCovariance);
     }

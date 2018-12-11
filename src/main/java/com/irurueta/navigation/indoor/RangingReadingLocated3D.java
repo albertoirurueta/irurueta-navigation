@@ -35,7 +35,7 @@ public class RangingReadingLocated3D<S extends RadioSource> extends RangingReadi
      * or position is null.
      */
     public RangingReadingLocated3D(S source, double distance,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(source, distance, position);
     }
 
@@ -49,8 +49,7 @@ public class RangingReadingLocated3D<S extends RadioSource> extends RangingReadi
      * position is null or standard deviation is zero or negative.
      */
     public RangingReadingLocated3D(S source, double distance,
-            Point3D position, Double distanceStandardDeviation)
-            throws IllegalArgumentException {
+            Point3D position, Double distanceStandardDeviation) {
         super(source, distance, position, distanceStandardDeviation);
     }
 
@@ -65,7 +64,7 @@ public class RangingReadingLocated3D<S extends RadioSource> extends RangingReadi
      * or position is null.
      */
     public RangingReadingLocated3D(S source, double distance,
-            Point3D position, Matrix positionCovariance) throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(source, distance, position, positionCovariance);
     }
 
@@ -82,7 +81,7 @@ public class RangingReadingLocated3D<S extends RadioSource> extends RangingReadi
      */
     public RangingReadingLocated3D(S source, double distance,
             Point3D position, Double distanceStandardDeviation,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(source, distance, position, distanceStandardDeviation,
                 positionCovariance);
     }

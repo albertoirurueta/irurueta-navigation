@@ -18,12 +18,14 @@ package com.irurueta.navigation.indoor;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
 
+import java.io.Serializable;
+
 /**
  * Contains a located signal reading associated to a given radio source
  * (e.g. WiFi access point or bluetooth beacon).
  * @param <P> a {@link Point} type.
  */
-public interface ReadingLocated<P extends Point> {
+public interface ReadingLocated<P extends Point> extends Serializable {
 
     /**
      * Gets position where reading was made.

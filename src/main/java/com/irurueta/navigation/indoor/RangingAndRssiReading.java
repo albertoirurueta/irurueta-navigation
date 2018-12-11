@@ -51,8 +51,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
      * @param rssi received signal strength indicator in dBm.
      * @throws IllegalArgumentException if radio source data is null or distance is negative.
      */
-    public RangingAndRssiReading(S source, double distance, double rssi)
-        throws IllegalArgumentException {
+    public RangingAndRssiReading(S source, double distance, double rssi) {
         super(source);
 
         if (distance < 0.0) {
@@ -74,8 +73,7 @@ public class RangingAndRssiReading<S extends RadioSource> extends Reading<S> {
      * or any of the standard deviations is zero or negative.
      */
     public RangingAndRssiReading(S source, double distance, double rssi,
-            Double distanceStandardDeviation, Double rssiStandardDeviation)
-            throws IllegalArgumentException {
+            Double distanceStandardDeviation, Double rssiStandardDeviation) {
         this(source, distance, rssi);
 
         if (distanceStandardDeviation != null && distanceStandardDeviation <= 0.0) {

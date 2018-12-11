@@ -36,8 +36,7 @@ public class RangingFingerprint<S extends RadioSource, R extends RangingReading<
      * @param readings non-located ranging readings.
      * @throws IllegalArgumentException if provided readings is null.
      */
-    public RangingFingerprint(List<R> readings)
-            throws IllegalArgumentException {
+    public RangingFingerprint(List<R> readings) {
         super(readings);
     }
 }

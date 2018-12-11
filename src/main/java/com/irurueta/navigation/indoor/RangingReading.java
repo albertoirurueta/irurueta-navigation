@@ -38,8 +38,7 @@ public class RangingReading<S extends RadioSource> extends Reading<S> {
      * @param distance distance in meters to the radio source.
      * @throws IllegalArgumentException if radio source data is null or distance is negative.
      */
-    public RangingReading(S source, double distance)
-            throws IllegalArgumentException {
+    public RangingReading(S source, double distance) {
         super(source);
 
         if (distance < 0.0) {
@@ -58,7 +57,7 @@ public class RangingReading<S extends RadioSource> extends Reading<S> {
      * standard deviation is zero or negative.
      */
     public RangingReading(S source, double distance,
-                          Double distanceStandardDeviation) throws IllegalArgumentException {
+                          Double distanceStandardDeviation) {
         this(source, distance);
 
         if (distanceStandardDeviation != null && distanceStandardDeviation <= 0.0) {
