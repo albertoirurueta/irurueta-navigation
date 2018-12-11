@@ -158,8 +158,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator(
-            List<? extends RssiReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
+            List<? extends RssiReadingLocated<S, P>> readings) {
         super(readings);
     }
 
@@ -181,8 +180,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      */
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
@@ -196,8 +194,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      */
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition)
-            throws IllegalArgumentException {
+            P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -235,8 +232,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }
@@ -263,8 +259,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      */
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -296,8 +291,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -315,8 +309,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      */
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            P initialPosition, Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -368,8 +361,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -390,8 +382,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     public RobustRssiRadioSourceEstimator(
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -445,8 +436,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
             List<? extends RssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
         mInitialPathLossExponent = initialPathLossExponent;
@@ -502,7 +492,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setInitialTransmittedPower(Double initialTransmittedPower)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -740,7 +730,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
     protected double residual(Solution<P> currentEstimation, int i) {
         //Model fitted internally is equal to:
         //Pr (dBm) = 10 * log(Pte * k^n / d^n) = 10*n*log(k) + 10*log(Pte) - 5*n*log(d^2)
-        //where;
+        //where:
         //Pr is received, expressed in dBm
         //Pte is equivalent transmitted power, expressed in dBm
         //k is a constant equal to k = c^2 / (pi * f)^2, where c is speed of light

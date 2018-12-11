@@ -67,8 +67,7 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRangingRadioSourceEstimator(
-            List<? extends RangingReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, P>> readings) {
         super(readings);
     }
 
@@ -90,8 +89,7 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
      */
     public RobustRangingRadioSourceEstimator(
             List<? extends RangingReadingLocated<S, P>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
@@ -114,7 +112,7 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
      */
     public RobustRangingRadioSourceEstimator(
             List<? extends RangingReadingLocated<S, P>> readings,
-            P initialPosition) throws IllegalArgumentException {
+            P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -143,8 +141,7 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
     public RobustRangingRadioSourceEstimator(
             List<? extends RangingReadingLocated<S, P>> readings,
             P initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }

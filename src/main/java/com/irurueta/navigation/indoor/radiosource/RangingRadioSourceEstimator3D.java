@@ -53,8 +53,7 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, Point3D>> readings) {
         super(readings);
     }
 
@@ -76,8 +75,7 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
      */
     public RangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            RangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
     }
 
@@ -100,7 +98,7 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
      */
     public RangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -127,8 +125,7 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
     public RangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
     }
 

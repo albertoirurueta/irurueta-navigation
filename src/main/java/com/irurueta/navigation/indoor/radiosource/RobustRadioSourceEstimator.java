@@ -183,8 +183,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRadioSourceEstimator(List<? extends R> readings)
-            throws IllegalArgumentException {
+    public RobustRadioSourceEstimator(List<? extends R> readings) {
         internalSetReadings(readings);
     }
 
@@ -204,8 +203,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
-    public RobustRadioSourceEstimator(List<? extends R> readings, L listener)
-            throws IllegalArgumentException {
+    public RobustRadioSourceEstimator(List<? extends R> readings, L listener) {
         this(readings);
         mListener = listener;
     }
@@ -236,8 +234,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
      * @throws LockedException if this estimator is locked.
      */
-    public void setProgressDelta(float progressDelta)
-            throws IllegalArgumentException, LockedException {
+    public void setProgressDelta(float progressDelta) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -268,8 +265,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException if estimator is locked.
      */
-    public void setConfidence(double confidence)
-            throws IllegalArgumentException, LockedException {
+    public void setConfidence(double confidence) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -297,8 +293,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException if this estimator is locked.
      */
-    public void setMaxIterations(int maxIterations)
-            throws IllegalArgumentException, LockedException {
+    public void setMaxIterations(int maxIterations) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -377,7 +372,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * @throws IllegalArgumentException if readings are not valid.
      */
     public void setReadings(List<? extends R> readings)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -433,7 +428,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * estimation is already in progress.
      */
     public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException { }
+            throws LockedException { }
 
     /**
      * Gets covariance for estimated position, power and pathloss.
@@ -513,9 +508,9 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Gets estimated located radio source.
      * @return estimated located radio source.
-     * @param <RS> type of located radio source.
+     * @param <S> type of located radio source.
      */
-    public abstract <RS extends RadioSourceLocated<P>> RS getEstimatedRadioSource();
+    public abstract <S extends RadioSourceLocated<P>> S getEstimatedRadioSource();
 
     /**
      * Internally sets signal readings belonging to the same radio source.
@@ -523,9 +518,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * @throws IllegalArgumentException if readings are null, not enough readings
      * are available, or readings do not belong to the same access point.
      */
-    protected void internalSetReadings(
-            List<? extends R> readings)
-            throws IllegalArgumentException {
+    protected void internalSetReadings(List<? extends R> readings) {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
         }

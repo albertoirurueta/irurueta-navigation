@@ -61,8 +61,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -84,8 +83,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
      */
     public RobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -108,7 +106,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
      */
     public RobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -135,8 +133,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     public RobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 

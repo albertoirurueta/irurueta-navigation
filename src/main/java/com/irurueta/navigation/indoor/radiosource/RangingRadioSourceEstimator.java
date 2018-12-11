@@ -101,8 +101,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingRadioSourceEstimator(
-            List<? extends RangingReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, P>> readings) {
         super(readings);
     }
 
@@ -124,8 +123,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
      */
     public RangingRadioSourceEstimator(
             List<? extends RangingReadingLocated<S, P>> readings,
-            RangingRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
@@ -148,7 +146,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
      */
     public RangingRadioSourceEstimator(
             List<? extends RangingReadingLocated<S, P>> readings,
-            P initialPosition) throws IllegalArgumentException {
+            P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -177,8 +175,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     public RangingRadioSourceEstimator(
             List<? extends RangingReadingLocated<S, P>> readings,
             P initialPosition,
-            RangingRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }

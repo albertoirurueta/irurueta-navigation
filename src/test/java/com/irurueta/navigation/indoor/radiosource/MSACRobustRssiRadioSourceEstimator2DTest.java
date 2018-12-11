@@ -5011,7 +5011,7 @@ public class MSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
