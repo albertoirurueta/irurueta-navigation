@@ -66,8 +66,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MixedRadioSourceEstimator2D(
-            List<? extends ReadingLocated<Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends ReadingLocated<Point2D>> readings) {
         super(readings);
     }
 
@@ -89,8 +88,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
      */
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
-            MixedRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -113,7 +111,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
      */
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -140,8 +138,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition,
-            MixedRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -166,8 +163,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
      */
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -196,8 +192,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            MixedRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -214,8 +209,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
      */
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -262,8 +256,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            MixedRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -282,7 +275,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
     public MixedRadioSourceEstimator2D(
             List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition,initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -335,8 +328,7 @@ public class MixedRadioSourceEstimator2D<S extends RadioSource>
             List<? extends ReadingLocated<Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            MixedRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            MixedRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }

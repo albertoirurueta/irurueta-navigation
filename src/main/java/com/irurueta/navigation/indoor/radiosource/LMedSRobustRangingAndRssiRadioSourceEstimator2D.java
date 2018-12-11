@@ -107,8 +107,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -130,8 +129,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -145,8 +143,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition)
-            throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -182,8 +179,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -209,8 +205,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -240,8 +235,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -258,8 +252,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -306,8 +299,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -326,8 +318,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
     public LMedSRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -383,8 +374,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -431,8 +421,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSour
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

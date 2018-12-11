@@ -92,8 +92,7 @@ public class LMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> ext
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingRadioSourceEstimator2D(
-            List<? extends RangingReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -115,8 +114,7 @@ public class LMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> ext
      */
     public LMedSRobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -139,7 +137,7 @@ public class LMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> ext
      */
     public LMedSRobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -166,8 +164,7 @@ public class LMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> ext
     public LMedSRobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -213,8 +210,7 @@ public class LMedSRobustRangingRadioSourceEstimator2D<S extends RadioSource> ext
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

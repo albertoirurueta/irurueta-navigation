@@ -197,8 +197,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RangingAndRssiRadioSourceEstimator(
-            List<? extends RangingAndRssiReadingLocated<S, P>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, P>> readings) {
         super(readings);
     }
 
@@ -220,8 +219,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      */
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
     }
 
@@ -244,7 +242,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      */
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            P initialPosition) throws IllegalArgumentException {
+            P initialPosition) {
         super(readings);
         mInitialPosition = initialPosition;
     }
@@ -273,8 +271,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
     }
@@ -301,8 +298,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      */
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -333,8 +329,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
     }
@@ -352,8 +347,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      */
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
-            P initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            P initialPosition, Double initialTransmittedPowerdBm) {
         super(readings);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -405,8 +399,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         super(readings, listener);
         mInitialPosition = initialPosition;
         mInitialTransmittedPowerdBm = initialTransmittedPowerdBm;
@@ -427,7 +420,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     public RangingAndRssiRadioSourceEstimator(
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         this(readings, initialPosition, initialTransmittedPowerdBm);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -481,8 +474,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
             List<? extends RangingAndRssiReadingLocated<S, P>> readings,
             P initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RangingAndRssiRadioSourceEstimatorListener<S, P> listener)
-            throws IllegalArgumentException {
+            RangingAndRssiRadioSourceEstimatorListener<S, P> listener) {
         this(readings, initialPosition, initialTransmittedPowerdBm, listener);
         mInitialPathLossExponent = initialPathLossExponent;
     }
@@ -561,7 +553,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @throws IllegalArgumentException if provided value is negative.
      */
     public void setInitialTransmittedPower(Double initialTransmittedPower)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -734,7 +726,7 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
      * @throws IllegalStateException if inner RSSI estimator is busy.
      */
     @Override
-    public int getMinReadings() throws IllegalStateException {
+    public int getMinReadings() {
         createInnerEstimatorsIfNeeded();
 
         int result = getNumberOfDimensions();
