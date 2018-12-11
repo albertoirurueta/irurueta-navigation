@@ -2089,14 +2089,14 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
 
         mRssiEstimator.setListener(new RobustRssiRadioSourceEstimatorListener<S, P>() {
             @Override
-            public void onEstimateStart(RobustRssiRadioSourceEstimator<S, P> estimator) { }
+            public void onEstimateStart(RobustRssiRadioSourceEstimator<S, P> estimator) { /* not used */ }
 
             @Override
-            public void onEstimateEnd(RobustRssiRadioSourceEstimator<S, P> estimator) { }
+            public void onEstimateEnd(RobustRssiRadioSourceEstimator<S, P> estimator) { /* not used */ }
 
             @Override
             public void onEstimateNextIteration(RobustRssiRadioSourceEstimator<S, P> estimator,
-                                                int iteration) { }
+                                                int iteration) { /* not used */ }
 
             @Override
             public void onEstimateProgressChange(RobustRssiRadioSourceEstimator<S, P> estimator, float progress) {
@@ -2116,8 +2116,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * are available, or readings do not belong to the same access point.
      */
     private void internalSetReadings(
-            List<? extends ReadingLocated<P>> readings)
-            throws IllegalArgumentException {
+            List<? extends ReadingLocated<P>> readings) {
         if (!areValidReadings(readings)) {
             throw new IllegalArgumentException();
         }
