@@ -98,8 +98,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(
-            List<? extends RangingReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, Point3D>> readings) {
         super(readings);
     }
 
@@ -121,8 +120,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
     }
 
@@ -145,7 +143,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -172,8 +170,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
     public PROMedSRobustRangingRadioSourceEstimator3D(
             List<? extends RangingReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -186,7 +183,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      * of quality scores is less than required minimum.
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -204,8 +201,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RangingReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingReadingLocated<S, Point3D>> readings) {
         super(readings);
         internalSetQualityScores(qualityScores);
     }
@@ -221,8 +217,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(
             double[] qualityScores,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -241,8 +236,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
     public PROMedSRobustRangingRadioSourceEstimator3D(
             double[] qualityScores,
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -258,7 +252,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      * of quality scores is less than required minimum.
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(double[] qualityScores,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -277,7 +271,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(double[] qualityScores,
             List<? extends RangingReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition) throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -295,8 +289,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      */
     public PROMedSRobustRangingRadioSourceEstimator3D(double[] qualityScores,
             Point3D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -317,8 +310,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
     public PROMedSRobustRangingRadioSourceEstimator3D(double[] qualityScores,
             List<? extends RangingReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -365,8 +357,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -403,8 +394,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      * @throws LockedException if robust solver is locked because an
      * estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -550,8 +540,7 @@ public class PROMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> e
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinReadings()) {
             throw new IllegalArgumentException();

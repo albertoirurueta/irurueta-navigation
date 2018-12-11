@@ -109,8 +109,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -132,8 +131,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -147,8 +145,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition)
-            throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -184,8 +181,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -211,8 +207,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -242,8 +237,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -260,8 +254,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -308,8 +301,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -328,8 +320,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -385,8 +376,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -400,7 +390,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -417,8 +407,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
         internalSetQualityScores(qualityScores);
     }
@@ -434,8 +423,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -454,8 +442,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -475,8 +462,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition)
-            throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -492,8 +478,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * of quality scores is less than required minimum.
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores, Point2D initialPosition)
-            throws IllegalArgumentException {
+            double[] qualityScores, Point2D initialPosition) {
         super(initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -511,8 +496,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -534,8 +518,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -553,7 +536,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -574,8 +557,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -595,8 +577,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -619,8 +600,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -643,8 +623,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -665,7 +644,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             Point2D initialPosition,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -688,8 +667,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             double[] qualityScores,
             Point2D initialPosition,
             Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -714,8 +692,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -740,8 +717,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
         internalSetQualityScores(qualityScores);
@@ -763,8 +739,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      */
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
-            Double initialTransmittedPowerdBm, double initialPathLossExponent)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
         internalSetQualityScores(qualityScores);
@@ -788,8 +763,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
     public PROSACRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -817,8 +791,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            RobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -842,8 +815,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
      */
-    public void setThreshold(double threshold)
-            throws IllegalArgumentException, LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -879,8 +851,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @throws LockedException if robust solver is locked because an
      * estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1073,8 +1044,7 @@ public class PROSACRobustRangingAndRssiRadioSourceEstimator2D<S extends RadioSou
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than required minimum.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinReadings()) {
             throw new IllegalArgumentException();

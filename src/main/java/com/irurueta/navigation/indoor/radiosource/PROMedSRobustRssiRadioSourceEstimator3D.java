@@ -124,8 +124,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
-            List<? extends RssiReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RssiReadingLocated<S, Point3D>> readings) {
         super(readings);
     }
 
@@ -147,8 +146,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
     }
 
@@ -162,8 +160,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition)
-            throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -199,8 +196,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -226,8 +222,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -257,8 +252,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -275,8 +269,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point3D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -323,8 +316,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -343,8 +335,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -400,8 +391,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -415,7 +405,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      * of quality scores is less than required minimum.
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
-            double[] qualityScores) throws IllegalArgumentException {
+            double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -432,8 +422,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
-            List<? extends RssiReadingLocated<S, Point3D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RssiReadingLocated<S, Point3D>> readings) {
         super(readings);
         internalSetQualityScores(qualityScores);
     }
@@ -449,8 +438,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -469,8 +457,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -490,8 +477,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition)
-            throws IllegalArgumentException {
+            Point3D initialPosition) {
         super(readings, initialPosition);
         internalSetQualityScores(qualityScores);
     }
@@ -545,8 +531,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -564,7 +549,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      */
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -585,8 +570,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -606,8 +590,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -630,8 +613,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -654,8 +636,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
-            Point3D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point3D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -676,7 +657,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
     public PROMedSRobustRssiRadioSourceEstimator3D(
             double[] qualityScores,
             Point3D initialPosition,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
         internalSetQualityScores(qualityScores);
     }
@@ -724,8 +705,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -750,8 +730,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
             double[] qualityScores,
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent)
-            throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
         internalSetQualityScores(qualityScores);
@@ -821,8 +800,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
             List<? extends RssiReadingLocated<S, Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener)
-            throws IllegalArgumentException {
+            RobustRssiRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
         internalSetQualityScores(qualityScores);
@@ -870,8 +848,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -908,8 +885,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      * @throws LockedException if robust solver is locked because an
      * estimation is already in progress.
      */
-    public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+    public void setQualityScores(double[] qualityScores) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -1056,8 +1032,7 @@ public class PROMedSRobustRssiRadioSourceEstimator3D<S extends RadioSource> exte
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinReadings()) {
             throw new IllegalArgumentException();
