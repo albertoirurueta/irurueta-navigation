@@ -48,8 +48,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * provided sources is less than the required minimum.
      */
     public MSACRobustPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -62,8 +61,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public MSACRobustPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -79,8 +77,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public MSACRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -106,8 +103,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public MSACRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -122,7 +118,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public MSACRobustPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -140,7 +136,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
     public MSACRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -166,8 +162,7 @@ public class MSACRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
      */
-    public void setThreshold(double threshold)
-            throws IllegalArgumentException, LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         ((MSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 setThreshold(threshold);
     }

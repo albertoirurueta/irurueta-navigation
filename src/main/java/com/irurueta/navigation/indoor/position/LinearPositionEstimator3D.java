@@ -50,8 +50,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public LinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources)
-            throws IllegalArgumentException {
+    public LinearPositionEstimator3D(List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -64,8 +63,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -81,8 +79,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      */
     public LinearPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -107,8 +104,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      */
     public LinearPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
-            PositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            PositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -123,7 +119,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      */
     public LinearPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -141,7 +137,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
     public LinearPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point3D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -171,8 +167,7 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      */
     @Override
     @SuppressWarnings("Duplicates")
-    protected void setPositionsAndDistances(List<Point3D> positions, List<Double> distances)
-            throws IllegalArgumentException {
+    protected void setPositionsAndDistances(List<Point3D> positions, List<Double> distances) {
         int size = positions.size();
         Point3D[] positionsArray = new InhomogeneousPoint3D[size];
         positionsArray = positions.toArray(positionsArray);

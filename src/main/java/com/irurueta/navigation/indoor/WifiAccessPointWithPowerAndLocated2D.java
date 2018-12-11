@@ -355,8 +355,7 @@ public class WifiAccessPointWithPowerAndLocated2D extends
     public WifiAccessPointWithPowerAndLocated2D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point2D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point2D position, Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation, position,
                 positionCovariance);
@@ -383,7 +382,7 @@ public class WifiAccessPointWithPowerAndLocated2D extends
     public WifiAccessPointWithPowerAndLocated2D(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point2D position, Matrix positionCovariance) throws IllegalArgumentException {
+            Point2D position, Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation, position, positionCovariance);

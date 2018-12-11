@@ -48,8 +48,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
      * provided sources is less than the required minimum.
      */
     public LMedSRobustPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -62,8 +61,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LMedSRobustPositionEstimator3D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -79,8 +77,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
      */
     public LMedSRobustPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -106,8 +103,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
      */
     public LMedSRobustPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustPositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -122,8 +118,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
      */
     public LMedSRobustPositionEstimator3D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -141,8 +136,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
     public LMedSRobustPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -192,8 +186,7 @@ public class LMedSRobustPositionEstimator3D extends RobustPositionEstimator3D {
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         ((LMedSRobustTrilateration3DSolver)mTrilaterationSolver).
                 setStopThreshold(stopThreshold);
     }

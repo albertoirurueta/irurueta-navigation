@@ -35,8 +35,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Point3D position)
-            throws IllegalArgumentException {
+            double transmittedPower, Point3D position) {
         super(bssid, frequency, transmittedPower, position);
     }
 
@@ -51,8 +50,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Point3D position)
-            throws IllegalArgumentException {
+            double transmittedPower, Point3D position) {
         super(bssid, frequency, ssid, transmittedPower, position);
     }
 
@@ -69,7 +67,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(bssid, frequency, transmittedPower,
                 transmittedPowerStandardDeviation, position);
     }
@@ -88,7 +86,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, position);
     }
@@ -105,8 +103,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double transmittedPower, Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, position, positionCovariance);
     }
 
@@ -123,8 +120,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      * @throws IllegalArgumentException if BSSID is null or frequency is negative.
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
-            double transmittedPower, Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double transmittedPower, Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower, position, positionCovariance);
     }
 
@@ -143,8 +139,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 position, positionCovariance);
     }
@@ -166,7 +161,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             String ssid, double transmittedPower,
             Double transmittedPowerStandardDeviation, Point3D position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, position, positionCovariance);
     }
@@ -182,8 +177,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      * @throws IllegalArgumentException if either BSSID is null or frequency is negative
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
-            double transmittedPower, double pathLossExponent, Point3D position)
-            throws IllegalArgumentException {
+            double transmittedPower, double pathLossExponent, Point3D position) {
         super(bssid, frequency, transmittedPower, pathLossExponent, position);
     }
 
@@ -201,8 +195,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Point3D position)
-            throws IllegalArgumentException {
+            double pathLossExponent, Point3D position) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, position);
     }
@@ -223,7 +216,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             String ssid, double transmittedPower,
             Double transmittedPowerStandardDeviation, double pathLossExponent,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 position);
@@ -244,7 +237,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, double pathLossExponent, Point3D position,
-            Matrix positionCovariance) throws IllegalArgumentException {
+            Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, pathLossExponent, position,
                 positionCovariance);
     }
@@ -265,8 +258,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
      */
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
-            double pathLossExponent, Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            double pathLossExponent, Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, position, positionCovariance);
     }
@@ -289,8 +281,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             String ssid, double transmittedPower,
             Double transmittedPowerStandardDeviation, double pathLossExponent,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent, position,
                 positionCovariance);
@@ -314,7 +305,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation, position);
     }
@@ -338,7 +329,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position) throws IllegalArgumentException {
+            Point3D position) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation, position);
@@ -364,8 +355,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position, Matrix positionCovariance)
-            throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, transmittedPower, transmittedPowerStandardDeviation,
                 pathLossExponent, pathLossExponentStandardDeviation, position,
                 positionCovariance);
@@ -392,7 +382,7 @@ public class WifiAccessPointWithPowerAndLocated3D extends
     public WifiAccessPointWithPowerAndLocated3D(String bssid, double frequency, String ssid,
             double transmittedPower, Double transmittedPowerStandardDeviation,
             double pathLossExponent, Double pathLossExponentStandardDeviation,
-            Point3D position, Matrix positionCovariance) throws IllegalArgumentException {
+            Point3D position, Matrix positionCovariance) {
         super(bssid, frequency, ssid, transmittedPower,
                 transmittedPowerStandardDeviation, pathLossExponent,
                 pathLossExponentStandardDeviation, position, positionCovariance);

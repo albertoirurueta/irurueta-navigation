@@ -125,8 +125,7 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      * @throws IllegalArgumentException if provided value is null or the number of provided sources is less
      * than the required minimum.
      */
-    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources)
-            throws IllegalArgumentException {
+    protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
         super.internalSetSources(sources);
         buildPositionsAndDistances();
     }
@@ -137,8 +136,7 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super.internalSetFingerprint(fingerprint);
         buildPositionsAndDistances();
     }

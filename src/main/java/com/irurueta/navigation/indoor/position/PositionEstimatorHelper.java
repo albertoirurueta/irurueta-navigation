@@ -272,6 +272,8 @@ public class PositionEstimatorHelper {
                                 (RangingAndRssiReading<? extends RadioSource>) reading,
                                 positionStandardDeviation, result2);
                         break;
+                    default:
+                        break;
                 }
 
                 if (position != null) {

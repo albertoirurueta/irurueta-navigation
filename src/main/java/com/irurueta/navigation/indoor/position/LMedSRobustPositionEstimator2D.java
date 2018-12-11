@@ -48,8 +48,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * provided sources is less than the required minimum.
      */
     public LMedSRobustPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -62,8 +61,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LMedSRobustPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -79,8 +77,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public LMedSRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -106,8 +103,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public LMedSRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustPositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -122,7 +118,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
      */
     public LMedSRobustPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -140,7 +136,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
     public LMedSRobustPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            RobustPositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            RobustPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -190,8 +186,7 @@ public class LMedSRobustPositionEstimator2D extends RobustPositionEstimator2D {
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         ((LMedSRobustTrilateration2DSolver)mTrilaterationSolver).
                 setStopThreshold(stopThreshold);
     }

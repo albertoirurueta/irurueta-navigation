@@ -128,7 +128,7 @@ public abstract class RobustPositionEstimator<P extends Point> {
      * than the required minimum.
      */
     public void setSources(List<? extends RadioSourceLocated<P>> sources)
-            throws LockedException, IllegalArgumentException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

@@ -50,8 +50,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public LinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources)
-            throws IllegalArgumentException {
+    public LinearPositionEstimator2D(List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -64,8 +63,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public LinearPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -81,8 +79,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
      */
     public LinearPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
-            throws IllegalArgumentException {
+            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -107,8 +104,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
      */
     public LinearPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            PositionEstimatorListener<Point2D> listener)
-            throws IllegalArgumentException {
+            PositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -123,7 +119,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
      */
     public LinearPositionEstimator2D(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -141,7 +137,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
     public LinearPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            PositionEstimatorListener<Point2D> listener) throws IllegalArgumentException {
+            PositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -171,8 +167,7 @@ public class LinearPositionEstimator2D extends LinearPositionEstimator<Point2D> 
      */
     @Override
     @SuppressWarnings("Duplicates")
-    protected void setPositionsAndDistances(List<Point2D> positions, List<Double> distances)
-            throws IllegalArgumentException {
+    protected void setPositionsAndDistances(List<Point2D> positions, List<Double> distances) {
         int size = positions.size();
         Point2D[] positionsArray = new InhomogeneousPoint2D[size];
         positionsArray = positions.toArray(positionsArray);
