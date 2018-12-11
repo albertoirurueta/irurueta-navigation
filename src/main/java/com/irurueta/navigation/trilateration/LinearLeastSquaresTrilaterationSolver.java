@@ -44,7 +44,7 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required 2 points.
      */
-    public LinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) throws IllegalArgumentException {
+    public LinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -65,7 +65,7 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * length is smaller than required 2 points.
      */
     public LinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
-            TrilaterationSolverListener<P> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<P> listener) {
         super(positions, distances, listener);
     }
 

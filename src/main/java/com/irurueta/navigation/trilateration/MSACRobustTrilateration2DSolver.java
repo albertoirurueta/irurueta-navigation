@@ -74,8 +74,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public MSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public MSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -89,7 +88,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * don't have the same length or their length is smaller than required (3 points).
      */
     public MSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -106,8 +105,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      */
     public MSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -121,8 +119,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * don't have the same length or their length is smaller than required (3 points).
      */
     public MSACRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -132,8 +129,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * @throws IllegalArgumentException if circles is null or if length of circles array
      * is less than required (3 points).
      */
-    public MSACRobustTrilateration2DSolver(Circle[] circles)
-            throws IllegalArgumentException {
+    public MSACRobustTrilateration2DSolver(Circle[] circles) {
         super(circles);
     }
 
@@ -145,7 +141,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * than required (3 points) or don't have the same length.
      */
     public MSACRobustTrilateration2DSolver(Circle[] circles,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
     }
 
@@ -158,8 +154,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * is less than required (3 points).
      */
     public MSACRobustTrilateration2DSolver(Circle[] circles,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, listener);
     }
 
@@ -174,8 +169,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      */
     public MSACRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, distanceStandardDeviations, listener);
     }
 
@@ -195,8 +189,7 @@ public class MSACRobustTrilateration2DSolver extends RobustTrilateration2DSolver
      * @throws LockedException if robust estimator is locked because an
      * estimation is already in progress.
      */
-    public void setThreshold(double threshold) throws IllegalArgumentException,
-            LockedException {
+    public void setThreshold(double threshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

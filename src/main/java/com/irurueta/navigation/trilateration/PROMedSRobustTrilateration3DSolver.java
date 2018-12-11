@@ -104,8 +104,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length of their length is smaller than required (4 points).
      */
-    public PROMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public PROMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -119,7 +118,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * don't have the same length or their length is smaller than required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -136,8 +135,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     public PROMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -151,8 +149,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * don't have the same length or their length is smaller than required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
@@ -162,8 +159,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
      * is less than required (4 points).
      */
-    public PROMedSRobustTrilateration3DSolver(Sphere[] spheres)
-            throws IllegalArgumentException {
+    public PROMedSRobustTrilateration3DSolver(Sphere[] spheres) {
         super(spheres);
     }
 
@@ -175,7 +171,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * than required (4 points) or don't have the same length.
      */
     public PROMedSRobustTrilateration3DSolver(Sphere[] spheres,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
     }
 
@@ -188,8 +184,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * is less than required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(Sphere[] spheres,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(spheres, listener);
     }
 
@@ -204,8 +199,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     public PROMedSRobustTrilateration3DSolver(Sphere[] spheres,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
     }
 
@@ -217,8 +211,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * @throws IllegalArgumentException if quality scores is null, length
      * of quality scores is less than required minimum (4 samples).
      */
-    public PROMedSRobustTrilateration3DSolver(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROMedSRobustTrilateration3DSolver(double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -234,8 +227,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * of quality scores is less than required minimum (4 samples).
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -253,8 +245,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * than required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
-            Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+            Point3D[] positions, double[] distances) {
         super(positions, distances);
         internalSetQualityScores(qualityScores);
     }
@@ -274,8 +265,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
             Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -297,8 +287,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
             Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -318,8 +307,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
             Point3D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -335,7 +323,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
-            Sphere[] spheres) throws IllegalArgumentException {
+            Sphere[] spheres) {
         super(spheres);
         internalSetQualityScores(qualityScores);
     }
@@ -352,8 +340,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * length is less than required (4 points).
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
-            Sphere[] spheres, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            Sphere[] spheres, double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -372,8 +359,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
             Sphere[] spheres,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(spheres, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -393,8 +379,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     public PROMedSRobustTrilateration3DSolver(double[] qualityScores,
             Sphere[] spheres, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -441,8 +426,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -477,7 +461,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      */
     @Override
     public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -616,8 +600,7 @@ public class PROMedSRobustTrilateration3DSolver extends RobustTrilateration3DSol
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();

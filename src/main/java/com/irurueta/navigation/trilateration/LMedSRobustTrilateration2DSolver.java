@@ -96,8 +96,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (3 points).
      */
-    public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -111,7 +110,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * don't have the same length or their length is smaller than required (3 points).
      */
     public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -128,8 +127,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      */
     public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -143,8 +141,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * don't have the same length or their length is smaller than required (3 points).
      */
     public LMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -167,7 +164,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * than required (3 points) or don't have the same length.
      */
     public LMedSRobustTrilateration2DSolver(Circle[] circles,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
     }
 
@@ -180,8 +177,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * is less than required (3 points).
      */
     public LMedSRobustTrilateration2DSolver(Circle[] circles,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, listener);
     }
 
@@ -196,8 +192,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      */
     public LMedSRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, distanceStandardDeviations, listener);
     }
 
@@ -243,8 +238,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

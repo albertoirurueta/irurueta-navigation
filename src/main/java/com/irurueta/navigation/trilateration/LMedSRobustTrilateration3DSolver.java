@@ -96,8 +96,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length or their length is smaller than required (4 points).
      */
-    public LMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public LMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -111,7 +110,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * don't have the same length or their length is smaller than required (4 points).
      */
     public LMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -128,8 +127,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      */
     public LMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -143,8 +141,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * don't have the same length or their length is smaller than required (4 points).
      */
     public LMedSRobustTrilateration3DSolver(Point3D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
@@ -154,8 +151,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * @throws IllegalArgumentException if spheres is null or if length of spheres array
      * is less than required (4 points).
      */
-    public LMedSRobustTrilateration3DSolver(Sphere[] spheres)
-            throws IllegalArgumentException {
+    public LMedSRobustTrilateration3DSolver(Sphere[] spheres) {
         super(spheres);
     }
 
@@ -167,7 +163,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * than required (4 points) or don't have the same length.
      */
     public LMedSRobustTrilateration3DSolver(Sphere[] spheres,
-        double[] distanceStandardDeviations) throws IllegalArgumentException {
+        double[] distanceStandardDeviations) {
         super(spheres, distanceStandardDeviations);
     }
 
@@ -180,8 +176,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * is less than required (4 points).
      */
     public LMedSRobustTrilateration3DSolver(Sphere[] spheres,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(spheres, listener);
     }
 
@@ -196,8 +191,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      */
     public LMedSRobustTrilateration3DSolver(Sphere[] spheres,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point3D> listener) {
         super(spheres, distanceStandardDeviations, listener);
     }
 
@@ -243,8 +237,7 @@ public class LMedSRobustTrilateration3DSolver extends RobustTrilateration3DSolve
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }

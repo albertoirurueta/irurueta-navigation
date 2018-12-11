@@ -40,8 +40,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    public LinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public LinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -62,7 +61,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * length is smaller than required (2 points).
      */
     public LinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -71,7 +70,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public LinearLeastSquaresTrilateration2DSolver(Circle[] circles) throws IllegalArgumentException {
+    public LinearLeastSquaresTrilateration2DSolver(Circle[] circles) {
         super();
         internalSetCircles(circles);
     }
@@ -83,7 +82,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public LinearLeastSquaresTrilateration2DSolver(Circle[] circles,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
@@ -112,8 +111,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * is less than 2.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setCircles(Circle[] circles) throws IllegalArgumentException,
-            LockedException {
+    public void setCircles(Circle[] circles) throws LockedException {
         if(isLocked()) {
             throw new LockedException();
         }
@@ -160,7 +158,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @throws IllegalArgumentException if circles is null or length of array of circles
      * is less than 2.
      */
-    private void internalSetCircles(Circle[] circles) throws IllegalArgumentException {
+    private void internalSetCircles(Circle[] circles) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }

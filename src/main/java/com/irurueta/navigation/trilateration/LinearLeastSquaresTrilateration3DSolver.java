@@ -40,8 +40,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    public LinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public LinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -62,7 +61,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * length is smaller than required (2 points).
      */
     public LinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
@@ -71,7 +70,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public LinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) throws IllegalArgumentException {
+    public LinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) {
         super();
         internalSetSpheres(spheres);
     }
@@ -83,7 +82,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public LinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
@@ -112,8 +111,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * is less than 2.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws IllegalArgumentException,
-            LockedException {
+    public void setSpheres(Sphere[] spheres) throws LockedException {
         if(isLocked()) {
             throw new LockedException();
         }
@@ -160,7 +158,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
      * is less than 2.
      */
-    private void internalSetSpheres(Sphere[] spheres) throws IllegalArgumentException {
+    private void internalSetSpheres(Sphere[] spheres) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }

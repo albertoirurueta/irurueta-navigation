@@ -40,8 +40,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -61,8 +60,8 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances, Point2D initialPosition)
-            throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions,
+            double[] distances, Point2D initialPosition) {
         super(positions, distances, initialPosition);
     }
 
@@ -83,7 +82,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -106,8 +105,9 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (2 points).
      */
-    public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances, Point2D initialPosition,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions,
+            double[] distances, Point2D initialPosition,
+            TrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, initialPosition, listener);
     }
 
@@ -116,7 +116,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles) throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles) {
         super();
         internalSetCircles(circles);
     }
@@ -127,8 +127,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @param initialPosition initial position to start trilateration solving.
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
-    public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles, Point2D initialPosition)
-            throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles, Point2D initialPosition) {
         super(initialPosition);
         internalSetCircles(circles);
     }
@@ -140,7 +139,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
@@ -153,7 +152,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles, Point2D initialPosition,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
         internalSetCircles(circles);
     }
@@ -167,7 +166,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -181,8 +180,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations, Point2D initialPosition)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, Point2D initialPosition) {
         super(positions, distances, distanceStandardDeviations, initialPosition);
     }
 
@@ -196,8 +194,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations, TrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, TrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -213,7 +210,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations, Point2D initialPosition,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, initialPosition, listener);
     }
 
@@ -224,7 +221,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super();
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
@@ -237,8 +234,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
-            double[] distanceStandardDeviations, Point2D initialPosition)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, Point2D initialPosition) {
         super(initialPosition);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
@@ -252,7 +248,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
@@ -267,7 +263,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations, Point2D initialPosition,
-            TrilaterationSolverListener<Point2D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point2D> listener) {
         super(initialPosition, listener);
         internalSetCirclesAndStandardDeviations(circles, distanceStandardDeviations);
     }
@@ -296,7 +292,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * is less than 2.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setCircles(Circle[] circles) throws IllegalArgumentException, LockedException {
+    public void setCircles(Circle[] circles) throws LockedException {
         if(isLocked()) {
             throw new LockedException();
         }
@@ -313,7 +309,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if(isLocked()) {
             throw new LockedException();
         }
@@ -350,7 +346,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if circles is null or length of array of circles
      * is less than 2.
      */
-    private void internalSetCircles(Circle[] circles) throws IllegalArgumentException {
+    private void internalSetCircles(Circle[] circles) {
         if (circles == null || circles.length < MIN_POINTS) {
             throw new IllegalArgumentException();
         }
@@ -374,8 +370,8 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if circles is null, length of arrays is less than
      * 2 or don't have the same length.
      */
-    private void internalSetCirclesAndStandardDeviations(Circle[] circles, double[] radiusStandardDeviations)
-            throws IllegalArgumentException {
+    private void internalSetCirclesAndStandardDeviations(Circle[] circles,
+            double[] radiusStandardDeviations) {
         if (circles == null || circles.length < MIN_POINTS) {
             throw new IllegalArgumentException();
         }
