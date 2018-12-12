@@ -67,7 +67,7 @@ public class LMedSRobustPositionEstimator2DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 0.5;
 
-    private static final int TIMES = 5;
+    private static final int TIMES = 50;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -719,12 +719,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -761,7 +759,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     //outlier
@@ -815,80 +813,33 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         LMedSRobustPositionEstimator2D estimator =
@@ -909,12 +860,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -951,7 +900,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     //outlier
@@ -1008,80 +957,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         LMedSRobustPositionEstimator2D estimator =
@@ -1100,12 +1003,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1184,80 +1085,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         LMedSRobustPositionEstimator2D estimator =
@@ -1278,12 +1133,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1365,80 +1218,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         LMedSRobustPositionEstimator2D estimator =
@@ -1457,12 +1264,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1498,7 +1303,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     //outlier
@@ -1552,80 +1357,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         LMedSRobustPositionEstimator2D estimator =
@@ -1646,12 +1405,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1687,7 +1444,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     //outlier
@@ -1744,80 +1501,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         LMedSRobustPositionEstimator2D estimator =
@@ -1836,12 +1547,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1877,7 +1586,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     //outlier
@@ -1937,80 +1646,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         RANSACRobustPositionEstimator2D estimator =
@@ -2031,12 +1694,10 @@ public class LMedSRobustPositionEstimator2DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -2072,7 +1733,7 @@ public class LMedSRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                        distance, FREQUENCY, pathLossExponent));
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     //outlier
@@ -2134,80 +1795,34 @@ public class LMedSRobustPositionEstimator2DTest implements
             Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         RANSACRobustPositionEstimator2D estimator =
@@ -2249,14 +1864,13 @@ public class LMedSRobustPositionEstimator2DTest implements
                 estimateProgressChange = 0;
     }
 
-    @SuppressWarnings("all")
     private double receivedPower(double equivalentTransmittedPower,
-                                 double distance, double frequency, double pathLossExponent) {
+                                 double distance, double pathLossExponent) {
         //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
-        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
+        double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * LMedSRobustPositionEstimator2DTest.FREQUENCY), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
     }

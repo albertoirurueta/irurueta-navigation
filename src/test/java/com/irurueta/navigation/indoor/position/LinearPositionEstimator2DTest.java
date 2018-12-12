@@ -54,7 +54,7 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
 
     private static final double ERROR_STD = 1e-3;
 
-    private static final int TIMES = 5;
+    private static final int TIMES = 10;
 
     private int estimateStart;
     private int estimateEnd;
@@ -448,7 +448,7 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
                 0.0, ERROR_STD);
 
-        int numValid = 0, numInvalid = 0;
+        int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -516,14 +516,14 @@ public class LinearPositionEstimator2DTest implements PositionEstimatorListener<
             Point2D estimatedPosition = estimator.getEstimatedPosition();
             double distance = position.distanceTo(estimatedPosition);
             if (distance >= LARGE_ABSOLUTE_ERROR) {
-                numInvalid++;
-            } else {
-                numValid++;
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+                continue;
             }
+            numValid++;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            break;
         }
 
-        assertTrue(numValid > numInvalid);
+        assertTrue(numValid > 0);
 
         //force NotReadyException
         LinearPositionEstimator2D estimator = new LinearPositionEstimator2D();
