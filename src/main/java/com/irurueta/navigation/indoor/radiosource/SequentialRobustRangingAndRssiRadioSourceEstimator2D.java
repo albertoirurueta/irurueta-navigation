@@ -70,8 +70,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(readings);
     }
 
@@ -93,8 +92,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
     }
 
@@ -108,7 +106,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(readings, initialPosition);
     }
 
@@ -144,8 +142,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
     }
 
@@ -171,7 +168,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
     }
 
@@ -201,8 +198,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -219,8 +215,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -267,8 +262,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -287,7 +281,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -340,8 +334,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -354,8 +347,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      * @throws IllegalArgumentException if quality scores is null, or length of
      * quality scores is less than required minimum.
      */
-    public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores)
-            throws IllegalArgumentException {
+    public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores) {
         super(qualityScores);
     }
 
@@ -371,8 +363,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings)
-            throws IllegalArgumentException {
+            List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings) {
         super(qualityScores, readings);
     }
 
@@ -387,8 +378,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, listener);
     }
 
@@ -406,8 +396,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, readings, listener);
     }
 
@@ -426,7 +415,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(qualityScores, readings, initialPosition);
     }
 
@@ -441,7 +430,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      * of quality scores is less than required minimum.
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores,
-            Point2D initialPosition) throws IllegalArgumentException {
+            Point2D initialPosition) {
         super(qualityScores, initialPosition);
     }
 
@@ -458,8 +447,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, initialPosition, listener);
     }
 
@@ -480,8 +468,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores,readings, initialPosition, listener);
     }
 
@@ -497,8 +484,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      * of quality scores is less than required minimum.
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
-            double[] qualityScores, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            double[] qualityScores, Double initialTransmittedPowerdBm) {
         super(qualityScores, initialTransmittedPowerdBm);
     }
 
@@ -518,7 +504,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(qualityScores, readings, initialTransmittedPowerdBm);
     }
 
@@ -536,8 +522,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, initialTransmittedPowerdBm, listener);
     }
 
@@ -559,8 +544,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, readings, initialTransmittedPowerdBm, listener);
     }
 
@@ -582,8 +566,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
-            Point2D initialPosition, Double initialTransmittedPowerdBm)
-            throws IllegalArgumentException {
+            Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -602,7 +585,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(
             double[] qualityScores, Point2D initialPosition,
-            Double initialTransmittedPowerdBm) throws IllegalArgumentException {
+            Double initialTransmittedPowerdBm) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm);
     }
 
@@ -622,8 +605,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm, listener);
     }
 
@@ -646,8 +628,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
     }
@@ -671,7 +652,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores,
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -692,7 +673,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
      */
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
-            double initialPathLossExponent) throws IllegalArgumentException {
+            double initialPathLossExponent) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
     }
@@ -715,8 +696,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
     public SequentialRobustRangingAndRssiRadioSourceEstimator2D(double[] qualityScores,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -742,8 +722,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
             List<? extends RangingAndRssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent,
-            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener)
-            throws IllegalArgumentException {
+            SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
     }
@@ -894,6 +873,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
                         setStopThreshold(mRangingThreshold != null ? mRangingThreshold :
                                 PROMedSRobustRangingRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD);
                 break;
+            default:
+                break;
         }
     }
 
@@ -930,6 +911,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2D<S extends Radi
                 ((PROMedSRobustRssiRadioSourceEstimator2D<S>)mRssiEstimator).
                         setStopThreshold(mRssiThreshold != null ? mRssiThreshold :
                                 PROMedSRobustRssiRadioSourceEstimator2D.DEFAULT_STOP_THRESHOLD);
+                break;
+            default:
                 break;
         }
     }
