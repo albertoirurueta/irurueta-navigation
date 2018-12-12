@@ -66,7 +66,7 @@ public class PROSACRobustPositionEstimator3DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 0.5;
 
-    private static final int TIMES = 5;
+    private static final int TIMES = 50;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -1294,12 +1294,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1398,80 +1396,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -1491,13 +1442,11 @@ public class PROSACRobustPositionEstimator3DTest implements
         GaussianRandomizer inlierErrorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, INLIER_ERROR_STD);
 
-        int numValidPosition = 0, num = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1594,7 +1543,6 @@ public class PROSACRobustPositionEstimator3DTest implements
                 continue;
             }
             assertNotNull(estimator.getCovariance());
-            num++;
 
             Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
             accuracyStd.setStandardDeviationFactor(1.0);
@@ -1602,80 +1550,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (num - numValidPosition);
-        avgPositionError /= num;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (num - numValidPosition);
-        avgPositionStd /= num;
-        avgPositionStdConfidence /= num;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (num - numValidPosition);
-        avgPositionAccuracy /= num;
-        avgPositionAccuracyConfidence /= num;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)num * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -1694,12 +1595,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1787,80 +1686,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -1881,12 +1733,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -1976,80 +1826,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -2068,12 +1871,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -2173,80 +1974,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -2267,12 +2021,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -2374,80 +2126,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -2466,12 +2171,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -2576,80 +2279,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
@@ -2670,12 +2326,10 @@ public class PROSACRobustPositionEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
@@ -2782,80 +2436,33 @@ public class PROSACRobustPositionEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
             double positionDistance = position.distanceTo(estimatedPosition);
-            if (positionDistance <= LARGE_ABSOLUTE_ERROR) {
-                assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionDistance > LARGE_ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         PROSACRobustPositionEstimator3D estimator =
