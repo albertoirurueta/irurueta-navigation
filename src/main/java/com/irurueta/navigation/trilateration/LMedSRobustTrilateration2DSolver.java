@@ -151,8 +151,7 @@ public class LMedSRobustTrilateration2DSolver extends RobustTrilateration2DSolve
      * @throws IllegalArgumentException if circles is null or if length of circles array
      * is less than required (3 points).
      */
-    public LMedSRobustTrilateration2DSolver(Circle[] circles)
-            throws IllegalArgumentException {
+    public LMedSRobustTrilateration2DSolver(Circle[] circles) {
         super(circles);
     }
 
