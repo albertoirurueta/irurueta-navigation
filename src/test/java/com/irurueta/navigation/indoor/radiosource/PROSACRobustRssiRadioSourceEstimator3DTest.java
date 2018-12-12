@@ -8355,7 +8355,7 @@ public class PROSACRobustRssiRadioSourceEstimator3DTest implements
                 avgInvalidPowerError = 0.0;
         double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
                 avgInvalidPowerStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 

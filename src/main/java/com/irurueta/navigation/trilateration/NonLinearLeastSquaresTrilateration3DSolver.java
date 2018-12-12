@@ -40,8 +40,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -61,8 +60,8 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances, Point3D initialPosition)
-            throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions,
+            double[] distances, Point3D initialPosition) {
         super(positions, distances, initialPosition);
     }
 
@@ -83,7 +82,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
@@ -106,8 +105,9 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
      * length is smaller than required (3 for 2D points or 4 for 3D points) or fitter is null.
      */
-    public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances, Point3D initialPosition,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions,
+            double[] distances, Point3D initialPosition,
+            TrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, initialPosition, listener);
     }
 
@@ -116,7 +116,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) {
         super();
         internalSetSpheres(spheres);
     }
@@ -127,8 +127,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @param initialPosition initial position to start trilateration solving.
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
-    public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres, Point3D initialPosition)
-            throws IllegalArgumentException {
+    public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres, Point3D initialPosition) {
         super(initialPosition);
         internalSetSpheres(spheres);
     }
@@ -140,7 +139,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
@@ -153,7 +152,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres, Point3D initialPosition,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
         internalSetSpheres(spheres);
     }
@@ -167,7 +166,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -181,8 +180,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations, Point3D initialPosition)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, Point3D initialPosition) {
         super(positions, distances, distanceStandardDeviations, initialPosition);
     }
 
@@ -196,8 +194,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * are null, don't have the same length of their length is smaller than required (2 points).
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
-            double[] distanceStandardDeviations, TrilaterationSolverListener<Point3D> listener)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, TrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -213,7 +210,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
             double[] distanceStandardDeviations, Point3D initialPosition,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, distanceStandardDeviations, initialPosition, listener);
     }
 
@@ -224,7 +221,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super();
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
@@ -237,8 +234,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
-            double[] distanceStandardDeviations, Point3D initialPosition)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations, Point3D initialPosition) {
         super(initialPosition);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
@@ -252,7 +248,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
             double[] distanceStandardDeviations,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
@@ -267,7 +263,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      */
     public NonLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
             double[] distanceStandardDeviations, Point3D initialPosition,
-            TrilaterationSolverListener<Point3D> listener) throws IllegalArgumentException {
+            TrilaterationSolverListener<Point3D> listener) {
         super(initialPosition, listener);
         internalSetSpheresAndStandardDeviations(spheres, distanceStandardDeviations);
     }
@@ -296,7 +292,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * is less than 2.
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
-    public void setSpheres(Sphere[] spheres) throws IllegalArgumentException, LockedException {
+    public void setSpheres(Sphere[] spheres) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -313,7 +309,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -350,7 +346,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
      * is less than 2.
      */
-    public void internalSetSpheres(Sphere[] spheres) throws IllegalArgumentException {
+    public void internalSetSpheres(Sphere[] spheres) {
         if (spheres == null || spheres.length < MIN_POINTS) {
             throw new IllegalArgumentException();
         }
@@ -374,8 +370,8 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * @throws IllegalArgumentException if spheres is null, length of arrays is less than
      * 2 or don't have the same length.
      */
-    private void internalSetSpheresAndStandardDeviations(Sphere[] spheres, double[] radiusStandardDeviations)
-            throws IllegalArgumentException {
+    private void internalSetSpheresAndStandardDeviations(Sphere[] spheres,
+            double[] radiusStandardDeviations) {
         if (spheres == null || spheres.length < MIN_POINTS) {
             throw new IllegalArgumentException();
         }

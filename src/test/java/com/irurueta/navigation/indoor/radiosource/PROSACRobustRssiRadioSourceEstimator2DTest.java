@@ -6854,7 +6854,7 @@ public class PROSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             InhomogeneousPoint2D accessPointPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -7141,7 +7141,7 @@ public class PROSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
                 avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             InhomogeneousPoint2D beaconPosition =
                     new InhomogeneousPoint2D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -9467,7 +9467,7 @@ public class PROSACRobustRssiRadioSourceEstimator2DTest implements
                 avgInvalidPowerStd = 0.0;
         double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
                 avgInvalidPathLossStd = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 

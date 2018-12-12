@@ -1949,9 +1949,9 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     /**
      * Gets estimated located radio source.
      * @return estimated located radio source.
-     * @param <RS> type of located radio source.
+     * @param <S2> type of located radio source.
      */
-    public abstract <RS extends RadioSourceLocated<P>> RS getEstimatedRadioSource();
+    public abstract <S2 extends RadioSourceLocated<P>> S2 getEstimatedRadioSource();
 
     /**
      * Builds ranging estimator.
@@ -2013,14 +2013,20 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
 
         mRangingEstimator.setListener(new RobustRangingRadioSourceEstimatorListener<S, P>() {
             @Override
-            public void onEstimateStart(RobustRangingRadioSourceEstimator<S, P> estimator) { }
+            public void onEstimateStart(RobustRangingRadioSourceEstimator<S, P> estimator) {
+                //not used
+            }
 
             @Override
-            public void onEstimateEnd(RobustRangingRadioSourceEstimator<S, P> estimator) { }
+            public void onEstimateEnd(RobustRangingRadioSourceEstimator<S, P> estimator) {
+                //not used
+            }
 
             @Override
             public void onEstimateNextIteration(RobustRangingRadioSourceEstimator<S, P> estimator,
-                                                int iteration) { }
+                                                int iteration) {
+                //not used
+            }
 
             @Override
             public void onEstimateProgressChange(RobustRangingRadioSourceEstimator<S, P> estimator, float progress) {
