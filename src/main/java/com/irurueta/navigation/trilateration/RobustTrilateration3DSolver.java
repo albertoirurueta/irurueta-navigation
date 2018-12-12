@@ -868,7 +868,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
     public static RobustTrilateration3DSolver create(double[] qualityScores,
             Sphere[] spheres, double[] distanceStandardDeviations,
             RobustTrilaterationSolverListener<Point3D> listener,
-            RobustEstimatorMethod method) throws IllegalArgumentException {
+            RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
                 return new RANSACRobustTrilateration3DSolver(spheres,
@@ -1261,16 +1261,18 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
                     mCovariance = null;
                 }
 
-                return mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
+                mEstimatedPosition = mNonLinearSolver.getEstimatedPosition();
             } catch (Exception e) {
                 //refinement failed, so we return input value
                 mCovariance = null;
-                return mEstimatedPosition = position;
+                mEstimatedPosition = position;
             }
         } else {
             mCovariance = null;
-            return mEstimatedPosition = position;
+            mEstimatedPosition = position;
         }
+
+        return mEstimatedPosition;
     }
 
     /**

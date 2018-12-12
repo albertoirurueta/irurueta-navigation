@@ -73,12 +73,12 @@ public class LocationUtils {
     public static String convert(double coordinate, int outputType) {
         if (coordinate < -180.0 || coordinate > 180.0 ||
                 Double.isNaN(coordinate)) {
-            throw new IllegalArgumentException("coordinate=" + coordinate);
+            throw new IllegalArgumentException();
         }
         if ((outputType != FORMAT_DEGREES) &&
                 (outputType != FORMAT_MINUTES) &&
                 (outputType != FORMAT_SECONDS)) {
-            throw new IllegalArgumentException("outputType=" + outputType);
+            throw new IllegalArgumentException();
         }
 
         StringBuilder sb = new StringBuilder();
@@ -123,7 +123,7 @@ public class LocationUtils {
     public static double convert(String coordinate) {
         // IllegalArgumentException if bad syntax
         if (coordinate == null) {
-            throw new NullPointerException("coordinate");
+            throw new NullPointerException();
         }
 
         boolean negative = false;
@@ -135,7 +135,7 @@ public class LocationUtils {
         StringTokenizer st = new StringTokenizer(coordinate, ":");
         int tokens = st.countTokens();
         if (tokens < 1) {
-            throw new IllegalArgumentException("coordinate=" + coordinate);
+            throw new IllegalArgumentException();
         }
         try {
             String degrees = st.nextToken();
@@ -165,27 +165,25 @@ public class LocationUtils {
 
             // deg must be in [0, 179] except for the case of -180 degrees
             if ((deg < 0.0) || (deg > 179 && !isNegative180)) {
-                throw new IllegalArgumentException("coordinate=" + coordinate);
+                throw new IllegalArgumentException();
             }
 
             // min must be in [0, 59] if seconds are present, otherwise [0.0, 60.0)
             //noinspection all
             if (min < 0 || min >= 60 || (secPresent && (min > 59))) {
-                throw new IllegalArgumentException("coordinate=" +
-                        coordinate);
+                throw new IllegalArgumentException();
             }
 
             // sec must be in [0.0, 60.0)
             if (sec < 0 || sec >= 60) {
-                throw new IllegalArgumentException("coordinate=" +
-                        coordinate);
+                throw new IllegalArgumentException();
             }
 
             val = deg*3600.0 + min*60.0 + sec;
             val /= 3600.0;
             return negative ? -val : val;
         } catch (NumberFormatException nfe) {
-            throw new IllegalArgumentException("coordinate=" + coordinate);
+            throw new IllegalArgumentException();
         }
     }
 
@@ -199,7 +197,7 @@ public class LocationUtils {
      * @param results instance containing results.
      */
     public static void distanceAndBearing(double startLatitude, double startLongitude,
-                                                  double endLatitude, double endLongitude, BearingDistance results) {
+            double endLatitude, double endLongitude, BearingDistance results) {
         //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
         results.mStartLatitude = data.getLat1();
@@ -221,7 +219,7 @@ public class LocationUtils {
      * @return bearing and distance results.
      */
     public static BearingDistance distanceAndBearing(double startLatitude, double startLongitude, double endLatitude,
-                                                     double endLongitude) {
+            double endLongitude) {
         BearingDistance results = new BearingDistance();
         distanceAndBearing(startLatitude, startLongitude, endLatitude, endLongitude, results);
         return results;
@@ -239,9 +237,9 @@ public class LocationUtils {
      * @throws IllegalArgumentException if results does not have at least 1 element.
      */
     public static void distanceAndBearing(double startLatitude, double startLongitude, double endLatitude,
-                                          double endLongitude, double[] results) throws IllegalArgumentException {
+            double endLongitude, double[] results) {
         if (results.length == 0) {
-            throw new IllegalArgumentException("results must have at least 1 element");
+            throw new IllegalArgumentException();
         }
         //noinspection all
         GeodesicData data = Geodesic.WGS84.inverse(startLatitude, startLongitude, endLatitude, endLongitude);
@@ -337,12 +335,6 @@ public class LocationUtils {
          * Final bearing (degrees).
          */
         private double mFinalBearing = 0.0f;
-
-        /**
-         * Constructor.
-         */
-        @SuppressWarnings("WeakerAccess")
-        public BearingDistance() { }
 
         /**
          * Gets starting latitude expressed in degrees.

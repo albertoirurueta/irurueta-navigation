@@ -104,8 +104,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * @throws IllegalArgumentException if either positions or distances are null,
      * don't have the same length of their length is smaller than required (3 points).
      */
-    public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+    public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -119,7 +118,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * don't have the same length or their length is smaller than required (3 points).
      */
     public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
     }
 
@@ -136,8 +135,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
     }
 
@@ -151,8 +149,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * don't have the same length or their length is smaller than required (3 points).
      */
     public PROMedSRobustTrilateration2DSolver(Point2D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
@@ -162,8 +159,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * @throws IllegalArgumentException if circles is null or if length or circles array
      * is less than required (3 points).
      */
-    public PROMedSRobustTrilateration2DSolver(Circle[] circles)
-            throws IllegalArgumentException {
+    public PROMedSRobustTrilateration2DSolver(Circle[] circles) {
         super(circles);
     }
 
@@ -175,7 +171,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * than required (3 points) or don't have the same length.
      */
     public PROMedSRobustTrilateration2DSolver(Circle[] circles,
-            double[] distanceStandardDeviations) throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
     }
 
@@ -188,8 +184,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * is less than required (3 points).
      */
     public PROMedSRobustTrilateration2DSolver(Circle[] circles,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, listener);
     }
 
@@ -204,8 +199,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     public PROMedSRobustTrilateration2DSolver(Circle[] circles,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, distanceStandardDeviations, listener);
     }
 
@@ -217,8 +211,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * @throws IllegalArgumentException if quality scores is null, length
      * of quality scores is less than required minimum (3 samples).
      */
-    public PROMedSRobustTrilateration2DSolver(double[] qualityScores)
-            throws IllegalArgumentException {
+    public PROMedSRobustTrilateration2DSolver(double[] qualityScores) {
         super();
         internalSetQualityScores(qualityScores);
     }
@@ -234,8 +227,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * of quality scores is less than required minimum (3 samples).
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetQualityScores(qualityScores);
     }
@@ -253,8 +245,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * than required (3 points).
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
-            Point2D[] positions, double[] distances)
-            throws IllegalArgumentException {
+            Point2D[] positions, double[] distances) {
         super(positions, distances);
         internalSetQualityScores(qualityScores);
     }
@@ -274,8 +265,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances,
-            double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            double[] distanceStandardDeviations) {
         super(positions, distances, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -297,8 +287,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances,
             double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -318,8 +307,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Point2D[] positions, double[] distances,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -335,7 +323,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * required (3 points).
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
-            Circle[] circles) throws IllegalArgumentException {
+            Circle[] circles) {
         super(circles);
         internalSetQualityScores(qualityScores);
     }
@@ -352,8 +340,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * length is less than required (3 points).
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
-            Circle[] circles, double[] distanceStandardDeviations)
-            throws IllegalArgumentException {
+            Circle[] circles, double[] distanceStandardDeviations) {
         super(circles, distanceStandardDeviations);
         internalSetQualityScores(qualityScores);
     }
@@ -372,8 +359,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Circle[] circles,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -393,8 +379,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     public PROMedSRobustTrilateration2DSolver(double[] qualityScores,
             Circle[] circles, double[] distanceStandardDeviations,
-            RobustTrilaterationSolverListener<Point2D> listener)
-            throws IllegalArgumentException {
+            RobustTrilaterationSolverListener<Point2D> listener) {
         super(circles, distanceStandardDeviations, listener);
         internalSetQualityScores(qualityScores);
     }
@@ -441,8 +426,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setStopThreshold(double stopThreshold)
-            throws IllegalArgumentException, LockedException {
+    public void setStopThreshold(double stopThreshold) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -477,7 +461,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      */
     @Override
     public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException {
+            throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -616,8 +600,7 @@ public class PROMedSRobustTrilateration2DSolver extends RobustTrilateration2DSol
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores)
-            throws IllegalArgumentException {
+    private void internalSetQualityScores(double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();

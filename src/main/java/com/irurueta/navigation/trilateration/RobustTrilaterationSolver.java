@@ -472,7 +472,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * estimation is already in progress.
      */
     public void setQualityScores(double[] qualityScores)
-            throws IllegalArgumentException, LockedException { }
+            throws LockedException { }
 
     /**
      * Gets estimated covariance of estimated position if available.
