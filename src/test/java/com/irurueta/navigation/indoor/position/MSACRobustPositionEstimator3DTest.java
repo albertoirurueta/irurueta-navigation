@@ -67,7 +67,7 @@ public class MSACRobustPositionEstimator3DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_ABSOLUTE_ERROR = 2.0;
 
-    private static final int TIMES = 200;
+    private static final int TIMES = 300;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
