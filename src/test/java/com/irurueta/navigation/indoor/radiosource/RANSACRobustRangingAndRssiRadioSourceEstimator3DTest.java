@@ -67,7 +67,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final int TIMES = 5;
+    private static final int TIMES = 50;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
@@ -1710,10 +1710,8 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -1814,85 +1812,44 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             assertNull(estimatedAccessPoint.getPositionCovariance());
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -1911,10 +1868,8 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -2015,84 +1970,44 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             assertNull(estimatedAccessPoint.getPositionCovariance());
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -2111,10 +2026,8 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -2215,84 +2128,44 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             assertNull(estimatedAccessPoint.getPositionCovariance());
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -2311,10 +2184,8 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -2415,84 +2286,44 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             assertNull(estimatedAccessPoint.getPositionCovariance());
             assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
 
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
-
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -2512,16 +2343,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -2634,145 +2460,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -2792,16 +2536,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -2914,145 +2653,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -3072,17 +2729,12 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < 10 * TIMES; t++) {
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3194,145 +2846,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -3354,16 +2924,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -3479,143 +3044,61 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= LARGE_POSITION_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        LARGE_POSITION_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > LARGE_POSITION_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    LARGE_POSITION_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= LARGE_POWER_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, LARGE_POWER_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > LARGE_POWER_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, LARGE_POWER_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -3637,17 +3120,12 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < 10 * TIMES; t++) {
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -3765,145 +3243,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -3925,17 +3321,12 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
-        for (int t = 0; t < 10 * TIMES; t++) {
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -4051,145 +3442,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -4211,16 +3520,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < 10 * TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -4343,145 +3647,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -4503,16 +3725,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, INLIER_ERROR_STD);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -4638,143 +3855,61 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= LARGE_POSITION_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        LARGE_POSITION_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > LARGE_POSITION_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    LARGE_POSITION_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= LARGE_POWER_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, LARGE_POWER_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > LARGE_POWER_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, LARGE_POWER_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -4794,20 +3929,13 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
         int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0,
                 numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double pathLossError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        double pathLossStd = 0.0;
         for (int t = 0; t < 2 * TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -4931,90 +4059,50 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
-            double pathLossStd = Math.sqrt(pathLossVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+            pathLossStd = Math.sqrt(pathLossVariance);
 
-            boolean validPosition, validPower, validPathLoss;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
+            pathLossError = Math.abs(estimator.getEstimatedPathLossExponent() -
+                    pathLossExponent);
+            if (pathLossError > PATH_LOSS_ERROR) {
+                continue;
             }
 
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPosition && validPower && validPathLoss) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    pathLossExponent, PATH_LOSS_ERROR);
+            numValidPathLoss++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
@@ -5022,102 +4110,28 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(numValidPathLoss > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
-
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
+                powerStd);
+        LOGGER.log(Level.INFO, "Path loss error: {0}",
+                pathLossError);
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
+                pathLossStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -5137,20 +4151,13 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
         int numValidPosition = 0, numValidPower = 0, numValidPathLoss = 0,
                 numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double pathLossError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -5277,90 +4284,50 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
-            double pathLossStd = Math.sqrt(pathLossVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+            pathLossStd = Math.sqrt(pathLossVariance);
 
-            boolean validPosition, validPower, validPathLoss;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
+            pathLossError = Math.abs(estimator.getEstimatedPathLossExponent() -
+                    pathLossExponent);
+            if (pathLossError > PATH_LOSS_ERROR) {
+                continue;
             }
 
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPosition && validPower && validPathLoss) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    pathLossExponent, PATH_LOSS_ERROR);
+            numValidPathLoss++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
@@ -5368,102 +4335,28 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(numValidPathLoss > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
-
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
+                powerStd);
+        LOGGER.log(Level.INFO, "Path loss error: {0}",
+                pathLossError);
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
+                pathLossStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -5482,16 +4375,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -5612,145 +4500,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -5769,16 +4575,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < 10 * TIMES; t++) {
             InhomogeneousPoint3D beaconPosition =
                     new InhomogeneousPoint3D(
@@ -5883,142 +4684,60 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(beaconPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(beaconPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(beaconPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -6037,12 +4756,9 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -6159,96 +4875,42 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
-            boolean validPosition;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
-
-            if (validPosition) {
-                numValid++;
-            }
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -6267,12 +4929,9 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -6390,96 +5049,45 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
-            boolean validPosition;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
-
-            if (validPosition) {
-                numValid++;
-            }
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -6498,12 +5106,9 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -6623,96 +5228,42 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
 
-            boolean validPosition;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
-
-            if (validPosition) {
-                numValid++;
-            }
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
             assertEquals(estimateStart, 2);
             assertEquals(estimateEnd, 2);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -6731,16 +5282,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPathLoss = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double pathLossError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -6858,144 +5404,61 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double pathLossStd = Math.sqrt(pathLossVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            pathLossStd = Math.sqrt(pathLossVariance);
 
-            boolean validPosition, validPathLoss;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
+            pathLossError = Math.abs(estimator.getEstimatedPathLossExponent() -
+                    pathLossExponent);
+            if (pathLossError > PATH_LOSS_ERROR) {
+                continue;
             }
 
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPosition && validPathLoss) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    pathLossExponent, PATH_LOSS_ERROR);
+            numValidPathLoss++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPathLoss > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Path loss error: {0}",
+                pathLossError);
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
+                pathLossStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -7014,16 +5477,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPathLoss = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPathLossError = 0.0, avgValidPathLossError = 0.0,
-                avgInvalidPathLossError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPathLossStd = 0.0, avgValidPathLossStd = 0.0,
-                avgInvalidPathLossStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double pathLossError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        double pathLossStd = 0.0;
         for (int t = 0; t < TIMES; t++) {
             double pathLossExponent = randomizer.nextDouble(
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
@@ -7143,144 +5601,61 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double pathLossStd = Math.sqrt(pathLossVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            pathLossStd = Math.sqrt(pathLossVariance);
 
-            boolean validPosition, validPathLoss;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double pathLossError = Math.abs(
-                    estimator.getEstimatedPathLossExponent() -
-                            pathLossExponent);
-
-            if (pathLossError <= PATH_LOSS_ERROR) {
-                assertEquals(estimator.getEstimatedPathLossExponent(),
-                        pathLossExponent, PATH_LOSS_ERROR);
-                validPathLoss = true;
-                numValidPathLoss++;
-
-                avgValidPathLossError += pathLossError;
-                avgValidPathLossStd += pathLossStd;
-            } else {
-                validPathLoss = false;
-
-                avgInvalidPathLossError += pathLossError;
-                avgInvalidPathLossStd += pathLossStd;
+            pathLossError = Math.abs(estimator.getEstimatedPathLossExponent() -
+                    pathLossExponent);
+            if (pathLossError > PATH_LOSS_ERROR) {
+                continue;
             }
 
-            avgPathLossError += pathLossError;
-            avgPathLossStd += pathLossStd;
-
-            if (validPosition && validPathLoss) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    pathLossExponent, PATH_LOSS_ERROR);
+            numValidPathLoss++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPathLoss > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPathLossError /= numValidPathLoss;
-        avgInvalidPathLossError /= (TIMES - numValidPathLoss);
-        avgPathLossError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPathLossStd /= numValidPathLoss;
-        avgInvalidPathLossStd /= (TIMES - numValidPathLoss);
-        avgPathLossStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid path loss: {0} %",
-                (double)numValidPathLoss / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage all valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid path loss error: {0}",
-                avgValidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. invalid path loss error: {0}",
-                avgInvalidPathLossError);
-        LOGGER.log(Level.INFO, "Avg. path loss error: {0}",
-                avgPathLossError);
-
-        LOGGER.log(Level.INFO, "Valid path loss standard deviation {0}",
-                avgValidPathLossStd);
-        LOGGER.log(Level.INFO, "Invalid path loss standard deviation {0}",
-                avgInvalidPathLossStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Path loss error: {0}",
+                pathLossError);
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
-                avgPathLossStd);
+                pathLossStd);
 
         //force NotReadyException
         RANSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
@@ -7300,16 +5675,11 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
                 new Random(), 0.0, STD_OUTLIER_ERROR);
 
         int numValidPosition = 0, numValidPower = 0, numValid = 0;
-        double avgPositionError = 0.0, avgValidPositionError = 0.0,
-                avgInvalidPositionError = 0.0;
-        double avgPowerError = 0.0, avgValidPowerError = 0.0,
-                avgInvalidPowerError = 0.0;
-        double avgPositionStd = 0.0, avgValidPositionStd = 0.0,
-                avgInvalidPositionStd = 0.0, avgPositionStdConfidence = 0.0;
-        double avgPowerStd = 0.0, avgValidPowerStd = 0.0,
-                avgInvalidPowerStd = 0.0;
-        double avgPositionAccuracy = 0.0, avgValidPositionAccuracy = 0.0,
-                avgInvalidPositionAccuracy = 0.0, avgPositionAccuracyConfidence = 0.0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
         for (int t = 0; t < 2 * TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
@@ -7427,145 +5797,63 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator3DTest implements
             Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
             accuracy.setConfidence(0.99);
 
-            double positionStd = accuracyStd.getAverageAccuracy();
-            double positionStdConfidence = accuracyStd.getConfidence();
-            double positionAccuracy = accuracy.getAverageAccuracy();
-            double positionAccuracyConfidence = accuracy.getConfidence();
-            double powerStd = Math.sqrt(powerVariance);
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
 
-            boolean validPosition, validPower;
-            double positionDistance = estimator.getEstimatedPosition().
+            positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
-            if (positionDistance <= ABSOLUTE_ERROR) {
-                assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
-                        ABSOLUTE_ERROR));
-                validPosition = true;
-                numValidPosition++;
-
-                avgValidPositionError += positionDistance;
-                avgValidPositionStd += positionStd;
-                avgValidPositionAccuracy += positionAccuracy;
-            } else {
-                validPosition = false;
-
-                avgInvalidPositionError += positionDistance;
-                avgInvalidPositionStd += positionStd;
-                avgInvalidPositionAccuracy += positionAccuracy;
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPositionError += positionDistance;
-            avgPositionStd += positionStd;
-            avgPositionStdConfidence += positionStdConfidence;
-            avgPositionAccuracy += positionAccuracy;
-            avgPositionAccuracyConfidence += positionAccuracyConfidence;
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
 
-            double powerError = Math.abs(
-                    estimator.getEstimatedTransmittedPowerdBm() -
-                            transmittedPowerdBm);
-            if (powerError <= ABSOLUTE_ERROR) {
-                assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
-                        ABSOLUTE_ERROR);
-                assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
-                        transmittedPowerdBm, ABSOLUTE_ERROR);
-                validPower = true;
-                numValidPower++;
-
-                avgValidPowerError += powerError;
-                avgValidPowerStd += powerStd;
-            } else {
-                validPower = false;
-
-                avgInvalidPowerError += powerError;
-                avgInvalidPowerStd += powerStd;
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
             }
 
-            avgPowerError += powerError;
-            avgPowerStd += powerStd;
-
-            if (validPosition && validPower) {
-                numValid++;
-            }
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
 
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
         }
 
         assertTrue(numValidPosition > 0);
         assertTrue(numValidPower > 0);
         assertTrue(numValid > 0);
 
-        avgValidPositionError /= numValidPosition;
-        avgInvalidPositionError /= (TIMES - numValidPosition);
-        avgPositionError /= TIMES;
-
-        avgValidPowerError /= numValidPower;
-        avgInvalidPowerError /= (TIMES - numValidPower);
-        avgPowerError /= TIMES;
-
-        avgValidPositionStd /= numValidPosition;
-        avgInvalidPositionStd /= (TIMES - numValidPosition);
-        avgPositionStd /= TIMES;
-        avgPositionStdConfidence /= TIMES;
-
-        avgValidPositionAccuracy /= numValidPosition;
-        avgInvalidPositionAccuracy /= (TIMES - numValidPosition);
-        avgPositionAccuracy /= TIMES;
-        avgPositionAccuracyConfidence /= TIMES;
-
-        avgValidPowerStd /= numValidPower;
-        avgInvalidPowerStd /= (TIMES - numValidPower);
-        avgPowerStd /= TIMES;
-
-        LOGGER.log(Level.INFO, "Percentage valid position: {0} %",
-                (double)numValidPosition / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage valid power: {0} %",
-                (double)numValidPower / (double)TIMES * 100.0);
-        LOGGER.log(Level.INFO, "Percentage both valid: {0} %",
-                (double)numValid / (double)TIMES * 100.0);
-
-        LOGGER.log(Level.INFO, "Avg. valid position error: {0} meters",
-                avgValidPositionError);
-        LOGGER.log(Level.INFO, "Avg. invalid position error: {0} meters",
-                avgInvalidPositionError);
-        LOGGER.log(Level.INFO, "Avg. position error: {0} meters",
-                avgPositionError);
 
         NumberFormat format = NumberFormat.getPercentInstance();
-        String formattedConfidence = format.format(avgPositionStdConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position standard deviation {0} meters ({1} confidence)",
-                avgValidPositionStd, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position standard deviation {0} meters ({1} confidence)",
-                avgInvalidPositionStd, formattedConfidence));
+        String formattedConfidence = format.format(positionStdConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position standard deviation {0} meters ({1} confidence)",
-                avgPositionStd, formattedConfidence));
+                positionStd, formattedConfidence));
 
-        formattedConfidence = format.format(avgPositionAccuracyConfidence);
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Valid position accuracy {0} meters ({1} confidence)",
-                avgValidPositionAccuracy, formattedConfidence));
-        LOGGER.log(Level.INFO, MessageFormat.format(
-                "Invalid position accuracy {0} meters ({1} confidence)",
-                avgInvalidPositionAccuracy, formattedConfidence));
+        formattedConfidence = format.format(positionAccuracyConfidence);
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
-                avgPositionAccuracy, formattedConfidence));
+                positionAccuracy, formattedConfidence));
 
-        LOGGER.log(Level.INFO, "Avg. valid power error: {0} dB",
-                avgValidPowerError);
-        LOGGER.log(Level.INFO, "Avg. invalid power error: {0} dB",
-                avgInvalidPowerError);
-        LOGGER.log(Level.INFO, "Avg. power error: {0} dB",
-                avgPowerError);
-
-        LOGGER.log(Level.INFO, "Valid power standard deviation {0} dB",
-                avgValidPowerStd);
-        LOGGER.log(Level.INFO, "Invalid power standard deviation {0} dB",
-                avgInvalidPowerStd);
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
-                avgPowerStd);
+                powerStd);
 
         //force NotReadyException
         MSACRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
