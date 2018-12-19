@@ -2749,7 +2749,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
         double positionStd = 0.0, positionStdConfidence = 0.0;
         double powerStd = 0.0;
         double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
-        for (int t = 0; t < 10*TIMES; t++) {
+        for (int t = 0; t < TIMES; t++) {
             InhomogeneousPoint3D accessPointPosition =
                     new InhomogeneousPoint3D(
                             randomizer.nextDouble(MIN_POS, MAX_POS),
