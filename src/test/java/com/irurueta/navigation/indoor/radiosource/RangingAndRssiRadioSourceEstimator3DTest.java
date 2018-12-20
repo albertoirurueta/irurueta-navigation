@@ -4743,6 +4743,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             positionError = estimator.getEstimatedPosition().
                     distanceTo(accessPointPosition);
+            if (positionError > LARGE_POSITION_ERROR) {
+                continue;
+            }
 
             assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
                     LARGE_POSITION_ERROR));
