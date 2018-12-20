@@ -1999,6 +1999,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
 
                 mRangingEstimator.setQualityScores(rangingQualityScores);
             }
+
+            //enable RSSI position estimation only if not enough ranging readings are
+            //available
+            mRssiPositionEnabled =
+                    rangingReadings.size() < mRangingEstimator.getMinReadings();
         }
 
         mRangingEstimator.setProgressDelta(2.0f * mProgressDelta);
