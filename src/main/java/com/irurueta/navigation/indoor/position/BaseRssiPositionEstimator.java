@@ -30,6 +30,7 @@ import java.util.List;
  * those readings with other located ones.
  * @param <P> a {@link Point} type.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class BaseRssiPositionEstimator<P extends Point,
         L extends BaseRssiPositionEstimatorListener> {
 

@@ -2509,6 +2509,2553 @@ public class SourcedRssiPositionEstimator2DTest implements SourcedRssiPositionEs
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(estimator);
+
+
+        //test constructor with use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+
+        //test constructor with use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+
+        //test constructor with located fingerprints and use source path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint and use sources
+        //path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, use sources
+        //path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with min/max values and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(2, 3, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //test constructor without max limit and with use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(2, -1, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(0,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(2,
+                    1, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+        //test constructor with min/max values, use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(2,
+                3,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //test constructor without max limit
+        estimator = new SourcedRssiPositionEstimator2D(2,
+                -1,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(0,
+                    3, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(2,
+                    1, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints and min/max values
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                2, 3,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    0, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    2, 1,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, min/max values and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                2, 3,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), 2,
+                    3, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, 2,
+                    3, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    0, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    2, 1,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, min/max values and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                2, 3, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    2, 3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    0, 3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    2, 1, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, min/max values, use sources path loss
+        //and listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                2, 3, false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    2, 3, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    0, 3, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    2, 1, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, min/max values and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, 2, 3, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, 2, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>>) null,
+                    2, 3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 0, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 2, 1,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, min/max values,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, 2, 3,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, 2,
+                    3, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, 2, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>>) null,
+                    2, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 0, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 2, 1,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+
+        //test constructor with path loss and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(pathLossExponent,
+                false);
+
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+
+        //test constructor with path loss, use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(pathLossExponent,
+                false, this);
+
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+
+        //test constructor with located fingerprints, path loss and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                pathLossExponent, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, path loss, use sources
+        // path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                pathLossExponent, false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, path loss and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, pathLossExponent,
+                false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, path loss, use sources path loss and
+        //listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, path loss and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, fingerprint,
+                pathLossExponent, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, path loss,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with min/max values, path loss and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(2,
+                3, pathLossExponent, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(),  pathLossExponent, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //test constructor without max limit
+        estimator = new SourcedRssiPositionEstimator2D(2,
+                -1, pathLossExponent, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(0,
+                    3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(2,
+                    1, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with min/max values, path loss, use sources path loss and
+        //listener
+        estimator = new SourcedRssiPositionEstimator2D(2,
+                3, pathLossExponent, false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //test constructor without max limit
+        estimator = new SourcedRssiPositionEstimator2D(2,
+                -1, pathLossExponent, false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(0,
+                    3, pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(2,
+                    1, pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, min/max values, path loss and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                2, 3, pathLossExponent,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), 2,
+                    3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, 2,
+                    3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    0, 3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    2, 1, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, min/max values, path loss
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                2, 3, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    0, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    2, 1, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, min/max values, path loss and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                2, 3, pathLossExponent, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    2, 3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    0, 3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    2, 1, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, min/max values, path loss, use sources
+        //path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                2, 3, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    2, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    0, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    2, 1, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, min/max values,
+        //path loss and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, 2, 3,
+                pathLossExponent, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, 2,
+                    3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, 2, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>>) null,
+                    2, 3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 0, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 2, 1,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, min/max values,
+        //path loss, use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, 2, 3,
+                pathLossExponent, false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getSources());
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, 2, 3,
+                    pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>>) null,
+                    2, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 0, 3,
+                    pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, 2, 1,
+                    pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, use sources path loss
+        //and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint ,
+                     null, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, use sources path loss and
+        //listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    null, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, use sources path
+        //loss and sources
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, sources,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, min/max values and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                sources, 2, 3,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    sources, 0, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    sources, 2, 1, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    2, 3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, min/max values and
+        //listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                sources, 2, 3,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, 2,
+                    3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, 2,
+                    3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    sources, 0, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    sources, 2, 1,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    2, 3,
+                    false,this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, min/max values and use
+        //sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                2, 3,
+                false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, 2, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint, null,
+                    2, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    sources, 0, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    sources, 2, 1,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, min/max values, use sources
+        //path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                2, 3,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, 2, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    null, 2, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                    0, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                    2, 1,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, sources, min/max
+        //values and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, 2, 3,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources,
+                    2, 3,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null, 2,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 0,
+                    3, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 2,
+                    1, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, min/max values,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, 2, 3,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources,
+                    2, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, 2,
+                    3, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources, 2, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null, 2,
+                    3, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 0, 3,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 2, 1,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, path loss and use
+        //sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                sources, pathLossExponent, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, path loss,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                sources, pathLossExponent, false,
+                this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    pathLossExponent, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, path loss and use sources
+        //path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                pathLossExponent, false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint, null,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, path loss, use sources path loss
+        //and listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                pathLossExponent, false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    null, pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, sources and path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, pathLossExponent,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, sources, path loss,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null, pathLossExponent,
+                    false,this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, min/max values,
+        //path loss and use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                2, 3, pathLossExponent,
+                false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, 2,
+                    3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, 2,
+                    3, pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                    0, 3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                    2, 1, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    2, 3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, sources, min/max values, path loss,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                2, 3, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertNull(estimator.getFingerprint());
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), sources, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D((List<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>)null, sources, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                    0, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints, sources,
+                    2, 1, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    (List<? extends RadioSourceLocated<Point2D>>)null,
+                    2, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, min/max values, path loss and
+        //use sources path loss
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                2, 3, pathLossExponent,
+                false);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent, 0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, 2, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    null, 2, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    sources, 0, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    sources, 2, 1,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with fingerprint, sources, min/max values, path loss,
+        //use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                2, 3, pathLossExponent,
+                false, this);
+
+        //check default values
+        assertNull(estimator.getLocatedFingerprints());
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertFalse(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(
+                    (RssiFingerprint<RadioSource, RssiReading<RadioSource>>)null,
+                    sources, 2, 3,
+                    pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint,
+                    null, 2, 3,
+                    pathLossExponent, false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                    0, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(fingerprint, sources,
+                    2, 1, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, sources, min/max
+        //values and path loss
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, 2, 3,
+                pathLossExponent, false);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertNull(estimator.getListener());
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources, 2,
+                    3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, 2, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources, 2,
+                    3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null, 2,
+                    3, pathLossExponent,
+                    false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 0, 3,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 2, 1,
+                    pathLossExponent, false);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
+
+
+        //test constructor with located fingerprints, fingerprint, sources, min/max
+        //values, path loss, use sources path loss and listener
+        estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                fingerprint, sources, 2, 3,
+                pathLossExponent, false, this);
+
+        //check default values
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+        assertSame(estimator.getFingerprint(), fingerprint);
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent,
+                0.0);
+        assertSame(estimator.getListener(), this);
+        assertNull(estimator.getEstimatedPositionCoordinates());
+        assertFalse(estimator.isLocked());
+        assertEquals(estimator.getNumberOfDimensions(), 2);
+        assertTrue(estimator.isReady());
+        assertNull(estimator.getEstimatedPosition());
+        assertSame(estimator.getSources(), sources);
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //force IllegalArgumentException
+        estimator = null;
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
+                    RssiReading<RadioSource>>>(), fingerprint, sources,
+                    2, 3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(null,
+                    fingerprint, sources, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    null, sources, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, null, 2,
+                    3, pathLossExponent,
+                    false, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 0, 3,
+                    pathLossExponent, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator = new SourcedRssiPositionEstimator2D(locatedFingerprints,
+                    fingerprint, sources, 2, 1,
+                    pathLossExponent, false,
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(estimator);
     }
 
     @Override

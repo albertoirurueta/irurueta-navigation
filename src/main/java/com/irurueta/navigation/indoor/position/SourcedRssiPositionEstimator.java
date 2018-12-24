@@ -31,6 +31,7 @@ import java.util.List;
  * associated to those readings.
  * @param <P> a {@link Point} type.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class SourcedRssiPositionEstimator<P extends Point> extends
         BaseRssiPositionEstimator<P, SourcedRssiPositionEstimatorListener<P>> {
 
