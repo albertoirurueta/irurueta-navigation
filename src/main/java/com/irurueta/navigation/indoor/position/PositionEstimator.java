@@ -40,7 +40,7 @@ public abstract class PositionEstimator<P extends Point> {
     protected List<? extends RadioSourceLocated<P>> mSources;
 
     /**
-     * Fingerprint containing readings at an unknown location for provided location radio sources.
+     * Fingerprint containing readings at an unknown location for provided located radio sources.
      */
     protected Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> mFingerprint;
 
@@ -103,6 +103,7 @@ public abstract class PositionEstimator<P extends Point> {
      * Sets fingerprint containing readings at an unknown location for provided located radio sources.
      * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
      * @throws LockedException if estimator is locked.
+     * @throws IllegalArgumentException if provided value is null.
      */
     public void setFingerprint(
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
