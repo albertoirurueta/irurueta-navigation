@@ -59,7 +59,7 @@ public class MSACRobustRangingRadioSourceEstimator2DTest implements
     private static final double ABSOLUTE_ERROR = 1e-6;
     private static final double LARGE_POSITION_ERROR = 0.5;
 
-    private static final int TIMES = 50;
+    private static final int TIMES = 100;
 
     private static final int PERCENTAGE_OUTLIERS = 20;
 
