@@ -5058,6 +5058,182 @@ public class SourcedRssiPositionEstimator2DTest implements SourcedRssiPositionEs
         assertNull(estimator);
     }
 
+    @Test
+    public void testGetSetLocatedFingerprints() throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default value
+        assertNull(estimator.getLocatedFingerprints());
+
+        //set new value
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        List<RssiReading<RadioSource>> readings = new ArrayList<>();
+        for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid" + i,
+                    FREQUENCY);
+            double rssi = randomizer.nextDouble();
+
+            RssiReading<RadioSource> reading =
+                    new RssiReading<>((RadioSource) accessPoint, rssi);
+            readings.add(reading);
+        }
+
+        RssiFingerprintLocated2D<RadioSource,
+                RssiReading<RadioSource>>
+                locatedFingerprint = new RssiFingerprintLocated2D<>(readings,
+                Point2D.create());
+
+        List<RssiFingerprintLocated2D<RadioSource,
+                RssiReading<RadioSource>>> locatedFingerprints =
+                new ArrayList<>();
+        locatedFingerprints.add(locatedFingerprint);
+
+        estimator.setLocatedFingerprints(locatedFingerprints);
+
+        //check correctness
+        assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
+
+        //force IllegalArgumentException
+        try {
+            estimator.setLocatedFingerprints(null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator.setLocatedFingerprints(new ArrayList<RssiFingerprintLocated<RadioSource,
+                    RssiReading<RadioSource>, Point2D>>());
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testGetSetFingerprint() throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default value
+        assertNull(estimator.getFingerprint());
+
+        //set new value
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        List<RssiReading<RadioSource>> readings = new ArrayList<>();
+        for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid" + i,
+                    FREQUENCY);
+            double rssi = randomizer.nextDouble();
+
+            RssiReading<RadioSource> reading =
+                    new RssiReading<>((RadioSource) accessPoint, rssi);
+            readings.add(reading);
+        }
+
+        RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                new RssiFingerprint<>(readings);
+        estimator.setFingerprint(fingerprint);
+
+        //check correctness
+        assertSame(estimator.getFingerprint(), fingerprint);
+
+        //force IllegalArgumentException
+        try {
+            estimator.setFingerprint(null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testGetSetMinMaxNearestFingerprints() throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default values
+        assertEquals(estimator.getMinNearestFingerprints(), 1);
+        assertEquals(estimator.getMaxNearestFingerprints(), -1);
+
+        //set new values
+        estimator.setMinMaxNearestFingerprints(2, 3);
+
+        //check
+        assertEquals(estimator.getMinNearestFingerprints(), 2);
+        assertEquals(estimator.getMaxNearestFingerprints(), 3);
+
+        //force IllegalArgumentException
+        try {
+            estimator.setMinMaxNearestFingerprints(0, 3);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            estimator.setMinMaxNearestFingerprints(2, 1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testGetSetPathLossExponent() throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default value
+        assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
+
+        //set new value
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        double pathLossExponent = randomizer.nextDouble();
+
+        estimator.setPathLossExponent(pathLossExponent);
+
+        //check correctness
+        assertEquals(estimator.getPathLossExponent(), pathLossExponent, 0.0);
+    }
+
+    @Test
+    public void testGetSetListener() throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default value
+        assertNull(estimator.getListener());
+
+        //set new value
+        estimator.setListener(this);
+
+        //check
+        assertSame(estimator.getListener(), this);
+    }
+
+    @Test
+    public void testGetSetSources() throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default values
+        assertNull(estimator.getSources());
+
+        //set new value
+        List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+        estimator.setSources(sources);
+
+        //check
+        assertSame(estimator.getSources(), sources);
+
+        //force IllegalArgumentException
+        try {
+            estimator.setSources(null);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testGetSetUseSourcesPathLossExponentWhenAvailable()
+            throws LockedException {
+        SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D();
+
+        //check default value
+        assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
+
+        //set new value
+        estimator.setUseSourcesPathLossExponentWhenAvailable(false);
+
+        //check
+        assertFalse(estimator.getUseSourcesPathLossExponentWhenAvailable());
+    }
+
     @Override
     public void onEstimateStart(SourcedRssiPositionEstimator<Point2D> estimator) {
         estimateStart++;
