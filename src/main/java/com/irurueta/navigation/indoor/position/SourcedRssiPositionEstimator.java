@@ -826,6 +826,7 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
      * @param locatedFingerprints located fingerprints containing RSSI readings.
      * @param fingerprint fingerprint containing readings at an unknown location
      *                    for provided located fingerprints.
+     * @param sources located radio sources.
      * @param minNearestFingerprints minimum number of nearest fingerprints.
      * @param maxNearestFingerprints maximum number of nearest fingerprints.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
