@@ -20,6 +20,7 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
 
@@ -58,12 +59,9 @@ public class SourcedRssiPositionEstimator2DTest implements SourcedRssiPositionEs
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final double ABSOLUTE_ERROR = 1e-6;
-//    private static final double LARGE_ABSOLUTE_ERROR = 1e-1;
+    private static final double ERROR_STD = 1.0e-1;
 
-    private static final double ERROR_STD = 1e-3;
-
-    private static final int TIMES = 10;
+    private static final int TIMES = 50;
 
     private int estimateStart;
     private int estimateEnd;
@@ -748,7 +746,7 @@ public class SourcedRssiPositionEstimator2DTest implements SourcedRssiPositionEs
 
         }
 
-        LOGGER.log(Level.INFO, "Results when no error and no bias");
+        LOGGER.log(Level.INFO, "Results withous error and without bias");
 
         LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
                 (double)numBestIsClosestPosition / (double)TIMES * 100.0);
@@ -1101,7 +1099,7 @@ public class SourcedRssiPositionEstimator2DTest implements SourcedRssiPositionEs
 
         }
 
-        LOGGER.log(Level.INFO, "Results when there is bias");
+        LOGGER.log(Level.INFO, "Results with bias");
 
         LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
                 (double)numBestIsClosestPosition / (double)TIMES * 100.0);
@@ -1165,9 +1163,1083 @@ public class SourcedRssiPositionEstimator2DTest implements SourcedRssiPositionEs
         assertEquals(bestPos, 3);
     }
 
-    //TODO: test with error
-    //TODO: test with bias and error
-    //TODO: test for different path loss
+    @Test
+    public void testEstimateWithError() throws LockedException,
+            NotReadyException,
+            PositionEstimationException {
+        int numBestIsClosestPosition = 0;
+        int numBestIsNoMeanRssiPosition = 0;
+        int numBestIsRssiPosition = 0;
+        int numBestIsNoMeansEstimatedPosition = 0;
+        int numBestIsNoMeanFinderEstimatedPosition = 0;
+        int numBestIsNoMeanReadingsEstimatedPosition = 0;
+        int numBestIsEstimatedPosition = 0;
+
+        double avgClosestDistance = 0.0;
+        double avgNoMeanRssiDistance = 0.0;
+        double avgRssiDistance = 0.0;
+        double avgNoMeansEstimatedError = 0.0;
+        double avgNoMeanFinderEstimatedError = 0.0;
+        double avgNoMeanReadingsEstimatedError = 0.0;
+        double avgEstimatedError = 0.0;
+
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+                    0.0, ERROR_STD);
+
+            //build sources
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for (int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
+                                "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, SourcedRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                    double rssiError = errorRandomizer.nextDouble();
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi + rssiError);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
+                        SourcedRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                double rssiError = errorRandomizer.nextDouble();
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi + rssiError);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //find real closest fingerprint based on location
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
+            double distance = Double.MAX_VALUE;
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+                    locatedFingerprints) {
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
+                double dist = fingerprintPosition.distanceTo(position);
+                if (dist < distance) {
+                    distance = dist;
+                    closestFingerprint = locatedFingerprint;
+                    closestPosition = fingerprintPosition;
+                }
+            }
+
+            assertNotNull(closestPosition);
+
+            double closestDistance = closestPosition.distanceTo(position);
+            avgClosestDistance += closestDistance / TIMES;
+
+
+            //find closest fingerprint based on RSSI without mean
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
+                    new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
+
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
+                    noMeanfinder.findNearestTo(fingerprint);
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+
+            double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
+            avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
+
+
+            //find closest fingerprint based on RSSI
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
+                    new RadioSourceKNearestFinder<>(locatedFingerprints);
+
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
+                    finder.findNearestTo(fingerprint);
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
+
+            double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
+            avgRssiDistance += rssiClosestDistance / TIMES;
+
+
+            //create estimator with means removed on finder and fingerprints
+            SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMeansFromFingerprintReadingsRemoved(true);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeansEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
+
+
+            //create estimator with means removed only on finder
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMeansFromFingerprintReadingsRemoved(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
+
+
+            //create estimator with means removed only on readings
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(false);
+            estimator.setMeansFromFingerprintReadingsRemoved(true);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
+
+
+            //create estimator with means not removed
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(false);
+            estimator.setMeansFromFingerprintReadingsRemoved(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double estimatedError = estimatedPosition.distanceTo(position);
+            avgEstimatedError += estimatedError / TIMES;
+
+            double[] errors = new double[]{
+                    closestDistance,
+                    noMeanRssiClosestDistance,
+                    rssiClosestDistance,
+                    noMeansEstimatedError,
+                    noMeanFinderEstimatedError,
+                    noMeanReadingsEstimatedError,
+                    estimatedError
+            };
+
+            //find minimum error
+            double minError = Double.MAX_VALUE;
+            int bestErrorPos = -1;
+            for (int i = 0; i < errors.length; i++) {
+                if (errors[i] < minError) {
+                    minError = errors[i];
+                    bestErrorPos = i;
+                }
+            }
+
+            switch (bestErrorPos) {
+                case 0:
+                    numBestIsClosestPosition++;
+                    break;
+                case 1:
+                    numBestIsNoMeanRssiPosition++;
+                    break;
+                case 2:
+                    numBestIsRssiPosition++;
+                    break;
+                case 3:
+                    numBestIsNoMeansEstimatedPosition++;
+                    break;
+                case 4:
+                    numBestIsNoMeanFinderEstimatedPosition++;
+                    break;
+                case 5:
+                    numBestIsNoMeanReadingsEstimatedPosition++;
+                    break;
+                case 6:
+                    numBestIsEstimatedPosition++;
+                    break;
+            }
+
+        }
+
+        LOGGER.log(Level.INFO, "Results with error bias");
+
+        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
+                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
+                (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
+                (double)numBestIsRssiPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no means: {0}%",
+                (double)numBestIsNoMeansEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no mean finder: {0}%",
+                (double)numBestIsNoMeanFinderEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no mean readings: {0}%",
+                (double)numBestIsNoMeanReadingsEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated: {0}%",
+                (double)numBestIsEstimatedPosition / (double)TIMES * 100.0);
+
+
+        LOGGER.log(Level.INFO, "Avg. closest fingerprint distance: {0} m",
+                avgClosestDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. no mean RSSI closest fingerprint distance: {0} m",
+                avgNoMeanRssiDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. RSSI closest fingerprint distance: {0} m",
+                avgRssiDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position error with means removed: {0} m",
+                avgNoMeansEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means removed only on finder error: {0} m",
+                avgNoMeanFinderEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means removed only on readings error: {0} m",
+                avgNoMeanReadingsEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means not removed error: {0} m",
+                avgEstimatedError);
+
+        int[] numBest = new int[]{
+                numBestIsClosestPosition,
+                numBestIsNoMeanRssiPosition,
+                numBestIsRssiPosition,
+                numBestIsNoMeansEstimatedPosition,
+                numBestIsNoMeanFinderEstimatedPosition,
+                numBestIsNoMeanReadingsEstimatedPosition,
+                numBestIsEstimatedPosition
+        };
+
+        //check that best result is obtained when means are removed from both
+        //fingerprint finder and readings to account for possible biases between devices
+        int bestNum = -Integer.MAX_VALUE;
+        int bestPos = -1;
+        for (int i = 0; i < numBest.length; i++) {
+            if (numBest[i] > bestNum) {
+                bestNum = numBest[i];
+                bestPos = i;
+            }
+        }
+
+        assertEquals(bestNum, numBestIsNoMeanFinderEstimatedPosition);
+        assertEquals(bestPos, 4);
+    }
+
+    @Test
+    public void testEstimateWithErrorAndWithBias() throws LockedException,
+            NotReadyException,
+            PositionEstimationException {
+        int numBestIsClosestPosition = 0;
+        int numBestIsNoMeanRssiPosition = 0;
+        int numBestIsRssiPosition = 0;
+        int numBestIsNoMeansEstimatedPosition = 0;
+        int numBestIsNoMeanFinderEstimatedPosition = 0;
+        int numBestIsNoMeanReadingsEstimatedPosition = 0;
+        int numBestIsEstimatedPosition = 0;
+
+        double avgClosestDistance = 0.0;
+        double avgNoMeanRssiDistance = 0.0;
+        double avgRssiDistance = 0.0;
+        double avgNoMeansEstimatedError = 0.0;
+        double avgNoMeanFinderEstimatedError = 0.0;
+        double avgNoMeanReadingsEstimatedError = 0.0;
+        double avgEstimatedError = 0.0;
+
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+                    0.0, ERROR_STD);
+
+            //build sources
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for (int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
+                                "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, SourcedRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                    double rssiError = errorRandomizer.nextDouble();
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi + rssiError);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
+                        SourcedRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                double rssiError = errorRandomizer.nextDouble();
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi + rssiError + RSSI_BIAS);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //find real closest fingerprint based on location
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
+            double distance = Double.MAX_VALUE;
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+                    locatedFingerprints) {
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
+                double dist = fingerprintPosition.distanceTo(position);
+                if (dist < distance) {
+                    distance = dist;
+                    closestFingerprint = locatedFingerprint;
+                    closestPosition = fingerprintPosition;
+                }
+            }
+
+            assertNotNull(closestPosition);
+
+            double closestDistance = closestPosition.distanceTo(position);
+            avgClosestDistance += closestDistance / TIMES;
+
+
+            //find closest fingerprint based on RSSI without mean
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
+                    new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
+
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
+                    noMeanfinder.findNearestTo(fingerprint);
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+
+            double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
+            avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
+
+
+            //find closest fingerprint based on RSSI
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
+                    new RadioSourceKNearestFinder<>(locatedFingerprints);
+
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
+                    finder.findNearestTo(fingerprint);
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
+
+            double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
+            avgRssiDistance += rssiClosestDistance / TIMES;
+
+
+            //create estimator with means removed on finder and fingerprints
+            SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMeansFromFingerprintReadingsRemoved(true);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeansEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
+
+
+            //create estimator with means removed only on finder
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMeansFromFingerprintReadingsRemoved(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
+
+
+            //create estimator with means removed only on readings
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(false);
+            estimator.setMeansFromFingerprintReadingsRemoved(true);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
+
+
+            //create estimator with means not removed
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(false);
+            estimator.setMeansFromFingerprintReadingsRemoved(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double estimatedError = estimatedPosition.distanceTo(position);
+            avgEstimatedError += estimatedError / TIMES;
+
+            double[] errors = new double[]{
+                    closestDistance,
+                    noMeanRssiClosestDistance,
+                    rssiClosestDistance,
+                    noMeansEstimatedError,
+                    noMeanFinderEstimatedError,
+                    noMeanReadingsEstimatedError,
+                    estimatedError
+            };
+
+            //find minimum error
+            double minError = Double.MAX_VALUE;
+            int bestErrorPos = -1;
+            for (int i = 0; i < errors.length; i++) {
+                if (errors[i] < minError) {
+                    minError = errors[i];
+                    bestErrorPos = i;
+                }
+            }
+
+            switch (bestErrorPos) {
+                case 0:
+                    numBestIsClosestPosition++;
+                    break;
+                case 1:
+                    numBestIsNoMeanRssiPosition++;
+                    break;
+                case 2:
+                    numBestIsRssiPosition++;
+                    break;
+                case 3:
+                    numBestIsNoMeansEstimatedPosition++;
+                    break;
+                case 4:
+                    numBestIsNoMeanFinderEstimatedPosition++;
+                    break;
+                case 5:
+                    numBestIsNoMeanReadingsEstimatedPosition++;
+                    break;
+                case 6:
+                    numBestIsEstimatedPosition++;
+                    break;
+            }
+
+        }
+
+        LOGGER.log(Level.INFO, "Results with error and bias");
+
+        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
+                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
+                (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
+                (double)numBestIsRssiPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no means: {0}%",
+                (double)numBestIsNoMeansEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no mean finder: {0}%",
+                (double)numBestIsNoMeanFinderEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no mean readings: {0}%",
+                (double)numBestIsNoMeanReadingsEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated: {0}%",
+                (double)numBestIsEstimatedPosition / (double)TIMES * 100.0);
+
+
+        LOGGER.log(Level.INFO, "Avg. closest fingerprint distance: {0} m",
+                avgClosestDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. no mean RSSI closest fingerprint distance: {0} m",
+                avgNoMeanRssiDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. RSSI closest fingerprint distance: {0} m",
+                avgRssiDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position error with means removed: {0} m",
+                avgNoMeansEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means removed only on finder error: {0} m",
+                avgNoMeanFinderEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means removed only on readings error: {0} m",
+                avgNoMeanReadingsEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means not removed error: {0} m",
+                avgEstimatedError);
+
+        int[] numBest = new int[]{
+                numBestIsClosestPosition,
+                numBestIsNoMeanRssiPosition,
+                numBestIsRssiPosition,
+                numBestIsNoMeansEstimatedPosition,
+                numBestIsNoMeanFinderEstimatedPosition,
+                numBestIsNoMeanReadingsEstimatedPosition,
+                numBestIsEstimatedPosition
+        };
+
+        //check that best result is obtained when means are removed from both
+        //fingerprint finder and readings to account for possible biases between devices
+        int bestNum = -Integer.MAX_VALUE;
+        int bestPos = -1;
+        for (int i = 0; i < numBest.length; i++) {
+            if (numBest[i] > bestNum) {
+                bestNum = numBest[i];
+                bestPos = i;
+            }
+        }
+
+        assertEquals(bestNum, numBestIsNoMeansEstimatedPosition);
+        assertEquals(bestPos, 3);
+    }
+
+    @Test
+    public void testEstimateWithOtherPathloss() throws LockedException,
+            NotReadyException,
+            PositionEstimationException {
+        int numBestIsClosestPosition = 0;
+        int numBestIsNoMeanRssiPosition = 0;
+        int numBestIsRssiPosition = 0;
+        int numBestIsNoMeansEstimatedPosition = 0;
+        int numBestIsNoMeanFinderEstimatedPosition = 0;
+        int numBestIsNoMeanReadingsEstimatedPosition = 0;
+        int numBestIsEstimatedPosition = 0;
+
+        double avgClosestDistance = 0.0;
+        double avgNoMeanRssiDistance = 0.0;
+        double avgRssiDistance = 0.0;
+        double avgNoMeansEstimatedError = 0.0;
+        double avgNoMeanFinderEstimatedError = 0.0;
+        double avgNoMeanReadingsEstimatedError = 0.0;
+        double avgEstimatedError = 0.0;
+
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            //build sources
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for (int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
+                                "bssid" + i, FREQUENCY, transmittedPowerdBm,
+                                position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, SourcedRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
+                        SourcedRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //find real closest fingerprint based on location
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
+            double distance = Double.MAX_VALUE;
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+                    locatedFingerprints) {
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
+                double dist = fingerprintPosition.distanceTo(position);
+                if (dist < distance) {
+                    distance = dist;
+                    closestFingerprint = locatedFingerprint;
+                    closestPosition = fingerprintPosition;
+                }
+            }
+
+            assertNotNull(closestPosition);
+
+            double closestDistance = closestPosition.distanceTo(position);
+            avgClosestDistance += closestDistance / TIMES;
+
+
+            //find closest fingerprint based on RSSI without mean
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
+                    new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
+
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
+                    noMeanfinder.findNearestTo(fingerprint);
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+
+            double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
+            avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
+
+
+            //find closest fingerprint based on RSSI
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
+                    new RadioSourceKNearestFinder<>(locatedFingerprints);
+
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
+                    finder.findNearestTo(fingerprint);
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
+
+            double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
+            avgRssiDistance += rssiClosestDistance / TIMES;
+
+
+            //create estimator with means removed on finder and fingerprints
+            SourcedRssiPositionEstimator2D estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMeansFromFingerprintReadingsRemoved(true);
+            estimator.setPathLossExponent(pathLossExponent);
+            estimator.setUseSourcesPathLossExponentWhenAvailable(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeansEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
+
+
+            //create estimator with means removed only on finder
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMeansFromFingerprintReadingsRemoved(false);
+            estimator.setPathLossExponent(pathLossExponent);
+            estimator.setUseSourcesPathLossExponentWhenAvailable(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
+
+
+            //create estimator with means removed only on readings
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(false);
+            estimator.setMeansFromFingerprintReadingsRemoved(true);
+            estimator.setPathLossExponent(pathLossExponent);
+            estimator.setUseSourcesPathLossExponentWhenAvailable(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
+            avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
+
+
+            //create estimator with means not removed
+            estimator = new SourcedRssiPositionEstimator2D(
+                    locatedFingerprints, fingerprint, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(false);
+            estimator.setMeansFromFingerprintReadingsRemoved(false);
+            estimator.setPathLossExponent(pathLossExponent);
+            estimator.setUseSourcesPathLossExponentWhenAvailable(false);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check correctness
+            assertNotNull(closestFingerprint);
+            assertNotNull(closestPosition);
+
+            estimatedPosition = estimator.getEstimatedPosition();
+
+            double estimatedError = estimatedPosition.distanceTo(position);
+            avgEstimatedError += estimatedError / TIMES;
+
+            double[] errors = new double[]{
+                    closestDistance,
+                    noMeanRssiClosestDistance,
+                    rssiClosestDistance,
+                    noMeansEstimatedError,
+                    noMeanFinderEstimatedError,
+                    noMeanReadingsEstimatedError,
+                    estimatedError
+            };
+
+            //find minimum error
+            double minError = Double.MAX_VALUE;
+            int bestErrorPos = -1;
+            for (int i = 0; i < errors.length; i++) {
+                if (errors[i] < minError) {
+                    minError = errors[i];
+                    bestErrorPos = i;
+                }
+            }
+
+            switch (bestErrorPos) {
+                case 0:
+                    numBestIsClosestPosition++;
+                    break;
+                case 1:
+                    numBestIsNoMeanRssiPosition++;
+                    break;
+                case 2:
+                    numBestIsRssiPosition++;
+                    break;
+                case 3:
+                    numBestIsNoMeansEstimatedPosition++;
+                    break;
+                case 4:
+                    numBestIsNoMeanFinderEstimatedPosition++;
+                    break;
+                case 5:
+                    numBestIsNoMeanReadingsEstimatedPosition++;
+                    break;
+                case 6:
+                    numBestIsEstimatedPosition++;
+                    break;
+            }
+
+        }
+
+        LOGGER.log(Level.INFO, "Results for different path loss exponents");
+
+        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
+                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
+                (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
+                (double)numBestIsRssiPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no means: {0}%",
+                (double)numBestIsNoMeansEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no mean finder: {0}%",
+                (double)numBestIsNoMeanFinderEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated no mean readings: {0}%",
+                (double)numBestIsNoMeanReadingsEstimatedPosition / (double)TIMES * 100.0);
+        LOGGER.log(Level.INFO, "Percentage best estimated: {0}%",
+                (double)numBestIsEstimatedPosition / (double)TIMES * 100.0);
+
+
+        LOGGER.log(Level.INFO, "Avg. closest fingerprint distance: {0} m",
+                avgClosestDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. no mean RSSI closest fingerprint distance: {0} m",
+                avgNoMeanRssiDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. RSSI closest fingerprint distance: {0} m",
+                avgRssiDistance);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position error with means removed: {0} m",
+                avgNoMeansEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means removed only on finder error: {0} m",
+                avgNoMeanFinderEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means removed only on readings error: {0} m",
+                avgNoMeanReadingsEstimatedError);
+        LOGGER.log(Level.INFO,
+                "Avg. Estimated position with means not removed error: {0} m",
+                avgEstimatedError);
+
+        int[] numBest = new int[]{
+                numBestIsClosestPosition,
+                numBestIsNoMeanRssiPosition,
+                numBestIsRssiPosition,
+                numBestIsNoMeansEstimatedPosition,
+                numBestIsNoMeanFinderEstimatedPosition,
+                numBestIsNoMeanReadingsEstimatedPosition,
+                numBestIsEstimatedPosition
+        };
+
+        //check that best result is obtained when means are removed to find
+        //closest fingerprints, but not removed for readings
+        int bestNum = -Integer.MAX_VALUE;
+        int bestPos = -1;
+        for (int i = 0; i < numBest.length; i++) {
+            if (numBest[i] > bestNum) {
+                bestNum = numBest[i];
+                bestPos = i;
+            }
+        }
+
+        assertEquals(bestNum, numBestIsNoMeanFinderEstimatedPosition);
+        assertEquals(bestPos, 4);
+    }
+
 
     @Override
     public void onEstimateStart(SourcedRssiPositionEstimator<Point2D> estimator) {
