@@ -101,8 +101,8 @@ public class SourcedRssiPositionEstimator2D extends SourcedRssiPositionEstimator
     }
 
     /**
-     * Gets estimated position.
-     * @return estimated position.
+     * Gets estimated position or null if not available yet.
+     * @return estimated position or null.
      */
     @Override
     public Point2D getEstimatedPosition() {

@@ -96,11 +96,15 @@ public class SourcedRssiPositionEstimator3D extends SourcedRssiPositionEstimator
     }
 
     /**
-     * Gets estimated position.
-     * @return estimated position.
+     * Gets estimated position or null if not available yet.
+     * @return estimated position or null.
      */
     @Override
     public Point3D getEstimatedPosition() {
+        if (mEstimatedPositionCoordinates == null) {
+            return null;
+        }
+
         Point3D result = new InhomogeneousPoint3D();
         getEstimatedPosition(result);
         return result;
