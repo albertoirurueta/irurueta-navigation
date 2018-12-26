@@ -288,26 +288,245 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
             }
 
             mEstimatedPositionCoordinates = null;
+            mNearestFingerprints = null;
 
             int dims = getNumberOfDimensions();
             int max = mMaxNearestFingerprints < 0 ?
                     mLocatedFingerprints.size() : mMaxNearestFingerprints;
             for (int k = mMinNearestFingerprints; k < max; k++) {
 
-                List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>>
-                        nearestFingerprints;
                 if (noMeanfinder != null) {
                     //noinspection unchecked
-                    nearestFingerprints = noMeanfinder.findKNearestTo(
+                    mNearestFingerprints = noMeanfinder.findKNearestTo(
                             (RssiFingerprint<RadioSource, RssiReading<RadioSource>>) mFingerprint, k);
                 } else {
                     //noinspection unchecked
-                    nearestFingerprints = finder.findKNearestTo(
+                    mNearestFingerprints = finder.findKNearestTo(
                             (RssiFingerprint<RadioSource, RssiReading<RadioSource>>) mFingerprint, k);
                 }
 
+                //Demonstration in 2D:
+                //--------------------
+                //Taylor series expansion can be expressed as:
+                //f(x) = f(a) + 1/1!*f'(a)*(x - a) + 1/2!*f''(a)*(x - a)^2 + ...
+
+                //where f'(x) is the derivative of f respect x, which can also be expressed as:
+                //f'(x) = diff(f(x))/diff(x)
+
+                //and f'(a) is the derivative of f respect x evaluated at a, which can be expressed
+                //as f'(a) = diff(f(a))/diff(x)
+
+                //consequently f''(a) is the second derivative respect x evaluated at a, which can
+                //be expressed as:
+                //f''(x) = diff(f(x))/diff(x^2)
+
+                //and:
+                //f''(a) = diff(f(a))/diff(x^2)
+
+                //Received power expressed in dBm is:
+                //k = (c/(4*pi*f))
+                //Pr = Pte*k^n / d^n
+
+                //where c is the speed of light, pi is 3.14159..., f is the frequency of the radio source,
+                //Pte is the equivalent transmitted power by the radio source, n is the path-loss exponent
+                // (typically 2.0), and d is the distance from a point to the location of the radio source.
+
+                //Hence:
+                //Pr(dBm) = 10*log(Pte*k^n/d^n) = 10*n*log(k) + 10*log(Pte) - 10*n*log(d) =
+                //          10*n*log(k) + 10*log(Pte) - 5*n*log(d^2)
+
+                //The former 2 terms are constant, and only the last terms depends on distance
+
+                //Hence, assuming the constant K = 10*n*log(k) + Pte(dBm), where Pte(dBm) = 10*log(Pte),
+                //assuming that transmitted power by the radio source Pte is known (so that K is also known),
+                //and assuming that the location of the radio source is known and it is located at pa = (xa, ya)
+                //so that d^2 = (x - xa)^2 + (y - ya)^2 then the received power at an unknown point pi = (xi, yi) is:
+
+                //Pr(pi) = Pr(xi,yi) = K - 5*n*log(d^2) = K - 5*n*log((xi - xa)^2 + (yi - ya)^2)
+
+                //Suppose that received power at point p1=(x1,y1) is known on a located fingerprint
+                //containing readings Pr(p1).
+
+                //Then, for an unknown point pi=(xi,yi) close to fingerprint 1 located at p1 where we
+                //have measured received power Pr(pi), we can get the following second-order Taylor
+                //approximation:
+
+                //Pr(pi) ~ Pr(p1) + JPtr(p1)*(pi - p1) + 1/2*(pi - p1)^T*HPr(p1)*(pi - p1) + ...
+
+                //where JPr(p1) is the Jacobian of Pr evaluated at p1. Since Pr is a multivariate function
+                //with scalar result, the Jacobian has size 1x2 and is equal to the gradient.
+                //HPtr(p1) is the Hessian matrix evaluated at p1, which is a symmetric matrix of size 2x2,
+                //and (pi-p1)^T is the transposed vector of (pi-p1)
+
+                //Hence, the Jacobian at any point p=(x,y) is equal to:
+                //JPr(p = (x,y)) = [diff(Pr(x,y))/diff(x)   diff(Pr(x,y))/diff(y)]
+
+                //And the Heassian matrix is equal to
+                //HPr(p = (x,y)) =  [diff(Pr(x,y))/diff(x^2)    diff(Pr(x,y))/diff(x*y)]
+                //                  [diff(Pr(x,y))/diff(x*y)    diff(Pr(x,y))/diff(y^2)]
+
+                //Simplifying Taylor expansion to first-order terms to get a linear (but less accurate)
+                //solution, we get:
+                //Pr(pi) = Pr(p1) + JPtr(p1)*(pi - p1)
+                //Pr(pi) = Pr(p1) + diff(Pr(p1))/diff(x)*(xi - x1) + diff(Pr(p1))/diff(y)*(yi - y1)
+
+                //where the first order derivatives of Pr(p = (x,y)) are:
+                //diff(Pr(x,y))/diff(x) = -5*n/(ln(10)*((x - xa)^2 + (y - ya)^2)*2*(x - xa)
+                //diff(Pr(x,y))/diff(x) = -10*n*(x - xa)/(ln(10)*((x - xa)^2 + (y - ya)^2))
+
+                //diff(Pr(x,y))/diff(y) = -5*n/(ln(10)*((x - xa)^2 + (y - ya)^2)*2*(y - ya)
+                //diff(Pr(x,y))/diff(y) = -10*n*(y - ya)/(ln(10)*((x - xa)^2 + (y - ya)^2))
+
+                //If we evaluate derivatives at p1 = (x1,y1), we get:
+                //diff(Pr(p1))/diff(x) = -10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                //diff(Pr(p1))/diff(y) = -10*n*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+
+                //where square distance from fingerprint 1 to radio source a can be expressed as:
+                //d1a^2 = (x1 - xa)^2 + (y1 - ya)^2
+
+                //where both the fingerprint and radio source positions are known, and hence d1a is known.
+
+                //Then derivatives can be expressed as:
+                //diff(Pr(p1))/diff(x) = -10*n*(x1 - xa)/(ln(10)*d1a^2)
+                //diff(Pr(p1))/diff(y) = -10*n*(y1 - ya)/(ln(10)*d1a^2)
+
+                //Hence, first order Taylor expansion can be expressed as:
+                //Pr(pi) = Pr(p1) + diff(Pr(p1))/diff(x)*(xi - x1) + diff(Pr(p1))/diff(y)*(yi - y1)
+                //Pr(pi) = Pr(p1) - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1) - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+
+                //where the only unknowns are xi,yi.
+
+                //Reordering expression above, we get:
+                //10*n*(x1 - xa)/(ln(10)*d1a^2)*xi + 10*n*(y1 - ya)/(ln(10)*d1a^2)*yi = Pr(p1) - Pr(pi) + 10*n*(x1 - xa)/(ln(10)*d1a^2)*x1 + 10*n*(y1 - ya)/(ln(10)*d1a^2)*y1
+
+                //Which can be expressed in matrix form as:
+                //[10*n*(x1 - xa)/(ln(10)*d1a^2)    10*n*(y1 - ya)/(ln(10)*d1a^2)]  [xi] = [Pr(p1) - Pr(pi) + 10*n*(x1 - xa)/(ln(10)*d1a^2)*x1 + 10*n*(y1 - ya)/(ln(10)*d1a^2)*y1]
+                //                                                                  [yi]
+
+                //which is the equation obtained for fingerprint 1 and radio source a.
+
+                //Having at least 2 linear independent equations for different fingerprints or radio sources allows
+                //solving unknown position pi = (xi,yi)
+                //Hence we could have either 2 or more located fingerprints with 1 radio sources, 2 or more radio
+                //sources on a single located fingerprint, or any combination resulting in enough equations
+
+
+                //Demonstration in 3D:
+                //--------------------
+                //Taylor series expansion can be expressed as:
+                //f(x) = f(a) + 1/1!*f'(a)*(x - a) + 1/2!*f''(a)*(x - a)^2 + ...
+
+                //where f'(x) is the derivative of f respect x, which can also be expressed as:
+                //f'(x) = diff(f(x))/diff(x)
+
+                //and f'(a) is the derivative of f respect x evaluated at a, which can be expressed
+                //as f'(a) = diff(f(a))/diff(x)
+
+                //consequently f''(a) is the second derivative respect x evaluated at a, which can
+                //be expressed as:
+                //f''(x) = diff(f(x))/diff(x^2)
+
+                //and:
+                //f''(a) = diff(f(a))/diff(x^2)
+
+                //Received power expressed in dBm is:
+                //k = (c/(4*pi*f))
+                //Pr = Pte*k^n / d^n
+
+                //where c is the speed of light, pi is 3.14159..., f is the frequency of the radio source,
+                //Pte is the equivalent transmitted power by the radio source, n is the path-loss exponent
+                // (typically 2.0), and d is the distance from a point to the location of the radio source.
+
+                //Hence:
+                //Pr(dBm) = 10*log(Pte*k^n/d^n) = 10*n*log(k) + 10*log(Pte) - 10*n*log(d) =
+                //          10*n*log(k) + 10*log(Pte) - 5*n*log(d^2)
+
+                //The former 2 terms are constant, and only the last terms depends on distance
+
+                //Hence, assuming the constant K = 10*n*log(k) + Pte(dBm), where Pte(dBm) = 10*log(Pte),
+                //assuming that transmitted power by the radio source Pte is known (so that K is also known),
+                //and assuming that the location of the radio source is known and it is located at pa = (xa, ya, za)
+                //so that d^2 = (x - xa)^2 + (y - ya)^2 + (z - za)^2 then the received power at an unknown point
+                //pi = (xi, yi, zi) is:
+
+                //Pr(pi) = Pr(xi,yi,zi) = K - 5*n*log(d^2) = K - 5*n*log((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2)
+
+                //Suppose that received power at point p1=(x1,y1,z1) is known on a located fingerprint
+                //containing readings Pr(p1).
+
+                //Then, for an unknown point pi=(xi,yi,zi) close to fingerprint 1 located at p1 where we
+                //have measured received power Pr(pi), we can get the following second-order Taylor
+                //approximation:
+
+                //Pr(pi) ~ Pr(p1) + JPtr(p1)*(pi - p1) + 1/2*(pi - p1)^T*HPr(p1)*(pi - p1) + ...
+
+                //where JPr(p1) is the Jacobian of Pr evaluated at p1. Since Pr is a multivariate function
+                //with scalar result, the Jacobian has size 1x3 and is equal to the gradient.
+                //HPtr(p1) is the Hessian matrix evaluated at p1, which is a symmetric matrix of size 3x3,
+                //and (pi-p1)^T is the transposed vector of (pi-p1)
+
+                //Hence, the Jacobian at any point p=(x,y) is equal to:
+                //JPr(p = (x,y)) = [diff(Pr(x,y,z))/diff(x)     diff(Pr(x,y,z))/diff(y)     diff(Pr(x,y,z))/diff(z)]
+
+                //And the Heassian matrix is equal to
+                //HPr(p = (x,y)) =  [diff(Pr(x,y,z))/diff(x^2)    diff(Pr(x,y,z))/diff(x*y)     diff(Pr(x,y,z))/diff(x*z)]
+                //                  [diff(Pr(x,y,z))/diff(x*y)    diff(Pr(x,y,z))/diff(y^2)     diff(Pr(x,y,z))/diff(y*z)]
+                //                  [diff(Pr(x,y,z))/diff(x*z)    diff(Pr(x,y,z))/diff(y*z)     diff(Pr(x,y,z))/diff(z^2)]
+
+                //Simplifying Taylor expansion to first-order terms to get a linear (but less accurate)
+                //solution, we get:
+                //Pr(pi) = Pr(p1) + JPtr(p1)*(pi - p1)
+                //Pr(pi) = Pr(p1) + diff(Pr(p1))/diff(x)*(xi - x1) + diff(Pr(p1))/diff(y)*(yi - y1) + diff(Pr(p1))/diff(z)*(zi - z1)
+
+                //where the first order derivatives of Pr(p = (x,y,z)) are:
+                //diff(Pr(x,y,z))/diff(x) = -5*n/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)*2*(x - xa)
+                //diff(Pr(x,y,z))/diff(x) = -10*n*(x - xa)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2))
+
+                //diff(Pr(x,y,z))/diff(y) = -5*n/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)*2*(y - ya)
+                //diff(Pr(x,y,z))/diff(y) = -10*n*(y - ya)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2))
+
+                //diff(Pr(x,y,z))/diff(z) = -5*n/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)*2*(z - za)
+                //diff(Pr(x,y,z))/diff(z) = -10*n*(z - za)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2))
+
+                //If we evaluate derivatives at p1 = (x1,y1,z1), we get:
+                //diff(Pr(p1))/diff(x) = -10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))
+                //diff(Pr(p1))/diff(y) = -10*n*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))
+                //diff(Pr(p1))/diff(z) = -10*n*(z1 - za)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))
+
+                //where square distance from fingerprint 1 to radio source a can be expressed as:
+                //d1a^2 = (x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2
+
+                //where both the fingerprint and radio source positions are known, and hence d1a is known.
+
+                //Then derivatives can be expressed as:
+                //diff(Pr(p1))/diff(x) = -10*n*(x1 - xa)/(ln(10)*d1a^2)
+                //diff(Pr(p1))/diff(y) = -10*n*(y1 - ya)/(ln(10)*d1a^2)
+                //diff(Pr(p1))/diff(z) = -10*n*(z1 - za)/(ln(10)*d1a^2)
+
+                //Hence, first order Taylor expansion can be expressed as:
+                //Pr(pi) = Pr(p1) + diff(Pr(p1))/diff(x)*(xi - x1) + diff(Pr(p1))/diff(y)*(yi - y1) + diff(Pr(p1))/diff(z)*(zi - z1)
+                //Pr(pi) = Pr(p1) - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1) - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1) - 10*n*(z1 - za)/(ln(10)*d1a^2)*(zi - z1)
+
+                //where the only unknowns are xi,yi,zi.
+
+                //Reordering expression above, we get:
+                //10*n*(x1 - xa)/(ln(10)*d1a^2)*xi + 10*n*(y1 - ya)/(ln(10)*d1a^2)*yi + 10*n*(z1 - za)/(ln(10)*d1a^2)*zi = Pr(p1) - Pr(pi) + 10*n*(x1 - xa)/(ln(10)*d1a^2)*x1 + 10*n*(y1 - ya)/(ln(10)*d1a^2)*y1 + 10*n*(z1 - za)/(ln(10)*d1a^2)*z1
+
+                //Which can be expressed in matrix form as:
+                //[10*n*(x1 - xa)/(ln(10)*d1a^2)    10*n*(y1 - ya)/(ln(10)*d1a^2)   10*n*(z1 - za)/(ln(10)*d1a^2)]  [xi] = [Pr(p1) - Pr(pi) + 10*n*(x1 - xa)/(ln(10)*d1a^2)*x1 + 10*n*(y1 - ya)/(ln(10)*d1a^2)*y1 + 10*n*(z1 - za)/(ln(10)*d1a^2)*z1]
+                //                                                                                                  [yi]
+                //                                                                                                  [zi]
+
+                //which is the equation obtained for fingerprint 1 and radio source a.
+
+                //Having at least 3 linear independent equations for different fingerprints or radio sources allows
+                //solving unknown position pi = (xi,yi,zi)
+                //Hence we could have either 3 or more located fingerprints with 1 radio sources, 3 or more radio
+                //sources on a single located fingerprint, or any combination resulting in enough equations
+
+
                 //build system of equations
-                int totalReadings = totalReadings(nearestFingerprints);
+                int totalReadings = totalReadings(mNearestFingerprints);
 
                 try {
                     double ln10 = Math.log(10.0);
@@ -315,7 +534,7 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
                     Matrix a = new Matrix(totalReadings, dims);
                     double[] b = new double[totalReadings];
                     for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
-                            nearestFingerprints) {
+                            mNearestFingerprints) {
 
                         P fingerprintPosition = locatedFingerprint.getPosition();
                         List<RssiReading<RadioSource>> locatedReadings =

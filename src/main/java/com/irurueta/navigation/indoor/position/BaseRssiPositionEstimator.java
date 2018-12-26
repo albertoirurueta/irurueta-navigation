@@ -98,6 +98,13 @@ public abstract class BaseRssiPositionEstimator<P extends Point,
     protected double[] mEstimatedPositionCoordinates;
 
     /**
+     * Nearest located fingerprints based on their RSSI readings respect to provided fingerprint.
+     * These are the fingerprints that are probably located close to the unknown location to be estimated,
+     * however their location is approximate due to errors on RSSI readings.
+     */
+    protected List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>> mNearestFingerprints;
+
+    /**
      * Indicates if this instance is locked.
      */
     protected boolean mLocked;
@@ -325,6 +332,16 @@ public abstract class BaseRssiPositionEstimator<P extends Point,
                         mEstimatedPositionCoordinates[i]);
             }
         }
+    }
+
+    /**
+     * Gets nearest found located fingerprints based on their RSSI readings respect to provided fingerprint.
+     * These are the fingerprints that are probably located close to the unknown location to be estimated,
+     * however their location is approximate due to errors on RSSI readings.
+     * @return nearest located fingerprints based on their RSSI readings or null if estimation has not been done yet.
+     */
+    public List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>> getNearestFingerprints() {
+        return mNearestFingerprints;
     }
 
     /**
