@@ -461,7 +461,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
     public void testEstimateWithoutErrorAndWithoutBias() throws LockedException,
             NotReadyException,
             PositionEstimationException {
-        int numBestIsClosestPosition = 0;
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -724,24 +723,21 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
             switch (bestErrorPos) {
                 case 0:
-                    numBestIsClosestPosition++;
-                    break;
-                case 1:
                     numBestIsNoMeanRssiPosition++;
                     break;
-                case 2:
+                case 1:
                     numBestIsRssiPosition++;
                     break;
-                case 3:
+                case 2:
                     numBestIsNoMeansEstimatedPosition++;
                     break;
-                case 4:
+                case 3:
                     numBestIsNoMeanFinderEstimatedPosition++;
                     break;
-                case 5:
+                case 4:
                     numBestIsNoMeanReadingsEstimatedPosition++;
                     break;
-                case 6:
+                case 5:
                     numBestIsEstimatedPosition++;
                     break;
             }
@@ -750,8 +746,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
         LOGGER.log(Level.INFO, "Results withous error and without bias");
 
-        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
-                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
                 (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
@@ -788,7 +782,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
                 avgEstimatedError);
 
         int[] numBest = new int[]{
-                numBestIsClosestPosition,
                 numBestIsNoMeanRssiPosition,
                 numBestIsRssiPosition,
                 numBestIsNoMeansEstimatedPosition,
@@ -808,7 +801,7 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
             }
         }
 
-        assertEquals(bestNum, numBestIsNoMeanFinderEstimatedPosition);
+        assertEquals(bestNum, numBestIsNoMeanReadingsEstimatedPosition);
         assertEquals(bestPos, 4);
     }
 
@@ -816,7 +809,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
     public void testEstimateWithBias() throws LockedException,
             NotReadyException,
             PositionEstimationException {
-        int numBestIsClosestPosition = 0;
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -1080,24 +1072,21 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
             switch (bestErrorPos) {
                 case 0:
-                    numBestIsClosestPosition++;
-                    break;
-                case 1:
                     numBestIsNoMeanRssiPosition++;
                     break;
-                case 2:
+                case 1:
                     numBestIsRssiPosition++;
                     break;
-                case 3:
+                case 2:
                     numBestIsNoMeansEstimatedPosition++;
                     break;
-                case 4:
+                case 3:
                     numBestIsNoMeanFinderEstimatedPosition++;
                     break;
-                case 5:
+                case 4:
                     numBestIsNoMeanReadingsEstimatedPosition++;
                     break;
-                case 6:
+                case 5:
                     numBestIsEstimatedPosition++;
                     break;
             }
@@ -1106,8 +1095,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
         LOGGER.log(Level.INFO, "Results with bias");
 
-        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
-                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
                 (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
@@ -1144,7 +1131,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
                 avgEstimatedError);
 
         int[] numBest = new int[]{
-                numBestIsClosestPosition,
                 numBestIsNoMeanRssiPosition,
                 numBestIsRssiPosition,
                 numBestIsNoMeansEstimatedPosition,
@@ -1164,15 +1150,15 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
             }
         }
 
-        assertEquals(bestNum, numBestIsNoMeansEstimatedPosition);
-        assertEquals(bestPos, 3);
+        assertTrue(bestNum == numBestIsNoMeanRssiPosition ||
+                bestNum == numBestIsNoMeanFinderEstimatedPosition);
+        assertTrue(bestPos == 0 || bestPos == 3);
     }
 
     @Test
     public void testEstimateWithError() throws LockedException,
             NotReadyException,
             PositionEstimationException {
-        int numBestIsClosestPosition = 0;
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -1439,24 +1425,21 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
             switch (bestErrorPos) {
                 case 0:
-                    numBestIsClosestPosition++;
-                    break;
-                case 1:
                     numBestIsNoMeanRssiPosition++;
                     break;
-                case 2:
+                case 1:
                     numBestIsRssiPosition++;
                     break;
-                case 3:
+                case 2:
                     numBestIsNoMeansEstimatedPosition++;
                     break;
-                case 4:
+                case 3:
                     numBestIsNoMeanFinderEstimatedPosition++;
                     break;
-                case 5:
+                case 4:
                     numBestIsNoMeanReadingsEstimatedPosition++;
                     break;
-                case 6:
+                case 5:
                     numBestIsEstimatedPosition++;
                     break;
             }
@@ -1465,8 +1448,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
         LOGGER.log(Level.INFO, "Results with error bias");
 
-        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
-                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
                 (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
@@ -1503,7 +1484,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
                 avgEstimatedError);
 
         int[] numBest = new int[]{
-                numBestIsClosestPosition,
                 numBestIsNoMeanRssiPosition,
                 numBestIsRssiPosition,
                 numBestIsNoMeansEstimatedPosition,
@@ -1523,7 +1503,7 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
             }
         }
 
-        assertEquals(bestNum, numBestIsNoMeanFinderEstimatedPosition);
+        assertEquals(bestNum, numBestIsNoMeanReadingsEstimatedPosition);
         assertEquals(bestPos, 4);
     }
 
@@ -1531,7 +1511,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
     public void testEstimateWithErrorAndWithBias() throws LockedException,
             NotReadyException,
             PositionEstimationException {
-        int numBestIsClosestPosition = 0;
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -1798,24 +1777,21 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
             switch (bestErrorPos) {
                 case 0:
-                    numBestIsClosestPosition++;
-                    break;
-                case 1:
                     numBestIsNoMeanRssiPosition++;
                     break;
-                case 2:
+                case 1:
                     numBestIsRssiPosition++;
                     break;
-                case 3:
+                case 2:
                     numBestIsNoMeansEstimatedPosition++;
                     break;
-                case 4:
+                case 3:
                     numBestIsNoMeanFinderEstimatedPosition++;
                     break;
-                case 5:
+                case 4:
                     numBestIsNoMeanReadingsEstimatedPosition++;
                     break;
-                case 6:
+                case 5:
                     numBestIsEstimatedPosition++;
                     break;
             }
@@ -1824,8 +1800,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
         LOGGER.log(Level.INFO, "Results with error and bias");
 
-        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
-                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
                 (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
@@ -1862,7 +1836,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
                 avgEstimatedError);
 
         int[] numBest = new int[]{
-                numBestIsClosestPosition,
                 numBestIsNoMeanRssiPosition,
                 numBestIsRssiPosition,
                 numBestIsNoMeansEstimatedPosition,
@@ -1882,15 +1855,16 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
             }
         }
 
-        assertEquals(bestNum, numBestIsNoMeansEstimatedPosition);
-        assertEquals(bestPos, 3);
+        assertTrue(bestNum == numBestIsNoMeanRssiPosition ||
+                bestNum == numBestIsNoMeanFinderEstimatedPosition);
+        assertTrue(bestPos == 0 || bestPos == 3);
+
     }
 
     @Test
     public void testEstimateWithOtherPathloss() throws LockedException,
             NotReadyException,
             PositionEstimationException {
-        int numBestIsClosestPosition = 0;
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -2166,24 +2140,21 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
             switch (bestErrorPos) {
                 case 0:
-                    numBestIsClosestPosition++;
-                    break;
-                case 1:
                     numBestIsNoMeanRssiPosition++;
                     break;
-                case 2:
+                case 1:
                     numBestIsRssiPosition++;
                     break;
-                case 3:
+                case 2:
                     numBestIsNoMeansEstimatedPosition++;
                     break;
-                case 4:
+                case 3:
                     numBestIsNoMeanFinderEstimatedPosition++;
                     break;
-                case 5:
+                case 4:
                     numBestIsNoMeanReadingsEstimatedPosition++;
                     break;
-                case 6:
+                case 5:
                     numBestIsEstimatedPosition++;
                     break;
             }
@@ -2192,8 +2163,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
 
         LOGGER.log(Level.INFO, "Results for different path loss exponents");
 
-        LOGGER.log(Level.INFO, "Percentage best closest: {0}%",
-                (double)numBestIsClosestPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best no mean RSSI: {0}%",
                 (double)numBestIsNoMeanRssiPosition / (double)TIMES * 100.0);
         LOGGER.log(Level.INFO, "Percentage best RSSI: {0}%",
@@ -2230,7 +2199,6 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
                 avgEstimatedError);
 
         int[] numBest = new int[]{
-                numBestIsClosestPosition,
                 numBestIsNoMeanRssiPosition,
                 numBestIsRssiPosition,
                 numBestIsNoMeansEstimatedPosition,
@@ -2250,7 +2218,7 @@ public class SourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEs
             }
         }
 
-        assertEquals(bestNum, numBestIsNoMeanFinderEstimatedPosition);
+        assertEquals(bestNum, numBestIsNoMeanReadingsEstimatedPosition);
         assertEquals(bestPos, 4);
     }
 
