@@ -43,7 +43,6 @@ import java.util.List;
  * point.
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
 public abstract class NonLinearSourcedRssiPositionEstimator<P extends Point> extends
         SourcedRssiPositionEstimator<P> {
 
@@ -613,6 +612,12 @@ public abstract class NonLinearSourcedRssiPositionEstimator<P extends Point> ext
             mLocked = false;
         }
     }
+
+    /**
+     * Gets type of position estimator.
+     * @return type of position estimator.
+     */
+    public abstract NonLinearSourcedRssiPositionEstimatorType getType();
 
     /**
      * Evaluates a non-linear multi dimension function at provided point using
