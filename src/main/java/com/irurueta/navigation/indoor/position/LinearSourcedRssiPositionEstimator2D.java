@@ -29,18 +29,19 @@ import java.util.List;
  * fingerprints to determine an approximate position for a non-located fingerprint.
  */
 @SuppressWarnings("WeakerAccess")
-public class SourcedRssiPositionEstimator2D extends SourcedRssiPositionEstimator<Point2D> {
+public class LinearSourcedRssiPositionEstimator2D extends
+        LinearSourcedRssiPositionEstimator<Point2D> {
 
     /**
      * Constructor.
      */
-    public SourcedRssiPositionEstimator2D() { }
+    public LinearSourcedRssiPositionEstimator2D() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public SourcedRssiPositionEstimator2D(
+    public LinearSourcedRssiPositionEstimator2D(
             SourcedRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
@@ -58,7 +59,7 @@ public class SourcedRssiPositionEstimator2D extends SourcedRssiPositionEstimator
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public SourcedRssiPositionEstimator2D(
+    public LinearSourcedRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -81,7 +82,7 @@ public class SourcedRssiPositionEstimator2D extends SourcedRssiPositionEstimator
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public SourcedRssiPositionEstimator2D(
+    public LinearSourcedRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
