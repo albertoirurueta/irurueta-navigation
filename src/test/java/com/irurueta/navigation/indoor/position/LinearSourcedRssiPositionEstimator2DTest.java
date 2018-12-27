@@ -561,6 +561,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
                 }
             }
 
+            assertNotNull(closestFingerprint);
             assertNotNull(closestPosition);
 
             double closestDistance = closestPosition.distanceTo(position);
@@ -611,10 +612,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeansEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
@@ -642,10 +647,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
@@ -673,10 +682,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
@@ -704,10 +717,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
@@ -920,6 +937,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
                 }
             }
 
+            assertNotNull(closestFingerprint);
             assertNotNull(closestPosition);
 
             double closestDistance = closestPosition.distanceTo(position);
@@ -970,10 +988,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeansEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
@@ -1001,10 +1023,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
@@ -1032,10 +1058,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
@@ -1063,10 +1093,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
@@ -1281,6 +1315,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
                 }
             }
 
+            assertNotNull(closestFingerprint);
             assertNotNull(closestPosition);
 
             double closestDistance = closestPosition.distanceTo(position);
@@ -1331,10 +1366,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeansEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
@@ -1362,10 +1401,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
@@ -1393,10 +1436,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
@@ -1424,10 +1471,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
@@ -1643,6 +1694,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
                 }
             }
 
+            assertNotNull(closestFingerprint);
             assertNotNull(closestPosition);
 
             double closestDistance = closestPosition.distanceTo(position);
@@ -1693,10 +1745,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeansEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
@@ -1724,10 +1780,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
@@ -1755,10 +1815,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
@@ -1786,10 +1850,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
@@ -2008,6 +2076,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
                 }
             }
 
+            assertNotNull(closestFingerprint);
             assertNotNull(closestPosition);
 
             double closestDistance = closestPosition.distanceTo(position);
@@ -2060,10 +2129,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeansEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
@@ -2093,10 +2166,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
@@ -2126,10 +2203,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
@@ -2159,10 +2240,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
@@ -2374,6 +2459,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
                 }
             }
 
+            assertNotNull(closestFingerprint);
             assertNotNull(closestPosition);
 
             double closestDistance = closestPosition.distanceTo(position);
@@ -2424,10 +2510,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             Point2D estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeansEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
@@ -2455,10 +2545,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
@@ -2486,10 +2580,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
@@ -2517,10 +2615,14 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
             estimator.estimate();
 
             //check correctness
-            assertNotNull(closestFingerprint);
-            assertNotNull(closestPosition);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
 
             estimatedPosition = estimator.getEstimatedPosition();
+
+            assertNotNull(estimatedPosition);
 
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
