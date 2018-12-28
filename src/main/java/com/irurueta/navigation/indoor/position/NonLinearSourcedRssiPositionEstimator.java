@@ -400,22 +400,22 @@ public abstract class NonLinearSourcedRssiPositionEstimator<P extends Point> ext
 
                 //hence, second order derivatives of Pr(p = (x,y)) are:
                 //diff(Pr(x,y))/diff(x^2) = -10*n/ln(10)*(1*((x - xa)^2 + (y - ya)^2) - (x - xa)*2*(x - xa)) / ((x - xa)^2 + (y - ya)^2)^2
-                //diff(Pr(x,y))/diff(x^2) = -10*n*((y - ya)^2 - (x - xa)^2))/(ln(10)*((x - xa)^2 + (y - ya)^2)^2))
+                //diff(Pr(x,y))/diff(x^2) = -10*n*((y - ya)^2 - (x - xa)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2)^2)
 
                 //diff(Pr(x,y))/diff(y^2) = -10*n/ln(10)*(1*((x - xa)^2 + (y - ya)^2) - (y - ya)*2*(y - ya)) / ((x - xa)^2 + (y - ya)^2)^2
-                //diff(Pr(x,y))/diff(y^2) = -10*n*((x - xa)^2 - (y - ya)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2)^2))
+                //diff(Pr(x,y))/diff(y^2) = -10*n*((x - xa)^2 - (y - ya)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2)^2)
 
                 //diff(Pr(x,y))/diff(x*y) = -10*n/ln(10)*(0*((x - xa)^2 + (y - ya)^2) - (x - xa)*2*(y - ya))/((x - xa)^2 + (y - ya)^2)^2
-                //diff(Pr(x,y))/diff(x*y) = 20*n*((x - xa)*(y - ya))/(ln(10)*((x - xa)^2 + (y - ya)^2)^2))
+                //diff(Pr(x,y))/diff(x*y) = 20*n*((x - xa)*(y - ya))/(ln(10)*((x - xa)^2 + (y - ya)^2)^2)
 
                 //If we evaluate second order derivatives at p1 = (x1,y1), we get:
-                //diff(Pr(p1))/diff(x^2) = -10*n*((y1 - ya)^2 - (x1 - xa)^2))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))
-                //diff(Pr(p1))/diff(y^2) = -10*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))
-                //diff(Pr(p1))/diff(x*y) = 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))
+                //diff(Pr(p1))/diff(x^2) = -10*n*((y1 - ya)^2 - (x1 - xa)^2))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                //diff(Pr(p1))/diff(y^2) = -10*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                //diff(Pr(p1))/diff(x*y) = 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
 
                 //and expressing the second order derivatives in terms of distance between
                 //fingerprint 1 and radio source a d1a, we get:
-                //diff(Pr(p1))/diff(x^2) = -10*n*((y1 - ya)^2 - (x1 - xa)^2))/(ln(10)*d1a^4))
+                //diff(Pr(p1))/diff(x^2) = -10*n*((y1 - ya)^2 - (x1 - xa)^2))/(ln(10)*d1a^4)
                 //diff(Pr(p1))/diff(y^2) = -10*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)
                 //diff(Pr(p1))/diff(x*y) = 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4)
 
@@ -522,24 +522,24 @@ public abstract class NonLinearSourcedRssiPositionEstimator<P extends Point> ext
                 //To obtain second order derivatives we take into account that:
                 //(f(x)/g(x))' = (f'(x)*g(x) - f(x)*g'(x))/g(x)^2
 
-                //hence, second order derivatives of Pr(p = (x,y)) are:
+                //hence, second order derivatives of Pr(p = (x,y,z)) are:
                 //diff(Pr(x,y,z))/diff(x^2) = -10*n/ln(10)*(1*((x - xa)^2 + (y - ya)^2 + (z - za)^2) - (x - xa)*2*(x - xa))/((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2
-                //diff(Pr(x,y,z))/diff(x^2) = -10*n*((y - ya)^2 + (z - za)^2 - (x - xa)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2))
+                //diff(Pr(x,y,z))/diff(x^2) = -10*n*((y - ya)^2 + (z - za)^2 - (x - xa)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2)
 
                 //diff(Pr(x,y,z))/diff(y^2) = -10*n/ln(10)*(1*((x - xa)^2 + (y - ya)^2 + (z - za)^2) - (y - ya)*2*(y - ya))/((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2
-                //diff(Pr(x,y,z))/diff(y^2) = -10*n*((x - xa)^2 - (y - ya)^2 + (z - za)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2))
+                //diff(Pr(x,y,z))/diff(y^2) = -10*n*((x - xa)^2 - (y - ya)^2 + (z - za)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2)
 
                 //diff(Pr(x,y,z))/diff(z^2) = -10*n/ln(10)*(1*((x - xa)^2 + (y - ya)^2 + (z - za)^2) - (z - za)*2*(z - za))/((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2
-                //diff(Pr(x,y,z))/diff(z^2) = -10*n*((x - xa)^2 + (y - ya)^2 - (z - za)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2))
+                //diff(Pr(x,y,z))/diff(z^2) = -10*n*((x - xa)^2 + (y - ya)^2 - (z - za)^2)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2)
 
                 //diff(Pr(x,y,z))/diff(x*y) = -10*n/ln(10)*(0*((x - xa)^2 + (y - ya)^2 + (z - za)^2) - (x - xa)*2*(y - ya))/((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2
-                //diff(Pr(x,y,z))/diff(x*y) = 20*n*(x - xa)*(y - ya)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2))
+                //diff(Pr(x,y,z))/diff(x*y) = 20*n*(x - xa)*(y - ya)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2)
 
                 //diff(Pr(x,y,z))/diff(x*z) = -10*n/ln(10)*(0*((x - xa)^2 + (y - ya)^2 + (z - za)^2) - (x - xa)*2*(z - za))/((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2
-                //diff(Pr(x,y,z))/diff(x*z) = 20*n*(x - xa)*(z - za)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2))
+                //diff(Pr(x,y,z))/diff(x*z) = 20*n*(x - xa)*(z - za)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2)
 
                 //diff(Pr(x,y,z))/diff(y*z) = -10*n/ln(10)*(0*((x - xa)^2 + (y - ya)^2 + (z - za)^2) - (y - ya)*2*(z - za))/((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2
-                //diff(Pr(x,y,z))/diff(y*z) = 20*n*(y - ya)*(z - za)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2))
+                //diff(Pr(x,y,z))/diff(y*z) = 20*n*(y - ya)*(z - za)/(ln(10)*((x - xa)^2 + (y - ya)^2 + (z - za)^2)^2)
 
                 //If we evaluate second order derivatives at p1 = (x1,y1,z1), we get:
                 //diff(Pr(p1))/diff(x^2) = -10*n*((y1 - ya)^2 + (z1 - za)^2 - (x1 - xa)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2)^2)
