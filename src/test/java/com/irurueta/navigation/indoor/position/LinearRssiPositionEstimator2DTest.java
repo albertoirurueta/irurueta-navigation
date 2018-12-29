@@ -15,8 +15,8 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.InhomogeneousPoint3D;
-import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.InhomogeneousPoint2D;
+import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
@@ -32,10 +32,10 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPositionEstimatorListener<Point3D> {
+public class LinearRssiPositionEstimator2DTest implements SourcedRssiPositionEstimatorListener<Point2D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            LinearSourcedRssiPositionEstimator3DTest.class.getName());
+            LinearRssiPositionEstimator2DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
@@ -65,7 +65,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
     private int estimateStart;
     private int estimateEnd;
 
-    public LinearSourcedRssiPositionEstimator3DTest() { }
+    public LinearRssiPositionEstimator2DTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -82,7 +82,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
     @Test
     public void testConstructor() {
         //test empty constructor
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default values
         assertNull(estimator.getLocatedFingerprints());
@@ -94,7 +94,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertNull(estimator.getNearestFingerprints());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertEquals(estimator.getNumberOfDimensions(), 2);
         assertFalse(estimator.isReady());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getSources());
@@ -104,7 +104,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
         //test constructor with listener
-        estimator = new LinearSourcedRssiPositionEstimator3D(this);
+        estimator = new LinearRssiPositionEstimator2D(this);
 
         //check default values
         assertNull(estimator.getLocatedFingerprints());
@@ -116,7 +116,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertNull(estimator.getNearestFingerprints());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertEquals(estimator.getNumberOfDimensions(), 2);
         assertFalse(estimator.isReady());
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getSources());
@@ -128,7 +128,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         List<RssiReading<RadioSource>> readings = new ArrayList<>();
-        for (int i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+        for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
             WifiAccessPoint accessPoint = new WifiAccessPoint("bssid" + i,
                     FREQUENCY);
             double rssi = randomizer.nextDouble();
@@ -138,12 +138,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             readings.add(reading);
         }
 
-        RssiFingerprintLocated3D<RadioSource,
+        RssiFingerprintLocated2D<RadioSource,
                 RssiReading<RadioSource>>
-                locatedFingerprint = new RssiFingerprintLocated3D<>(readings,
-                Point3D.create());
+                locatedFingerprint = new RssiFingerprintLocated2D<>(readings,
+                Point2D.create());
 
-        List<RssiFingerprintLocated3D<RadioSource,
+        List<RssiFingerprintLocated2D<RadioSource,
                 RssiReading<RadioSource>>> locatedFingerprints =
                 new ArrayList<>();
         locatedFingerprints.add(locatedFingerprint);
@@ -153,16 +153,16 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                 new RssiFingerprint<>(readings);
 
 
-        List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
-        for (int i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
-            WifiAccessPointLocated3D source = new WifiAccessPointLocated3D("bssid" + 1,
-                    FREQUENCY, Point3D.create());
+        List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+        for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+            WifiAccessPointLocated2D source = new WifiAccessPointLocated2D("bssid" + 1,
+                    FREQUENCY, Point2D.create());
             sources.add(source);
         }
 
 
         //test constructor with located fingerprints, fingerprint and sources
-        estimator = new LinearSourcedRssiPositionEstimator3D(locatedFingerprints,
+        estimator = new LinearRssiPositionEstimator2D(locatedFingerprints,
                 fingerprint, sources);
 
         //check default values
@@ -175,7 +175,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertNull(estimator.getNearestFingerprints());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertEquals(estimator.getNumberOfDimensions(), 2);
         assertTrue(estimator.isReady());
         assertNull(estimator.getEstimatedPosition());
         assertSame(estimator.getSources(), sources);
@@ -186,22 +186,22 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(new ArrayList<RssiFingerprintLocated3D<RadioSource,
+            estimator = new LinearRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
                     RssiReading<RadioSource>>>(), fingerprint, sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(null,
+            estimator = new LinearRssiPositionEstimator2D(null,
                     fingerprint, sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new LinearRssiPositionEstimator2D(locatedFingerprints,
                     null, sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new LinearRssiPositionEstimator2D(locatedFingerprints,
                     fingerprint, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -209,7 +209,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
         //test constructor with located fingerprints, fingerprint, sources and listener
-        estimator = new LinearSourcedRssiPositionEstimator3D(locatedFingerprints,
+        estimator = new LinearRssiPositionEstimator2D(locatedFingerprints,
                 fingerprint, sources, this);
 
         //check default values
@@ -222,7 +222,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         assertNull(estimator.getEstimatedPositionCoordinates());
         assertNull(estimator.getNearestFingerprints());
         assertFalse(estimator.isLocked());
-        assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertEquals(estimator.getNumberOfDimensions(), 2);
         assertTrue(estimator.isReady());
         assertNull(estimator.getEstimatedPosition());
         assertSame(estimator.getSources(), sources);
@@ -233,22 +233,22 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(new ArrayList<RssiFingerprintLocated3D<RadioSource,
+            estimator = new LinearRssiPositionEstimator2D(new ArrayList<RssiFingerprintLocated2D<RadioSource,
                     RssiReading<RadioSource>>>(), fingerprint, sources, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(null,
+            estimator = new LinearRssiPositionEstimator2D(null,
                     fingerprint, sources,this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new LinearRssiPositionEstimator2D(locatedFingerprints,
                     null, sources, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new LinearSourcedRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new LinearRssiPositionEstimator2D(locatedFingerprints,
                     fingerprint, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -257,7 +257,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
     @Test
     public void testGetSetLocatedFingerprints() throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertNull(estimator.getLocatedFingerprints());
@@ -266,7 +266,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         List<RssiReading<RadioSource>> readings = new ArrayList<>();
-        for (int i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+        for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
             WifiAccessPoint accessPoint = new WifiAccessPoint("bssid" + i,
                     FREQUENCY);
             double rssi = randomizer.nextDouble();
@@ -276,12 +276,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             readings.add(reading);
         }
 
-        RssiFingerprintLocated3D<RadioSource,
+        RssiFingerprintLocated2D<RadioSource,
                 RssiReading<RadioSource>>
-                locatedFingerprint = new RssiFingerprintLocated3D<>(readings,
-                Point3D.create());
+                locatedFingerprint = new RssiFingerprintLocated2D<>(readings,
+                Point2D.create());
 
-        List<RssiFingerprintLocated3D<RadioSource,
+        List<RssiFingerprintLocated2D<RadioSource,
                 RssiReading<RadioSource>>> locatedFingerprints =
                 new ArrayList<>();
         locatedFingerprints.add(locatedFingerprint);
@@ -298,14 +298,14 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         } catch (IllegalArgumentException ignore) { }
         try {
             estimator.setLocatedFingerprints(new ArrayList<RssiFingerprintLocated<RadioSource,
-                    RssiReading<RadioSource>, Point3D>>());
+                    RssiReading<RadioSource>, Point2D>>());
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertNull(estimator.getFingerprint());
@@ -314,7 +314,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         List<RssiReading<RadioSource>> readings = new ArrayList<>();
-        for (int i = 0; i < Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
+        for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
             WifiAccessPoint accessPoint = new WifiAccessPoint("bssid" + i,
                     FREQUENCY);
             double rssi = randomizer.nextDouble();
@@ -340,7 +340,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
     @Test
     public void testGetSetMinMaxNearestFingerprints() throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default values
         assertEquals(estimator.getMinNearestFingerprints(), 1);
@@ -366,7 +366,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
     @Test
     public void testGetSetPathLossExponent() throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
@@ -383,7 +383,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
     @Test
     public void testGetSetListener() throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertNull(estimator.getListener());
@@ -397,13 +397,13 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
     @Test
     public void testGetSetSources() throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default values
         assertNull(estimator.getSources());
 
         //set new value
-        List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+        List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
         estimator.setSources(sources);
 
         //check
@@ -419,7 +419,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
     @Test
     public void testGetSetUseSourcesPathLossExponentWhenAvailable()
             throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
@@ -434,7 +434,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
     @Test
     public void testGetSetUseNoMeanNearestFingerprintFinder()
             throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
@@ -449,7 +449,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
     @Test
     public void testIsSetMeansFromFingerprintReadingsRemoved()
             throws LockedException {
-        LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D();
+        LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D();
 
         //check default value
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
@@ -485,62 +485,59 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build sources
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
-            List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
-                WifiAccessPointWithPowerAndLocated3D accessPoint =
-                        new WifiAccessPointWithPowerAndLocated3D(
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
                 sources.add(accessPoint);
             }
 
             //build located fingerprints
             int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            List<RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
                     new ArrayList<>();
             for (int j = 0; j < numFingerprints; j++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
                 List<RssiReading<RadioSource>> readings = new ArrayList<>();
-                for (RadioSourceLocated<Point3D> source : sources) {
+                for (RadioSourceLocated<Point2D> source : sources) {
                     double distance = source.getPosition().distanceTo(position);
-                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
                 }
 
-                RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
-                        new RssiFingerprintLocated3D<>(readings, position);
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
                 locatedFingerprints.add(locatedFingerprint);
             }
 
             //build non-located fingerprint
             double x = randomizer.nextDouble(MIN_POS, MAX_POS);
             double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-            double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
             List<RssiReading<RadioSource>> readings = new ArrayList<>();
-            for (RadioSourceLocated<Point3D> source : sources) {
+            for (RadioSourceLocated<Point2D> source : sources) {
                 double distance = source.getPosition().distanceTo(position);
-                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -550,12 +547,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     new RssiFingerprint<>(readings);
 
             //find real closest fingerprint based on location
-            RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
-            Point3D closestPosition = null;
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
             double distance = Double.MAX_VALUE;
-            for (RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
                     locatedFingerprints) {
-                Point3D fingerprintPosition = locatedFingerprint.getPosition();
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
                 double dist = fingerprintPosition.distanceTo(position);
                 if (dist < distance) {
                     distance = dist;
@@ -572,31 +569,31 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //find closest fingerprint based on RSSI without mean
-            RadioSourceNoMeanKNearestFinder<Point3D, RadioSource> noMeanfinder =
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
                     new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprintNoMean =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
                     noMeanfinder.findNearestTo(fingerprint);
-            Point3D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
 
             double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
             avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
 
 
             //find closest fingerprint based on RSSI
-            RadioSourceKNearestFinder<Point3D, RadioSource> finder =
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
                     new RadioSourceKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprint =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
                     finder.findNearestTo(fingerprint);
-            Point3D rssiClosestPosition = nearestFingerprint.getPosition();
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
 
             double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
             avgRssiDistance += rssiClosestDistance / TIMES;
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D(
+            LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -620,7 +617,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
 
             assertNotNull(estimatedPosition);
 
@@ -632,7 +629,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on finder
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -667,7 +664,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on readings
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -692,6 +689,8 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             estimatedPosition = estimator.getEstimatedPosition();
 
+            assertNotNull(estimatedPosition);
+
             double noMeanReadingsEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
 
@@ -700,7 +699,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means not removed
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -861,62 +860,59 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build sources
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
-            List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
-                WifiAccessPointWithPowerAndLocated3D accessPoint =
-                        new WifiAccessPointWithPowerAndLocated3D(
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
                 sources.add(accessPoint);
             }
 
             //build located fingerprints
             int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            List<RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
                     new ArrayList<>();
             for (int j = 0; j < numFingerprints; j++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
                 List<RssiReading<RadioSource>> readings = new ArrayList<>();
-                for (RadioSourceLocated<Point3D> source : sources) {
+                for (RadioSourceLocated<Point2D> source : sources) {
                     double distance = source.getPosition().distanceTo(position);
-                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
                 }
 
-                RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
-                        new RssiFingerprintLocated3D<>(readings, position);
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
                 locatedFingerprints.add(locatedFingerprint);
             }
 
             //build non-located fingerprint
             double x = randomizer.nextDouble(MIN_POS, MAX_POS);
             double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-            double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
             List<RssiReading<RadioSource>> readings = new ArrayList<>();
-            for (RadioSourceLocated<Point3D> source : sources) {
+            for (RadioSourceLocated<Point2D> source : sources) {
                 double distance = source.getPosition().distanceTo(position);
-                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT)) +
+                        LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT)) +
                         RSSI_BIAS;
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
@@ -927,12 +923,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     new RssiFingerprint<>(readings);
 
             //find real closest fingerprint based on location
-            RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
-            Point3D closestPosition = null;
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
             double distance = Double.MAX_VALUE;
-            for (RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
                     locatedFingerprints) {
-                Point3D fingerprintPosition = locatedFingerprint.getPosition();
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
                 double dist = fingerprintPosition.distanceTo(position);
                 if (dist < distance) {
                     distance = dist;
@@ -949,31 +945,31 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //find closest fingerprint based on RSSI without mean
-            RadioSourceNoMeanKNearestFinder<Point3D, RadioSource> noMeanfinder =
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
                     new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprintNoMean =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
                     noMeanfinder.findNearestTo(fingerprint);
-            Point3D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
 
             double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
             avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
 
 
             //find closest fingerprint based on RSSI
-            RadioSourceKNearestFinder<Point3D, RadioSource> finder =
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
                     new RadioSourceKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprint =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
                     finder.findNearestTo(fingerprint);
-            Point3D rssiClosestPosition = nearestFingerprint.getPosition();
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
 
             double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
             avgRssiDistance += rssiClosestDistance / TIMES;
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D(
+            LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -997,7 +993,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
 
             assertNotNull(estimatedPosition);
 
@@ -1009,7 +1005,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on finder
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1034,6 +1030,8 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             estimatedPosition = estimator.getEstimatedPosition();
 
+            assertNotNull(estimatedPosition);
+
             double noMeanFinderEstimatedError = estimatedPosition.distanceTo(position);
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
 
@@ -1042,7 +1040,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on readings
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1077,7 +1075,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means not removed
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1102,6 +1100,8 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             estimatedPosition = estimator.getEstimatedPosition();
 
+            assertNotNull(estimatedPosition);
+
             double estimatedError = estimatedPosition.distanceTo(position);
             avgEstimatedError += estimatedError / TIMES;
 
@@ -1109,7 +1109,6 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertEquals(estimator.getNearestFingerprints().size(), 1);
 
             double[] errors = new double[]{
-                    closestDistance,
                     noMeanRssiClosestDistance,
                     rssiClosestDistance,
                     noMeansEstimatedError,
@@ -1208,9 +1207,8 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             }
         }
 
-        assertTrue(bestNum == numBestIsNoMeanRssiPosition ||
-                bestNum == numBestIsNoMeanFinderEstimatedPosition);
-        assertTrue(bestPos == 0 || bestPos == 3);
+        assertEquals(bestNum, numBestIsNoMeansEstimatedPosition);
+        assertEquals(bestPos, 2);
     }
 
     @Test
@@ -1239,63 +1237,60 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build sources
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
-            List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
-                WifiAccessPointWithPowerAndLocated3D accessPoint =
-                        new WifiAccessPointWithPowerAndLocated3D(
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
                 sources.add(accessPoint);
             }
 
             //build located fingerprints
             int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            List<RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
                     new ArrayList<>();
             for (int j = 0; j < numFingerprints; j++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
                 List<RssiReading<RadioSource>> readings = new ArrayList<>();
-                for (RadioSourceLocated<Point3D> source : sources) {
+                for (RadioSourceLocated<Point2D> source : sources) {
                     double distance = source.getPosition().distanceTo(position);
-                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                     double rssiError = errorRandomizer.nextDouble();
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi + rssiError);
                     readings.add(reading);
                 }
 
-                RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
-                        new RssiFingerprintLocated3D<>(readings, position);
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
                 locatedFingerprints.add(locatedFingerprint);
             }
 
             //build non-located fingerprint
             double x = randomizer.nextDouble(MIN_POS, MAX_POS);
             double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-            double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
             List<RssiReading<RadioSource>> readings = new ArrayList<>();
-            for (RadioSourceLocated<Point3D> source : sources) {
+            for (RadioSourceLocated<Point2D> source : sources) {
                 double distance = source.getPosition().distanceTo(position);
-                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                 double rssiError = errorRandomizer.nextDouble();
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi + rssiError);
@@ -1306,12 +1301,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     new RssiFingerprint<>(readings);
 
             //find real closest fingerprint based on location
-            RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
-            Point3D closestPosition = null;
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
             double distance = Double.MAX_VALUE;
-            for (RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
                     locatedFingerprints) {
-                Point3D fingerprintPosition = locatedFingerprint.getPosition();
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
                 double dist = fingerprintPosition.distanceTo(position);
                 if (dist < distance) {
                     distance = dist;
@@ -1328,31 +1323,31 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //find closest fingerprint based on RSSI without mean
-            RadioSourceNoMeanKNearestFinder<Point3D, RadioSource> noMeanfinder =
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
                     new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprintNoMean =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
                     noMeanfinder.findNearestTo(fingerprint);
-            Point3D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
 
             double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
             avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
 
 
             //find closest fingerprint based on RSSI
-            RadioSourceKNearestFinder<Point3D, RadioSource> finder =
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
                     new RadioSourceKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprint =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
                     finder.findNearestTo(fingerprint);
-            Point3D rssiClosestPosition = nearestFingerprint.getPosition();
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
 
             double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
             avgRssiDistance += rssiClosestDistance / TIMES;
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D(
+            LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1376,7 +1371,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
 
             assertNotNull(estimatedPosition);
 
@@ -1388,7 +1383,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on finder
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1423,7 +1418,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on readings
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1458,7 +1453,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means not removed
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1621,63 +1616,60 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build sources
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
-            List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
-                WifiAccessPointWithPowerAndLocated3D accessPoint =
-                        new WifiAccessPointWithPowerAndLocated3D(
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
                 sources.add(accessPoint);
             }
 
             //build located fingerprints
             int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            List<RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
                     new ArrayList<>();
             for (int j = 0; j < numFingerprints; j++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
                 List<RssiReading<RadioSource>> readings = new ArrayList<>();
-                for (RadioSourceLocated<Point3D> source : sources) {
+                for (RadioSourceLocated<Point2D> source : sources) {
                     double distance = source.getPosition().distanceTo(position);
-                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                     double rssiError = errorRandomizer.nextDouble();
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi + rssiError);
                     readings.add(reading);
                 }
 
-                RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
-                        new RssiFingerprintLocated3D<>(readings, position);
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
                 locatedFingerprints.add(locatedFingerprint);
             }
 
             //build non-located fingerprint
             double x = randomizer.nextDouble(MIN_POS, MAX_POS);
             double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-            double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
             List<RssiReading<RadioSource>> readings = new ArrayList<>();
-            for (RadioSourceLocated<Point3D> source : sources) {
+            for (RadioSourceLocated<Point2D> source : sources) {
                 double distance = source.getPosition().distanceTo(position);
-                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                 double rssiError = errorRandomizer.nextDouble();
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi + rssiError + RSSI_BIAS);
@@ -1688,12 +1680,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     new RssiFingerprint<>(readings);
 
             //find real closest fingerprint based on location
-            RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
-            Point3D closestPosition = null;
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
             double distance = Double.MAX_VALUE;
-            for (RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
                     locatedFingerprints) {
-                Point3D fingerprintPosition = locatedFingerprint.getPosition();
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
                 double dist = fingerprintPosition.distanceTo(position);
                 if (dist < distance) {
                     distance = dist;
@@ -1710,31 +1702,31 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //find closest fingerprint based on RSSI without mean
-            RadioSourceNoMeanKNearestFinder<Point3D, RadioSource> noMeanfinder =
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
                     new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprintNoMean =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
                     noMeanfinder.findNearestTo(fingerprint);
-            Point3D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
 
             double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
             avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
 
 
             //find closest fingerprint based on RSSI
-            RadioSourceKNearestFinder<Point3D, RadioSource> finder =
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
                     new RadioSourceKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprint =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
                     finder.findNearestTo(fingerprint);
-            Point3D rssiClosestPosition = nearestFingerprint.getPosition();
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
 
             double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
             avgRssiDistance += rssiClosestDistance / TIMES;
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D(
+            LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1758,7 +1750,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
 
             assertNotNull(estimatedPosition);
 
@@ -1770,7 +1762,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on finder
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1805,7 +1797,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on readings
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1840,7 +1832,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means not removed
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2006,17 +1998,16 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build sources
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
-            List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
 
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
-                WifiAccessPointWithPowerAndLocated3D accessPoint =
-                        new WifiAccessPointWithPowerAndLocated3D(
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm,
                                 position);
                 sources.add(accessPoint);
@@ -2024,18 +2015,17 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build located fingerprints
             int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            List<RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
                     new ArrayList<>();
             for (int j = 0; j < numFingerprints; j++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
                 List<RssiReading<RadioSource>> readings = new ArrayList<>();
-                for (RadioSourceLocated<Point3D> source : sources) {
+                for (RadioSourceLocated<Point2D> source : sources) {
                     double distance = source.getPosition().distanceTo(position);
-                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
@@ -2045,21 +2035,20 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     readings.add(reading);
                 }
 
-                RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
-                        new RssiFingerprintLocated3D<>(readings, position);
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
                 locatedFingerprints.add(locatedFingerprint);
             }
 
             //build non-located fingerprint
             double x = randomizer.nextDouble(MIN_POS, MAX_POS);
             double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-            double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
             List<RssiReading<RadioSource>> readings = new ArrayList<>();
-            for (RadioSourceLocated<Point3D> source : sources) {
+            for (RadioSourceLocated<Point2D> source : sources) {
                 double distance = source.getPosition().distanceTo(position);
-                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
@@ -2073,12 +2062,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     new RssiFingerprint<>(readings);
 
             //find real closest fingerprint based on location
-            RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
-            Point3D closestPosition = null;
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
             double distance = Double.MAX_VALUE;
-            for (RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
                     locatedFingerprints) {
-                Point3D fingerprintPosition = locatedFingerprint.getPosition();
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
                 double dist = fingerprintPosition.distanceTo(position);
                 if (dist < distance) {
                     distance = dist;
@@ -2095,31 +2084,31 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //find closest fingerprint based on RSSI without mean
-            RadioSourceNoMeanKNearestFinder<Point3D, RadioSource> noMeanfinder =
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
                     new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprintNoMean =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
                     noMeanfinder.findNearestTo(fingerprint);
-            Point3D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
 
             double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
             avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
 
 
             //find closest fingerprint based on RSSI
-            RadioSourceKNearestFinder<Point3D, RadioSource> finder =
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
                     new RadioSourceKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprint =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
                     finder.findNearestTo(fingerprint);
-            Point3D rssiClosestPosition = nearestFingerprint.getPosition();
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
 
             double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
             avgRssiDistance += rssiClosestDistance / TIMES;
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D(
+            LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2145,7 +2134,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
 
             assertNotNull(estimatedPosition);
 
@@ -2157,7 +2146,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on finder
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2194,7 +2183,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means removed only on readings
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2231,7 +2220,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //create estimator with means not removed
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2372,7 +2361,8 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
     @Test
     public void testEstimateWithoutErrorAndWithoutBiasOneRadioSource() throws LockedException,
-            NotReadyException, PositionEstimationException {
+            NotReadyException,
+            PositionEstimationException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -2393,62 +2383,59 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
             //build sources
             int numSources = 1;
-            List<RadioSourceLocated<Point3D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
             for (int i = 0; i < numSources; i++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
-                WifiAccessPointWithPowerAndLocated3D accessPoint =
-                        new WifiAccessPointWithPowerAndLocated3D(
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm, position);
                 sources.add(accessPoint);
             }
 
             //build located fingerprints
             int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
-            List<RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
                     new ArrayList<>();
             for (int j = 0; j < numFingerprints; j++) {
                 double x = randomizer.nextDouble(MIN_POS, MAX_POS);
                 double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-                double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-                InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
                 List<RssiReading<RadioSource>> readings = new ArrayList<>();
-                for (RadioSourceLocated<Point3D> source : sources) {
+                for (RadioSourceLocated<Point2D> source : sources) {
                     double distance = source.getPosition().distanceTo(position);
-                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
                 }
 
-                RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
-                        new RssiFingerprintLocated3D<>(readings, position);
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
                 locatedFingerprints.add(locatedFingerprint);
             }
 
             //build non-located fingerprint
             double x = randomizer.nextDouble(MIN_POS, MAX_POS);
             double y = randomizer.nextDouble(MIN_POS, MAX_POS);
-            double z = randomizer.nextDouble(MIN_POS, MAX_POS);
-            InhomogeneousPoint3D position = new InhomogeneousPoint3D(x, y, z);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
 
             List<RssiReading<RadioSource>> readings = new ArrayList<>();
-            for (RadioSourceLocated<Point3D> source : sources) {
+            for (RadioSourceLocated<Point2D> source : sources) {
                 double distance = source.getPosition().distanceTo(position);
-                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated3D) source).
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearSourcedRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -2458,12 +2445,12 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                     new RssiFingerprint<>(readings);
 
             //find real closest fingerprint based on location
-            RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
-            Point3D closestPosition = null;
+            RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> closestFingerprint = null;
+            Point2D closestPosition = null;
             double distance = Double.MAX_VALUE;
-            for (RssiFingerprintLocated3D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
+            for (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint :
                     locatedFingerprints) {
-                Point3D fingerprintPosition = locatedFingerprint.getPosition();
+                Point2D fingerprintPosition = locatedFingerprint.getPosition();
                 double dist = fingerprintPosition.distanceTo(position);
                 if (dist < distance) {
                     distance = dist;
@@ -2480,31 +2467,31 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
 
 
             //find closest fingerprint based on RSSI without mean
-            RadioSourceNoMeanKNearestFinder<Point3D, RadioSource> noMeanfinder =
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
                     new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprintNoMean =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprintNoMean =
                     noMeanfinder.findNearestTo(fingerprint);
-            Point3D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
+            Point2D noMeanRssiClosestPosition = nearestFingerprintNoMean.getPosition();
 
             double noMeanRssiClosestDistance = noMeanRssiClosestPosition.distanceTo(position);
             avgNoMeanRssiDistance += noMeanRssiClosestDistance / TIMES;
 
 
             //find closest fingerprint based on RSSI
-            RadioSourceKNearestFinder<Point3D, RadioSource> finder =
+            RadioSourceKNearestFinder<Point2D, RadioSource> finder =
                     new RadioSourceKNearestFinder<>(locatedFingerprints);
 
-            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point3D> nearestFingerprint =
+            RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearestFingerprint =
                     finder.findNearestTo(fingerprint);
-            Point3D rssiClosestPosition = nearestFingerprint.getPosition();
+            Point2D rssiClosestPosition = nearestFingerprint.getPosition();
 
             double rssiClosestDistance = rssiClosestPosition.distanceTo(position);
             avgRssiDistance += rssiClosestDistance / TIMES;
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearSourcedRssiPositionEstimator3D estimator = new LinearSourcedRssiPositionEstimator3D(
+            LinearRssiPositionEstimator2D estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2528,7 +2515,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
-            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
 
             assertNotNull(estimatedPosition);
 
@@ -2536,11 +2523,11 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             avgNoMeansEstimatedError += noMeansEstimatedError / TIMES;
 
             assertNotNull(estimator.getNearestFingerprints());
-            assertEquals(estimator.getNearestFingerprints().size(), 3);
+            assertEquals(estimator.getNearestFingerprints().size(), 2);
 
 
             //create estimator with means removed only on finder
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2571,11 +2558,11 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             avgNoMeanFinderEstimatedError += noMeanFinderEstimatedError / TIMES;
 
             assertNotNull(estimator.getNearestFingerprints());
-            assertEquals(estimator.getNearestFingerprints().size(), 3);
+            assertEquals(estimator.getNearestFingerprints().size(), 2);
 
 
             //create estimator with means removed only on readings
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2606,11 +2593,11 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             avgNoMeanReadingsEstimatedError += noMeanReadingsEstimatedError / TIMES;
 
             assertNotNull(estimator.getNearestFingerprints());
-            assertEquals(estimator.getNearestFingerprints().size(), 3);
+            assertEquals(estimator.getNearestFingerprints().size(), 2);
 
 
             //create estimator with means not removed
-            estimator = new LinearSourcedRssiPositionEstimator3D(
+            estimator = new LinearRssiPositionEstimator2D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2641,7 +2628,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
             avgEstimatedError += estimatedError / TIMES;
 
             assertNotNull(estimator.getNearestFingerprints());
-            assertEquals(estimator.getNearestFingerprints().size(), 3);
+            assertEquals(estimator.getNearestFingerprints().size(), 2);
 
             double[] errors = new double[]{
                     closestDistance,
@@ -2725,15 +2712,15 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
     }
 
     @Override
-    public void onEstimateStart(SourcedRssiPositionEstimator<Point3D> estimator) {
+    public void onEstimateStart(RssiPositionEstimator<Point2D> estimator) {
         estimateStart++;
-        checkLocked((LinearSourcedRssiPositionEstimator3D)estimator);
+        checkLocked((LinearRssiPositionEstimator2D)estimator);
     }
 
     @Override
-    public void onEstimateEnd(SourcedRssiPositionEstimator<Point3D> estimator) {
+    public void onEstimateEnd(RssiPositionEstimator<Point2D> estimator) {
         estimateEnd++;
-        checkLocked((LinearSourcedRssiPositionEstimator3D)estimator);
+        checkLocked((LinearRssiPositionEstimator2D)estimator);
     }
 
     private void reset() {
@@ -2751,7 +2738,7 @@ public class LinearSourcedRssiPositionEstimator3DTest implements SourcedRssiPosi
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(LinearSourcedRssiPositionEstimator3D estimator) {
+    private void checkLocked(LinearRssiPositionEstimator2D estimator) {
         try {
             estimator.setLocatedFingerprints(null);
             fail("LockedException expected but not thrown");

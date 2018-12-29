@@ -30,7 +30,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class SourcedRssiPositionEstimator<P extends Point> extends
+public abstract class RssiPositionEstimator<P extends Point> extends
         BaseRssiPositionEstimator<P, SourcedRssiPositionEstimatorListener<P>> {
 
     /**
@@ -65,13 +65,13 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
     /**
      * Constructor.
      */
-    public SourcedRssiPositionEstimator() { }
+    public RssiPositionEstimator() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public SourcedRssiPositionEstimator(
+    public RssiPositionEstimator(
             SourcedRssiPositionEstimatorListener<P> listener) {
         super(listener);
     }
@@ -90,7 +90,7 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public SourcedRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public RssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
@@ -114,7 +114,7 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public SourcedRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public RssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,

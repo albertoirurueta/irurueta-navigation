@@ -24,7 +24,7 @@ import java.util.List;
  * 2D position estimator based on located fingerprints containing only RSSI readings and
  * having as well prior knowledge of the location of radio sources associated to those
  * readings.
- * This implementation uses a first-order Taylor approximation over provided located
+ * This implementation uses a second-order Taylor approximation over provided located
  * fingerprints to determine an approximate position for a non-located fingerprint using
  * a non-linear solving algorithm.
  * An initial position can be provided as a starting point to solve the position,
@@ -32,19 +32,19 @@ import java.util.List;
  * point.
  */
 @SuppressWarnings("WeakerAccess")
-public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
-        NonLinearSourcedRssiPositionEstimator2D {
+public class SecondOrderNonLinearRssiPositionEstimator2D extends
+        NonLinearRssiPositionEstimator2D {
 
     /**
      * Constructor.
      */
-    public FirstOrderNonLinearSourcedRssiPositionEstimator2D() { }
+    public SecondOrderNonLinearRssiPositionEstimator2D() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public FirstOrderNonLinearSourcedRssiPositionEstimator2D(
+    public SecondOrderNonLinearRssiPositionEstimator2D(
             SourcedRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
@@ -62,7 +62,7 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public FirstOrderNonLinearSourcedRssiPositionEstimator2D(
+    public SecondOrderNonLinearRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -85,7 +85,7 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public FirstOrderNonLinearSourcedRssiPositionEstimator2D(
+    public SecondOrderNonLinearRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -109,7 +109,7 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public FirstOrderNonLinearSourcedRssiPositionEstimator2D(
+    public SecondOrderNonLinearRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -133,7 +133,7 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public FirstOrderNonLinearSourcedRssiPositionEstimator2D(
+    public SecondOrderNonLinearRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -148,8 +148,8 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
      * @return type of position estimator.
      */
     @Override
-    public NonLinearSourcedRssiPositionEstimatorType getType() {
-        return NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER;
+    public NonLinearRssiPositionEstimatorType getType() {
+        return NonLinearRssiPositionEstimatorType.SECOND_ORDER;
     }
 
     /**
@@ -173,6 +173,9 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
         //Pr(pi) = Pr(p1)
         //- 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
         //- 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+        //- 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
+        //- 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)*(yi - y1)^2
+        //+ 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4))*(xi - x1)*(yi - y1)
 
         double xi = params[0];
         double yi = params[1];
@@ -199,25 +202,39 @@ public class FirstOrderNonLinearSourcedRssiPositionEstimator2D extends
         double diffX1a = x1 - xa;
         double diffY1a = y1 - ya;
 
+        double diffXi12 = diffXi1 * diffXi1;
+        double diffYi12 = diffYi1 * diffYi1;
+
         double diffX1a2 = diffX1a * diffX1a;
         double diffY1a2 = diffY1a * diffY1a;
 
         double d1a2 = diffX1a2 + diffY1a2;
+        double d1a4 = d1a2 * d1a2;
 
         double value1 = - 10.0 * n * diffX1a / (ln10 * d1a2);
         double value2 = - 10.0 * n * diffY1a / (ln10 * d1a2);
+        double value3 = - 5.0 * n * (-diffX1a2 + diffY1a2) / (ln10 * d1a4);
+        double value4 = - 5.0 * n * (diffX1a2 - diffY1a2) / (ln10 * d1a4);
+        double value5 = 20.0 * n * diffX1a * diffY1a / (ln10 * d1a4);
 
         double result = pr
                 + value1 * diffXi1
-                + value2 * diffYi1;
+                + value2 * diffYi1
+                + value3 * diffXi12
+                + value4 * diffYi12
+                + value5 * diffXi1 * diffYi1;
 
         //derivative respect xi
         //diff(Pr(pi))/diff(xi) = - 10*n*(x1 - xa)/(ln(10)*d1a^2)
-        derivatives[0] = value1;
+        //- 10*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)
+        //+ 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4)*(yi - y1)
+        derivatives[0] = value1 + 2.0 * value3 * diffXi1 + value5 * diffYi1;
 
         //derivative respect yi
         //diff(Pr(pi))/diff(yi) = - 10*n*(y1 - ya)/(ln(10)*d1a^2)
-        derivatives[1] = value2;
+        //- 10*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)*(yi - y1)
+        //+ 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4)*(xi - x1)
+        derivatives[1] = value2 + 2.0 * value4 * diffYi1 + value5 * diffXi1;
 
         return result;
     }

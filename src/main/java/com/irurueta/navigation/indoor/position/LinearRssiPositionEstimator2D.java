@@ -28,20 +28,19 @@ import java.util.List;
  * This implementation uses a first-order Taylor approximation over provided located
  * fingerprints to determine an approximate position for a non-located fingerprint.
  */
-@SuppressWarnings("WeakerAccess")
-public class LinearSourcedRssiPositionEstimator2D extends
-        LinearSourcedRssiPositionEstimator<Point2D> {
+public class LinearRssiPositionEstimator2D extends
+        LinearRssiPositionEstimator<Point2D> {
 
     /**
      * Constructor.
      */
-    public LinearSourcedRssiPositionEstimator2D() { }
+    public LinearRssiPositionEstimator2D() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public LinearSourcedRssiPositionEstimator2D(
+    public LinearRssiPositionEstimator2D(
             SourcedRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
@@ -59,7 +58,7 @@ public class LinearSourcedRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public LinearSourcedRssiPositionEstimator2D(
+    public LinearRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -82,7 +81,7 @@ public class LinearSourcedRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public LinearSourcedRssiPositionEstimator2D(
+    public LinearRssiPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,

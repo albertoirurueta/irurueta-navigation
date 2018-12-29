@@ -15,7 +15,7 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-public enum NonLinearSourcedRssiPositionEstimatorType {
+public enum NonLinearRssiPositionEstimatorType {
     FIRST_ORDER,
     SECOND_ORDER,
     THIRD_ORDER
