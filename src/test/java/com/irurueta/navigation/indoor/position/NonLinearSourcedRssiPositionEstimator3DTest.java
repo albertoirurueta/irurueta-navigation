@@ -119,7 +119,7 @@ public class NonLinearSourcedRssiPositionEstimator3DTest
 
         //check
         assertEquals(estimator.getType(),
-                NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER);
+                NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER);
         assertNull(estimator.getLocatedFingerprints());
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getSources());
@@ -173,7 +173,7 @@ public class NonLinearSourcedRssiPositionEstimator3DTest
 
         //check
         assertEquals(estimator.getType(),
-                NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER);
+                NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER);
         assertNull(estimator.getLocatedFingerprints());
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getSources());
@@ -262,7 +262,7 @@ public class NonLinearSourcedRssiPositionEstimator3DTest
 
         //check
         assertEquals(estimator.getType(),
-                NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER);
+                NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER);
         assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getSources(), sources);
@@ -320,7 +320,7 @@ public class NonLinearSourcedRssiPositionEstimator3DTest
 
         //check
         assertEquals(estimator.getType(),
-                NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER);
+                NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER);
         assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getSources(), sources);
@@ -379,7 +379,7 @@ public class NonLinearSourcedRssiPositionEstimator3DTest
 
         //check
         assertEquals(estimator.getType(),
-                NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER);
+                NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER);
         assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getSources(), sources);
@@ -438,7 +438,7 @@ public class NonLinearSourcedRssiPositionEstimator3DTest
 
         //check
         assertEquals(estimator.getType(),
-                NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER);
+                NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER);
         assertSame(estimator.getLocatedFingerprints(), locatedFingerprints);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getSources(), sources);

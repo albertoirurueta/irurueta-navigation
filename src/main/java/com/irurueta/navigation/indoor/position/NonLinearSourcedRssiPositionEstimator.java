@@ -56,7 +56,7 @@ public abstract class NonLinearSourcedRssiPositionEstimator<P extends Point> ext
      * Default type to be used when none is provided.
      */
     public static final NonLinearSourcedRssiPositionEstimatorType DEFAULT_TYPE =
-            NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER;
+            NonLinearSourcedRssiPositionEstimatorType.THIRD_ORDER;
 
     /**
      * Initial position to start the solving algorithm.
