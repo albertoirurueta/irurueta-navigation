@@ -57,10 +57,10 @@ public abstract class SourcedRssiPositionEstimator<P extends Point> extends
     /**
      * True indicates that mean effects are removed from located fingerprints and from
      * new fingerprints whose location is unknown.
-     * By default this is enabled to remove possible bias effects due to readings
+     * By default this is disabled to remove possible bias effects due to readings
      * measured by different devices with different hardware.
      */
-    protected boolean mRemoveMeansFromFingerprintReadings = true;
+    protected boolean mRemoveMeansFromFingerprintReadings;
 
     /**
      * Constructor.

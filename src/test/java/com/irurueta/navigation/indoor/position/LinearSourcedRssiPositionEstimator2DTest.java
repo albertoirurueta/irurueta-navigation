@@ -100,7 +100,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
         assertNull(estimator.getSources());
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
 
 
         //test constructor with listener
@@ -122,7 +122,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
         assertNull(estimator.getSources());
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
 
 
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -181,7 +181,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
         assertSame(estimator.getSources(), sources);
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
 
         //force IllegalArgumentException
         estimator = null;
@@ -228,7 +228,7 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
         assertSame(estimator.getSources(), sources);
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
 
         //force IllegalArgumentException
         estimator = null;
@@ -452,13 +452,13 @@ public class LinearSourcedRssiPositionEstimator2DTest implements SourcedRssiPosi
         LinearSourcedRssiPositionEstimator2D estimator = new LinearSourcedRssiPositionEstimator2D();
 
         //check default value
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
 
         //set new value
-        estimator.setMeansFromFingerprintReadingsRemoved(false);
+        estimator.setMeansFromFingerprintReadingsRemoved(true);
 
         //check
-        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
     }
 
     @Test

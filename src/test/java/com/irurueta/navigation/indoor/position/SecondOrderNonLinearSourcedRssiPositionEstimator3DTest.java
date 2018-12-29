@@ -104,7 +104,7 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
         assertNull(estimator.getSources());
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearSourcedRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
@@ -133,7 +133,7 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
         assertNull(estimator.getSources());
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearSourcedRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
@@ -199,7 +199,7 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
         assertSame(estimator.getSources(), sources);
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearSourcedRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
@@ -254,7 +254,7 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
         assertSame(estimator.getSources(), sources);
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearSourcedRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
@@ -311,7 +311,7 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
         assertSame(estimator.getSources(), sources);
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearSourcedRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
@@ -367,7 +367,7 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
         assertSame(estimator.getSources(), sources);
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearSourcedRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
@@ -609,13 +609,13 @@ public class SecondOrderNonLinearSourcedRssiPositionEstimator3DTest
                 new SecondOrderNonLinearSourcedRssiPositionEstimator3D();
 
         //check default value
-        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
 
         //set new value
-        estimator.setMeansFromFingerprintReadingsRemoved(false);
+        estimator.setMeansFromFingerprintReadingsRemoved(true);
 
         //check
-        assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
+        assertTrue(estimator.isMeansFromFingerprintReadingsRemoved());
     }
 
     @Test
