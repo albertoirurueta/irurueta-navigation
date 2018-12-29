@@ -28,7 +28,7 @@ import java.util.List;
  * This is a base implementation for all implementations using different orders of
  * Taylor approximation to estimate position.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class NonLinearSourcedRssiPositionEstimator3D extends
         NonLinearSourcedRssiPositionEstimator<Point3D> {
 
@@ -157,5 +157,300 @@ public abstract class NonLinearSourcedRssiPositionEstimator3D extends
         Point3D result = new InhomogeneousPoint3D();
         getEstimatedPosition(result);
         return result;
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param type type to be used.
+     * @return a non-linear 3D position estimator.
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            NonLinearSourcedRssiPositionEstimatorType type) {
+        switch (type) {
+            case THIRD_ORDER:
+                return new ThirdOrderNonLinearSourcedRssiPositionEstimator3D();
+            case SECOND_ORDER:
+                return new SecondOrderNonLinearSourcedRssiPositionEstimator3D();
+            case FIRST_ORDER:
+            default:
+                return new FirstOrderNonLinearSourcedRssiPositionEstimator3D();
+        }
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param listener listener in charge of handling events.
+     * @param type a non-linear 3D position estimator.
+     * @return a non-linear 3D position estimator.
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            SourcedRssiPositionEstimatorListener<Point3D> listener,
+            NonLinearSourcedRssiPositionEstimatorType type) {
+        switch (type) {
+            case THIRD_ORDER:
+                return new ThirdOrderNonLinearSourcedRssiPositionEstimator3D(listener);
+            case SECOND_ORDER:
+                return new SecondOrderNonLinearSourcedRssiPositionEstimator3D(listener);
+            case FIRST_ORDER:
+            default:
+                return new FirstOrderNonLinearSourcedRssiPositionEstimator3D(listener);
+        }
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param type a non-linear 3D position estimator.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            NonLinearSourcedRssiPositionEstimatorType type) {
+        switch (type) {
+            case THIRD_ORDER:
+                return new ThirdOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources);
+            case SECOND_ORDER:
+                return new SecondOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources);
+            case FIRST_ORDER:
+            default:
+                return new FirstOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources);
+        }
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param listener listener in charge of handling events.
+     * @param type a non-linear 3D position estimator.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            SourcedRssiPositionEstimatorListener<Point3D> listener,
+            NonLinearSourcedRssiPositionEstimatorType type) {
+        switch (type) {
+            case THIRD_ORDER:
+                return new ThirdOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, listener);
+            case SECOND_ORDER:
+                return new SecondOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, listener);
+            case FIRST_ORDER:
+            default:
+                return new FirstOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, listener);
+        }
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param initialPosition initial position to start the solving algorithm or null.
+     * @param type a non-linear 3D position estimator.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            Point3D initialPosition, NonLinearSourcedRssiPositionEstimatorType type) {
+        switch (type) {
+            case THIRD_ORDER:
+                return new ThirdOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, initialPosition);
+            case SECOND_ORDER:
+                return new SecondOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, initialPosition);
+            case FIRST_ORDER:
+            default:
+                return new FirstOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, initialPosition);
+        }
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param initialPosition initial position to start the solving algorithm or null.
+     * @param listener listener in charge of handling events.
+     * @param type a non-linear 3D position estimator.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<
+            ? extends RadioSource, ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition,
+            SourcedRssiPositionEstimatorListener<Point3D> listener,
+            NonLinearSourcedRssiPositionEstimatorType type) {
+        switch (type) {
+            case THIRD_ORDER:
+                return new ThirdOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, initialPosition,
+                        listener);
+            case SECOND_ORDER:
+                return new SecondOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, initialPosition,
+                        listener);
+            case FIRST_ORDER:
+            default:
+                return new FirstOrderNonLinearSourcedRssiPositionEstimator3D(
+                        locatedFingerprints, fingerprint, sources, initialPosition,
+                        listener);
+        }
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @return a non-linear 3D position estimator.
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create() {
+        return create(DEFAULT_TYPE);
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param listener listener in charge of handling events.
+     * @return a non-linear 3D position estimator.
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+        return create(listener, DEFAULT_TYPE);
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources) {
+        return create(locatedFingerprints, fingerprint, sources, DEFAULT_TYPE);
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param listener listener in charge of handling events.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+        return create(locatedFingerprints, fingerprint, sources, listener,
+                DEFAULT_TYPE);
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param initialPosition initial position to start the solving algorithm or null.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            Point3D initialPosition) {
+        return create(locatedFingerprints, fingerprint, sources, initialPosition,
+                DEFAULT_TYPE);
+    }
+
+    /**
+     * Creates an instance of a non-linear 3D position estimator using provided type.
+     * @param locatedFingerprints located fingerprints containing RSSI readings.
+     * @param fingerprint fingerprint containing readings at an unknown location
+     *                    for provided located fingerprints.
+     * @param sources located radio sources.
+     * @param initialPosition initial position to start the solving algorithm or null.
+     * @param listener listener in charge of handling events.
+     * @return a non-linear 3D position estimator.
+     * @throws IllegalArgumentException if provided non located fingerprint is null,
+     * located fingerprints value is null or there are not enough fingerprints or
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
+     */
+    public static NonLinearSourcedRssiPositionEstimator3D create(
+            List<? extends RssiFingerprintLocated<
+            ? extends RadioSource, ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
+            RssiFingerprint<? extends RadioSource,
+            ? extends RssiReading<? extends RadioSource>> fingerprint,
+            List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition,
+            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+        return create(locatedFingerprints, fingerprint, sources, initialPosition,
+                listener, DEFAULT_TYPE);
     }
 }

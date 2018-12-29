@@ -53,6 +53,12 @@ public abstract class NonLinearSourcedRssiPositionEstimator<P extends Point> ext
     public static final double FALLBACK_RSSI_STANDARD_DEVIATION = 1.0;
 
     /**
+     * Default type to be used when none is provided.
+     */
+    public static final NonLinearSourcedRssiPositionEstimatorType DEFAULT_TYPE =
+            NonLinearSourcedRssiPositionEstimatorType.FIRST_ORDER;
+
+    /**
      * Initial position to start the solving algorithm.
      * This should be a value close to the expected solution.
      * If no value is provided, the average position among all selected nearest

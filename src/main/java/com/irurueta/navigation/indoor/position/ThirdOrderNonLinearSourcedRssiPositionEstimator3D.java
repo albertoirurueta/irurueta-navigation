@@ -160,7 +160,7 @@ public class ThirdOrderNonLinearSourcedRssiPositionEstimator3D extends
     @Override
     @SuppressWarnings("Duplicates")
     protected double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-        //Demonstration in 2D:
+        //Demonstration in 3D:
         //--------------------
         //Taylor series expansion can be expressed as:
         //f(x) = f(a) + 1/1!*f'(a)*(x - a) + 1/2!*f''(a)*(x - a)^2 + 1/3!*f'''(a)*(x - a)^3 ...
@@ -425,7 +425,7 @@ public class ThirdOrderNonLinearSourcedRssiPositionEstimator3D extends
         double diffY1a2 = diffY1a * diffY1a;
         double diffZ1a2 = diffZ1a * diffZ1a;
 
-        double d1a2 = diffX1a2 + diffY1a2;
+        double d1a2 = diffX1a2 + diffY1a2 + diffZ1a2;
         double d1a4 = d1a2 * d1a2;
         double d1a8 = d1a4 * d1a4;
 
@@ -474,7 +474,7 @@ public class ThirdOrderNonLinearSourcedRssiPositionEstimator3D extends
 
         double result = pr
                 + value1 * diffXi1
-                + value2 * diffXi1
+                + value2 * diffYi1
                 + value3 * diffZi1
                 + value4 * diffXi12
                 + value5 * diffYi12
