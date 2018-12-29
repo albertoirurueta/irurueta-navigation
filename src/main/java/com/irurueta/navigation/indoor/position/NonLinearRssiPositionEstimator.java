@@ -35,7 +35,7 @@ import java.util.List;
  * Base class for position estimators based on located fingerprints containing only
  * RSSI readings and having as well prior knowledge of the location of radio sources
  * associated to those readings.
- * This implementation uses a second-order Taylor approximation over provided located
+ * This implementation uses a Taylor approximation over provided located
  * fingerprints to determine an approximate position for a non-located fingerprint using
  * a non-linear solving algorithm.
  * An initial position can be provided as a starting point to solve the position,
