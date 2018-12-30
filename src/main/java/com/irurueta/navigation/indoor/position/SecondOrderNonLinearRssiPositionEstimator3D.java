@@ -15,8 +15,10 @@
  */
 package com.irurueta.navigation.indoor.position;
 
+import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.statistics.MultivariateNormalDist;
 
 import java.util.List;
 
@@ -263,5 +265,53 @@ public class SecondOrderNonLinearRssiPositionEstimator3D extends
                 value9 * diffXi1;
 
         return result;
+    }
+
+    /**
+     * Propagates provided variances into RSSI variance of non-located fingerprint
+     * reading.
+     * @param fingerprintRssi closest located fingerprint reading RSSI expressed in dBm's.
+     * @param pathlossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition position to be estimated. Usually this is equal to the
+     *                          initial position used by a non linear algorithm.
+     * @param fingerprintRssiVariance variance of fingerprint RSSI or null if unknown.
+     * @param pathlossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null if
+     *                                      unknown.
+     * @return variance of RSSI measured at non located fingerprint reading.
+     */
+    @Override
+    @SuppressWarnings("Duplicates")
+    protected Double propagateVariances(double fingerprintRssi,
+            double pathlossExponent, Point3D fingerprintPosition,
+            Point3D radioSourcePosition, Point3D estimatedPosition,
+            Double fingerprintRssiVariance, Double pathlossExponentVariance,
+            Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance) {
+        try {
+            MultivariateNormalDist dist =
+                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                            fingerprintRssi, pathlossExponent, fingerprintPosition,
+                            radioSourcePosition, estimatedPosition, fingerprintRssiVariance,
+                            pathlossExponentVariance, fingerprintPositionCovariance,
+                            radioSourcePositionCovariance, null);
+            if (dist == null) {
+                return null;
+            }
+
+            Matrix covariance = dist.getCovariance();
+            if (covariance == null) {
+                return null;
+            }
+
+            return covariance.getElementAt(0, 0);
+
+        } catch (IndoorException e) {
+            return null;
+        }
     }
 }

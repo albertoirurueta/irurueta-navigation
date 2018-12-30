@@ -25,7 +25,6 @@ import java.util.List;
  * @param <S> a {@link RadioSource} type.
  * @param <R> a {@link RssiReading} type.
  */
-@SuppressWarnings("WeakerAccess")
 public class RssiFingerprintLocated2D<S extends RadioSource, R extends RssiReading<S>>
         extends RssiFingerprintLocated<S, R, Point2D> {
 

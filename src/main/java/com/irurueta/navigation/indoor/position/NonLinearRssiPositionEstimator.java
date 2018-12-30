@@ -53,6 +53,36 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
     public static final double FALLBACK_RSSI_STANDARD_DEVIATION = 1.0;
 
     /**
+     * Indicates that by default measured RSSI standard deviation of closest fingerprint
+     * must be propagated into measured RSSI reading variance at unknown location.
+     */
+    public static final boolean DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION = true;
+
+    /**
+     * Indicates that by default path-loss exponent standard deviation of radio source
+     * must be propagated into measured RSSI reading variance at unknown location.
+     */
+    public static final boolean DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION = true;
+
+    /**
+     * Indicates that by default covariance of closest fingerprint position must be
+     * propagated into measured RSSI reading variance at unknown location.
+     */
+    public static final boolean DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE = true;
+
+    /**
+     * Indicates that by default covariance of radio source position must be propagated
+     * into measured RSSI reading variance at unknown location.
+     */
+    public static final boolean DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE = true;
+
+    /**
+     * Small value to be used as the minimum allowed RSSI standard deviations. A value
+     * larger than this must be provided to allow convergence to a solution
+     */
+    private static final double TINY_RSSI_STD = 1e-12;
+
+    /**
      * Default type to be used when none is provided.
      */
     @SuppressWarnings("WeakerAccess")
@@ -69,10 +99,40 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
 
     /**
      * RSSI standard deviation fallback value to use when none can be
-     * determined from provided readings.
+     * determined from provided readings. This fallback value is only used if
+     * no variance is propagated or the resulting value is too small to allow
+     * convergence to a solution.
      */
     private double mFallbackRssiStandardDeviation =
             FALLBACK_RSSI_STANDARD_DEVIATION;
+
+    /**
+     * Indicates whether measured RSSI standard deviation of closest fingerprint must
+     * be propagated into measured RSSI reading variance at unknown location.
+     */
+    private boolean mPropagateFingerprintRssiStandardDeviation =
+            DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION;
+
+    /**
+     * Indicates whether path-loss exponent standard deviation of radio source must
+     * be propagated into measured RSSI reading variance at unknown location.
+     */
+    private boolean mPropagatePathlossExponentStandardDeviation =
+            DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION;
+
+    /**
+     * Indicates whether covariance of closest fingerprint position must be
+     * propagated into measured RSSI reading variance at unknown location.
+     */
+    private boolean mPropagateFingerprintPositionCovariance =
+            DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE;
+
+    /**
+     * Indicates whether covariance of radio source position must be propagated
+     * into measured RSSI reading variance at unknown location.
+     */
+    private boolean mPropagateRadioSourcePositionCovariance =
+            DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE;
 
     /**
      * Levenberg-Marquardt fitter to find a non-linear solution.
@@ -240,13 +300,122 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * determined from provided readings.
      * @param fallbackRssiStandardDeviation RSSI standard deviation fallback
      * @throws LockedException if estimator is locked.
+     * @throws IllegalArgumentException if provided value is smaller than
+     * {@link #TINY_RSSI_STD}.
      */
     public void setFallbackRssiStandardDeviation(
             double fallbackRssiStandardDeviation) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
+        if (fallbackRssiStandardDeviation < TINY_RSSI_STD) {
+            throw new IllegalArgumentException();
+        }
         mFallbackRssiStandardDeviation = fallbackRssiStandardDeviation;
+    }
+
+    /**
+     * Indicates whether measured RSSI standard deviation of closest fingerprint must be
+     * propagated into measured RSSI reading variance at unknown location.
+     * @return true to propagate RSSI standard deviation of closest fingerprint,
+     * false otherwise.
+     */
+    public boolean isFingerprintRssiStandardDeviationPropagated() {
+        return mPropagateFingerprintRssiStandardDeviation;
+    }
+
+    /**
+     * Specifies whether measured RSSI standard deviation of closest fingerprint must be
+     * propagated into measured RSSI reading variance at unknown location.
+     * @param propagateFingerprintRssiStandardDeviation true to propagate RSSI standard
+     *                                                  deviation of closest fingerprint,
+     *                                                  false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFingerprintRssiStandardDeviationPropagated(
+            boolean propagateFingerprintRssiStandardDeviation) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPropagateFingerprintRssiStandardDeviation =
+                propagateFingerprintRssiStandardDeviation;
+    }
+
+    /**
+     * Indicates whether path-loss exponent standard deviation of radio source must be
+     * propagated into measured RSSI reading variance at unknown location.
+     * @return true to propagate  path-loss exponent standard deviation of radio source,
+     * false otherwise.
+     */
+    public boolean isPathlossExponentStandardDeviationPropagated() {
+        return mPropagatePathlossExponentStandardDeviation;
+    }
+
+    /**
+     * Specifies whether path-loss exponent standard deviation of radio source must be
+     * propagated into measured RSSI reading variance at unknown location.
+     * @param propagatePathlossExponentStandardDeviation true to propagate path-loss
+     *                                                   exponent standard deviation of
+     *                                                   radio source, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPathlossExponentStandardDeviationPropagated(
+            boolean propagatePathlossExponentStandardDeviation) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPropagatePathlossExponentStandardDeviation =
+                propagatePathlossExponentStandardDeviation;
+    }
+
+    /**
+     * Indicates whether covariance of closest fingerprint position must be propagated
+     * into measured RSSI reading variance at unknown location.
+     * @return true to propagate fingerprint position covariance, false otherwise.
+     */
+    public boolean isFingerprintPositionCovariancePropagated() {
+        return mPropagateFingerprintPositionCovariance;
+    }
+
+    /**
+     * Specifies whether covariance of closest fingerprint position must be propagated
+     * into measured RSSI reading variance at unknown location.
+     * @param propagateFingerprintPositionCovariance true to propagate fingerprint
+     *                                               position covariance, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setFingerprintPositionCovariancePropagated(
+            boolean propagateFingerprintPositionCovariance) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPropagateFingerprintPositionCovariance =
+                propagateFingerprintPositionCovariance;
+    }
+
+    /**
+     * Indicates whether covariance of radio source position must be propagated into
+     * measured RSSI reading variance at unknown location.
+     * @return true to propagate radio source position covariance, false otherwise.
+     */
+    public boolean isRadioSourcePositionCovariancePropagated() {
+        return mPropagateRadioSourcePositionCovariance;
+    }
+
+    /**
+     * Specifies whether covariance of radio source position must be propagated into
+     * measured RSSI reading variance at unknown location.
+     * @param propagateRadioSourcePositionCovariance true to propagate radio source
+     *                                               position covariance, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setRadioSourcePositionCovariancePropagated(
+            boolean propagateRadioSourcePositionCovariance) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mPropagateRadioSourcePositionCovariance =
+                propagateRadioSourcePositionCovariance;
     }
 
     /**
@@ -641,7 +810,30 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * @throws EvaluationException raised if something failed during the evaluation.
      */
     protected abstract double evaluate(int i, double[] point, double[] params,
-                    double[] derivatives) throws EvaluationException;
+            double[] derivatives) throws EvaluationException;
+
+    /**
+     * Propagates provided variances into RSSI variance of non-located fingerprint
+     * reading.
+     * @param fingerprintRssi closest located fingerprint reading RSSI expressed in dBm's.
+     * @param pathlossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition position to be estimated. Usually this is equal to the
+     *                          initial position used by a non linear algorithm.
+     * @param fingerprintRssiVariance variance of fingerprint RSSI or null if unknown.
+     * @param pathlossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null if
+     *                                      unknown.
+     * @return variance of RSSI measured at non located fingerprint reading.
+     */
+    protected abstract Double propagateVariances(double fingerprintRssi,
+            double pathlossExponent, P fingerprintPosition, P radioSourcePosition,
+            P estimatedPosition, Double fingerprintRssiVariance,
+            Double pathlossExponentVariance, Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance);
 
     /**
      * Builds data required to solve the problem.
@@ -662,12 +854,15 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
         for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
                 mNearestFingerprints) {
 
-            P fingerprintPosition = locatedFingerprint.getPosition();
             List<RssiReading<RadioSource>> locatedReadings =
                     locatedFingerprint.getReadings();
             if (locatedReadings == null) {
                 continue;
             }
+
+            P fingerprintPosition = locatedFingerprint.getPosition();
+            Matrix fingerprintPositionCovariance = locatedFingerprint.
+                    getPositionCovariance();
 
             double locatedMeanRssi = 0.0;
             double meanRssi = 0.0;
@@ -690,14 +885,25 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
 
                 RadioSourceLocated<P> locatedSource = mSources.get(pos);
                 double pathLossExponent = mPathLossExponent;
+                Double pathLossExponentVariance = null;
                 if (mUseSourcesPathLossExponentWhenAvailable &&
                         locatedSource instanceof RadioSourceWithPower) {
-                    pathLossExponent = ((RadioSourceWithPower)locatedSource).
-                            getPathLossExponent();
+                    RadioSourceWithPower locatedSourceWithPower =
+                            (RadioSourceWithPower)locatedSource;
+                    pathLossExponent = locatedSourceWithPower.getPathLossExponent();
+                    Double std = locatedSourceWithPower.
+                            getPathLossExponentStandardDeviation();
+                    pathLossExponentVariance = std != null ? std * std : null;
                 }
 
                 P sourcePosition = locatedSource.getPosition();
+                Matrix sourcePositionCovariance = locatedSource.getPositionCovariance();
                 double locatedRssi = locatedReading.getRssi();
+                locatedRssi -= locatedMeanRssi;
+
+                Double locatedRssiStd = locatedReading.getRssiStandardDeviation();
+                Double locatedRssiVariance = locatedRssiStd != null ?
+                        locatedRssiStd * locatedRssiStd : null;
                 if (mRemoveMeansFromFingerprintReadings) {
                     meanRssi = mFingerprint.getMeanRssi();
                 }
@@ -713,11 +919,42 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
                     //only take into account reading for matching sources on located and
                     //non-located readings
                     double rssi = reading.getRssi();
-                    double standardDeviation = reading.getRssiStandardDeviation() != null ?
-                            reading.getRssiStandardDeviation() : mFallbackRssiStandardDeviation;
+                    rssi -= meanRssi;
 
-                    allReceivedPower.add(rssi - meanRssi);
-                    allFingerprintPower.add(locatedRssi - locatedMeanRssi);
+                    Double standardDeviation = null;
+                    if (mPropagateFingerprintRssiStandardDeviation ||
+                            mPropagatePathlossExponentStandardDeviation ||
+                            mPropagateFingerprintPositionCovariance ||
+                            mPropagateRadioSourcePositionCovariance) {
+
+                        //compute initial position
+                        P initialPosition = mInitialPosition != null ?
+                                mInitialPosition : fingerprintPosition;
+
+                        Double variance = propagateVariances(locatedRssi,
+                                pathLossExponent, fingerprintPosition, sourcePosition,
+                                initialPosition, locatedRssiVariance,
+                                pathLossExponentVariance, fingerprintPositionCovariance,
+                                sourcePositionCovariance);
+                        if (variance != null) {
+                            standardDeviation = Math.sqrt(variance);
+                        }
+                    }
+
+                    if (standardDeviation == null) {
+                        standardDeviation = reading.getRssiStandardDeviation();
+                    } else if (reading.getRssiStandardDeviation() != null) {
+                        standardDeviation = standardDeviation * standardDeviation +
+                                reading.getRssiStandardDeviation() * reading.getRssiStandardDeviation();
+                        standardDeviation = Math.sqrt(standardDeviation);
+                    }
+
+                    if (standardDeviation == null || standardDeviation < TINY_RSSI_STD) {
+                        standardDeviation = mFallbackRssiStandardDeviation;
+                    }
+
+                    allReceivedPower.add(rssi);
+                    allFingerprintPower.add(locatedRssi);
                     allFingerprintPositions.add(fingerprintPosition);
                     allSourcesPosition.add(sourcePosition);
                     allPathLossExponents.add(pathLossExponent);

@@ -15,6 +15,12 @@
  */
 package com.irurueta.navigation.indoor;
 
+import com.irurueta.algebra.AlgebraException;
+import com.irurueta.algebra.Matrix;
+import com.irurueta.geometry.InhomogeneousPoint2D;
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.indoor.radiosource.RssiRadioSourceEstimator;
 import com.irurueta.numerical.*;
 import com.irurueta.statistics.MultivariateNormalDist;
@@ -47,6 +53,9 @@ public class UtilsTest {
 
     private static final double MIN_DISTANCE = 0.5;
     private static final double MAX_DISTANCE = 50.0;
+
+    private static final double MIN_POS = -50.0;
+    private static final double MAX_POS = 50.0;
 
     private static final double TX_POWER_VARIANCE = 0.1;
     private static final double RX_POWER_VARIANCE = 0.5;
@@ -405,6 +414,175 @@ public class UtilsTest {
             double distanceVariance = dist.getCovariance().
                     getElementAt(0, 0);
             assertEquals(distanceVariance, 0.0, ABSOLUTE_ERROR);
+        }
+    }
+
+    @Test
+    public void testPropagateVariancesToRssiVarianceFirstOrderNonLinear2D()
+            throws IndoorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            double fingerprintRssi = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            double x1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point2D fingerprintPosition = new InhomogeneousPoint2D(x1, y1);
+
+            double xa = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double ya = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point2D radioSourcePosition = new InhomogeneousPoint2D(xa, ya);
+
+            double xi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double yi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point2D estimatedPosition = new InhomogeneousPoint2D(xi, yi);
+
+            //test without variance values
+            MultivariateNormalDist dist = Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, null,
+                    null, null,
+                    null, null);
+
+            double diffX1a = x1 - xa;
+            double diffY1a = y1 - ya;
+
+            double diffXi1 = xi - x1;
+            double diffYi1 = yi - y1;
+
+            double diffX1a2 = diffX1a * diffX1a;
+            double diffY1a2 = diffY1a * diffY1a;
+
+            double d1a2 = diffX1a2 + diffY1a2;
+
+            double rssi = fingerprintRssi - 10.0 * pathLossExponent *
+                    (diffX1a * diffXi1 + diffY1a * diffYi1)/(Math.log(10.0) * d1a2);
+
+            assertEquals(dist.getMean()[0], rssi, ABSOLUTE_ERROR);
+
+            double rssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(rssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            //test with variance values
+            dist = Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, 0.0,
+                    0.0, new Matrix(2,2),
+                    new Matrix(2, 2), new Matrix(2, 2));
+
+            assertEquals(dist.getMean()[0], rssi, ABSOLUTE_ERROR);
+            rssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(rssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            assertNull(Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    fingerprintRssi, pathLossExponent, null, radioSourcePosition,
+                    estimatedPosition, null,
+                    null, null,
+                    null, null));
+            assertNull(Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition, null,
+                    estimatedPosition, null, null,
+                    null, null,
+                    null));
+            assertNull(Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition, radioSourcePosition,
+                    null, null,
+                    null, null,
+                    null, null));
+        }
+    }
+
+    @Test
+    public void testPropagateVariancesToRssiVarianceFirstOrderNonLinear3D()
+            throws IndoorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            double fingerprintRssi = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            double x1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double z1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point3D fingerprintPosition = new InhomogeneousPoint3D(x1, y1, z1);
+
+            double xa = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double ya = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double za = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point3D radioSourcePosition = new InhomogeneousPoint3D(xa, ya, za);
+
+            double xi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double yi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double zi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point3D estimatedPosition = new InhomogeneousPoint3D(xi, yi, zi);
+
+            //test without variance values
+            MultivariateNormalDist dist = Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, null,
+                    null, null,
+                    null, null);
+
+            double diffX1a = x1 - xa;
+            double diffY1a = y1 - ya;
+            double diffZ1a = z1 - za;
+
+            double diffXi1 = xi - x1;
+            double diffYi1 = yi - y1;
+            double diffZi1 = zi - z1;
+
+            double diffX1a2 = diffX1a * diffX1a;
+            double diffY1a2 = diffY1a * diffY1a;
+            double diffZ1a2 = diffZ1a * diffZ1a;
+
+            double d1a2 = diffX1a2 + diffY1a2 + diffZ1a2;
+
+            double rssi = fingerprintRssi - 10.0 * pathLossExponent *
+                    (diffX1a * diffXi1 + diffY1a * diffYi1 + diffZ1a * diffZi1) /
+                    (Math.log(10.0) * d1a2);
+
+            assertEquals(dist.getMean()[0], rssi, ABSOLUTE_ERROR);
+
+            double rssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(rssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            //test with variance values
+            dist = Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, 0.0,
+                    0.0, new Matrix(3,3),
+                    new Matrix(3, 3), new Matrix(3, 3));
+
+            assertEquals(dist.getMean()[0], rssi, ABSOLUTE_ERROR);
+            rssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(rssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            assertNull(Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    fingerprintRssi, pathLossExponent, null, radioSourcePosition,
+                    estimatedPosition, null,
+                    null, null,
+                    null, null));
+            assertNull(Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition, null,
+                    estimatedPosition, null, null,
+                    null, null,
+                    null));
+            assertNull(Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    fingerprintRssi, pathLossExponent, fingerprintPosition, radioSourcePosition,
+                    null, null,
+                    null, null,
+                    null, null));
         }
     }
 

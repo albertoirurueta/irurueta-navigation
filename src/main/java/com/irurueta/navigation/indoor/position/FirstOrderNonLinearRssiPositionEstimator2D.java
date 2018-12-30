@@ -15,8 +15,10 @@
  */
 package com.irurueta.navigation.indoor.position;
 
+import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.statistics.MultivariateNormalDist;
 
 import java.util.List;
 
@@ -171,8 +173,8 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
         //This method implements received power at point pi = (xi, yi) and its derivatives
 
         //Pr(pi) = Pr(p1)
-        //- 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
-        //- 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+        //  - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
+        //  - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
 
         double xi = params[0];
         double yi = params[1];
@@ -220,5 +222,53 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
         derivatives[1] = value2;
 
         return result;
+    }
+
+    /**
+     * Propagates provided variances into RSSI variance of non-located fingerprint
+     * reading.
+     * @param fingerprintRssi closest located fingerprint reading RSSI expressed in dBm's.
+     * @param pathlossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition position to be estimated. Usually this is equal to the
+     *                          initial position used by a non linear algorithm.
+     * @param fingerprintRssiVariance variance of fingerprint RSSI or null if unknown.
+     * @param pathlossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null if
+     *                                      unknown.
+     * @return variance of RSSI measured at non located fingerprint reading.
+     */
+    @Override
+    @SuppressWarnings("Duplicates")
+    protected Double propagateVariances(double fingerprintRssi,
+            double pathlossExponent, Point2D fingerprintPosition,
+            Point2D radioSourcePosition, Point2D estimatedPosition,
+            Double fingerprintRssiVariance, Double pathlossExponentVariance,
+            Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance) {
+        try {
+            MultivariateNormalDist dist =
+                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                            fingerprintRssi, pathlossExponent, fingerprintPosition,
+                            radioSourcePosition, estimatedPosition, fingerprintRssiVariance,
+                            pathlossExponentVariance, fingerprintPositionCovariance,
+                            radioSourcePositionCovariance, null);
+            if (dist == null) {
+                return null;
+            }
+
+            Matrix covariance = dist.getCovariance();
+            if (covariance == null) {
+                return null;
+            }
+
+            return covariance.getElementAt(0, 0);
+
+        } catch (IndoorException e) {
+            return null;
+        }
     }
 }
