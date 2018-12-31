@@ -173,11 +173,11 @@ public class SecondOrderNonLinearRssiPositionEstimator2D extends
         //This method implements received power at point pi = (xi, yi) and its derivatives
 
         //Pr(pi) = Pr(p1)
-        //- 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
-        //- 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
-        //- 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
-        //- 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)*(yi - y1)^2
-        //+ 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4))*(xi - x1)*(yi - y1)
+        //  - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
+        //  - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+        //  - 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
+        //  - 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)*(yi - y1)^2
+        //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4))*(xi - x1)*(yi - y1)
 
         double xi = params[0];
         double yi = params[1];
@@ -268,11 +268,12 @@ public class SecondOrderNonLinearRssiPositionEstimator2D extends
             Matrix radioSourcePositionCovariance) {
         try {
             MultivariateNormalDist dist =
-                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    Utils.propagateVariancesToRssiVarianceSecondOrderNonLinear2D(
                             fingerprintRssi, pathlossExponent, fingerprintPosition,
                             radioSourcePosition, estimatedPosition, fingerprintRssiVariance,
                             pathlossExponentVariance, fingerprintPositionCovariance,
                             radioSourcePositionCovariance, null);
+
             if (dist == null) {
                 return null;
             }

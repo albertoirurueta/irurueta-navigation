@@ -386,7 +386,7 @@ public class Utils {
                     //diff(Pr(pi))/diff(y1) = -10*n/ln(10)*((-2*y1 + yi + ya)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^2
                     //diff(Pr(pi))/diff(y1) = -10*n/ln(10)*((-2*y1 + yi + ya)*d1a^2 - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(y1 - ya))/d1a^4
                     double tmpY = 2.0 * crossDiff * diffY1a;
-                    double derivativeY1 = -10.0 * pathLossExponent / ln10 * ((-2.0 * y1 + yi + ya)*d1a2
+                    double derivativeY1 = -10.0 * pathLossExponent / ln10 * ((-2.0 * y1 + yi + ya) * d1a2
                             - tmpY) / d1a4;
 
 
@@ -590,7 +590,7 @@ public class Utils {
                     y[0] = fingerprintRssi
                             - 10.0 * pathLossExponent * crossDiff / (ln10 * d1a2);
 
-                    //compute gradient (is a jacobian having 1 row and 8 columns)
+                    //compute gradient (is a jacobian having 1 row and 11 columns)
 
 
                     //derivative of rssi respect to fingerprint rssi
@@ -758,4 +758,405 @@ public class Utils {
         }
     }
 
+    /**
+     * Propagates provided variances (fingerprint rssi variance, path-loss exponent variance,
+     * fingerprint position covariance and radio source position covariance) into
+     * rssi variance by considering the 2D 2nd order Taylor expression of received power.
+     * Notice that any unknown variance is assumed to be zero.
+     * @param fingerprintRssi closest located fingerprint reading RSSI expressed in dBm's.
+     * @param pathLossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition  position to be estimated. Usually this is equal to the
+     *                           initial position used by a non linear algorithm.
+     * @param fingerprintRssiVariance variance of fingerprint RSSI or null if unknown.
+     * @param pathLossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null
+     *                                      if unknown.
+     * @param estimatedPositionCovariance  covariance of position to be estimated or null
+     *                                     if unknown. (This is usually unknown).
+     * @return a normal distribution containing expected received RSSI value and its variance.
+     * @throws IndoorException if something fails.
+     */
+    public static MultivariateNormalDist propagateVariancesToRssiVarianceSecondOrderNonLinear2D(
+            final double fingerprintRssi, final double pathLossExponent,
+            Point2D fingerprintPosition, Point2D radioSourcePosition,
+            Point2D estimatedPosition, Double fingerprintRssiVariance,
+            Double pathLossExponentVariance,
+            Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance,
+            Matrix estimatedPositionCovariance) throws IndoorException {
+
+        if (fingerprintPosition == null || radioSourcePosition == null ||
+                estimatedPosition == null) {
+            return null;
+        }
+
+        //2nd order Taylor expression of received power in 2D:
+        //Pr(pi) = Pr(p1)
+        //  - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
+        //  - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+        //  - 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
+        //  - 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)*(yi - y1)^2
+        //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4))*(xi - x1)*(yi - y1)
+        //where d1a^2 = (x1 - xa)^2 + (y1 - ya)^2
+
+        final double x1 = fingerprintPosition.getInhomX();
+        final double y1 = fingerprintPosition.getInhomY();
+
+        final double xa = radioSourcePosition.getInhomX();
+        final double ya = radioSourcePosition.getInhomY();
+
+        final double xi = estimatedPosition.getInhomX();
+        final double yi = estimatedPosition.getInhomY();
+
+        double[] mean = new double[] {
+                fingerprintRssi, pathLossExponent, x1, y1, xa, ya, xi, yi
+        };
+        Matrix covariance = Matrix.diagonal(new double[]{
+                fingerprintRssiVariance != null ? fingerprintRssiVariance : 0.0,
+                pathLossExponentVariance != null ? pathLossExponentVariance : 0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        });
+
+        if (fingerprintPositionCovariance != null &&
+                fingerprintPositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                fingerprintPositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+
+            covariance.setSubmatrix(2, 2,
+                    3, 3,
+                    fingerprintPositionCovariance);
+        }
+
+        if (radioSourcePositionCovariance != null &&
+                radioSourcePositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                radioSourcePositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(4, 4,
+                    5, 5,
+                    radioSourcePositionCovariance);
+        }
+
+        if (estimatedPositionCovariance != null &&
+                estimatedPositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                estimatedPositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(6, 6,
+                    7, 7,
+                    estimatedPositionCovariance);
+        }
+
+        try {
+            return MultivariateNormalDist.propagate(new MultivariateNormalDist.JacobianEvaluator() {
+                @Override
+                public void evaluate(double[] x, double[] y, Matrix jacobian) {
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
+                    //  - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+                    //  - 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
+                    //  - 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*d1a^4)*(yi - y1)^2
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4))*(xi - x1)*(yi - y1)
+                    //where d1a^2 = (x1 - xa)^2 + (y1 - ya)^2
+
+                    //Hence:
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*(xi - x1)
+                    //  - 10*n*(y1 - ya)/(ln(10)*(x1 - xa)^2 + (y1 - ya)^2)*(yi - y1)
+                    //  - 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)^2
+                    //  - 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(yi - y1)^2
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    double diffX1a = x1 - xa;
+                    double diffY1a = y1 - ya;
+
+                    double diffXi1 = xi - x1;
+                    double diffYi1 = yi - y1;
+
+                    double diffX1a2 = diffX1a * diffX1a;
+                    double diffY1a2 = diffY1a * diffY1a;
+
+                    double diffXi12 = diffXi1 * diffXi1;
+                    double diffYi12 = diffYi1 * diffYi1;
+
+                    double d1a2 = diffX1a2 + diffY1a2;
+                    double d1a4 = d1a2 * d1a2;
+                    double d1a8 = d1a4 * d1a4;
+
+                    double ln10 = Math.log(10.0);
+
+                    y[0] = fingerprintRssi
+                            - 10.0 * pathLossExponent * diffX1a / (ln10 * d1a2) * diffXi1
+                            - 10.0 * pathLossExponent * diffY1a / (ln10 * d1a2) * diffYi1
+                            - 5.0 * pathLossExponent * (-diffX1a2 + diffY1a2) / (ln10 * d1a4) * diffXi12
+                            - 5.0 * pathLossExponent * (diffX1a2 - diffY1a2) / (ln10 * d1a4) * diffYi12
+                            + 20.0 * pathLossExponent * diffX1a * diffY1a / (ln10 * d1a4) * diffXi1 * diffYi1;
+
+                    //compute gradient (is a jacobian having 1 row and 8 columns)
+
+
+                    //derivative of rssi respect to fingerprint rssi
+                    double derivativeFingerprintRssi = 1.0;
+
+                    //derivative of rssi respect to path-loss exponent
+
+                    //diff(Pr(pi))/diff(n) = -10*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*(xi - x1)
+                    //  -10*(y1 - ya)/(ln(10)*(x1 - xa)^2 + (y1 - ya)^2)*(yi - y1)
+                    //  -5*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)^2
+                    //  -5*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(yi - y1)^2
+                    //  +20*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+                    double derivativePathLossExponent = - 10.0 * diffX1a / (ln10 * d1a2) * diffXi1
+                            - 10.0 * diffY1a / (ln10 * d1a2) * diffYi1
+                            - 5.0 * (-diffX1a2 + diffY1a2) / (ln10 * d1a4) * diffXi12
+                            - 5.0 * (diffX1a2 - diffY1a2) / (ln10 * d1a4) * diffYi12
+                            + 20.0 * diffX1a * diffY1a / (ln10 * d1a4) * diffXi1 * diffYi1;
+
+
+                    //derivative of rssi respect to x1
+
+                    //We have
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*(xi - x1)
+                    //  - 10*n*(y1 - ya)/(ln(10)*(x1 - xa)^2 + (y1 - ya)^2)*(yi - y1)
+                    //  - 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)^2
+                    //  - 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(yi - y1)^2
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                    //  + 5*n*((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+
+                    //and we know that: (f(x)/g(x))' = (f'(x)*g(x) - f(x)*g'(x))/g(x)^2
+                    //and also that (f(x)*g(x))' = f'(x)*g(x) + f(x)*g'(x)
+
+                    //Hence
+                    //diff((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/diff(x1) =
+                    //  diff(x1*xi -xa*xi -x1^2 + xa*x1)/diff(x1) =
+                    //  diff(-x1^2 + (xi + xa)*x1 - xa*xi)/diff(x1) =
+                    //  -2*x1 + xi + xa
+
+                    //diff(((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))/diff(x1) =
+                    //  2*(x1 - xa)*((xi - x1)^2 - (yi - y1)^2) - 2*(xi - x1)*((x1 - xa)^2 - (y1 - ya)^2)
+
+                    //diff((x1 - xa)*(y1 - ya))/diff(x1) =
+                    //  y1 - ya
+
+                    //diff((xi - x1)*(yi - y1))/diff(x1) =
+                    // -(yi - y1)
+
+                    //diff((x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1))/diff(x1) =
+                    //  (y1 - ya)*(xi - x1)*(yi - y1) - (x1 - xa)*(y1 - ya)*(yi - y1) =
+                    //  ((y1 - ya)*(xi - x1) - (x1 - xa)*(y1 - ya))*(yi - y1)
+
+                    //diff(Pr(pi))/diff(x1) = -10*n/ln(10)*((-2*x1 + xi + xa)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(x1 - xa))/((x1 - xa)^2 + (y1 - ya)^2)^2
+                    //  + 5*n/ln(10)*(2*((x1 - xa)*((xi - x1)^2 - (yi - y1)^2) - (xi - x1)*((x1 - xa)^2 - (y1 - ya)^2))*((x1 - xa)^2 + (y1 - ya)^2)^2 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))*2*((x1 - xa)^2 + (y1 - ya)^2)*2*(x1 - xa))/((x1 - xa)^2 + (y1 - ya)^2)^4
+                    //  + 20*n/ln(10)*(((y1 - ya)*(xi - x1) - (x1 - xa)*(y1 - ya))*(yi - y1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*2*((x1 - xa)^2 + (y1 - ya)^2)*2*(x1 - xa))/((x1 - xa)^2 + (y1 - ya)^2)^4
+
+                    //diff(Pr(pi))/diff(x1) = -10*n/ln(10)*((-2*x1 + xi + xa)*d1a^2 - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(x1 - xa))/d1a^4
+                    //  + 5*n/ln(10)*(2*((x1 - xa)*((xi - x1)^2 - (yi - y1)^2) - (xi - x1)*((x1 - xa)^2 - (y1 - ya)^2))*d1a^4 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))*4*d1a^2*(x1 - xa))/d1a^8
+                    //  + 20*n/ln(10)*(((y1 - ya)*(xi - x1) - (x1 - xa)*(y1 - ya))*(yi - y1)*d1a^4 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*4*d1a^2*(x1 - xa))/d1a^8
+                    double crossDiff = diffX1a * diffXi1 + diffY1a * diffYi1;
+                    double tmpX = crossDiff * 2.0 * diffX1a;
+                    double tmpX2 = (diffX1a2 - diffY1a2) * (diffXi12 - diffYi12) * 4.0 * d1a2 * diffX1a;
+                    double tmpX3 = diffX1a * diffY1a * diffXi1 * diffYi1 * 4.0 * d1a2 * diffX1a;
+                    double derivativeX1 = -10.0 * pathLossExponent / ln10 * ((-2.0 * x1 + xi + xa) * d1a2 - tmpX) / d1a4
+                            + 5.0 * pathLossExponent / ln10 * (2.0 * (diffX1a * (diffXi12 - diffYi12) - diffXi1 * (diffX1a2 - diffY1a2)) * d1a4 - tmpX2) / d1a8
+                            + 20.0 * pathLossExponent / ln10 * ((diffY1a * diffXi1 - diffX1a * diffY1a) * diffYi1 * d1a4 - tmpX3) / d1a8;
+
+
+                    //derivative of rssi respect to y1
+
+                    //We have
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*(xi - x1)
+                    //  - 10*n*(y1 - ya)/(ln(10)*(x1 - xa)^2 + (y1 - ya)^2)*(yi - y1)
+                    //  - 5*n*((y1 - ya)^2 - (x1 - xa)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)^2
+                    //  - 5*n*((x1 - xa)^2 - (y1 - ya)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(yi - y1)^2
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                    //  + 5*n*((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+
+                    //and we know that: (f(x)/g(x))' = (f'(x)*g(x) - f(x)*g'(x))/g(x)^2
+                    //and also that (f(x)*g(x))' = f'(x)*g(x) + f(x)*g'(x)
+
+                    //Hence
+                    //diff((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/diff(y1) =
+                    //  diff(y1*yi -ya*yi -y1^2 + ya*y1)/diff(y1) =
+                    //  diff(-y1^2 + (yi + ya)*y1 - ya*yi)/diff(y1) =
+                    //  -2*y1 + yi + ya
+
+                    //diff(((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))/diff(y1) =
+                    //  -2*(y1 - ya)*((xi - x1)^2 - (yi - y1)^2) + 2*(yi - y1)*((x1 - xa)^2 - (y1 - ya)^2)
+
+                    //diff((x1 - xa)*(y1 - ya))/diff(y1) =
+                    //  x1 - xa
+
+                    //diff((xi - x1)*(yi - y1))/diff(y1) =
+                    // -(xi - x1)
+
+                    //diff((x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1))/diff(y1) =
+                    //  (x1 - xa)*(xi - x1)*(yi - y1) - (x1 - xa)*(y1 - ya)*(xi - x1) =
+                    //  ((x1 - xa)*(yi - y1) - (x1 - xa)*(y1 - ya))*(xi - x1)
+
+                    //diff(Pr(pi))/diff(y1) = -10*n/ln(10)*((-2*y1 + yi + ya)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^2
+                    //  + 5*n/ln(10)*(2*(-(y1 - ya)*((xi - x1)^2 - (yi - y1)^2) + (yi - y1)*((x1 - xa)^2 - (y1 - ya)^2))*((x1 - xa)^2 + (y1 - ya)^2)^2 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*2*((x1 - xa)^2 + (y1 - ya)^2)*2*(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^4
+                    //  + 20*n/ln(10)*(((x1 - xa)*(yi - y1) - (x1 - xa)*(y1 - ya))*(xi - x1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*2*((x1 - xa)^2 + (y1 - ya)^2)*2*(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^4
+
+                    //diff(Pr(pi))/diff(y1) = -10*n/ln(10)*((-2*y1 + yi + ya)*d1a^2 - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(y1 - ya))/d1a^4
+                    //  + 5*n/ln(10)*(2*(-(y1 - ya)*((xi - x1)^2 - (yi - y1)^2) + (yi - y1)*((x1 - xa)^2 - (y1 - ya)^2))*d1a^4 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*4*d1a^2*(y1 - ya))/d1a^8
+                    //  + 20*n/ln(10)*(((x1 - xa)*(yi - y1) - (x1 - xa)*(y1 - ya))*(xi - x1)*d1a^4 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*4*d1a^2*(y1 - ya))/d1a^8
+                    double tmpY = crossDiff * 2.0 * diffY1a;
+                    double tmpY2 = (diffX1a2 - diffY1a2) * (diffXi12 - diffYi12) * 4.0 * d1a2 * diffY1a;
+                    double tmpY3 = diffX1a * diffY1a * diffXi1 * diffYi1 * 4.0 * d1a2 * diffY1a;
+                    double derivativeY1 = -10.0 * pathLossExponent / ln10 * ((-2.0 * y1 + yi + ya) * d1a2 - tmpY) / d1a4
+                            + 5.0 * pathLossExponent / ln10 * (2.0 * (-diffY1a * (diffXi12 - diffYi12) + diffYi1 * (diffX1a2 - diffY1a2)) * d1a4 - tmpY2) / d1a8
+                            + 20.0 * pathLossExponent / ln10 * ((diffX1a * diffYi1 - diffX1a * diffY1a) * diffXi1 * d1a4 - tmpY3) / d1a8;
+
+
+                    //derivative of rssi respect to xa
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                    //  + 5*n*((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    //diff((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/diff(xa) =
+                    //  -(xi - x1)
+
+                    //diff(((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))/diff(xa) =
+                    //  -2*(x1 - xa)*((xi - x1)^2 - (yi - y1)^2)
+
+                    //diff((x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1))/diff(xa) =
+                    //  -(y1 - ya)*(xi - x1)*(yi - y1)
+
+                    //diff(Pr(pi))/diff(xa) = -10*n/ln(10)*(-(xi - x1)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*-2*(x1 - xa))/((x1 - xa)^2 + (y1 - ya)^2)^2
+                    //  + 5*n/ln(10)*(-2*(x1 - xa)*((xi - x1)^2 - (yi - y1)^2)*((x1 - xa)^2 + (y1 - ya)^2)^2 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*2*((x1 - xa)^2 + (y1 - ya)^2)*-2*(x1 - xa))/((x1 - xa)^2 + (y1 - ya)^2)^4
+                    //  + 20*n*(-(y1 - ya)*(xi - x1)*(yi - y1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*2*((x1 - xa)^2 + (y1 - ya)^2)*-2*(x1 - xa))/((x1 - xa)^2 + (y1 - ya)^2)^4
+
+                    //diff(Pr(pi))/diff(xa) = -10*n/ln(10)*(-(xi - x1)*d1a^2 + ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(x1 - xa))/d1a^4
+                    //  + 5*n/ln(10)*(-2*(x1 - xa)*((xi - x1)^2 - (yi - y1)^2)*d1a^4 + ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*4*d1a^2*(x1 - xa))/d1a^8
+                    //  + 20*n/ln(10)*(-(y1 - ya)*(xi - x1)*(yi - y1)*d1a^4 + (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*4*d1a^2*(x1 - xa))/d1a^8
+                    double derivativeXa = -10.0 * pathLossExponent / ln10 * (-diffXi1 * d1a2 + tmpX) / d1a4
+                            + 5.0 * pathLossExponent / ln10 * (-2.0 * diffX1a * (diffXi12 - diffYi12) * d1a4 + tmpX2) / d1a8
+                            + 20.0 * pathLossExponent / ln10 * (-diffY1a * diffXi1 * diffYi1 * d1a4 + tmpX3) / d1a8;
+
+
+                    //derivative of rssi respect to ya
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                    //  + 5*n*((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    //diff((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/diff(ya) =
+                    //  -(yi - y1)
+
+                    //diff(((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))/diff(ya) =
+                    //  2*(y1 - ya)*((xi - x1)^2 - (yi - y1)^2)
+
+                    //diff((x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1))/diff(ya) =
+                    //  -(x1 - xa)*(xi - x1)*(yi - y1)
+
+                    //diff(Pr(pi))/diff(ya) = -10*n/ln(10)*(-(yi - y1)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*-2*(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^2
+                    //  + 5*n/ln(10)*(2*(y1 - ya)*((xi - x1)^2 - (yi - y1)^2)*((x1 - xa)^2 + (y1 - ya)^2)^2 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*2*((x1 - xa)^2 + (y1 - ya)^2)*-2*(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^4
+                    //  + 20*n/ln(10)*(-(x1 - xa)*(xi - x1)*(yi - y1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*2*((x1 - xa)^2 + (y1 - ya)^2)*-2(y1 - ya))/((x1 - xa)^2 + (y1 - ya)^2)^4
+
+                    //diff(Pr(pi))/diff(ya) = -10*n/ln(10)*(-(yi - y1)*d1a^2 + ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*2*(y1 - ya))/d1a^4
+                    //  + 5*n/ln(10)*(2*(y1 - ya)*((xi - x1)^2 - (yi - y1)^2)*d1a^4 + ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*4*d1a^2*(y1 - ya))/d1a^8
+                    //  + 20*n/ln(10)*(-(x1 - xa)*(xi - x1)*(yi - y1)*d1a^4 + (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*4*d1a^2*(y1 - ya))/d1a^8
+                    double derivativeYa = -10.0 * pathLossExponent / ln10 * (-diffYi1 * d1a2 + tmpY) / d1a4
+                            + 5.0 * pathLossExponent / ln10 * (2.0 * diffY1a * (diffXi12 - diffYi12) * d1a4 + tmpY2) / d1a8
+                            + 20.0 * pathLossExponent / ln10 * (-diffX1a * diffXi1 * diffYi1 * d1a4 + tmpY3) / d1a8;
+
+
+                    //derivative of rssi respect to xi
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                    //  + 5*n*((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    //diff((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/diff(xi) =
+                    //  x1 - xa
+
+                    //diff(((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))/diff(xi) =
+                    //  2*((x1 - xa)^2 - (y1 - ya)^2)*(xi - x1)
+
+                    //diff((x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1))/diff(xi) =
+                    //  (x1 - xa)*(y1 - ya)*(yi - y1)
+
+                    //diff(Pr(pi))/diff(xi) = -10*n/ln(10)*((x1 - xa)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*0)/((x1 - xa)^2 + (y1 - ya)^2)^2
+                    //  + 5*n/ln(10)*(2*((x1 - xa)^2 - (y1 - ya)^2)*(xi - x1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*0)/((x1 - xa)^2 + (y1 - ya)^2)^4
+                    //  + 20*n/ln(10)*((x1 - xa)*(y1 - ya)*(yi - y1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*0)/((x1 - xa)^2 + (y1 - ya)^2)^4
+
+                    //diff(Pr(pi))/diff(xi) = -10*n/ln(10)*((x1 - xa)*d1a^2)/d1a^4
+                    //  + 5*n/ln(10)*(2*((x1 - xa)^2 - (y1 - ya)^2)*(xi - x1)*d1a^4)/d1a^8
+                    //  + 20*n/ln(10)*((x1 - xa)*(y1 - ya)*(yi - y1)*d1a^4)/d1a^8
+
+                    //diff(Pr(pi))/diff(xi) = -10*n/ln(10)*(x1 - xa)/d1a^2
+                    //  + 10*n/ln(10)*(((x1 - xa)^2 - (y1 - ya)^2)*(xi - x1))/d1a^4
+                    //  + 20*n/ln(10)*(x1 - xa)*(y1 - ya)*(yi - y1)/d1a^4
+                    double derivativeXi = -10.0 * pathLossExponent / ln10 * diffX1a / d1a2
+                            + 10.0 * pathLossExponent / ln10 * ((diffX1a2 - diffY1a2) * diffXi1) / d1a4
+                            + 20.0 * pathLossExponent / ln10 * diffX1a * diffY1a * diffYi1 / d1a4;
+
+
+                    //derivative of rssi respect to yi
+
+                    //Pr(pi) = Pr(p1)
+                    //  - 10*n*((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+                    //  + 5*n*((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2)
+                    //  + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)^2))*(xi - x1)*(yi - y1)
+
+                    //diff((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))/diff(yi) =
+                    //  y1 - ya
+
+                    //diff(((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2))/diff(yi) =
+                    //  2*((x1 - xa)^2 - (y1 - ya)^2)*(yi - y1)
+
+                    //diff((x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1))/diff(yi) =
+                    //  (x1 - xa)*(y1 - ya)*(xi - x1)
+
+                    //diff(Pr(pi))/diff(yi) = -10*n/ln(10)*((y1 - ya)*((x1 - xa)^2 + (y1 - ya)^2) - ((x1 - xa)*(xi - x1) + (y1 - ya)*(yi - y1))*0)/((x1 - xa)^2 + (y1 - ya)^2)^2
+                    //  + 5*n/ln(10)*(2*((x1 - xa)^2 - (y1 - ya)^2)*(yi - y1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - ((x1 - xa)^2 - (y1 - ya)^2)*((xi - x1)^2 - (yi - y1)^2)*0)/((x1 - xa)^2 + (y1 - ya)^2)^4
+                    //  + 20*n/ln(10)*((x1 - xa)*(y1 - ya)*(xi - x1)*((x1 - xa)^2 + (y1 - ya)^2)^2 - (x1 - xa)*(y1 - ya)*(xi - x1)*(yi - y1)*0)/((x1 - xa)^2 + (y1 - ya)^2)^4
+
+                    //diff(Pr(pi))/diff(yi) = -10*n/ln(10)*((y1 - ya)*d1a^2)/d1a^4
+                    //  + 5*n/ln(10)*(2*((x1 - xa)^2 - (y1 - ya)^2)*(yi - y1)*d1a^4)/d1a^8
+                    //  + 20*n/ln(10)*((x1 - xa)*(y1 - ya)*(xi - x1)*d1a^4)/d1a^8
+
+                    //diff(Pr(pi))/diff(yi) = -10*n/ln(10)*(y1 - ya)/d1a^2
+                    //  + 10*n/ln(10)*(((x1 - xa)^2 - (y1 - ya)^2)*(yi - y1))/d1a^4
+                    //  + 20*n/ln(10)*(x1 - xa)*(y1 - ya)*(xi - x1)/d1a^4
+                    double derivativeYi = -10.0 * pathLossExponent / ln10 * diffY1a / d1a2
+                            + 10.0 * pathLossExponent / ln10 * ((diffX1a2 - diffY1a2) * diffYi1) / d1a4
+                            + 20.0 * pathLossExponent / ln10 * diffX1a * diffY1a * diffXi1 / d1a4;
+
+
+                    //set derivatives fingerprintRssi, pathLossExponent, x1, y1, xa, ya, xi, yi
+                    jacobian.setElementAtIndex(0, derivativeFingerprintRssi);
+                    jacobian.setElementAtIndex(1, derivativePathLossExponent);
+                    jacobian.setElementAtIndex(2, derivativeX1);
+                    jacobian.setElementAtIndex(3, derivativeY1);
+                    jacobian.setElementAtIndex(4, derivativeXa);
+                    jacobian.setElementAtIndex(5, derivativeYa);
+                    jacobian.setElementAtIndex(6, derivativeXi);
+                    jacobian.setElementAtIndex(7, derivativeYi);
+                }
+
+                @Override
+                public int getNumberOfVariables() {
+                    return 1;
+                }
+            }, mean, covariance);
+        } catch (AlgebraException | StatisticsException e) {
+            throw new IndoorException(e);
+        }
+    }
 }
