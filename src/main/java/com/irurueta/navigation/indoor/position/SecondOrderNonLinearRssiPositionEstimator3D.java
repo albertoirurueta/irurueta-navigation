@@ -171,7 +171,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3D extends
         // - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
         // - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
         // - 10*n*(z1 - za)/(ln(10)*d1a^2)*(zi - z1)
-        // - 5*n*((y1 - ya)^2 + (z1 - za)^2) - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
+        // - 5*n*((y1 - ya)^2 + (z1 - za)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2
         // - 5*n*((x1 - xa)^2 - (y1 - ya)^2 + (z1 - za)^2)/(ln(10)*d1a^4)*(yi - y1)^2
         // - 5*n*((x1 - xa)^2 + (y1 - ya)^2 - (z1 - za)^2)/(ln(10)*d1a^4)*(zi - z1)^2
         // + 20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4)*(xi - x1)*(yi - y1)
@@ -294,7 +294,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3D extends
             Matrix radioSourcePositionCovariance) {
         try {
             MultivariateNormalDist dist =
-                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    Utils.propagateVariancesToRssiVarianceSecondOrderNonLinear3D(
                             fingerprintRssi, pathlossExponent, fingerprintPosition,
                             radioSourcePosition, estimatedPosition, fingerprintRssiVariance,
                             pathlossExponentVariance, fingerprintPositionCovariance,
