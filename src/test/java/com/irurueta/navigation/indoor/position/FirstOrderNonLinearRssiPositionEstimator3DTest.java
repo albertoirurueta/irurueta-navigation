@@ -39,7 +39,7 @@ public class FirstOrderNonLinearRssiPositionEstimator3DTest
         implements SourcedRssiPositionEstimatorListener<Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            SecondOrderNonLinearRssiPositionEstimator3DTest.class.getName());
+            FirstOrderNonLinearRssiPositionEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 

@@ -6891,8 +6891,9 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         }
 
         assertTrue(bestNum == numBestIsNoMeanRssiPosition ||
+                bestNum == numBestIsNoMeanFinderEstimatedPosition ||
                 bestNum == numBestIsNoMeanReadingsEstimatedPosition);
-        assertTrue(bestPos == 0 || bestPos == 4);
+        assertTrue(bestPos == 0 || bestPos == 3 || bestPos == 4);
     }
 
     @Override
