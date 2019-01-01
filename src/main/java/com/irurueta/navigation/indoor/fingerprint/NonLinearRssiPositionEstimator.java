@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
@@ -159,7 +159,7 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * @param listener listener in charge of handling events.
      */
     public NonLinearRssiPositionEstimator(
-            SourcedRssiPositionEstimatorListener<P> listener) {
+            RssiPositionEstimatorListener<P> listener) {
         super(listener);
     }
 
@@ -205,7 +205,7 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<P>> sources,
-            SourcedRssiPositionEstimatorListener<P> listener) {
+            RssiPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -254,7 +254,7 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<P>> sources, P initialPosition,
-            SourcedRssiPositionEstimatorListener<P> listener) {
+            RssiPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
         mInitialPosition = initialPosition;
     }
@@ -439,12 +439,12 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * an unknown location.
      * @throws LockedException if estimator is locked.
      * @throws NotReadyException if estimator is not ready.
-     * @throws PositionEstimationException if estimation fails for some other reason.
+     * @throws FingerprintEstimationException if estimation fails for some other reason.
      */
     @Override
     @SuppressWarnings("Duplicates")
     public void estimate() throws LockedException, NotReadyException,
-            PositionEstimationException {
+            FingerprintEstimationException {
 
         if (!isReady()) {
             throw new NotReadyException();
@@ -778,7 +778,7 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
 
             if (mEstimatedPositionCoordinates == null) {
                 //no solution could be found
-                throw new PositionEstimationException();
+                throw new FingerprintEstimationException();
             }
 
             if (mListener != null) {

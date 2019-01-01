@@ -13,14 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
-
-import com.irurueta.geometry.Point;
+package com.irurueta.navigation.indoor.fingerprint;
 
 /**
- * Listener to be notified of events such as when estimation of position using
- * fingerprints and radio sources starts or ends.
- * @param <P> a {@link Point} type.
+ * Type of non linear position estimator.
  */
-public interface SourcedRssiPositionEstimatorListener<P extends Point>
-        extends BaseRssiPositionEstimatorListener<RssiPositionEstimator<P>> { }
+public enum NonLinearRssiPositionEstimatorType {
+    /**
+     * Uses a 1st order Taylor approximation.
+     */
+    FIRST_ORDER,
+
+    /**
+     * Uses a 2nd order Taylor approximation.
+     */
+    SECOND_ORDER,
+
+    /**
+     * Uses a 3rd order Taylor approximation.
+     */
+    THIRD_ORDER
+}

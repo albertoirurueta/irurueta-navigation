@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class RssiPositionEstimator<P extends Point> extends
-        BaseRssiPositionEstimator<P, SourcedRssiPositionEstimatorListener<P>> {
+        BaseRssiPositionEstimator<P, RssiPositionEstimatorListener<P>> {
 
     /**
      * Located radio sources.
@@ -70,7 +70,7 @@ public abstract class RssiPositionEstimator<P extends Point> extends
      * @param listener listener in charge of handling events.
      */
     public RssiPositionEstimator(
-            SourcedRssiPositionEstimatorListener<P> listener) {
+            RssiPositionEstimatorListener<P> listener) {
         super(listener);
     }
 
@@ -117,7 +117,7 @@ public abstract class RssiPositionEstimator<P extends Point> extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<P>> sources,
-            SourcedRssiPositionEstimatorListener<P> listener) {
+            RssiPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, listener);
         internalSetSources(sources);
     }

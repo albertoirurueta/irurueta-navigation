@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.RadioSource;
+import com.irurueta.navigation.indoor.RssiFingerprint;
+import com.irurueta.navigation.indoor.RssiFingerprintLocated;
+import com.irurueta.navigation.indoor.RssiReading;
 
 import java.util.List;
 
@@ -370,9 +373,9 @@ public abstract class BaseRssiPositionEstimator<P extends Point,
      * an unknown location.
      * @throws LockedException if estimator is locked.
      * @throws NotReadyException if estimator is not ready.
-     * @throws PositionEstimationException if estimation fails for some other reason.
+     * @throws FingerprintEstimationException if estimation fails for some other reason.
      */
-    public abstract void estimate() throws LockedException, NotReadyException, PositionEstimationException;
+    public abstract void estimate() throws LockedException, NotReadyException, FingerprintEstimationException;
 
     /**
      * Gets estimated position.

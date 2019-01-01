@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point2D;
@@ -47,7 +47,7 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
      * @param listener listener in charge of handling events.
      */
     public ThirdOrderNonLinearRssiPositionEstimator2D(
-            SourcedRssiPositionEstimatorListener<Point2D> listener) {
+            RssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
 
@@ -93,7 +93,7 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            SourcedRssiPositionEstimatorListener<Point2D> listener) {
+            RssiPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -141,7 +141,7 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
-            SourcedRssiPositionEstimatorListener<Point2D> listener) {
+            RssiPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, initialPosition, listener);
     }
 

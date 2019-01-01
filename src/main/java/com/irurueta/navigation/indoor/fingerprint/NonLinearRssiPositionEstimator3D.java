@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
@@ -42,7 +42,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public NonLinearRssiPositionEstimator3D(
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
     }
 
@@ -84,7 +84,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources,
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -131,7 +131,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition,
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, sources, initialPosition, listener);
     }
 
@@ -184,7 +184,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
      * @return a non-linear 3D position estimator.
      */
     public static NonLinearRssiPositionEstimator3D create(
-            SourcedRssiPositionEstimatorListener<Point3D> listener,
+            RssiPositionEstimatorListener<Point3D> listener,
             NonLinearRssiPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
@@ -251,7 +251,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources,
-            SourcedRssiPositionEstimatorListener<Point3D> listener,
+            RssiPositionEstimatorListener<Point3D> listener,
             NonLinearRssiPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
@@ -323,7 +323,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition,
-            SourcedRssiPositionEstimatorListener<Point3D> listener,
+            RssiPositionEstimatorListener<Point3D> listener,
             NonLinearRssiPositionEstimatorType type) {
         switch (type) {
             case THIRD_ORDER:
@@ -356,7 +356,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
      * @return a non-linear 3D position estimator.
      */
     public static NonLinearRssiPositionEstimator3D create(
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         return create(listener, DEFAULT_TYPE);
     }
 
@@ -400,7 +400,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources,
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         return create(locatedFingerprints, fingerprint, sources, listener,
                 DEFAULT_TYPE);
     }
@@ -449,7 +449,7 @@ public abstract class NonLinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition,
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         return create(locatedFingerprints, fingerprint, sources, initialPosition,
                 listener, DEFAULT_TYPE);
     }

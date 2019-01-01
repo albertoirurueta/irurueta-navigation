@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
 public class NonLinearRssiPositionEstimator2DTest
-        implements SourcedRssiPositionEstimatorListener<Point2D> {
+        implements RssiPositionEstimatorListener<Point2D> {
 
     private static final Logger LOGGER = Logger.getLogger(
             NonLinearRssiPositionEstimator2DTest.class.getName());
@@ -448,7 +448,7 @@ public class NonLinearRssiPositionEstimator2DTest
 
     @Test
     public void testEstimateOrderComparison() throws EvaluationException,
-            LockedException, NotReadyException, PositionEstimationException {
+            LockedException, NotReadyException, FingerprintEstimationException {
         double avgRssiErrorFirstOrder = 0.0;
         double avgRssiErrorSecondOrder = 0.0;
         double avgRssiErrorThirdOrder = 0.0;

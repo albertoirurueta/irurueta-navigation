@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
 public class SecondOrderNonLinearRssiPositionEstimator3DTest
-        implements SourcedRssiPositionEstimatorListener<Point3D> {
+        implements RssiPositionEstimatorListener<Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
             SecondOrderNonLinearRssiPositionEstimator3DTest.class.getName());
@@ -118,7 +118,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
-        assertEquals(estimator.getFallbackRssiStandardDeviation(),
+        Assert.assertEquals(estimator.getFallbackRssiStandardDeviation(),
                 NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
@@ -131,7 +131,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                 NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        Assert.assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
 
 
         //test constructor with listener
@@ -777,7 +777,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithoutErrorWithoutBiasAndWithoutInitialPosition()
-            throws LockedException, NotReadyException, PositionEstimationException,
+            throws LockedException, NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
 
         int numBestIsNoMeanRssiPosition = 0;
@@ -1177,7 +1177,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithBiasAndWithoutInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -1578,7 +1578,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithErrorWithoutInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -1983,7 +1983,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithErrorWithBiasAndWithoutInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -2389,7 +2389,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithOtherPathlossWithoutInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -2803,9 +2803,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithoutErrorAndWithoutBiasOneRadioSourceWithoutInitialPosition()
-            throws LockedException,
-            NotReadyException,
-            PositionEstimationException {
+            throws LockedException, NotReadyException,
+            FingerprintEstimationException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -3156,7 +3155,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithoutErrorWithoutBiasAndWithInitialPosition()
-            throws LockedException, NotReadyException, PositionEstimationException,
+            throws LockedException, NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
 
         int numBestIsNoMeanRssiPosition = 0;
@@ -3596,7 +3595,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithBiasAndWithInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -4037,7 +4036,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithErrorWithInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -4482,7 +4481,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithErrorWithBiasAndWithInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -4928,7 +4927,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithOtherPathlossWithInitialPosition() throws LockedException,
-            NotReadyException, PositionEstimationException,
+            NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
@@ -5382,7 +5381,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithoutErrorAndWithoutBiasOneRadioSourceWithInitialPosition()
-            throws LockedException, NotReadyException, PositionEstimationException {
+            throws LockedException, NotReadyException, FingerprintEstimationException {
         int numBestIsNoMeanRssiPosition = 0;
         int numBestIsRssiPosition = 0;
         int numBestIsNoMeansEstimatedPosition = 0;
@@ -5771,7 +5770,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateCompareInitialPosition()
-            throws LockedException, NotReadyException, PositionEstimationException,
+            throws LockedException, NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
 
         double avgClosestDistance = 0.0;
@@ -6023,7 +6022,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithVariancePropagation()
-            throws LockedException, NotReadyException, PositionEstimationException,
+            throws LockedException, NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
 
         int numBestIsNoMeanRssiPosition = 0;
@@ -6455,7 +6454,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testEstimateWithErrorWithBiasAndWithVariancePropagation()
-            throws LockedException, NotReadyException, PositionEstimationException,
+            throws LockedException, NotReadyException, FingerprintEstimationException,
             NonSymmetricPositiveDefiniteMatrixException {
 
         int numBestIsNoMeanRssiPosition = 0;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
@@ -41,7 +41,7 @@ public class LinearRssiPositionEstimator3D extends
      * @param listener listener in charge of handling events.
      */
     public LinearRssiPositionEstimator3D(
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
     }
 
@@ -83,7 +83,7 @@ public class LinearRssiPositionEstimator3D extends
             RssiFingerprint<? extends RadioSource,
                     ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point3D>> sources,
-            SourcedRssiPositionEstimatorListener<Point3D> listener) {
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 

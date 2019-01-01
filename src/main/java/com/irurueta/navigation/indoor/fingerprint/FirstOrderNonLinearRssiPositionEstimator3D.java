@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
+package com.irurueta.navigation.indoor.fingerprint;
 
 import com.irurueta.algebra.Matrix;
-import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.indoor.*;
 import com.irurueta.statistics.MultivariateNormalDist;
 
 import java.util.List;
 
 /**
- * 2D position estimator based on located fingerprints containing only RSSI readings and
+ * 3D position estimator based on located fingerprints containing only RSSI readings and
  * having as well prior knowledge of the location of radio sources associated to those
  * readings.
  * This implementation uses a first-order Taylor approximation over provided located
@@ -34,20 +34,20 @@ import java.util.List;
  * point.
  */
 @SuppressWarnings("WeakerAccess")
-public class FirstOrderNonLinearRssiPositionEstimator2D extends
-        NonLinearRssiPositionEstimator2D {
+public class FirstOrderNonLinearRssiPositionEstimator3D extends
+        NonLinearRssiPositionEstimator3D {
 
     /**
      * Constructor.
      */
-    public FirstOrderNonLinearRssiPositionEstimator2D() { }
+    public FirstOrderNonLinearRssiPositionEstimator3D() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public FirstOrderNonLinearRssiPositionEstimator2D(
-            SourcedRssiPositionEstimatorListener<Point2D> listener) {
+    public FirstOrderNonLinearRssiPositionEstimator3D(
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
     }
 
@@ -59,17 +59,15 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
      * @param sources located radio sources.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
      * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
      */
-    public FirstOrderNonLinearRssiPositionEstimator2D(
+    public FirstOrderNonLinearRssiPositionEstimator3D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+            List<? extends RadioSourceLocated<Point3D>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
@@ -82,18 +80,16 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
      * @param listener listener in charge of handling events.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
      * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
      */
-    public FirstOrderNonLinearRssiPositionEstimator2D(
+    public FirstOrderNonLinearRssiPositionEstimator3D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            SourcedRssiPositionEstimatorListener<Point2D> listener) {
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -106,17 +102,15 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
      * @param initialPosition initial position to start the solving algorithm or null.
      * @throws IllegalArgumentException if provided non located fingerprint is null,
      * located fingerprints value is null or there are not enough fingerprints or
-     * readings within provided fingerprints (for 2D position estimation at least 2
-     * located total readings are required among all fingerprints, for example 2
-     * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     * readings within provided fingerprints (for 3D position estimation 3 located
+     * total readings are required among all fingerprints).
      */
-    public FirstOrderNonLinearRssiPositionEstimator2D(
+    public FirstOrderNonLinearRssiPositionEstimator3D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition) {
+            List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition) {
         super(locatedFingerprints, fingerprint, sources, initialPosition);
     }
 
@@ -133,15 +127,16 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
      * readings within provided fingerprints (for 2D position estimation at least 2
      * located total readings are required among all fingerprints, for example 2
      * readings are required in a single fingerprint, or at least 2 fingerprints at
-     * different locations containing a single reading are required).
+     * different locations containing a single reading are required. For 3D position
+     * estimation 3 located total readings are required among all fingerprints).
      */
-    public FirstOrderNonLinearRssiPositionEstimator2D(
+    public FirstOrderNonLinearRssiPositionEstimator3D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
-            ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
+            ? extends RssiReading<? extends RadioSource>, Point3D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
-            SourcedRssiPositionEstimatorListener<Point2D> listener) {
+            List<? extends RadioSourceLocated<Point3D>> sources, Point3D initialPosition,
+            RssiPositionEstimatorListener<Point3D> listener) {
         super(locatedFingerprints, fingerprint, sources, initialPosition, listener);
     }
 
@@ -170,14 +165,16 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
     @Override
     @SuppressWarnings("Duplicates")
     protected double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-        //This method implements received power at point pi = (xi, yi) and its derivatives
+        //This method implements received power at point pi = (xi, yi, zi) and its derivatives
 
         //Pr(pi) = Pr(p1)
         //  - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
         //  - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+        //  - 10*n*(z1 - za)/(ln(10)*d1a^2)*(zi - z1)
 
         double xi = params[0];
         double yi = params[1];
+        double zi = params[2];
 
         //received power
         double pr = point[0];
@@ -185,33 +182,40 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
         //fingerprint coordinates
         double x1 = point[1];
         double y1 = point[2];
+        double z1 = point[3];
 
         //radio source coordinates
-        double xa = point[3];
-        double ya = point[4];
+        double xa = point[4];
+        double ya = point[5];
+        double za = point[6];
 
         //path loss exponent
-        double n = point[5];
+        double n = point[7];
 
         double ln10 = Math.log(10.0);
 
         double diffXi1 = xi - x1;
         double diffYi1 = yi - y1;
+        double diffZi1 = zi - z1;
 
         double diffX1a = x1 - xa;
         double diffY1a = y1 - ya;
+        double diffZ1a = z1 - za;
 
         double diffX1a2 = diffX1a * diffX1a;
         double diffY1a2 = diffY1a * diffY1a;
+        double diffZ1a2 = diffZ1a * diffZ1a;
 
-        double d1a2 = diffX1a2 + diffY1a2;
+        double d1a2 = diffX1a2 + diffY1a2 + diffZ1a2;
 
         double value1 = - 10.0 * n * diffX1a / (ln10 * d1a2);
         double value2 = - 10.0 * n * diffY1a / (ln10 * d1a2);
+        double value3 = - 10.0 * n * diffZ1a / (ln10 * d1a2);
 
         double result = pr
                 + value1 * diffXi1
-                + value2 * diffYi1;
+                + value2 * diffYi1
+                + value3 * diffZi1;
 
         //derivative respect xi
         //diff(Pr(pi))/diff(xi) = - 10*n*(x1 - xa)/(ln(10)*d1a^2)
@@ -220,6 +224,10 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
         //derivative respect yi
         //diff(Pr(pi))/diff(yi) = - 10*n*(y1 - ya)/(ln(10)*d1a^2)
         derivatives[1] = value2;
+
+        //derivative respect zi
+        //diff(Pr(pi))/diff(zi) = - 10*n*(z1 - za)/(ln(10)*d1a^2)
+        derivatives[2] = value3;
 
         return result;
     }
@@ -244,14 +252,14 @@ public class FirstOrderNonLinearRssiPositionEstimator2D extends
     @Override
     @SuppressWarnings("Duplicates")
     protected Double propagateVariances(double fingerprintRssi,
-            double pathlossExponent, Point2D fingerprintPosition,
-            Point2D radioSourcePosition, Point2D estimatedPosition,
+            double pathlossExponent, Point3D fingerprintPosition,
+            Point3D radioSourcePosition, Point3D estimatedPosition,
             Double fingerprintRssiVariance, Double pathlossExponentVariance,
             Matrix fingerprintPositionCovariance,
             Matrix radioSourcePositionCovariance) {
         try {
             MultivariateNormalDist dist =
-                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear2D(
+                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
                             fingerprintRssi, pathlossExponent, fingerprintPosition,
                             radioSourcePosition, estimatedPosition, fingerprintRssiVariance,
                             pathlossExponentVariance, fingerprintPositionCovariance,
