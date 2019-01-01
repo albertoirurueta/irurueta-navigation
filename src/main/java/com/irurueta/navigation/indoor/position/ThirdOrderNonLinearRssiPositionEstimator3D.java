@@ -583,7 +583,7 @@ public class ThirdOrderNonLinearRssiPositionEstimator3D extends
             Matrix radioSourcePositionCovariance) {
         try {
             MultivariateNormalDist dist =
-                    Utils.propagateVariancesToRssiVarianceFirstOrderNonLinear3D(
+                    Utils.propagateVariancesToRssiVarianceThirdOrderNonLinear3D(
                             fingerprintRssi, pathlossExponent, fingerprintPosition,
                             radioSourcePosition, estimatedPosition, fingerprintRssiVariance,
                             pathlossExponentVariance, fingerprintPositionCovariance,

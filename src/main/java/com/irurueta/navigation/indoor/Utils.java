@@ -2116,4 +2116,231 @@ public class Utils {
             throw new IndoorException(e);
         }
     }
+
+    /**
+     * Propagates provided variances (fingerprint rssi variance, path-loss exponent variance,
+     * fingerprint position covariance and radio source position covariance) into
+     * rssi variance by considering the 3D 3rd order Taylor expression of received power.
+     * Notice that any unknown variance is assumed to be zero.
+     * @param fingerprintRssi closest located fingerprint reading RSSI expressed in dBm's.
+     * @param pathLossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition  position to be estimated. Usually this is equal to the
+     *                           initial position used by a non linear algorithm.
+     * @param fingerprintRssiVariance variance of fingerprint RSSI or null if unknown.
+     * @param pathLossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null
+     *                                      if unknown.
+     * @param estimatedPositionCovariance  covariance of position to be estimated or null
+     *                                     if unknown. (This is usually unknown).
+     * @return a normal distribution containing expected received RSSI value and its variance.
+     * @throws IndoorException if something fails.
+     */
+    public static MultivariateNormalDist propagateVariancesToRssiVarianceThirdOrderNonLinear3D(
+            final double fingerprintRssi, final double pathLossExponent,
+            Point3D fingerprintPosition, Point3D radioSourcePosition,
+            Point3D estimatedPosition,
+            Double fingerprintRssiVariance,
+            Double pathLossExponentVariance,
+            Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance,
+            Matrix estimatedPositionCovariance) throws IndoorException {
+
+        if (fingerprintPosition == null || radioSourcePosition == null ||
+                estimatedPosition == null) {
+            return null;
+        }
+
+        //1st order Taylor expression of received power in 3D:
+        //Pr(pi) = Pr(p1)
+        //  - 10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1)
+        //  - 10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1)
+        //  - 10*n*(z1 - za)/(ln(10)*d1a^2)*(zi - z1)
+        //where d1a^2 = (x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2
+
+        final double x1 = fingerprintPosition.getInhomX();
+        final double y1 = fingerprintPosition.getInhomY();
+        final double z1 = fingerprintPosition.getInhomZ();
+
+        final double xa = radioSourcePosition.getInhomX();
+        final double ya = radioSourcePosition.getInhomY();
+        final double za = radioSourcePosition.getInhomZ();
+
+        final double xi = estimatedPosition.getInhomX();
+        final double yi = estimatedPosition.getInhomY();
+        final double zi = estimatedPosition.getInhomZ();
+
+        double[] mean = new double[] {
+                fingerprintRssi, pathLossExponent, x1, y1, z1, xa, ya, za, xi, yi, zi
+        };
+        Matrix covariance = Matrix.diagonal(new double[]{
+                fingerprintRssiVariance != null ? fingerprintRssiVariance : 0.0,
+                pathLossExponentVariance != null ? pathLossExponentVariance : 0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        });
+
+        if (fingerprintPositionCovariance != null &&
+                fingerprintPositionCovariance.getRows() == Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                fingerprintPositionCovariance.getColumns() == Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+
+            covariance.setSubmatrix(2, 2,
+                    4, 4,
+                    fingerprintPositionCovariance);
+        }
+
+        if (radioSourcePositionCovariance != null &&
+                radioSourcePositionCovariance.getRows() == Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                radioSourcePositionCovariance.getColumns() == Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(5, 5,
+                    7, 7,
+                    radioSourcePositionCovariance);
+        }
+
+        if (estimatedPositionCovariance != null &&
+                estimatedPositionCovariance.getRows() == Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                estimatedPositionCovariance.getColumns() == Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(8, 8,
+                    10, 10,
+                    estimatedPositionCovariance);
+        }
+
+        try {
+            //although less precise, we use a jacobian estimator to simplify expressions
+            final MultiVariateFunctionEvaluatorListener evaluator = new MultiVariateFunctionEvaluatorListener() {
+                @Override
+                public void evaluate(double[] point, double[] result) {
+                    //Pr(pi = (xi,yi)) = Pr(p1) +
+                    //  -10*n*(x1 - xa)/(ln(10)*d1a^2)*(xi - x1) +
+                    //  -10*n*(y1 - ya)/(ln(10)*d1a^2)*(yi - y1) +
+                    //  -10*n*(z1 - za)/(ln(10)*d1a^2)*(zi - z1) +
+                    //  -5*n*((y1 - ya)^2 + (z1 - za)^2 - (x1 - xa)^2)/(ln(10)*d1a^4)*(xi - x1)^2 +
+                    //  -5*n*((x1 - xa)^2 - (y1 - ya)^2 + (z1 - za)^2)/(ln(10)*d1a^4)*(yi - y1)^2 +
+                    //  -5*n*((x1 - xa)^2 + (y1 - ya)^2 - (z1 - za)^2)/(ln(10)*d1a^4)*(zi - z1)^2 +
+                    //  20*n*(x1 - xa)*(y1 - ya)/(ln(10)*d1a^4)*(xi - x1)*(yi - y1) +
+                    //  20*n*(y1 - ya)*(z1 - za)/(ln(10)*d1a^4)*(yi - y1)*(zi - z1) +
+                    //  20*n*(x1 - xa)*(z1 - za)/(ln(10)*d1a^4)*(xi - x1)*(zi - z1) +
+                    //  -10/6*n/ln(10)*(-2*(x1 - xa)*d1a^4 - ((y1 - ya)^2 + (z1 - za)^2 - (x1 - xa)^2)*4*d1a^2*(x1 - xa))/d1a^8*(xi - x1)^3 +
+                    //  -10/6*n/ln(10)*(-2*(y1 - ya)*d1a^4 - ((x1 - xa)^2 - (y1 - ya)^2 + (z1 - za)^2)*4*d1a^2*(y1 - ya))/d1a^8*(yi - y1)^3 +
+                    //  -10/6*n/ln(10)*(-2*(z1 - za)*d1a^4 - ((x1 - xa)^2 + (y1 - ya)^2 - (z1 - za)^2)*4*d1a^2*(z1 - za))/d1a^8*(zi - z1)^3 +
+                    //  -5*n/ln(10)*(2*(y1 - ya)*d1a^4 - ((y1 - ya)^2 + (z1 - za)^2 - (x1 - xa)^2)*4*d1a^2*(y1 - ya))/d1a^8*(xi - x1)^2*(yi - y1) +
+                    //  -5*n/ln(10)*(2*(z1 - za)*d1a^4 - ((y1 - ya)^2 + (z1 - za)^2 - (x1 - xa)^2)*4*d1a^2*(z1 - za))/d1a^8*(xi - x1)^2*(zi - z1) +
+                    //  -5*n/ln(10)*(2*(x1 - xa)*d1a^4 - ((x1 - xa)^2 - (y1 - ya)^2 + (z1 - za)^2)*4*d1a^2*(x1 - xa))/d1a^8*(xi - x1)*(yi - y1)^2 +
+                    //  -5*n/ln(10)*(2*(x1 - xa)*d1a^4 - ((x1 - xa)^2 + (y1 - ya)^2 - (z1 - za)^2)*4*d1a^2*(x1 - xa))/d1a^8*(xi - x1)*(zi - z1)^2 +
+                    //  -5*n/ln(10)*(2*(z1 - za)*d1a^4 - ((x1 - xa)^2 - (y1 - ya)^2 + (z1 - za)^2)*4*d1a^2*(z1 - za))/d1a^8*(yi - y1)^2*(zi - z1) +
+                    //  -5*n/ln(10)*(2*(y1 - ya)*d1a^4 - ((x1 - xa)^2 + (y1 - ya)^2 - (z1 - za)^2)*4*d1a^2*(y1 - ya))/d1a^8*(yi - y1)*(zi - z1)^2 +
+                    //  -80*n/ln(10)*((x1 - xa)*(y1 - ya)*(z1 - za)*d1a^2)/d1a^8*(xi - x1)*(yi - y1)*(zi - z1)
+
+                    double fingerprintRssi = point[0];
+                    double pathLossExponent = point[1];
+                    double x1 = point[2];
+                    double y1 = point[3];
+                    double z1 = point[4];
+                    double xa = point[5];
+                    double ya = point[6];
+                    double za = point[7];
+                    double xi = point[8];
+                    double yi = point[9];
+                    double zi = point[10];
+
+                    double diffX1a = x1 - xa;
+                    double diffY1a = y1 - ya;
+                    double diffZ1a = z1 - za;
+
+                    double diffXi1 = xi - x1;
+                    double diffYi1 = yi - y1;
+                    double diffZi1 = zi - z1;
+
+                    double diffX1a2 = diffX1a * diffX1a;
+                    double diffY1a2 = diffY1a * diffY1a;
+                    double diffZ1a2 = diffZ1a * diffZ1a;
+
+                    double diffXi12 = diffXi1 * diffXi1;
+                    double diffYi12 = diffYi1 * diffYi1;
+                    double diffZi12 = diffZi1 * diffZi1;
+
+                    double diffXi13 = diffXi12 * diffXi1;
+                    double diffYi13 = diffYi12 * diffYi1;
+                    double diffZi13 = diffZi12 * diffZi1;
+
+                    double d1a2 = diffX1a2 + diffY1a2 + diffZ1a2;
+                    double d1a4 = d1a2 * d1a2;
+                    double d1a8 = d1a4 * d1a4;
+
+                    double ln10 = Math.log(10.0);
+
+                    double value1 = - 10.0 * pathLossExponent * diffX1a / (ln10 * d1a2);
+                    double value2 = - 10.0 * pathLossExponent * diffY1a / (ln10 * d1a2);
+                    double value3 = - 10.0 * pathLossExponent * diffZ1a / (ln10 * d1a2);
+                    double value4 = - 5.0 * pathLossExponent * (-diffX1a2 + diffY1a2 + diffZ1a2) / (ln10 * d1a4);
+                    double value5 = - 5.0 * pathLossExponent * (diffX1a2 - diffY1a2 + diffZ1a2) / (ln10 * d1a4);
+                    double value6 = - 5.0 * pathLossExponent * (diffX1a2 + diffY1a2 - diffZ1a2) / (ln10 * d1a4);
+                    double value7 = 20.0 * pathLossExponent * diffX1a * diffY1a / (ln10 * d1a4);
+                    double value8 = 20.0 * pathLossExponent * diffY1a * diffZ1a / (ln10 * d1a4);
+                    double value9 = 20.0 * pathLossExponent * diffX1a * diffZ1a / (ln10 * d1a4);
+                    double value10 = - 10.0 / 6.0 * pathLossExponent / ln10 * (-2.0 * diffX1a * d1a4 - (-diffX1a2 + diffY1a2 + diffZ1a2) * 4.0 * d1a2 * diffX1a) / d1a8;
+                    double value11 = - 10.0 / 6.0 * pathLossExponent / ln10 * (-2.0 * diffY1a * d1a4 - (diffX1a2 - diffY1a2 + diffZ1a2) * 4.0 * d1a2 * diffY1a) / d1a8;
+                    double value12 = - 10.0 / 6.0 * pathLossExponent / ln10 * (-2.0 * diffZ1a * d1a4 - (diffX1a2 + diffY1a2 - diffZ1a2) * 4.0 * d1a2 * diffZ1a) / d1a8;
+                    double value13 = - 5.0 * pathLossExponent / ln10 * (2.0 * diffY1a * d1a4 - (-diffX1a2 + diffY1a2 + diffZ1a2) * 4.0 * d1a2 * diffY1a) / d1a8;
+                    double value14 = - 5.0 * pathLossExponent / ln10 * (2.0 * diffZ1a * d1a4 - (-diffX1a2 + diffY1a2 + diffZ1a2) * 4.0 * d1a2 * diffZ1a) / d1a8;
+                    double value15 = - 5.0 * pathLossExponent / ln10 * (2.0 * diffX1a * d1a4 - (diffX1a2 - diffY1a2 + diffZ1a2) * 4.0 * d1a2 * diffX1a) / d1a8;
+                    double value16 = - 5.0 * pathLossExponent / ln10 * (2.0 * diffX1a * d1a4 - (diffX1a2 + diffY1a2 - diffZ1a2) * 4.0 * d1a2 * diffX1a) / d1a8;
+                    double value17 = - 5.0 * pathLossExponent / ln10 * (2.0 * diffZ1a * d1a4 - (diffX1a2 - diffY1a2 + diffZ1a2) * 4.0 * d1a2 * diffZ1a) / d1a8;
+                    double value18 = - 5.0 * pathLossExponent / ln10 * (2.0 * diffY1a * d1a4 - (diffX1a2 + diffY1a2 - diffZ1a2) * 4.0 * d1a2 * diffY1a) / d1a8;
+                    double value19 = - 80.0 * pathLossExponent / ln10 * (diffX1a * diffY1a * diffZ1a * d1a2) / d1a8;
+
+                    result[0] = fingerprintRssi
+                            + value1 * diffXi1
+                            + value2 * diffYi1
+                            + value3 * diffZi1
+                            + value4 * diffXi12
+                            + value5 * diffYi12
+                            + value6 * diffZi12
+                            + value7 * diffXi1 * diffYi1
+                            + value8 * diffYi1 * diffZi1
+                            + value9 * diffXi1 * diffZi1
+                            + value10 * diffXi13
+                            + value11 * diffYi13
+                            + value12 * diffZi13
+                            + value13 * diffXi12 * diffYi1
+                            + value14 * diffXi12 * diffZi1
+                            + value15 * diffXi1 * diffYi12
+                            + value16 * diffXi1 * diffZi12
+                            + value17 * diffYi12 * diffZi1
+                            + value18 * diffYi1 * diffZi12
+                            + value19 * diffXi1 * diffYi1 * diffZi1;
+                }
+
+                @Override
+                public int getNumberOfVariables() {
+                    return 1;
+                }
+            };
+
+            final JacobianEstimator jacobianEstimator = new JacobianEstimator(evaluator);
+
+            return MultivariateNormalDist.propagate(new MultivariateNormalDist.JacobianEvaluator() {
+                @Override
+                public void evaluate(double[] x, double[] y, Matrix jacobian) {
+
+                    try {
+                        evaluator.evaluate(x, y);
+                        jacobianEstimator.jacobian(x, jacobian);
+                    } catch (EvaluationException ignore) {
+                        //never happens
+                    }
+                }
+
+                @Override
+                public int getNumberOfVariables() {
+                    return 1;
+                }
+            }, mean, covariance);
+        } catch (AlgebraException | StatisticsException e) {
+            throw new IndoorException(e);
+        }
+    }
+
 }
