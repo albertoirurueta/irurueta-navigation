@@ -18,7 +18,7 @@ package com.irurueta.navigation.indoor.fingerprint;
 /**
  * Type of non linear position estimator.
  */
-public enum NonLinearRssiPositionEstimatorType {
+public enum NonLinearFingerprintPositionEstimatorType {
     /**
      * Uses a 1st order Taylor approximation.
      */

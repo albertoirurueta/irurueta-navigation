@@ -34,20 +34,20 @@ import java.util.List;
  * point.
  */
 @SuppressWarnings("WeakerAccess")
-public class ThirdOrderNonLinearRssiPositionEstimator2D extends
-        NonLinearRssiPositionEstimator2D {
+public class ThirdOrderNonLinearFingerprintPositionEstimator2D extends
+        NonLinearFingerprintPositionEstimator2D {
 
     /**
      * Constructor.
      */
-    public ThirdOrderNonLinearRssiPositionEstimator2D() { }
+    public ThirdOrderNonLinearFingerprintPositionEstimator2D() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public ThirdOrderNonLinearRssiPositionEstimator2D(
-            RssiPositionEstimatorListener<Point2D> listener) {
+    public ThirdOrderNonLinearFingerprintPositionEstimator2D(
+            FingerprintPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
 
@@ -64,7 +64,7 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public ThirdOrderNonLinearRssiPositionEstimator2D(
+    public ThirdOrderNonLinearFingerprintPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -87,13 +87,13 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public ThirdOrderNonLinearRssiPositionEstimator2D(
+    public ThirdOrderNonLinearFingerprintPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiPositionEstimatorListener<Point2D> listener) {
+            FingerprintPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -111,7 +111,7 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public ThirdOrderNonLinearRssiPositionEstimator2D(
+    public ThirdOrderNonLinearFingerprintPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -135,13 +135,13 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public ThirdOrderNonLinearRssiPositionEstimator2D(
+    public ThirdOrderNonLinearFingerprintPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point2D>> sources, Point2D initialPosition,
-            RssiPositionEstimatorListener<Point2D> listener) {
+            FingerprintPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, initialPosition, listener);
     }
 
@@ -150,8 +150,8 @@ public class ThirdOrderNonLinearRssiPositionEstimator2D extends
      * @return type of position estimator.
      */
     @Override
-    public NonLinearRssiPositionEstimatorType getType() {
-        return NonLinearRssiPositionEstimatorType.THIRD_ORDER;
+    public NonLinearFingerprintPositionEstimatorType getType() {
+        return NonLinearFingerprintPositionEstimatorType.THIRD_ORDER;
     }
 
     /**

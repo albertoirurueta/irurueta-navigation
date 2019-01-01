@@ -34,20 +34,20 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class LinearRssiPositionEstimator<P extends Point> extends
-        RssiPositionEstimator<P> {
+public abstract class LinearFingerprintPositionEstimator<P extends Point> extends
+        FingerprintPositionEstimator<P> {
 
     /**
      * Constructor.
      */
-    public LinearRssiPositionEstimator() { }
+    public LinearFingerprintPositionEstimator() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public LinearRssiPositionEstimator(
-            RssiPositionEstimatorListener<P> listener) {
+    public LinearFingerprintPositionEstimator(
+            FingerprintPositionEstimatorListener<P> listener) {
         super(listener);
     }
 
@@ -65,11 +65,11 @@ public abstract class LinearRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public LinearRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public LinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                              RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> sources) {
+                                              List<? extends RadioSourceLocated<P>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
@@ -88,12 +88,12 @@ public abstract class LinearRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public LinearRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public LinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                              RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> sources,
-            RssiPositionEstimatorListener<P> listener) {
+                                              List<? extends RadioSourceLocated<P>> sources,
+                                              FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 

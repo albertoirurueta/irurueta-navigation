@@ -43,8 +43,8 @@ import java.util.List;
  * point.
  * @param <P> a {@link Point} type.
  */
-public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
-        RssiPositionEstimator<P> {
+public abstract class NonLinearFingerprintPositionEstimator<P extends Point> extends
+        FingerprintPositionEstimator<P> {
 
     /**
      * Default RSSI standard deviation assumed for provided fingerprints as a fallback
@@ -86,8 +86,8 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * Default type to be used when none is provided.
      */
     @SuppressWarnings("WeakerAccess")
-    public static final NonLinearRssiPositionEstimatorType DEFAULT_TYPE =
-            NonLinearRssiPositionEstimatorType.THIRD_ORDER;
+    public static final NonLinearFingerprintPositionEstimatorType DEFAULT_TYPE =
+            NonLinearFingerprintPositionEstimatorType.THIRD_ORDER;
 
     /**
      * Initial position to start the solving algorithm.
@@ -152,14 +152,14 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
     /**
      * Constructor.
      */
-    public NonLinearRssiPositionEstimator() { }
+    public NonLinearFingerprintPositionEstimator() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public NonLinearRssiPositionEstimator(
-            RssiPositionEstimatorListener<P> listener) {
+    public NonLinearFingerprintPositionEstimator(
+            FingerprintPositionEstimatorListener<P> listener) {
         super(listener);
     }
 
@@ -177,11 +177,11 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                                 RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> sources) {
+                                                 List<? extends RadioSourceLocated<P>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
@@ -200,12 +200,12 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                                 RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> sources,
-            RssiPositionEstimatorListener<P> listener) {
+                                                 List<? extends RadioSourceLocated<P>> sources,
+                                                 FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -224,11 +224,11 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                                 RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> sources, P initialPosition) {
+                                                 List<? extends RadioSourceLocated<P>> sources, P initialPosition) {
         super(locatedFingerprints, fingerprint, sources);
         mInitialPosition = initialPosition;
     }
@@ -249,12 +249,12 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                                 RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            List<? extends RadioSourceLocated<P>> sources, P initialPosition,
-            RssiPositionEstimatorListener<P> listener) {
+                                                 List<? extends RadioSourceLocated<P>> sources, P initialPosition,
+                                                 FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
         mInitialPosition = initialPosition;
     }
@@ -793,7 +793,7 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
      * Gets type of position estimator.
      * @return type of position estimator.
      */
-    public abstract NonLinearRssiPositionEstimatorType getType();
+    public abstract NonLinearFingerprintPositionEstimatorType getType();
 
     /**
      * Evaluates a non-linear multi dimension function at provided point using
@@ -1026,7 +1026,7 @@ public abstract class NonLinearRssiPositionEstimator<P extends Point> extends
             @Override
             public double evaluate(int i, double[] point, double[] params, double[] derivatives)
                     throws EvaluationException {
-                return NonLinearRssiPositionEstimator.this.evaluate(i, point, params, derivatives);
+                return NonLinearFingerprintPositionEstimator.this.evaluate(i, point, params, derivatives);
             }
         });
 

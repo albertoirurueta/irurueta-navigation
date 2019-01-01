@@ -34,8 +34,8 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseRssiPositionEstimator<P extends Point,
-        L extends BaseRssiPositionEstimatorListener> {
+public abstract class BaseFingerprintEstimator<P extends Point,
+        L extends BaseFingerprintEstimatorListener> {
 
     /**
      * Default minimum number of nearest fingerprints to search.
@@ -115,13 +115,13 @@ public abstract class BaseRssiPositionEstimator<P extends Point,
     /**
      * Constructor.
      */
-    public BaseRssiPositionEstimator() { }
+    public BaseFingerprintEstimator() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public BaseRssiPositionEstimator(L listener) {
+    public BaseFingerprintEstimator(L listener) {
         mListener = listener;
     }
 
@@ -138,9 +138,9 @@ public abstract class BaseRssiPositionEstimator<P extends Point,
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public BaseRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public BaseFingerprintEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                    RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint) {
         internalSetLocatedFingerprints(locatedFingerprints);
         internalSetFingerprint(fingerprint);
@@ -160,11 +160,11 @@ public abstract class BaseRssiPositionEstimator<P extends Point,
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public BaseRssiPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public BaseFingerprintEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-            RssiFingerprint<? extends RadioSource,
+                                    RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-            L listener) {
+                                    L listener) {
         this(listener);
         internalSetLocatedFingerprints(locatedFingerprints);
         internalSetFingerprint(fingerprint);

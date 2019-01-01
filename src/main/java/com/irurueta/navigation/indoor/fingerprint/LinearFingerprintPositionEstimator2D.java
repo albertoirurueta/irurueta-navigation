@@ -28,20 +28,20 @@ import java.util.List;
  * This implementation uses a first-order Taylor approximation over provided located
  * fingerprints to determine an approximate position for a non-located fingerprint.
  */
-public class LinearRssiPositionEstimator2D extends
-        LinearRssiPositionEstimator<Point2D> {
+public class LinearFingerprintPositionEstimator2D extends
+        LinearFingerprintPositionEstimator<Point2D> {
 
     /**
      * Constructor.
      */
-    public LinearRssiPositionEstimator2D() { }
+    public LinearFingerprintPositionEstimator2D() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public LinearRssiPositionEstimator2D(
-            RssiPositionEstimatorListener<Point2D> listener) {
+    public LinearFingerprintPositionEstimator2D(
+            FingerprintPositionEstimatorListener<Point2D> listener) {
         super(listener);
     }
 
@@ -58,7 +58,7 @@ public class LinearRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public LinearRssiPositionEstimator2D(
+    public LinearFingerprintPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
@@ -81,13 +81,13 @@ public class LinearRssiPositionEstimator2D extends
      * readings are required in a single fingerprint, or at least 2 fingerprints at
      * different locations containing a single reading are required).
      */
-    public LinearRssiPositionEstimator2D(
+    public LinearFingerprintPositionEstimator2D(
             List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, Point2D>> locatedFingerprints,
             RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
             List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiPositionEstimatorListener<Point2D> listener) {
+            FingerprintPositionEstimatorListener<Point2D> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 

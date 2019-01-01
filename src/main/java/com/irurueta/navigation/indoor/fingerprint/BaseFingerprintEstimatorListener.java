@@ -15,12 +15,23 @@
  */
 package com.irurueta.navigation.indoor.fingerprint;
 
-import com.irurueta.geometry.Point;
 
 /**
- * Listener to be notified of events such as when estimation of position using
- * fingerprints and radio sources starts or ends.
- * @param <P> a {@link Point} type.
+ * Listener to be notified of events such as when estimation of position
+ * using fingerprints starts or ends.
+ * @param <E> a {@link BaseFingerprintEstimator} type.
  */
-public interface RssiPositionEstimatorListener<P extends Point>
-        extends BaseRssiPositionEstimatorListener<RssiPositionEstimator<P>> { }
+public interface BaseFingerprintEstimatorListener<E extends BaseFingerprintEstimator> {
+
+    /**
+     * Called when estimation starts.
+     * @param estimator estimator raising the event.
+     */
+    void onEstimateStart(E estimator);
+
+    /**
+     * Called when estimation ends.
+     * @param estimator estimator raising the event.
+     */
+    void onEstimateEnd(E estimator);
+}

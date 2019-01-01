@@ -35,11 +35,11 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
-public class SecondOrderNonLinearRssiPositionEstimator3DTest
-        implements RssiPositionEstimatorListener<Point3D> {
+public class SecondOrderNonLinearFingerprintPositionEstimator3DTest
+        implements FingerprintPositionEstimatorListener<Point3D> {
 
     private static final Logger LOGGER = Logger.getLogger(
-            SecondOrderNonLinearRssiPositionEstimator3DTest.class.getName());
+            SecondOrderNonLinearFingerprintPositionEstimator3DTest.class.getName());
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
@@ -80,7 +80,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     private int estimateStart;
     private int estimateEnd;
 
-    public SecondOrderNonLinearRssiPositionEstimator3DTest() { }
+    public SecondOrderNonLinearFingerprintPositionEstimator3DTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -97,8 +97,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testConstructor() {
         //test empty constructor
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default values
         assertNull(estimator.getLocatedFingerprints());
@@ -119,23 +119,23 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         Assert.assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
         assertEquals(estimator.isPathlossExponentStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
         assertEquals(estimator.isFingerprintPositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
         assertEquals(estimator.isRadioSourcePositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        Assert.assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        Assert.assertEquals(estimator.getType(), NonLinearFingerprintPositionEstimatorType.SECOND_ORDER);
 
 
         //test constructor with listener
-        estimator = new SecondOrderNonLinearRssiPositionEstimator3D(this);
+        estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(this);
 
         //check default values
         assertNull(estimator.getLocatedFingerprints());
@@ -156,19 +156,19 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
         assertEquals(estimator.isPathlossExponentStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
         assertEquals(estimator.isFingerprintPositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
         assertEquals(estimator.isRadioSourcePositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        assertEquals(estimator.getType(), NonLinearFingerprintPositionEstimatorType.SECOND_ORDER);
 
 
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -208,7 +208,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
         //test constructor with located fingerprints, fingerprint and sources
-        estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+        estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                 fingerprint, sources);
 
         //check default values
@@ -230,40 +230,40 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
         assertEquals(estimator.isPathlossExponentStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
         assertEquals(estimator.isFingerprintPositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
         assertEquals(estimator.isRadioSourcePositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        assertEquals(estimator.getType(), NonLinearFingerprintPositionEstimatorType.SECOND_ORDER);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     new ArrayList<RssiFingerprintLocated3D<RadioSource,
                     RssiReading<RadioSource>>>(), fingerprint, sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(null,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(null,
                     fingerprint, sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     null, sources);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     fingerprint, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -271,7 +271,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
         //test constructor with located fingerprints, fingerprint, sources and listener
-        estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+        estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                 fingerprint, sources, this);
 
         //check default values
@@ -293,40 +293,40 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertNull(estimator.getInitialPosition());
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
         assertEquals(estimator.isPathlossExponentStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
         assertEquals(estimator.isFingerprintPositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
         assertEquals(estimator.isRadioSourcePositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        assertEquals(estimator.getType(), NonLinearFingerprintPositionEstimatorType.SECOND_ORDER);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     new ArrayList<RssiFingerprintLocated3D<RadioSource,
                     RssiReading<RadioSource>>>(), fingerprint, sources, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(null,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(null,
                     fingerprint, sources,this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     null, sources, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     fingerprint, null, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -336,7 +336,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         //test constructor with located fingerprints, fingerprint, sources and
         //initial position
         Point3D initialPosition = Point3D.create();
-        estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+        estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                 fingerprint, sources, initialPosition);
 
         //check default values
@@ -358,40 +358,40 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
         assertEquals(estimator.isPathlossExponentStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
         assertEquals(estimator.isFingerprintPositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
         assertEquals(estimator.isRadioSourcePositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        assertEquals(estimator.getType(), NonLinearFingerprintPositionEstimatorType.SECOND_ORDER);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     new ArrayList<RssiFingerprintLocated3D<RadioSource,
                     RssiReading<RadioSource>>>(), fingerprint, sources, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(null,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(null,
                     fingerprint, sources, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     null, sources, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     fingerprint, null, initialPosition);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -400,7 +400,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
         //test constructor with located fingerprints, fingerprint, sources,
         //initial position and listener
-        estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+        estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                 fingerprint, sources, initialPosition, this);
 
         //check default values
@@ -422,41 +422,41 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
         assertSame(estimator.getInitialPosition(), initialPosition);
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
         assertEquals(estimator.isFingerprintRssiStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_RSSI_STANDARD_DEVIATION);
         assertEquals(estimator.isPathlossExponentStandardDeviationPropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_PATHLOSS_EXPONENT_STANDARD_DEVIATION);
         assertEquals(estimator.isFingerprintPositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_FINGERPRINT_POSITION_COVARIANCE);
         assertEquals(estimator.isRadioSourcePositionCovariancePropagated(),
-                NonLinearRssiPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
+                NonLinearFingerprintPositionEstimator.DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE);
         assertNull(estimator.getCovariance());
         assertEquals(estimator.getChiSq(), 0.0, 0.0);
-        assertEquals(estimator.getType(), NonLinearRssiPositionEstimatorType.SECOND_ORDER);
+        assertEquals(estimator.getType(), NonLinearFingerprintPositionEstimatorType.SECOND_ORDER);
 
         //force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     new ArrayList<RssiFingerprintLocated3D<RadioSource,
                     RssiReading<RadioSource>>>(), fingerprint, sources,
                     initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(null,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(null,
                     fingerprint, sources, initialPosition,this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     null, sources, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(locatedFingerprints,
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(locatedFingerprints,
                     fingerprint, null, initialPosition, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
@@ -465,8 +465,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetLocatedFingerprints() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getLocatedFingerprints());
@@ -514,8 +514,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetFingerprint() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getFingerprint());
@@ -550,8 +550,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetMinMaxNearestFingerprints() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default values
         assertEquals(estimator.getMinNearestFingerprints(), 1);
@@ -577,8 +577,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetPathLossExponent() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getPathLossExponent(), 2.0, 0.0);
@@ -595,8 +595,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetListener() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getListener());
@@ -610,8 +610,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetSources() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default values
         assertNull(estimator.getSources());
@@ -633,8 +633,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testGetSetUseSourcesPathLossExponentWhenAvailable()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.getUseSourcesPathLossExponentWhenAvailable());
@@ -649,8 +649,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testGetSetUseNoMeanNearestFingerprintFinder()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.getUseNoMeanNearestFingerprintFinder());
@@ -665,8 +665,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testIsSetMeansFromFingerprintReadingsRemoved()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertFalse(estimator.isMeansFromFingerprintReadingsRemoved());
@@ -680,8 +680,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetInitialPosition() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertNull(estimator.getInitialPosition());
@@ -696,12 +696,12 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
     @Test
     public void testGetSetFallbackRssiStandardDeviation() throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertEquals(estimator.getFallbackRssiStandardDeviation(),
-                NonLinearRssiPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
+                NonLinearFingerprintPositionEstimator.FALLBACK_RSSI_STANDARD_DEVIATION,
                 0.0);
 
         //set new value
@@ -714,8 +714,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testIsSetFingerprintRssiStandardDeviationPropagated()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isFingerprintRssiStandardDeviationPropagated());
@@ -730,8 +730,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testIsSetPathlossExponentStandardDeviationPropagated()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
@@ -746,8 +746,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testIsSetFingerprintPositionCovariancePropagated()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
@@ -762,8 +762,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     @Test
     public void testIsSetRadioSourcePositionCovariancePropagated()
             throws LockedException {
-        SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                new SecondOrderNonLinearRssiPositionEstimator3D();
+        SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                new SecondOrderNonLinearFingerprintPositionEstimator3D();
 
         //check default value
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
@@ -837,7 +837,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -861,7 +861,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -917,8 +917,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -957,7 +957,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -995,7 +995,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1033,7 +1033,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1236,7 +1236,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -1260,7 +1260,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT)) +
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT)) +
                         RSSI_BIAS;
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
@@ -1317,8 +1317,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1357,7 +1357,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1395,7 +1395,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1433,7 +1433,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1639,7 +1639,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     double rssiError = errorRandomizer.nextDouble();
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi + rssiError);
@@ -1664,7 +1664,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 double rssiError = errorRandomizer.nextDouble();
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi + rssiError);
@@ -1721,8 +1721,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1761,7 +1761,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -1799,7 +1799,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -1837,7 +1837,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2044,7 +2044,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     double rssiError = errorRandomizer.nextDouble();
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi + rssiError);
@@ -2069,7 +2069,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 double rssiError = errorRandomizer.nextDouble();
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi + rssiError + RSSI_BIAS);
@@ -2126,8 +2126,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2166,7 +2166,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2204,7 +2204,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2242,7 +2242,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2533,8 +2533,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2575,7 +2575,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2615,7 +2615,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2655,7 +2655,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -2856,7 +2856,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -2880,7 +2880,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -2936,8 +2936,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D estimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D estimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -2972,7 +2972,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(true);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -3006,7 +3006,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -3040,7 +3040,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            estimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            estimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             estimator.setUseNoMeanNearestFingerprintFinder(false);
             estimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -3215,7 +3215,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -3239,7 +3239,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -3295,7 +3295,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -3304,8 +3304,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -3345,7 +3345,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -3354,7 +3354,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -3393,7 +3393,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -3402,7 +3402,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -3439,7 +3439,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -3448,7 +3448,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -3654,7 +3654,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -3678,7 +3678,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT)) +
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT)) +
                         RSSI_BIAS;
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
@@ -3735,7 +3735,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -3744,8 +3744,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -3785,7 +3785,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -3794,7 +3794,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -3833,7 +3833,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -3842,7 +3842,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -3881,7 +3881,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -3890,7 +3890,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -4097,7 +4097,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     double rssiError = errorRandomizer.nextDouble();
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi + rssiError);
@@ -4122,7 +4122,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 double rssiError = errorRandomizer.nextDouble();
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi + rssiError);
@@ -4179,7 +4179,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -4188,8 +4188,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -4229,7 +4229,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -4238,7 +4238,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -4277,7 +4277,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -4286,7 +4286,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -4325,7 +4325,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -4334,7 +4334,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -4542,7 +4542,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     double rssiError = errorRandomizer.nextDouble();
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi + rssiError);
@@ -4567,7 +4567,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 double rssiError = errorRandomizer.nextDouble();
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi + rssiError + RSSI_BIAS);
@@ -4624,7 +4624,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -4633,8 +4633,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                             locatedFingerprints, fingerprint, sources, initialPosition,
                             this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -4674,7 +4674,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -4683,7 +4683,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -4722,7 +4722,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -4731,7 +4731,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -4770,7 +4770,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -4779,7 +4779,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -5071,7 +5071,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -5080,8 +5080,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -5123,7 +5123,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -5132,7 +5132,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -5173,7 +5173,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -5182,7 +5182,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -5223,7 +5223,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -5232,7 +5232,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -5433,7 +5433,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -5457,7 +5457,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -5513,7 +5513,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed on finder and fingerprints
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -5522,8 +5522,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -5559,7 +5559,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -5568,7 +5568,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -5603,7 +5603,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -5612,7 +5612,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -5647,7 +5647,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            linearEstimator = new LinearRssiPositionEstimator3D(
+            linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
             linearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             linearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -5656,7 +5656,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
             initialPosition = linearEstimator.getEstimatedPosition();
 
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
@@ -5819,7 +5819,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                             receivedRssi);
                     readings.add(reading);
@@ -5843,7 +5843,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -5875,7 +5875,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create linear estimator to obtain initial position
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
 
             linearEstimator.estimate();
@@ -5883,8 +5883,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
             //estimate without initial position
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
 
             reset();
@@ -5921,7 +5921,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //estimate with initial position
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, initialPosition,
                     this);
 
@@ -5959,7 +5959,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //estimate with exact initial position
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, position,
                     this);
 
@@ -6072,7 +6072,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         new WifiAccessPointWithPowerAndLocated3D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm,
                                 null,
-                                LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
+                                LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
                                 pathLossStd, position, positionCovariance);
                 sources.add(accessPoint);
             }
@@ -6102,7 +6102,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     double receivedRssiStd = randomizer.nextDouble(
                             MIN_RSSI_STANDARD_DEVIATION, MAX_RSSI_STANDARD_DEVIATION);
 
@@ -6130,7 +6130,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                 RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
                         receivedRssi);
                 readings.add(reading);
@@ -6185,7 +6185,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
             avgRssiDistance += rssiClosestDistance / TIMES;
 
             //create linear estimator to obtain initial position
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
 
             linearEstimator.estimate();
@@ -6193,8 +6193,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                             locatedFingerprints, fingerprint, sources, initialPosition,
                             this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -6234,7 +6234,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             nonLinearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -6272,7 +6272,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             nonLinearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -6310,7 +6310,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             nonLinearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -6506,7 +6506,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         new WifiAccessPointWithPowerAndLocated3D(
                                 "bssid" + i, FREQUENCY, transmittedPowerdBm,
                                 null,
-                                LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
+                                LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT,
                                 pathLossStd, position, positionCovariance);
                 sources.add(accessPoint);
             }
@@ -6536,7 +6536,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                             getTransmittedPower();
 
                     double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
-                            distance, LinearRssiPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
+                            distance, LinearFingerprintPositionEstimator3D.DEFAULT_PATH_LOSS_EXPONENT));
                     double receivedRssiStd = randomizer.nextDouble(
                             MIN_RSSI_STANDARD_DEVIATION, MAX_RSSI_STANDARD_DEVIATION);
 
@@ -6567,7 +6567,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                         getTransmittedPower();
 
                 double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm), distance,
-                        LinearRssiPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
+                        LinearFingerprintPositionEstimator2D.DEFAULT_PATH_LOSS_EXPONENT));
 
                 errorRandomizer.setStandardDeviation(ERROR_STD);
                 double rssiError = errorRandomizer.nextDouble();
@@ -6626,7 +6626,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
             avgRssiDistance += rssiClosestDistance / TIMES;
 
             //create linear estimator to obtain initial position
-            LinearRssiPositionEstimator3D linearEstimator = new LinearRssiPositionEstimator3D(
+            LinearFingerprintPositionEstimator3D linearEstimator = new LinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources);
 
             linearEstimator.estimate();
@@ -6634,8 +6634,8 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
             Point3D initialPosition = linearEstimator.getEstimatedPosition();
 
             //create estimator with means removed on finder and fingerprints
-            SecondOrderNonLinearRssiPositionEstimator3D nonLinearEstimator =
-                    new SecondOrderNonLinearRssiPositionEstimator3D(
+            SecondOrderNonLinearFingerprintPositionEstimator3D nonLinearEstimator =
+                    new SecondOrderNonLinearFingerprintPositionEstimator3D(
                             locatedFingerprints, fingerprint, sources, initialPosition,
                             this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
@@ -6675,7 +6675,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on finder
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(true);
             nonLinearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -6713,7 +6713,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means removed only on readings
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             nonLinearEstimator.setMeansFromFingerprintReadingsRemoved(true);
@@ -6751,7 +6751,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
 
 
             //create estimator with means not removed
-            nonLinearEstimator = new SecondOrderNonLinearRssiPositionEstimator3D(
+            nonLinearEstimator = new SecondOrderNonLinearFingerprintPositionEstimator3D(
                     locatedFingerprints, fingerprint, sources, this);
             nonLinearEstimator.setUseNoMeanNearestFingerprintFinder(false);
             nonLinearEstimator.setMeansFromFingerprintReadingsRemoved(false);
@@ -6896,15 +6896,15 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
     }
 
     @Override
-    public void onEstimateStart(RssiPositionEstimator<Point3D> estimator) {
+    public void onEstimateStart(FingerprintPositionEstimator<Point3D> estimator) {
         estimateStart++;
-        checkLocked((SecondOrderNonLinearRssiPositionEstimator3D)estimator);
+        checkLocked((SecondOrderNonLinearFingerprintPositionEstimator3D)estimator);
     }
 
     @Override
-    public void onEstimateEnd(RssiPositionEstimator<Point3D> estimator) {
+    public void onEstimateEnd(FingerprintPositionEstimator<Point3D> estimator) {
         estimateEnd++;
-        checkLocked((SecondOrderNonLinearRssiPositionEstimator3D)estimator);
+        checkLocked((SecondOrderNonLinearFingerprintPositionEstimator3D)estimator);
     }
 
     private void reset() {
@@ -6922,7 +6922,7 @@ public class SecondOrderNonLinearRssiPositionEstimator3DTest
                 Math.pow(distance, pathLossExponent);
     }
 
-    private void checkLocked(SecondOrderNonLinearRssiPositionEstimator3D estimator) {
+    private void checkLocked(SecondOrderNonLinearFingerprintPositionEstimator3D estimator) {
         try {
             estimator.setLocatedFingerprints(null);
             fail("LockedException expected but not thrown");
