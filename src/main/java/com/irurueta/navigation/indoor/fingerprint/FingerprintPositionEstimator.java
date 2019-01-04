@@ -29,7 +29,7 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class FingerprintPositionEstimator<P extends Point> extends
-        BaseFingerprintEstimator<P, FingerprintPositionEstimatorListener<P>> {
+        BaseFingerprintPositionEstimator<P, FingerprintPositionEstimatorListener<P>> {
 
     /**
      * Located radio sources.
@@ -88,11 +88,12 @@ public abstract class FingerprintPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public FingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public FingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                        RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                        List<? extends RadioSourceLocated<P>> sources) {
+            List<? extends RadioSourceLocated<P>> sources) {
         super(locatedFingerprints, fingerprint);
         internalSetSources(sources);
     }
@@ -112,12 +113,13 @@ public abstract class FingerprintPositionEstimator<P extends Point> extends
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public FingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public FingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                        RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                        List<? extends RadioSourceLocated<P>> sources,
-                                        FingerprintPositionEstimatorListener<P> listener) {
+            List<? extends RadioSourceLocated<P>> sources,
+            FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, listener);
         internalSetSources(sources);
     }

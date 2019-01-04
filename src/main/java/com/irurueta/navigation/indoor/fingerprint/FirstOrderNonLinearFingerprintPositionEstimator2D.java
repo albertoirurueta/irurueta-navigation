@@ -161,7 +161,7 @@ public class FirstOrderNonLinearFingerprintPositionEstimator2D extends
      * @param i number of sample being evaluated.
      * @param point point where function will be evaluated.
      * @param params initial parameters estimation to be tried. These will
-     * change as the Levenberg-Marquard algorithm iterates to the best solution.
+     * change as the Levenberg-Marquardt algorithm iterates to the best solution.
      * These are used as input parameters along with point to evaluate function.
      * @param derivatives partial derivatives of the function respect to each
      * provided parameter.

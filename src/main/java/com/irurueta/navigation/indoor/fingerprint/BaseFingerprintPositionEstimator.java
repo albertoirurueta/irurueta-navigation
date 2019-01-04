@@ -32,9 +32,10 @@ import java.util.List;
  * getting RSSI readings at an unknown location of different radio sources and comparing
  * those readings with other located ones.
  * @param <P> a {@link Point} type.
+ * @param <L> a {@link BaseFingerprintEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseFingerprintEstimator<P extends Point,
+public abstract class BaseFingerprintPositionEstimator<P extends Point,
         L extends BaseFingerprintEstimatorListener> {
 
     /**
@@ -61,7 +62,7 @@ public abstract class BaseFingerprintEstimator<P extends Point,
 
     /**
      * Fingerprint containing readings at an unknown location.
-     * Readings need to belong to the same radio sources as those given as located
+     * Readings need to belong to the same radio sources as those given at located
      * fingerprints
      */
     protected RssiFingerprint<? extends RadioSource,
@@ -115,13 +116,13 @@ public abstract class BaseFingerprintEstimator<P extends Point,
     /**
      * Constructor.
      */
-    public BaseFingerprintEstimator() { }
+    public BaseFingerprintPositionEstimator() { }
 
     /**
      * Constructor.
      * @param listener listener in charge of handling events.
      */
-    public BaseFingerprintEstimator(L listener) {
+    public BaseFingerprintPositionEstimator(L listener) {
         mListener = listener;
     }
 
@@ -138,9 +139,10 @@ public abstract class BaseFingerprintEstimator<P extends Point,
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public BaseFingerprintEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public BaseFingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                    RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint) {
         internalSetLocatedFingerprints(locatedFingerprints);
         internalSetFingerprint(fingerprint);
@@ -160,11 +162,12 @@ public abstract class BaseFingerprintEstimator<P extends Point,
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public BaseFingerprintEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public BaseFingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                    RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                    L listener) {
+            L listener) {
         this(listener);
         internalSetLocatedFingerprints(locatedFingerprints);
         internalSetFingerprint(fingerprint);
@@ -369,7 +372,7 @@ public abstract class BaseFingerprintEstimator<P extends Point,
     public abstract boolean isReady();
 
     /**
-     * Estimates position based on provided located radio sources and readings of such radio sources at
+     * Starts estimation based on provided located radio sources and readings of such radio sources at
      * an unknown location.
      * @throws LockedException if estimator is locked.
      * @throws NotReadyException if estimator is not ready.
@@ -447,8 +450,9 @@ public abstract class BaseFingerprintEstimator<P extends Point,
      * @throws IllegalArgumentException if minimum value is larger than maximum value (as
      * long as it has a limit defined), or if minimum value is less than 1.
      */
+    @SuppressWarnings("Duplicates")
     private void internalSetMinMaxNearestFingerprints(int minNearestFingerprints,
-                                                        int maxNearestFingerprints) {
+            int maxNearestFingerprints) {
         if (minNearestFingerprints < 1 ||
                 (maxNearestFingerprints >= 0 && minNearestFingerprints > maxNearestFingerprints)) {
             throw new IllegalArgumentException();

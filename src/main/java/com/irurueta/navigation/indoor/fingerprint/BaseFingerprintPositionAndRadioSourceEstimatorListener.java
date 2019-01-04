@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package com.irurueta.navigation.indoor.fingerprint;
 
-
 /**
- * Listener to be notified of events such as when estimation of position
- * using fingerprints starts or ends.
- * @param <E> a {@link BaseFingerprintPositionEstimator} type.
+ * Listener to be notified of events such as when estimation of position and
+ * radio source using fingerprints starts or ends.
+ * @param <E> a {@link BaseFingerprintPositionAndRadioSourceEstimator} type.
  */
-public interface BaseFingerprintEstimatorListener<E extends BaseFingerprintPositionEstimator> {
+public interface BaseFingerprintPositionAndRadioSourceEstimatorListener<
+        E extends BaseFingerprintPositionAndRadioSourceEstimator> {
 
     /**
      * Called when estimation starts.

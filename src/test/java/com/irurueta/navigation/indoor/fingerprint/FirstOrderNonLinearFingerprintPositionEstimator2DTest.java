@@ -201,7 +201,7 @@ public class FirstOrderNonLinearFingerprintPositionEstimator2DTest
 
         List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
         for (int i = 0; i < Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH; i++) {
-            WifiAccessPointLocated2D source = new WifiAccessPointLocated2D("bssid" + 1,
+            WifiAccessPointLocated2D source = new WifiAccessPointLocated2D("bssid" + i,
                     FREQUENCY, Point2D.create());
             sources.add(source);
         }

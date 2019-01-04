@@ -30,7 +30,8 @@ import java.util.List;
  * RSSI readings and having as well prior knowledge of the location of radio sources
  * associated to those readings.
  * This implementation uses a first-order Taylor approximation over provided located
- * fingerprints to determine an approximate position for a non-located fingerprint.
+ * fingerprints to determine an approximate position for a non-located fingerprint and
+ * solves the problem in a linear way.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
@@ -142,8 +143,9 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point> extend
 
             int dims = getNumberOfDimensions();
             int max = mMaxNearestFingerprints < 0 ?
-                    mLocatedFingerprints.size() : mMaxNearestFingerprints;
-            for (int k = mMinNearestFingerprints; k < max; k++) {
+                    mLocatedFingerprints.size() :
+                    Math.min(mMaxNearestFingerprints, mLocatedFingerprints.size());
+            for (int k = mMinNearestFingerprints; k <= max; k++) {
 
                 if (noMeanfinder != null) {
                     //noinspection unchecked

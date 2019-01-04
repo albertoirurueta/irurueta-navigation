@@ -77,17 +77,17 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
     public static final boolean DEFAULT_PROPAGATE_RADIO_SOURCE_POSITION_COVARIANCE = true;
 
     /**
-     * Small value to be used as the minimum allowed RSSI standard deviations. A value
-     * larger than this must be provided to allow convergence to a solution
-     */
-    private static final double TINY_RSSI_STD = 1e-12;
-
-    /**
      * Default type to be used when none is provided.
      */
     @SuppressWarnings("WeakerAccess")
     public static final NonLinearFingerprintPositionEstimatorType DEFAULT_TYPE =
             NonLinearFingerprintPositionEstimatorType.THIRD_ORDER;
+
+    /**
+     * Small value to be used as the minimum allowed RSSI standard deviations. A value
+     * larger than this must be provided to allow convergence to a solution
+     */
+    private static final double TINY_RSSI_STD = 1e-12;
 
     /**
      * Initial position to start the solving algorithm.
@@ -179,9 +179,9 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      */
     public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                                 RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                                 List<? extends RadioSourceLocated<P>> sources) {
+            List<? extends RadioSourceLocated<P>> sources) {
         super(locatedFingerprints, fingerprint, sources);
     }
 
@@ -200,12 +200,13 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                                 RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                                 List<? extends RadioSourceLocated<P>> sources,
-                                                 FingerprintPositionEstimatorListener<P> listener) {
+            List<? extends RadioSourceLocated<P>> sources,
+            FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
     }
 
@@ -224,11 +225,12 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                                 RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                                 List<? extends RadioSourceLocated<P>> sources, P initialPosition) {
+            List<? extends RadioSourceLocated<P>> sources, P initialPosition) {
         super(locatedFingerprints, fingerprint, sources);
         mInitialPosition = initialPosition;
     }
@@ -249,12 +251,13 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * different locations containing a single reading are required. For 3D position
      * estimation 3 located total readings are required among all fingerprints).
      */
-    public NonLinearFingerprintPositionEstimator(List<? extends RssiFingerprintLocated<? extends RadioSource,
+    public NonLinearFingerprintPositionEstimator(
+            List<? extends RssiFingerprintLocated<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>, P>> locatedFingerprints,
-                                                 RssiFingerprint<? extends RadioSource,
+            RssiFingerprint<? extends RadioSource,
             ? extends RssiReading<? extends RadioSource>> fingerprint,
-                                                 List<? extends RadioSourceLocated<P>> sources, P initialPosition,
-                                                 FingerprintPositionEstimatorListener<P> listener) {
+            List<? extends RadioSourceLocated<P>> sources, P initialPosition,
+            FingerprintPositionEstimatorListener<P> listener) {
         super(locatedFingerprints, fingerprint, sources, listener);
         mInitialPosition = initialPosition;
     }
@@ -479,8 +482,9 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
             mNearestFingerprints = null;
 
             int max = mMaxNearestFingerprints < 0 ?
-                    mLocatedFingerprints.size() : mMaxNearestFingerprints;
-            for (int k = mMinNearestFingerprints; k < max; k++) {
+                    mLocatedFingerprints.size() :
+                    Math.min(mMaxNearestFingerprints, mLocatedFingerprints.size());
+            for (int k = mMinNearestFingerprints; k <= max; k++) {
                 if (noMeanfinder != null) {
                     //noinspection unchecked
                     mNearestFingerprints = noMeanfinder.findKNearestTo(
@@ -537,17 +541,17 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
                 //have measured received power Pr(pi), we can get the following second-order Taylor
                 //approximation:
 
-                //Pr(pi) ~ Pr(p1) + JPtr(p1)*(pi - p1) + 1/2*(pi - p1)^T*HPr(p1)*(pi - p1) + ...
+                //Pr(pi) ~ Pr(p1) + JPr(p1)*(pi - p1) + 1/2*(pi - p1)^T*HPr(p1)*(pi - p1) + ...
 
                 //where JPr(p1) is the Jacobian of Pr evaluated at p1. Since Pr is a multivariate function
                 //with scalar result, the Jacobian has size 1x2 and is equal to the gradient.
-                //HPtr(p1) is the Hessian matrix evaluated at p1, which is a symmetric matrix of size 2x2,
+                //HPr(p1) is the Hessian matrix evaluated at p1, which is a symmetric matrix of size 2x2,
                 //and (pi-p1)^T is the transposed vector of (pi-p1)
 
                 //Hence, the Jacobian at any point p=(x,y) is equal to:
                 //JPr(p = (x,y)) = [diff(Pr(x,y))/diff(x)   diff(Pr(x,y))/diff(y)]
 
-                //And the Heassian matrix is equal to
+                //And the Hessian matrix is equal to
                 //HPr(p = (x,y)) =  [diff(Pr(x,y))/diff(x^2)    diff(Pr(x,y))/diff(x*y)]
                 //                  [diff(Pr(x,y))/diff(x*y)    diff(Pr(x,y))/diff(y^2)]
 
@@ -773,6 +777,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
                     //Iterate to use additinal nearby fingerprints
                     mEstimatedPositionCoordinates = null;
                     mCovariance = null;
+                    mNearestFingerprints = null;
                 }
             }
 
@@ -817,7 +822,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * reading.
      * @param fingerprintRssi closest located fingerprint reading RSSI expressed in dBm's.
      * @param pathlossExponent path-loss exponent.
-     * @param fingerprintPosition position of closest fingerprint.
+     * @param fingerprintPosition position of closest located fingerprint.
      * @param radioSourcePosition radio source position associated to fingerprint reading.
      * @param estimatedPosition position to be estimated. Usually this is equal to the
      *                          initial position used by a non linear algorithm.
@@ -840,7 +845,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * @param allReceivedPower list of received powers for readings at unknown positions.
      * @param allFingerprintPower list of power readings at fingerprint positions.
      * @param allFingerprintPositions list of fingerprint positions.
-     * @param allSourcesPosition list of radio sources positions.
+     * @param allSourcesPositions list of radio sources positions.
      * @param allPathLossExponents list of path loss exponents.
      * @param allStandardDeviations list of standard deviations for readings being used.
      */
@@ -848,7 +853,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
     private void buildData(List<Double> allReceivedPower,
                            List<Double> allFingerprintPower,
                            List<P> allFingerprintPositions,
-                           List<P> allSourcesPosition,
+                           List<P> allSourcesPositions,
                            List<Double> allPathLossExponents,
                            List<Double> allStandardDeviations) {
         for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
@@ -873,7 +878,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
             for (RssiReading<RadioSource> locatedReading : locatedReadings) {
                 RadioSource source = locatedReading.getSource();
 
-                //find within the list of located sources the shource of
+                //find within the list of located sources the source of
                 //current located fingerprint reading.
                 //Radio sources are compared by their id
                 //regardless of them being located or not
@@ -944,6 +949,8 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
                     if (standardDeviation == null) {
                         standardDeviation = reading.getRssiStandardDeviation();
                     } else if (reading.getRssiStandardDeviation() != null) {
+                        //consider propagated variance and reading variance independent, so we
+                        //sum them both
                         standardDeviation = standardDeviation * standardDeviation +
                                 reading.getRssiStandardDeviation() * reading.getRssiStandardDeviation();
                         standardDeviation = Math.sqrt(standardDeviation);
@@ -956,7 +963,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
                     allReceivedPower.add(rssi);
                     allFingerprintPower.add(locatedRssi);
                     allFingerprintPositions.add(fingerprintPosition);
-                    allSourcesPosition.add(sourcePosition);
+                    allSourcesPositions.add(sourcePosition);
                     allPathLossExponents.add(pathLossExponent);
                     allStandardDeviations.add(standardDeviation);
                 }
@@ -968,6 +975,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * Setups fitter to solve position.
      * @throws FittingException if Levenberg-Marquardt fitting fails.
      */
+    @SuppressWarnings("Duplicates")
     private void setupFitter() throws FittingException {
         //build lists of data
         final List<Double> allReceivedPower = new ArrayList<>();

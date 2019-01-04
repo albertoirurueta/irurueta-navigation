@@ -653,9 +653,9 @@ public class NonLinearFingerprintPositionEstimator3DTest
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
         //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
         double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY),
-                BaseFingerprintEstimator.DEFAULT_PATH_LOSS_EXPONENT);
+                BaseFingerprintPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT);
         return equivalentTransmittedPower * k /
-                Math.pow(distance, BaseFingerprintEstimator.DEFAULT_PATH_LOSS_EXPONENT);
+                Math.pow(distance, BaseFingerprintPositionEstimator.DEFAULT_PATH_LOSS_EXPONENT);
     }
 
     private void checkLocked(NonLinearFingerprintPositionEstimator3D estimator) {
