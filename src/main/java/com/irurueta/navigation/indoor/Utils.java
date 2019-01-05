@@ -2343,4 +2343,408 @@ public class Utils {
         }
     }
 
+    /**
+     * Propagates provided variances (path-loss exponent variance,
+     * fingerprint position covariance and radio source position covariance) into
+     * difference of rssi variance by considering the 2D expression.
+     * Notice that any unknown variance is assumed to be zero.
+     * @param pathLossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition  position to be estimated. Usually this is equal to the
+     *                           initial position used by a non linear algorithm.
+     * @param pathLossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null
+     *                                      if unknown.
+     * @param estimatedPositionCovariance  covariance of position to be estimated or null
+     *                                     if unknown. (This is usually unknown).
+     * @return a normal distribution containing expected received RSSI value and its variance.
+     * @throws IndoorException if something fails.
+     */
+    public static MultivariateNormalDist propagateVariancesToRssiDifferenceVariance2D(
+            final double pathLossExponent,
+            Point2D fingerprintPosition, Point2D radioSourcePosition,
+            Point2D estimatedPosition,
+            Double pathLossExponentVariance,
+            Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance,
+            Matrix estimatedPositionCovariance) throws IndoorException {
+
+        if (fingerprintPosition == null || radioSourcePosition == null ||
+                estimatedPosition == null) {
+            return null;
+        }
+
+        //Expression being used is:
+        //Prdiff1a = Pr(pi) - Pr(p1) = 5*n*log(d1a^2) - 5*n*log(dia^2) =
+        //  = 5*n*log((x1 - xa)^2 + (y1 - ya)^2) - 5*n*log((xi - xa)^2 + (yi - ya)^2)
+
+
+        final double x1 = fingerprintPosition.getInhomX();
+        final double y1 = fingerprintPosition.getInhomY();
+
+        final double xa = radioSourcePosition.getInhomX();
+        final double ya = radioSourcePosition.getInhomY();
+
+        final double xi = estimatedPosition.getInhomX();
+        final double yi = estimatedPosition.getInhomY();
+
+        double[] mean = new double[] {
+                pathLossExponent, x1, y1, xa, ya, xi, yi
+        };
+        Matrix covariance = Matrix.diagonal(new double[]{
+                pathLossExponentVariance != null ? pathLossExponentVariance : 0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        });
+
+        if (fingerprintPositionCovariance != null &&
+                fingerprintPositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                fingerprintPositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+
+            covariance.setSubmatrix(1, 1,
+                    2, 2,
+                    fingerprintPositionCovariance);
+        }
+
+        if (radioSourcePositionCovariance != null &&
+                radioSourcePositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                radioSourcePositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(3, 3,
+                    4, 4,
+                    radioSourcePositionCovariance);
+        }
+
+        if (estimatedPositionCovariance != null &&
+                estimatedPositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                estimatedPositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(5, 5,
+                    6, 6,
+                    estimatedPositionCovariance);
+        }
+
+        try {
+            return MultivariateNormalDist.propagate(new MultivariateNormalDist.JacobianEvaluator() {
+                @Override
+                public void evaluate(double[] x, double[] y, Matrix jacobian) {
+
+                    //Expression being used is:
+                    //Prdiff1a = Pr(pi) - Pr(p1) = 5*n*log(d1a^2) - 5*n*log(dia^2) =
+                    //  = 5*n*log((x1 - xa)^2 + (y1 - ya)^2) - 5*n*log((xi - xa)^2 + (yi - ya)^2)
+
+                    double diffX1a = x1 - xa;
+                    double diffY1a = y1 - ya;
+
+                    double diffXia = xi - xa;
+                    double diffYia = yi - ya;
+
+                    double diffX1a2 = diffX1a * diffX1a;
+                    double diffY1a2 = diffY1a * diffY1a;
+
+                    double diffXia2 = diffXia * diffXia;
+                    double diffYia2 = diffYia * diffYia;
+
+                    double d1a2 = diffX1a2 + diffY1a2;
+                    double dia2 = diffXia2 + diffYia2;
+
+                    double ln10 = Math.log(10.0);
+
+
+                    //compute gradient (is a jacobian having 1 row and 7 columns)
+
+
+                    //derivative of diff rssi respect to fingerprint path-loss exponent "n"
+
+                    double derivativePathLossExponent = 5.0 *
+                            (Math.log10(d1a2) - Math.log10(dia2));
+
+
+                    //derivative of diff rssi respect to x1
+                    //diff(Prdiff1a)/diff(x1) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*2*(x1 - xa) =
+                    //  = 10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+
+                    double tmp1a = 10.0 * pathLossExponent / (ln10 * d1a2);
+                    double derivativeX1 = tmp1a * diffX1a;
+
+
+                    //derivative of diff rssi respect to y1
+                    //diff(Prdiff1a)/diff(y1) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*2*(y1 - ya) =
+                    //  = 10*n*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))
+
+                    double derivativeY1 = tmp1a * diffY1a;
+
+
+                    //derivative of rssi respect to xi
+                    //diff(Prdiff1a)/diff(xi) = -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2))*2*(xi - xa)
+                    //  = -10*n*(xi - xa)/(ln(10)*((xi - xa)^2 + (yi - ya)^2))
+
+                    double tmpia = 10.0 * pathLossExponent / (ln10 * dia2);
+                    double derivativeXi = - tmpia * diffXia;
+
+                    //derivative of rssi respect to yi
+                    //diff(Prdiff1a)/diff(yi) = -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2))*2*(yi - ya)
+                    //  = -10*n*(yi - ya)/(ln(10)*((xi - xa)^2 + (yi - ya)^2))
+
+                    double derivativeYi = - tmpia * diffYia;
+
+
+                    //derivative of rssi respect to xa
+                    //diff(Prdiff1a)/diff(xa) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*-2*(x1 - xa) -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2))*-2(xi - xa) =
+                    //  = -10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)) + 10*n*(xi - xa)/(ln(10)*((xi - xa)^2 + (yi - ya)^2))
+
+                    double derivativeXa = - derivativeX1 - derivativeXi ;
+
+
+                    //derivative of rssi respect to ya
+                    //diff(Prdiff1a)/diff(ya) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2))*-2*(y1 - ya) -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2))*-2(yi - ya) =
+                    //  = -10*n*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2)) + 10*n*(yi - ya)/(ln(10)*((xi - xa)^2 + (yi - ya)^2))
+
+                    double derivativeYa = - derivativeY1 - derivativeYi ;
+
+
+                    //Prdiff1a = Pr(pi) - Pr(p1) = 5*n*log(d1a^2) - 5*n*log(dia^2) =
+                    //  = 5*n*log((x1 - xa)^2 + (y1 - ya)^2) - 5*n*log((xi - xa)^2 + (yi - ya)^2)
+
+
+                    //set derivatives pathLossExponent, x1, y1, xa, ya, xi, yi
+                    jacobian.setElementAtIndex(0, derivativePathLossExponent);
+                    jacobian.setElementAtIndex(1, derivativeX1);
+                    jacobian.setElementAtIndex(2, derivativeY1);
+                    jacobian.setElementAtIndex(3, derivativeXa);
+                    jacobian.setElementAtIndex(4, derivativeYa);
+                    jacobian.setElementAtIndex(5, derivativeXi);
+                    jacobian.setElementAtIndex(6, derivativeYi);
+
+
+                    y[0] = derivativePathLossExponent * pathLossExponent;
+                }
+
+                @Override
+                public int getNumberOfVariables() {
+                    return 1;
+                }
+            }, mean, covariance);
+        } catch (AlgebraException | StatisticsException e) {
+            throw new IndoorException(e);
+        }
+    }
+
+    /**
+     * Propagates provided variances (path-loss exponent variance,
+     * fingerprint position covariance and radio source position covariance) into
+     * difference of rssi variance by considering the 3D expression.
+     * Notice that any unknown variance is assumed to be zero.
+     * @param pathLossExponent path-loss exponent.
+     * @param fingerprintPosition position of closest fingerprint.
+     * @param radioSourcePosition radio source position associated to fingerprint reading.
+     * @param estimatedPosition  position to be estimated. Usually this is equal to the
+     *                           initial position used by a non linear algorithm.
+     * @param pathLossExponentVariance variance of path-loss exponent or null if unknown.
+     * @param fingerprintPositionCovariance covariance of fingerprint position or null if
+     *                                      unknown.
+     * @param radioSourcePositionCovariance covariance of radio source position or null
+     *                                      if unknown.
+     * @param estimatedPositionCovariance  covariance of position to be estimated or null
+     *                                     if unknown. (This is usually unknown).
+     * @return a normal distribution containing expected received RSSI value and its variance.
+     * @throws IndoorException if something fails.
+     */
+    public static MultivariateNormalDist propagateVariancesToRssiDifferenceVariance3D(
+            final double pathLossExponent,
+            Point3D fingerprintPosition, Point3D radioSourcePosition,
+            Point3D estimatedPosition,
+            Double pathLossExponentVariance,
+            Matrix fingerprintPositionCovariance,
+            Matrix radioSourcePositionCovariance,
+            Matrix estimatedPositionCovariance) throws IndoorException {
+
+        if (fingerprintPosition == null || radioSourcePosition == null ||
+                estimatedPosition == null) {
+            return null;
+        }
+
+        //Expression being used is:
+        //Prdiff1a = Pr(pi) - Pr(p1) = 5*n*log(d1a^2) - 5*n*log(dia^2) =
+        //  = 5*n*log((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2) - 5*n*log((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2)
+
+
+        final double x1 = fingerprintPosition.getInhomX();
+        final double y1 = fingerprintPosition.getInhomY();
+        final double z1 = fingerprintPosition.getInhomZ();
+
+        final double xa = radioSourcePosition.getInhomX();
+        final double ya = radioSourcePosition.getInhomY();
+        final double za = radioSourcePosition.getInhomZ();
+
+        final double xi = estimatedPosition.getInhomX();
+        final double yi = estimatedPosition.getInhomY();
+        final double zi = estimatedPosition.getInhomZ();
+
+        double[] mean = new double[] {
+                pathLossExponent, x1, y1, z1, xa, ya, za, xi, yi, zi
+        };
+        Matrix covariance = Matrix.diagonal(new double[]{
+                pathLossExponentVariance != null ? pathLossExponentVariance : 0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+        });
+
+        if (fingerprintPositionCovariance != null &&
+                fingerprintPositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                fingerprintPositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+
+            covariance.setSubmatrix(1, 1,
+                    3, 3,
+                    fingerprintPositionCovariance);
+        }
+
+        if (radioSourcePositionCovariance != null &&
+                radioSourcePositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                radioSourcePositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(4, 4,
+                    6, 6,
+                    radioSourcePositionCovariance);
+        }
+
+        if (estimatedPositionCovariance != null &&
+                estimatedPositionCovariance.getRows() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH &&
+                estimatedPositionCovariance.getColumns() == Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+            covariance.setSubmatrix(7, 7,
+                    9, 9,
+                    estimatedPositionCovariance);
+        }
+
+        try {
+            return MultivariateNormalDist.propagate(new MultivariateNormalDist.JacobianEvaluator() {
+                @Override
+                public void evaluate(double[] x, double[] y, Matrix jacobian) {
+
+                    //Expression being used is:
+                    //Prdiff1a = Pr(pi) - Pr(p1) = 5*n*log(d1a^2) - 5*n*log(dia^2) =
+                    //  = 5*n*log((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2) - 5*n*log((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2)
+
+                    double diffX1a = x1 - xa;
+                    double diffY1a = y1 - ya;
+                    double diffZ1a = z1 - za;
+
+                    double diffXia = xi - xa;
+                    double diffYia = yi - ya;
+                    double diffZia = zi - za;
+
+                    double diffX1a2 = diffX1a * diffX1a;
+                    double diffY1a2 = diffY1a * diffY1a;
+                    double diffZ1a2 = diffZ1a * diffZ1a;
+
+                    double diffXia2 = diffXia * diffXia;
+                    double diffYia2 = diffYia * diffYia;
+                    double diffZia2 = diffZia * diffZia;
+
+                    double d1a2 = diffX1a2 + diffY1a2 + diffZ1a2;
+                    double dia2 = diffXia2 + diffYia2 + diffZia2;
+
+                    double ln10 = Math.log(10.0);
+
+
+                    //compute gradient (is a jacobian having 1 row and 10 columns)
+
+                    //derivative of diff rssi respect to fingerprint path-loss exponent "n"
+
+                    double derivativePathLossExponent = 5.0 *
+                            (Math.log10(d1a2) - Math.log10(dia2));
+
+
+                    //derivative of diff rssi respect to x1
+                    //diff(Prdiff1a)/diff(x1) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))*2*(x1 - xa) =
+                    //  = 10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))
+
+                    double tmp1a = 10.0 * pathLossExponent / (ln10 * d1a2);
+                    double derivativeX1 = tmp1a * diffX1a;
+
+
+                    //derivative of diff rssi respect to y1
+                    //diff(Prdiff1a)/diff(y1) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2) + (z1 - za)^2)*2*(y1 - ya) =
+                    //  = 10*n*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))
+
+                    double derivativeY1 = tmp1a * diffY1a;
+
+
+                    //derivative of diff rssi respect to z1
+                    //diff(Prdiff1a)/diff(z1) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2) + (z1 - za)^2)*2*(z1 - za) =
+                    //  = 10*n*(z1 - za)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))
+
+                    double derivativeZ1 = tmp1a * diffZ1a;
+
+
+                    //derivative of rssi respect to xi
+                    //diff(Prdiff1a)/diff(xi) = -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))*2*(xi - xa)
+                    //  = -10*n*(xi - xa)/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))
+
+                    double tmpia = 10.0 * pathLossExponent / (ln10 * dia2);
+                    double derivativeXi = - tmpia * diffXia;
+
+
+                    //derivative of rssi respect to yi
+                    //diff(Prdiff1a)/diff(yi) = -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))*2*(yi - ya)
+                    //  = -10*n*(yi - ya)/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))
+
+                    double derivativeYi = - tmpia * diffYia;
+
+
+                    //derivative of rssi respect to zi
+                    //diff(Prdiff1a)/diff(zi) = -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))*2*(zi - za)
+                    //  = -10*n*(zi - za)/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))
+
+                    double derivativeZi = - tmpia * diffZia;
+
+
+                    //Prdiff1a = Pr(pi) - Pr(p1) = 5*n*log(d1a^2) - 5*n*log(dia^2) =
+                    //  = 5*n*log((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2) - 5*n*log((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2)
+
+                    //derivative of rssi respect to xa
+                    //diff(Prdiff1a)/diff(xa) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))*-2*(x1 - xa) -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))*-2(xi - xa) =
+                    //  = -10*n*(x1 - xa)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2)) + 10*n*(xi - xa)/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))
+
+                    double derivativeXa = - derivativeX1 - derivativeXi;
+
+
+                    //derivative of rssi respect to ya
+                    //diff(Prdiff1a)/diff(ya) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))*-2*(y1 - ya) -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))*-2(yi - ya) =
+                    //  = -10*n*(y1 - ya)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2)) + 10*n*(yi - ya)/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))
+
+                    double derivativeYa = - derivativeY1 - derivativeYi;
+
+
+                    //derivative of rssi respect to za
+                    //diff(Prdiff1a)/diff(za) = 5*n/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2))*-2*(z1 - za) -5*n/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))*-2(zi - za) =
+                    //  = -10*n*(z1 - za)/(ln(10)*((x1 - xa)^2 + (y1 - ya)^2 + (z1 - za)^2)) + 10*n*(zi - za)/(ln(10)*((xi - xa)^2 + (yi - ya)^2 + (zi - za)^2))
+
+                    double derivativeZa = - derivativeZ1 - derivativeZi;
+
+
+                    //set derivatives pathLossExponent, x1, y1, z1, xa, ya, za, xi, yi, zi
+                    jacobian.setElementAtIndex(0, derivativePathLossExponent);
+                    jacobian.setElementAtIndex(1, derivativeX1);
+                    jacobian.setElementAtIndex(2, derivativeY1);
+                    jacobian.setElementAtIndex(3, derivativeZ1);
+                    jacobian.setElementAtIndex(4, derivativeXa);
+                    jacobian.setElementAtIndex(5, derivativeYa);
+                    jacobian.setElementAtIndex(6, derivativeZa);
+                    jacobian.setElementAtIndex(7, derivativeXi);
+                    jacobian.setElementAtIndex(8, derivativeYi);
+                    jacobian.setElementAtIndex(9, derivativeZi);
+
+
+                    y[0] = derivativePathLossExponent * pathLossExponent;
+                }
+
+                @Override
+                public int getNumberOfVariables() {
+                    return 1;
+                }
+            }, mean, covariance);
+        } catch (AlgebraException | StatisticsException e) {
+            throw new IndoorException(e);
+        }
+    }
+
 }

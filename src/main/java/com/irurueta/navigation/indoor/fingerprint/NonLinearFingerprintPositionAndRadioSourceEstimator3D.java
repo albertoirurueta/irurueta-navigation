@@ -19,6 +19,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.statistics.MultivariateNormalDist;
 
 import java.util.List;
 
@@ -221,12 +222,30 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3D extends
      * @return variance of RSSI difference measured at non located fingerprint reading.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     protected Double propagateVariances(double pathlossExponent, Point3D fingerprintPosition,
             Point3D radioSourcePosition, Point3D estimatedPosition,
             Double pathlossExponentVariance, Matrix fingerprintPositionCovariance,
             Matrix radioSourcePositionCovariance) {
-        //TODO: finish implementation
-        return null;
+        try {
+            MultivariateNormalDist dist = Utils.propagateVariancesToRssiDifferenceVariance3D(
+                    pathlossExponent, fingerprintPosition, radioSourcePosition,
+                    estimatedPosition, pathlossExponentVariance,
+                    fingerprintPositionCovariance, radioSourcePositionCovariance,
+                    null);
+            if (dist == null) {
+                return null;
+            }
+
+            Matrix covariance = dist.getCovariance();
+            if (covariance == null) {
+                return null;
+            }
+
+            return covariance.getElementAt(0, 0);
+        } catch (IndoorException e) {
+            return null;
+        }
     }
 
     /**

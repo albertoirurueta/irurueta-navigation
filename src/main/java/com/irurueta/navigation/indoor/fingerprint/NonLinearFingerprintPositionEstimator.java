@@ -938,9 +938,11 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
 
                         Double variance = propagateVariances(locatedRssi,
                                 pathLossExponent, fingerprintPosition, sourcePosition,
-                                initialPosition, locatedRssiVariance,
-                                pathLossExponentVariance, fingerprintPositionCovariance,
-                                sourcePositionCovariance);
+                                initialPosition,
+                                mPropagateFingerprintRssiStandardDeviation ? locatedRssiVariance : null,
+                                mPropagatePathlossExponentStandardDeviation ? pathLossExponentVariance : null,
+                                mPropagateFingerprintPositionCovariance ? fingerprintPositionCovariance : null,
+                                mPropagateRadioSourcePositionCovariance ? sourcePositionCovariance : null);
                         if (variance != null) {
                             standardDeviation = Math.sqrt(variance);
                         }

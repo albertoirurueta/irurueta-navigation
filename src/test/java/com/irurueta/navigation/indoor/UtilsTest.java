@@ -1009,6 +1009,178 @@ public class UtilsTest {
         }
     }
 
+    @Test
+    public void testPropagateVariancesToRssiDifferenceVariance2D()
+            throws IndoorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            double x1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point2D fingerprintPosition = new InhomogeneousPoint2D(x1, y1);
+
+            double xa = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double ya = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point2D radioSourcePosition = new InhomogeneousPoint2D(xa, ya);
+
+            double xi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double yi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point2D estimatedPosition = new InhomogeneousPoint2D(xi, yi);
+
+            //test without variance values
+            MultivariateNormalDist dist = Utils.propagateVariancesToRssiDifferenceVariance2D(
+                    pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, null,
+                    null, null,
+                    null);
+
+            double diffX1a = x1 - xa;
+            double diffY1a = y1 - ya;
+
+            double diffXia = xi - xa;
+            double diffYia = yi - ya;
+
+            double diffX1a2 = diffX1a * diffX1a;
+            double diffY1a2 = diffY1a * diffY1a;
+
+            double diffXia2 = diffXia * diffXia;
+            double diffYia2 = diffYia * diffYia;
+
+            double d1a2 = diffX1a2 + diffY1a2;
+            double dia2 = diffXia2 + diffYia2;
+
+            double diffRssi = 5.0 * pathLossExponent * (Math.log10(d1a2) - Math.log10(dia2));
+
+            assertEquals(dist.getMean()[0], diffRssi, ABSOLUTE_ERROR);
+
+            double diffRssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(diffRssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            //test with variance values
+            dist = Utils.propagateVariancesToRssiDifferenceVariance2D(
+                    pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, 0.0,
+                    new Matrix(2,2),
+                    new Matrix(2, 2),
+                    new Matrix(2, 2));
+
+            assertEquals(dist.getMean()[0], diffRssi, ABSOLUTE_ERROR);
+            diffRssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(diffRssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            assertNull(Utils.propagateVariancesToRssiDifferenceVariance2D(
+                    pathLossExponent, null, radioSourcePosition,
+                    estimatedPosition, null,
+                    null, null,
+                    null));
+            assertNull(Utils.propagateVariancesToRssiDifferenceVariance2D(
+                    pathLossExponent, fingerprintPosition, null,
+                    estimatedPosition, null, null,
+                    null, null));
+            assertNull(Utils.propagateVariancesToRssiDifferenceVariance2D(
+                    pathLossExponent, fingerprintPosition, radioSourcePosition,
+                    null, null,
+                    null, null,
+                    null));
+        }
+    }
+
+    @Test
+    public void testPropagateVariancesToRssiDifferenceVariance3D()
+            throws IndoorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            double x1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double z1 = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point3D fingerprintPosition = new InhomogeneousPoint3D(x1, y1, z1);
+
+            double xa = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double ya = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double za = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point3D radioSourcePosition = new InhomogeneousPoint3D(xa, ya, za);
+
+            double xi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double yi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double zi = randomizer.nextDouble(MIN_POS, MAX_POS);
+            Point3D estimatedPosition = new InhomogeneousPoint3D(xi, yi, zi);
+
+            //test without variance values
+            MultivariateNormalDist dist = Utils.propagateVariancesToRssiDifferenceVariance3D(
+                    pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, null,
+                    null, null,
+                    null);
+
+            double diffX1a = x1 - xa;
+            double diffY1a = y1 - ya;
+            double diffZ1a = z1 - za;
+
+            double diffXia = xi - xa;
+            double diffYia = yi - ya;
+            double diffZia = zi - za;
+
+            double diffX1a2 = diffX1a * diffX1a;
+            double diffY1a2 = diffY1a * diffY1a;
+            double diffZ1a2 = diffZ1a * diffZ1a;
+
+            double diffXia2 = diffXia * diffXia;
+            double diffYia2 = diffYia * diffYia;
+            double diffZia2 = diffZia * diffZia;
+
+            double d1a2 = diffX1a2 + diffY1a2 + diffZ1a2;
+            double dia2 = diffXia2 + diffYia2 + diffZia2;
+
+            double diffRssi = 5.0 * pathLossExponent * (Math.log10(d1a2) - Math.log10(dia2));
+
+            assertEquals(dist.getMean()[0], diffRssi, ABSOLUTE_ERROR);
+
+            double diffRssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(diffRssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            //test with variance values
+            dist = Utils.propagateVariancesToRssiDifferenceVariance3D(
+                    pathLossExponent, fingerprintPosition,
+                    radioSourcePosition, estimatedPosition, 0.0,
+                    new Matrix(3,3),
+                    new Matrix(3, 3),
+                    new Matrix(3, 3));
+
+            assertEquals(dist.getMean()[0], diffRssi, ABSOLUTE_ERROR);
+            diffRssiVariance = dist.getCovariance().
+                    getElementAt(0, 0);
+            assertEquals(diffRssiVariance, 0.0, ABSOLUTE_ERROR);
+
+
+            assertNull(Utils.propagateVariancesToRssiDifferenceVariance3D(
+                    pathLossExponent, null, radioSourcePosition,
+                    estimatedPosition, null,
+                    null, null,
+                    null));
+            assertNull(Utils.propagateVariancesToRssiDifferenceVariance3D(
+                    pathLossExponent, fingerprintPosition, null,
+                    estimatedPosition, null, null,
+                    null, null));
+            assertNull(Utils.propagateVariancesToRssiDifferenceVariance3D(
+                    pathLossExponent, fingerprintPosition, radioSourcePosition,
+                    null, null,
+                    null, null,
+                    null));
+        }
+    }
 
     private double receivedPower(double equivalentTransmittedPower,
                                  double distance, double pathLossExponent) {

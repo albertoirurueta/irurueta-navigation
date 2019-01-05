@@ -15,15 +15,20 @@
  */
 package com.irurueta.navigation.indoor.fingerprint;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
+import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
+import com.irurueta.navigation.Accuracy2D;
 import com.irurueta.navigation.LockedException;
+import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
 import org.junit.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
@@ -36,8 +41,8 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
-    private static final int MIN_SOURCES = 3;
-    private static final int MAX_SOURCES = 10;
+    private static final int MIN_SOURCES = 10;
+    private static final int MAX_SOURCES = 20;
 
     private static final double MIN_POS = -50.0;
     private static final double MAX_POS = 50.0;
@@ -64,9 +69,11 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
 
     private static final double SPEED_OF_LIGHT = 299792458.0;
 
-    private static final double ERROR_STD = 1.0e-1;
+    private static final double INITIAL_POSITION_ERROR_STD = 1.0;
 
-    private static final double ERROR_MARGIN = 1e-3;
+    private static final double RSSI_ERROR_STD = 1.0e-1;
+
+    private static final double ABSOLUTE_ERROR = 1e-6;
 
     private static final int TIMES = 50;
 
@@ -121,7 +128,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
 
         //test constructor with listener
@@ -156,7 +162,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
 
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -216,7 +221,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -265,7 +269,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -316,7 +319,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -366,7 +368,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -418,7 +419,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -467,7 +467,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -518,7 +517,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -571,7 +569,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertTrue(estimator.isPathlossExponentStandardDeviationPropagated());
         assertTrue(estimator.isFingerprintPositionCovariancePropagated());
         assertTrue(estimator.isRadioSourcePositionCovariancePropagated());
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
 
         //force IllegalArgumentException
         estimator = null;
@@ -827,23 +824,3433 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
         assertFalse(estimator.isRadioSourcePositionCovariancePropagated());
     }
 
-
     @Test
-    public void testIsSetInitialPositionCovariancePropagated() throws LockedException {
-        NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
-                new NonLinearFingerprintPositionAndRadioSourceEstimator2D();
+    public void testEstimateOneRadioSourceWithoutInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
 
-        //check default value
-        assertTrue(estimator.isInitialPositionCovariancePropagated());
+        Accuracy2D accuracy = new Accuracy2D();
 
-        //set new value
-        estimator.setInitialPositionCovariancePropagated(false);
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        //check
-        assertFalse(estimator.isInitialPositionCovariancePropagated());
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check results
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
     }
 
-    //TODO: test estimate
+    @Test
+    public void testEstimateOneRadioSourceWithExactInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithApproximateInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            GaussianRandomizer positionErrorRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, INITIAL_POSITION_ERROR_STD);
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> initialSources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+                        x + positionErrorRandomizer.nextDouble(),
+                        y + positionErrorRandomizer.nextDouble());
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+
+                WifiAccessPointWithPowerAndLocated2D initialAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, initialPosition);
+                initialSources.add(initialAccessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+                    x + positionErrorRandomizer.nextDouble(),
+                    y + positionErrorRandomizer.nextDouble());
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint, initialPosition,
+                            initialSources,this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check results
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithNonLocatedSources()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> locatedSources = new ArrayList<>();
+            List<RadioSource> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                locatedSources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint("bssid" + i, FREQUENCY);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                int k = 0;
+                for (RadioSourceLocated<Point2D> locatedSource : locatedSources) {
+                    double distance = locatedSource.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) locatedSource).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+
+                    RadioSource source = sources.get(k);
+                    RssiReading<RadioSource> reading = new RssiReading<>(source,
+                            receivedRssi);
+                    readings.add(reading);
+                    k++;
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            int k = 0;
+            for (RadioSourceLocated<Point2D> locatedSource : locatedSources) {
+                double distance = locatedSource.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) locatedSource).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+
+                RadioSource source = sources.get(k);
+                RssiReading<RadioSource> reading = new RssiReading<>(source,
+                        receivedRssi);
+                readings.add(reading);
+                k++;
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint, position, locatedSources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = locatedSources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = locatedSources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithRssiError()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            GaussianRandomizer rssiErrorRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, RSSI_ERROR_STD);
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    double rssiError = rssiErrorRandomizer.nextDouble();
+
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi + rssiError);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                double rssiError = rssiErrorRandomizer.nextDouble();
+
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi + rssiError);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithBias()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi + RSSI_BIAS);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi + RSSI_BIAS);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithRssiErrorAndBias()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            GaussianRandomizer rssiErrorRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, RSSI_ERROR_STD);
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    double rssiError = rssiErrorRandomizer.nextDouble();
+
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi + rssiError + RSSI_BIAS);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                double rssiError = rssiErrorRandomizer.nextDouble();
+
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi + rssiError + RSSI_BIAS);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithVariancePropagation()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                double positionStd = randomizer.nextDouble(
+                        MIN_POSITION_STANDARD_DEVIATION,
+                        MAX_POSITION_STANDARD_DEVIATION);
+                double positionVariance = positionStd * positionStd;
+                Matrix positionCovariance = Matrix.diagonal(
+                        new double[] { positionVariance, positionVariance });
+                double pathLossStd = randomizer.nextDouble(MIN_PATHLOSS_STANDARD_DEVIATION,
+                        MAX_PATHLOSS_STANDARD_DEVIATION);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
+                                "bssid" + i, FREQUENCY, transmittedPowerdBm,
+                                null,
+                                NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                                pathLossStd, position, positionCovariance);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                double positionStd = randomizer.nextDouble(
+                        MIN_POSITION_STANDARD_DEVIATION,
+                        MAX_POSITION_STANDARD_DEVIATION);
+                double positionVariance = positionStd * positionStd;
+                Matrix positionCovariance = Matrix.diagonal(
+                        new double[] { positionVariance, positionVariance });
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    double receivedRssiStd = randomizer.nextDouble(
+                            MIN_RSSI_STANDARD_DEVIATION, MAX_RSSI_STANDARD_DEVIATION);
+
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi, receivedRssiStd);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position,
+                                positionCovariance);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateBeacon()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                BeaconIdentifier identifier = BeaconIdentifier.fromUuid(UUID.randomUUID());
+                BeaconLocated2D beacon = new BeaconLocated2D(
+                        Collections.singletonList(identifier),
+                        transmittedPowerdBm, FREQUENCY, position);
+                sources.add(beacon);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((BeaconLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((BeaconLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateOneRadioSourceWithOtherPathLossExponent()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            //build sources
+            int numSources = 1;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i,
+                                FREQUENCY, transmittedPowerdBm, pathLossExponent,
+                                position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, pathLossExponent));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, pathLossExponent));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setPathLossExponent(pathLossExponent);
+            estimator.setMinMaxNearestFingerprints(4,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateTwoRadioSourcesWithoutInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 2;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(6,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            //check results
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertEquals(estimatedLocatedSources.size(), numSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateTwoRadioSourcesWithExactInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 2;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(6,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertEquals(estimatedLocatedSources.size(), numSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateTwoRadioSourcesWithVariancePropagation()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 2;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                double positionStd = randomizer.nextDouble(
+                        MIN_POSITION_STANDARD_DEVIATION,
+                        MAX_POSITION_STANDARD_DEVIATION);
+                double positionVariance = positionStd * positionStd;
+                Matrix positionCovariance = Matrix.diagonal(
+                        new double[] { positionVariance, positionVariance });
+                double pathLossStd = randomizer.nextDouble(MIN_PATHLOSS_STANDARD_DEVIATION,
+                        MAX_PATHLOSS_STANDARD_DEVIATION);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(
+                                "bssid" + i, FREQUENCY, transmittedPowerdBm,
+                                null,
+                                NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
+                                pathLossStd, position, positionCovariance);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                double positionStd = randomizer.nextDouble(
+                        MIN_POSITION_STANDARD_DEVIATION,
+                        MAX_POSITION_STANDARD_DEVIATION);
+                double positionVariance = positionStd * positionStd;
+                Matrix positionCovariance = Matrix.diagonal(
+                        new double[] { positionVariance, positionVariance });
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    double receivedRssiStd = randomizer.nextDouble(
+                            MIN_RSSI_STANDARD_DEVIATION, MAX_RSSI_STANDARD_DEVIATION);
+
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi, receivedRssiStd);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position,
+                                positionCovariance);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(6,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateWithoutEnoughFingerprintsForARadioSource()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = 2;
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS);
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //find closest located fingerprint to actual position and leave only
+            //dims - 1 readings for last radio source
+            int minNearestFingerprints = 6;
+            RadioSourceNoMeanKNearestFinder<Point2D, RadioSource> noMeanfinder =
+                    new RadioSourceNoMeanKNearestFinder<>(locatedFingerprints);
+            List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D>> nearestFingerprints =
+                    noMeanfinder.findKNearestTo(fingerprint, minNearestFingerprints);
+            RadioSourceLocated<Point2D> lastSource = sources.get(sources.size() - 1);
+            int numReadingsLastSource = 0;
+            locatedFingerprints.clear();
+
+            for(RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, Point2D> nearFingerprint : nearestFingerprints) {
+                List<RssiReading<RadioSource>> nearReadings = nearFingerprint.getReadings();
+
+                List<RssiReading<RadioSource>> readingsToRemove = new ArrayList<>();
+                for(RssiReading<RadioSource> nearReading : nearReadings) {
+                    if (nearReading.getSource().equals(lastSource)) {
+                        numReadingsLastSource++;
+
+                        if (numReadingsLastSource >= Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH) {
+                            readingsToRemove.add(nearReading);
+                        }
+                    }
+                }
+
+                nearReadings.removeAll(readingsToRemove);
+
+                locatedFingerprints.add(
+                        (RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>)nearFingerprint);
+            }
+
+
+
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position,
+                            sources,
+                            this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(minNearestFingerprints,-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            if (estimatedPosition == null) {
+                continue;
+            }
+
+            assertNotNull(estimatedPosition);
+
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertEquals(estimatedLocatedSources.size(), numSources - 1);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testEstimateMultipleRadioSourcesWithoutInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = Math.max(
+                    randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS),
+                    2 * (Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1));
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(
+                    estimator.getNumberOfDimensions() * (numSources + 1),-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertEquals(estimatedLocatedSources.size(), numSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+
+            break;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testEstimateMultipleRadioSourcesWithExactInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            //build sources
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = Math.max(
+                    randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS),
+                    2 * (Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1));
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            position, sources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(
+                    estimator.getNumberOfDimensions() * (numSources + 1),-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertEquals(estimatedLocatedSources.size(), numSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(positionError <= ABSOLUTE_ERROR);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                if (sourcePositionError > ABSOLUTE_ERROR) {
+                    continue;
+                }
+                assertTrue(sourcePositionError <= ABSOLUTE_ERROR);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testEstimateMultipleRadioSourcesWithApproximateInitialValues()
+            throws LockedException, FingerprintEstimationException, NotReadyException {
+
+        Accuracy2D accuracy = new Accuracy2D();
+
+        double avgPositionError = 0.0;
+        double avgSourcePositionError = 0.0;
+        double avgPositionAccuracy = 0.0;
+        double avgSourceAccuracy = 0.0;
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            GaussianRandomizer positionErrorRandomizer = new GaussianRandomizer(
+                    new Random(), 0.0, INITIAL_POSITION_ERROR_STD);
+
+            //build sources
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+            List<RadioSourceLocated<Point2D>> sources = new ArrayList<>();
+            List<RadioSourceLocated<Point2D>> initialSources = new ArrayList<>();
+            for(int i = 0; i < numSources; i++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+                        x + positionErrorRandomizer.nextDouble(),
+                        y + positionErrorRandomizer.nextDouble());
+
+                WifiAccessPointWithPowerAndLocated2D accessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, position);
+                sources.add(accessPoint);
+
+                WifiAccessPointWithPowerAndLocated2D initialAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D("bssid" + i, FREQUENCY,
+                                transmittedPowerdBm, initialPosition);
+                initialSources.add(initialAccessPoint);
+            }
+
+            //build located fingerprints
+            int numFingerprints = Math.max(
+                    randomizer.nextInt(MIN_FINGERPRINTS, MAX_FINGERPRINTS),
+                    2 * (Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1));
+            List<RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>>> locatedFingerprints =
+                    new ArrayList<>();
+            for (int j = 0; j < numFingerprints; j++) {
+                double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+                double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+                InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+                List<RssiReading<RadioSource>> readings = new ArrayList<>();
+                for (RadioSourceLocated<Point2D> source : sources) {
+                    double distance = source.getPosition().distanceTo(position);
+                    double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                            getTransmittedPower();
+
+                    double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                            distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                    RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                            receivedRssi);
+                    readings.add(reading);
+                }
+
+                RssiFingerprintLocated2D<RadioSource, RssiReading<RadioSource>> locatedFingerprint =
+                        new RssiFingerprintLocated2D<>(readings, position);
+                locatedFingerprints.add(locatedFingerprint);
+            }
+
+            //build non-located fingerprint
+            double x = randomizer.nextDouble(MIN_POS, MAX_POS);
+            double y = randomizer.nextDouble(MIN_POS, MAX_POS);
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(x, y);
+
+            InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
+                    x + positionErrorRandomizer.nextDouble(),
+                    y + positionErrorRandomizer.nextDouble());
+
+            List<RssiReading<RadioSource>> readings = new ArrayList<>();
+            for (RadioSourceLocated<Point2D> source : sources) {
+                double distance = source.getPosition().distanceTo(position);
+                double transmittedPowerdBm = ((WifiAccessPointWithPowerAndLocated2D) source).
+                        getTransmittedPower();
+
+                double receivedRssi = Utils.powerTodBm(receivedPower(Utils.dBmToPower(transmittedPowerdBm),
+                        distance, NonLinearFingerprintPositionAndRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT));
+                RssiReading<RadioSource> reading = new RssiReading<>((RadioSource) source,
+                        receivedRssi);
+                readings.add(reading);
+            }
+
+            RssiFingerprint<RadioSource, RssiReading<RadioSource>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+            //create estimator
+            NonLinearFingerprintPositionAndRadioSourceEstimator2D estimator =
+                    new NonLinearFingerprintPositionAndRadioSourceEstimator2D(
+                            locatedFingerprints, fingerprint,
+                            initialPosition, initialSources, this);
+            estimator.setUseNoMeanNearestFingerprintFinder(true);
+            estimator.setMinMaxNearestFingerprints(
+                    estimator.getNumberOfDimensions() * (numSources + 1),-1);
+
+            reset();
+
+            //check is ready
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedLocatedSources());
+            assertNull(estimator.getNearestFingerprints());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            //estimate
+            estimator.estimate();
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
+            List<RadioSourceLocated<Point2D>> estimatedLocatedSources =
+                    estimator.getEstimatedLocatedSources();
+            Matrix estimatedCovariance = estimator.getCovariance();
+
+            assertNotNull(estimatedPosition);
+            assertNotNull(estimatedPositionCovariance);
+            assertNotNull(estimatedLocatedSources);
+            assertEquals(estimatedLocatedSources.size(), numSources);
+            assertNotNull(estimatedCovariance);
+            assertFalse(estimator.isLocked());
+            assertTrue(estimator.isReady());
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            double positionError = estimatedPosition.distanceTo(position);
+
+            try {
+                accuracy.setCovarianceMatrix(estimatedPositionCovariance);
+
+                double positionAccuracy = accuracy.getAverageAccuracyMeters();
+                avgPositionAccuracy += positionAccuracy;
+            } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                continue;
+            }
+
+            avgPositionError += positionError;
+
+            double avgSourcePositionErrorOneTime = 0.0;
+            double avgSourceAccuracyOneTime = 0.0;
+            int numValidSources = 0;
+            for (RadioSourceLocated<Point2D> estimatedLocatedSource : estimatedLocatedSources) {
+                Point2D estimatedSourcePosition = estimatedLocatedSource.getPosition();
+                Matrix estimatedSourcePositionCovariance =
+                        estimatedLocatedSource.getPositionCovariance();
+
+                int index = sources.indexOf(estimatedLocatedSource);
+                RadioSourceLocated<Point2D> source = sources.get(index);
+                Point2D sourcePosition = source.getPosition();
+                double sourcePositionError = estimatedSourcePosition.distanceTo(sourcePosition);
+
+                try {
+                    accuracy.setCovarianceMatrix(estimatedSourcePositionCovariance);
+
+                    double sourcePositionAccuracy = accuracy.getAverageAccuracyMeters();
+                    avgSourceAccuracyOneTime += sourcePositionAccuracy;
+                } catch (NonSymmetricPositiveDefiniteMatrixException ignore) {
+                    continue;
+                }
+
+                avgSourcePositionErrorOneTime += sourcePositionError;
+
+                numValidSources++;
+            }
+
+            avgSourcePositionErrorOneTime /= numValidSources;
+            avgSourceAccuracyOneTime /= numValidSources;
+
+            avgSourcePositionError += avgSourcePositionErrorOneTime;
+            avgSourceAccuracy += avgSourceAccuracyOneTime;
+
+            numValid++;
+        }
+
+        avgPositionError /= numValid;
+        avgSourcePositionError /= numValid;
+        avgPositionAccuracy /= numValid;
+        avgSourceAccuracy /= numValid;
+
+        double percentage = (double)numValid / (double)TIMES;
+
+        LOGGER.log(Level.INFO, "Valid percentage: {0}%",
+                percentage * 100.0);
+        LOGGER.log(Level.INFO, "Avg. position error: {0} m",
+                avgPositionError);
+        LOGGER.log(Level.INFO, "Avg. position accuracy: {0} m",
+                avgPositionAccuracy);
+
+        LOGGER.log(Level.INFO, "Avg. source position error: {0} m",
+                avgSourcePositionError);
+        LOGGER.log(Level.INFO, "Avg. source accuracy: {0} m",
+                avgSourceAccuracy);
+
+        assertEquals(numValid, TIMES);
+    }
 
     @Override
     public void onEstimateStart(FingerprintPositionAndRadioSourceEstimator<Point2D> estimator) {
@@ -929,11 +4336,6 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator2DTest implement
             estimator.setRadioSourcePositionCovariancePropagated(true);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
-        try {
-            estimator.setInitialPositionCovariancePropagated(true);
-            fail("LockedException expected but not thrown");
-        } catch (LockedException ignore) { }
-
         try {
             estimator.estimate();
             fail("LockedException expected but not thrown");
