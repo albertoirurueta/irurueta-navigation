@@ -617,8 +617,9 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             mEstimatedPositionCovariance = null;
             mNearestFingerprints = null;
 
-            int min = mMinNearestFingerprints < 1 ?
-                    mLocatedFingerprints.size() : Math.max(1, mMinNearestFingerprints);
+//            int min = mMinNearestFingerprints < 1 ?
+//                    mLocatedFingerprints.size() : Math.max(1, mMinNearestFingerprints);
+            int min = Math.max(1, mMinNearestFingerprints);
             int max = mMaxNearestFingerprints < 0 ?
                     mLocatedFingerprints.size() :
                     Math.min(mMaxNearestFingerprints, mLocatedFingerprints.size());
@@ -702,6 +703,16 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
                 try {
                     List<RadioSource> sourcesToBeEstimated = setupFitter();
+                    if (mMinNearestFingerprints < 0) {
+                        //if no limit is set in minimum value, then a minimum of
+                        //dims * (1 + numSources) is used
+                        int numSources = sourcesToBeEstimated.size();
+                        int dims = getNumberOfDimensions();
+                        int minNearest = dims * (1 + numSources);
+                        if (k < minNearest) {
+                            continue;
+                        }
+                    }
 
                     mFitter.fit();
 

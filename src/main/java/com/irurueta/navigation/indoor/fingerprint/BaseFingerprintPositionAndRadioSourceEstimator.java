@@ -35,7 +35,7 @@ public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends P
     /**
      * Default minimum number of nearest fingerprints to search.
      */
-    public static final int DEFAULT_MIN_NEAREST_FINGERPRINTS = 1;
+    public static final int DEFAULT_MIN_NEAREST_FINGERPRINTS = -1;
 
     /**
      * Default maximum number of nearest fingerprints to search (no limit).
