@@ -28,10 +28,7 @@ import com.irurueta.numerical.fitting.FittingException;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFitter;
 import com.irurueta.numerical.fitting.LevenbergMarquardtMultiDimensionFunctionEvaluator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * Base class for position and radio source estimators based only on located
@@ -617,8 +614,6 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             mEstimatedPositionCovariance = null;
             mNearestFingerprints = null;
 
-//            int min = mMinNearestFingerprints < 1 ?
-//                    mLocatedFingerprints.size() : Math.max(1, mMinNearestFingerprints);
             int min = Math.max(1, mMinNearestFingerprints);
             int max = mMaxNearestFingerprints < 0 ?
                     mLocatedFingerprints.size() :
@@ -904,6 +899,9 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             nearestFingerprintsCentroid.setInhomogeneousCoordinate(i, centroidCoords[i]);
         }
 
+        //maps to keep cached in memory computed values to speed up computations
+        HashMap<RadioSource, Integer> numReadingsMap = new HashMap<>();
+        HashMap<RadioSource, P> centroidsMap = new HashMap<>();
 
         for (RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P> locatedFingerprint :
                 mNearestFingerprints) {
@@ -924,17 +922,31 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                 //obtain the total number of readings available for this source and
                 //the centroid of all located fingerprints containing readings for
                 //such source
-                int numReadings = totalReadingsForSource(source, mNearestFingerprints, null);
+                int numReadings;
+                if (!numReadingsMap.containsKey(source)) {
+                    numReadings = totalReadingsForSource(source, mNearestFingerprints, null);
+                    numReadingsMap.put(source, numReadings);
+                } else {
+                    numReadings = numReadingsMap.get(source);
+                }
+
                 if (numReadings < dims) {
                     continue;
                 }
 
-                P centroid = createPoint();
+                P centroid;
+                if (!centroidsMap.containsKey(source)) {
+                    centroid = createPoint();
 
-                //noinspection unchecked
-                totalReadingsForSource(source,
-                        (List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>>)mLocatedFingerprints,
-                        centroid);
+                    //noinspection unchecked
+                    totalReadingsForSource(source,
+                            (List<RssiFingerprintLocated<RadioSource, RssiReading<RadioSource>, P>>) mLocatedFingerprints,
+                            centroid);
+
+                    centroidsMap.put(source, centroid);
+                } else {
+                    centroid = centroidsMap.get(source);
+                }
 
                 //find within the list of located sources (if available) the source
                 //of current located fingerprint
@@ -1016,7 +1028,6 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                         P initialPosition = mInitialPosition != null ?
                                 mInitialPosition : nearestFingerprintsCentroid;
 
-                        //TODO: finish
                         Double variance = propagateVariances(pathLossExponent,
                                 fingerprintPosition, sourcePosition, initialPosition,
                                 mPropagatePathlossExponentStandardDeviation ? pathLossExponentVariance : null,
