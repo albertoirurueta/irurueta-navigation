@@ -613,6 +613,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
             mCovariance = null;
             mEstimatedPositionCovariance = null;
             mNearestFingerprints = null;
+            mEstimatedLocatedSources = null;
 
             int min = Math.max(1, mMinNearestFingerprints);
             int max = mMaxNearestFingerprints < 0 ?
@@ -756,7 +757,14 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
                     mEstimatedPositionCoordinates = null;
                     mCovariance = null;
                     mEstimatedPositionCovariance = null;
+                    mEstimatedLocatedSources = null;
                 }
+            }
+
+            if (mEstimatedPositionCoordinates == null ||
+                    mEstimatedLocatedSources == null) {
+                //no position could be estimated
+                throw new FingerprintEstimationException();
             }
 
             if (mListener != null) {

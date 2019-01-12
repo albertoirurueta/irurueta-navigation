@@ -3442,7 +3442,7 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3DTest implement
 
     @Test
     public void testEstimateWithoutEnoughFingerprintsForARadioSource()
-            throws LockedException, FingerprintEstimationException, NotReadyException {
+            throws LockedException, NotReadyException {
 
         Accuracy3D accuracy = new Accuracy3D();
 
@@ -3575,17 +3575,17 @@ public class NonLinearFingerprintPositionAndRadioSourceEstimator3DTest implement
             assertEquals(estimateEnd, 0);
 
             //estimate
-            estimator.estimate();
+            try {
+                estimator.estimate();
+            } catch (FingerprintEstimationException e) {
+                continue;
+            }
 
             Point3D estimatedPosition = estimator.getEstimatedPosition();
             Matrix estimatedPositionCovariance = estimator.getEstimatedPositionCovariance();
             List<RadioSourceLocated<Point3D>> estimatedLocatedSources =
                     estimator.getEstimatedLocatedSources();
             Matrix estimatedCovariance = estimator.getCovariance();
-
-            if (estimatedPosition == null) {
-                continue;
-            }
 
             assertNotNull(estimatedPosition);
 

@@ -26,7 +26,7 @@ import java.util.List;
  * Base class for position and radio source estimators based on located fingerprints
  * containing only RSSI readings without any prior knowledge of radio sources.
  * @param <P> a {@link Point} type.
- * @param <L> a {@link }
+ * @param <L> a {@link BaseFingerprintPositionAndRadioSourceEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends Point,
@@ -34,6 +34,8 @@ public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends P
 
     /**
      * Default minimum number of nearest fingerprints to search.
+     * This is the minimum required value to be used for the estimation of all
+     * radio sources and fingerprint position.
      */
     public static final int DEFAULT_MIN_NEAREST_FINGERPRINTS = -1;
 
@@ -64,7 +66,7 @@ public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends P
 
     /**
      * Minimum number of nearest fingerprints to search or -1 if there is no limit
-     * and all provided fingerprints are initially used.
+     * and all required fingerprints are initially used.
      */
     protected int mMinNearestFingerprints = DEFAULT_MIN_NEAREST_FINGERPRINTS;
 
@@ -225,7 +227,7 @@ public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends P
     /**
      * Get minimum number of nearest fingerprints to search.
      * @return minimum number of nearest fingerprints, -1 indicates to initially use
-     * all available fingerprints.
+     * all fingerprints needed to estimate available radio sources.
      */
     public int getMinNearestFingerprints() {
         return mMinNearestFingerprints;
@@ -242,7 +244,8 @@ public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends P
 
     /**
      * Sets minimum and maximum number of nearest fingerprints to search.
-     * If minimum value is -1, then initially al fingerprints are used.
+     * If minimum value is -1, then the minimum required number of fingerprints needed
+     * to estimate available radio sources is used.
      * If maximum value is -1, then the problem is attempted to be solved until all
      * available fingerprints are used.
      * @param minNearestFingerprints minimum number of nearest fingerprints or -1.

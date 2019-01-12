@@ -29,6 +29,7 @@ import java.util.List;
  * This class estimates 3D position of a new fingerprint and the 3D position of all
  * radio sources associated to fingerprints whose location is known.
  */
+@SuppressWarnings("WeakerAccess")
 public class NonLinearFingerprintPositionAndRadioSourceEstimator3D extends
         NonLinearFingerprintPositionAndRadioSourceEstimator<Point3D> {
 

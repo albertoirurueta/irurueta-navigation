@@ -43,6 +43,7 @@ import java.util.List;
  * point.
  * @param <P> a {@link Point} type.
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class NonLinearFingerprintPositionEstimator<P extends Point> extends
         FingerprintPositionEstimator<P> {
 
@@ -79,7 +80,6 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
     /**
      * Default type to be used when none is provided.
      */
-    @SuppressWarnings("WeakerAccess")
     public static final NonLinearFingerprintPositionEstimatorType DEFAULT_TYPE =
             NonLinearFingerprintPositionEstimatorType.THIRD_ORDER;
 
@@ -87,7 +87,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
      * Small value to be used as the minimum allowed RSSI standard deviations. A value
      * larger than this must be provided to allow convergence to a solution
      */
-    private static final double TINY_RSSI_STD = 1e-12;
+    public static final double TINY_RSSI_STD = 1e-12;
 
     /**
      * Initial position to start the solving algorithm.
