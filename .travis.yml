@@ -38,10 +38,6 @@ script:
 - ./cd/before-deploy.sh
 - ./cd/deploy.sh
 
-cache:
-  directories:
-  - ~/.m2/repository
-
 deploy:
   provider: pages
   skip-cleanup: true
