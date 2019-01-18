@@ -73,6 +73,8 @@ public class FirstOrderNonLinearFingerprintPositionEstimator3DTest
 
     private static final double ERROR_STD = 1.0e-1;
 
+    private static final double ERROR = 1e-1;
+
     private static final int TIMES = 50;
 
     private int estimateStart;
@@ -6014,7 +6016,7 @@ public class FirstOrderNonLinearFingerprintPositionEstimator3DTest
                         accuracy.getConfidence() * 100.0});
 
         assertTrue(avgEstimatedErrorWithInitialPosition >=
-                avgEstimatedErrorWithExactInitialPosition);
+                avgEstimatedErrorWithExactInitialPosition - ERROR);
     }
 
     @Test
