@@ -35,6 +35,12 @@ script:
 - travis_wait 50 mvn clean jacoco:prepare-agent install jacoco:report -P !build-extras
 - mvn site -Djacoco.skip -DskipTests -P !build-extras
 - sonar-scanner
+- ./cd/before-deploy.sh
+- ./cd/deploy.sh
+
+cache:
+  directories:
+  - ~/.m2/repository
 
 deploy:
   provider: pages
@@ -44,7 +50,3 @@ deploy:
   local-dir: ./target/site
   on:
     branch: master
-
-after_success:
-- ./cd/before-deploy.sh
-- ./cd/deploy.sh
