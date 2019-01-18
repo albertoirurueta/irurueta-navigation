@@ -36,10 +36,6 @@ script:
 - mvn site -Djacoco.skip -DskipTests -P !build-extras
 - sonar-scanner
 
-cache:
-  directories:
-  - ~/.m2/repository
-
 deploy:
   provider: pages
   skip-cleanup: true
