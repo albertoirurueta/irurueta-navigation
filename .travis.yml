@@ -33,8 +33,8 @@ addons:
 #add: -Denvironment=test to activate CI profile to publish into gh-pages
 script:
 - travis_wait 50 mvn clean jacoco:prepare-agent install jacoco:report -P !build-extras
-- travis_wait 50 mvn site -Djacoco.skip -DskipTests -P !build-extras
-- travis_wait 50 sonar-scanner
+- mvn site -Djacoco.skip -DskipTests -P !build-extras
+- sonar-scanner
 
 cache:
   directories:

@@ -106,6 +106,7 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point, S extends RadioSou
      * @return nearest fingerprint or null if none could be found.
      * @throws IllegalArgumentException if either fingerprint or collection of fingerprints is null.
      * @param <P> a {@link Point} type.
+     * @param <S> a {@link RadioSource} type.
      */
     @SuppressWarnings("Duplicates")
     public static <P extends Point, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P>
@@ -165,6 +166,7 @@ public class RadioSourceNoMeanKNearestFinder<P extends Point, S extends RadioSou
      *                            be stored or an empty list if no fingerprint is found.
      * @throws IllegalArgumentException if any parameter is null or k is less than 1.
      * @param <P> a {@link Point} type.
+     * @param <S> a {@link RadioSource} type.
      */
     @SuppressWarnings("Duplicates")
     public static <P extends Point, S extends RadioSource> void findKNearestTo(
