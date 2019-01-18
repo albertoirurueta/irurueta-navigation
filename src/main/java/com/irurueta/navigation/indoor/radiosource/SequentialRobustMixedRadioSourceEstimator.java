@@ -21,6 +21,7 @@ import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.numerical.robust.InliersData;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
@@ -345,6 +346,11 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * exponent estimation is enabled.
      */
     private Double mEstimatedPathLossExponentVariance;
+
+    /**
+     * Data related to inliers found after estimation.
+     */
+    private InliersData mInliersData;
 
     /**
      * Indicates whether position covariances of readings must be taken into account to increase
@@ -1854,6 +1860,7 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                 mEstimatedPosition = mRangingEstimator.getEstimatedPosition();
                 mEstimatedPositionCovariance =
                         mRangingEstimator.getEstimatedPositionCovariance();
+                mInliersData = mRangingEstimator.getInliersData();
             } else {
                 mEstimatedPosition = null;
             }
@@ -1871,6 +1878,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
                     mEstimatedPositionCovariance =
                             mRssiEstimator.getEstimatedPositionCovariance();
                 }
+
+                mInliersData = mRssiEstimator.getInliersData();
 
                 if (mTransmittedPowerEstimationEnabled) {
                     //transmitted power estimation enabled
@@ -1944,6 +1953,24 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
         } finally {
             mLocked = false;
         }
+    }
+
+    /**
+     * Gets data related to inliers found after estimation.
+     * @return data related to inliers found after estimation.
+     */
+    public InliersData getInliersData() {
+        return mInliersData;
+    }
+
+    /**
+     * Indicates whether position is estimated using RSSI data.
+     * If enough ranging readings are available, this is false and position is estimated using ranging readings,
+     * otherwise this is true and position is estimated using RSSI data in a less reliable way.
+     * @return true if position is estimated using RSSI data, false if position is estimated using ranging data.
+     */
+    public boolean isRssiPositionEnabled() {
+        return mRssiPositionEnabled;
     }
 
     /**

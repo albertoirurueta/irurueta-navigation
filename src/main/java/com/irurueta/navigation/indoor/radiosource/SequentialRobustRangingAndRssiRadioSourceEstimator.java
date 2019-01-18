@@ -21,6 +21,7 @@ import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.numerical.robust.InliersData;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
@@ -337,6 +338,11 @@ public abstract class SequentialRobustRangingAndRssiRadioSourceEstimator<S exten
      * exponent estimation is enabled.
      */
     private Double mEstimatedPathLossExponentVariance;
+
+    /**
+     * Data related to inliers found after estimation.
+     */
+    private InliersData mInliersData;
 
     /**
      * Indicates whether position covariances of readings must be taken into account to increase
@@ -1778,6 +1784,7 @@ public abstract class SequentialRobustRangingAndRssiRadioSourceEstimator<S exten
             mEstimatedPosition = mRangingEstimator.getEstimatedPosition();
             mEstimatedPositionCovariance =
                     mRangingEstimator.getEstimatedPositionCovariance();
+            mInliersData = mRangingEstimator.getInliersData();
 
             //estimate transmitted power and/or pathloss if enabled
             if (mTransmittedPowerEstimationEnabled || mPathLossEstimationEnabled) {
@@ -1854,6 +1861,14 @@ public abstract class SequentialRobustRangingAndRssiRadioSourceEstimator<S exten
         } finally {
             mLocked = false;
         }
+    }
+
+    /**
+     * Gets data related to inliers found after estimation.
+     * @return data related to inliers found after estimation.
+     */
+    public InliersData getInliersData() {
+        return mInliersData;
     }
 
     /**

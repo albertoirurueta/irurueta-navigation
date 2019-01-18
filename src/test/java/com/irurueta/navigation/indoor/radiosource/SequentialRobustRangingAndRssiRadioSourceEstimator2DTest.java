@@ -141,6 +141,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -201,6 +202,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -265,6 +267,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -315,6 +318,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -385,6 +389,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -451,6 +456,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -501,6 +507,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -551,6 +558,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -617,6 +625,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -668,6 +677,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -735,6 +745,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -786,6 +797,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -853,6 +865,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -920,6 +933,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -971,6 +985,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1023,6 +1038,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1090,6 +1106,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1157,6 +1174,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1208,6 +1226,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1259,6 +1278,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1327,6 +1347,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1377,6 +1398,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1443,6 +1465,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1493,6 +1516,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1561,6 +1585,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1627,6 +1652,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1677,6 +1703,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1727,6 +1754,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1794,6 +1822,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1845,6 +1874,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1914,6 +1944,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -1966,6 +1997,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2036,6 +2068,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2104,6 +2137,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2156,6 +2190,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2208,6 +2243,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2277,6 +2313,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2345,6 +2382,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2397,6 +2435,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -2449,6 +2488,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
         assertNull(estimator.getCovariance());
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedPosition());
+        assertNull(estimator.getInliersData());
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
@@ -3056,6 +3096,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -3213,6 +3255,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -3406,6 +3450,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -3602,6 +3648,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -3795,6 +3843,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -3996,6 +4046,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -4194,6 +4246,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -4388,6 +4442,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -4605,6 +4661,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -4788,6 +4846,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             BeaconWithPowerAndLocated2D estimatedBeacon =
                     (BeaconWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -4978,6 +5038,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -5151,6 +5213,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -5327,6 +5391,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -5499,6 +5565,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
@@ -5694,6 +5762,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNotNull(estimator.getEstimatedPathLossExponentVariance());
 
+            assertNotNull(estimator.getInliersData());
+
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
 
@@ -5887,6 +5957,8 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator2DTest implements
             assertNotNull(estimator.getEstimatedPositionCovariance());
             assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
             assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
 
             WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
                     (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
