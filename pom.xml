@@ -303,6 +303,7 @@
                 <configuration>
                     <show>private</show>
                     <nohelp>true</nohelp>
+                    <detectJavaApiLink>false</detectJavaApiLink>
                     <links>
                         <link>http://docs.oracle.com/javase/7/docs/api/</link>
                     </links>
