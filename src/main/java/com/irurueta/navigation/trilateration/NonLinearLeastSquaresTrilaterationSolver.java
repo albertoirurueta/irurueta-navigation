@@ -46,11 +46,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     public static final double DEFAULT_DISTANCE_STANDARD_DEVIATION = 1.0e-3;
 
     /**
-     * Minimum required number of points to solve trilateration.
-     */
-    public static final int MIN_POINTS = 2;
-
-    /**
      * Levenberg-Marquardt  fitter to find a non-linear solution.
      */
     private LevenbergMarquardtMultiDimensionFitter mFitter = new LevenbergMarquardtMultiDimensionFitter();
@@ -361,17 +356,6 @@ public abstract class NonLinearLeastSquaresTrilaterationSolver<P extends Point> 
     @Override
     public TrilaterationSolverType getType() {
         return TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER;
-    }
-
-    /**
-     * Minimum required number of positions and distances.
-     * To find a solution at least two pairs of positions and distances must be provided, although
-     * larger number will help to converge to a proper solution.
-     * @return minimum required number of positions and distances.
-     */
-    @Override
-    public int getMinRequiredPositionsAndDistances() {
-        return MIN_POINTS;
     }
 
     /**

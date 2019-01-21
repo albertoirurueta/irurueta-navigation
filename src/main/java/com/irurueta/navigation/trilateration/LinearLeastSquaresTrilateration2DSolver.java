@@ -129,7 +129,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
 
     /**
      * Minimum required number of positions and distances.
-     * At least 3 positions and distances will be required to linearly solve a 3D problem.
+     * At least 3 positions and distances will be required to linearly solve a 2D problem.
      * @return minimum required number of positions and distances.
      */
     @Override

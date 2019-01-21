@@ -80,8 +80,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -94,7 +93,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
 
         //constructor with sources
         List<WifiAccessPointLocated2D> sources = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
         }
@@ -106,8 +105,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -144,8 +142,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -175,8 +172,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -215,8 +211,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -237,8 +232,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -273,8 +267,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -306,8 +299,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -350,8 +342,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -372,8 +363,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -410,8 +400,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -443,8 +432,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -486,8 +474,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -509,8 +496,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -548,8 +534,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertNull(estimator.getSources());
@@ -581,8 +566,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 NonLinearPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION, 0.0);
         assertNull(estimator.getEstimatedPosition());
-        assertEquals(estimator.getMinRequiredSources(),
-                NonLinearPositionEstimator.MIN_SOURCES);
+        assertEquals(estimator.getMinRequiredSources(), 3);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
         assertSame(estimator.getSources(), sources);
@@ -669,7 +653,7 @@ public class NonLinearPositionEstimator2DTest implements PositionEstimatorListen
 
         //set new value
         List<WifiAccessPointLocated2D> sources = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
                     new InhomogeneousPoint2D()));
         }

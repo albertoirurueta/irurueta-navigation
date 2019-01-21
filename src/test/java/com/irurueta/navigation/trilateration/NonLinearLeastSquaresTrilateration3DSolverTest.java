@@ -69,13 +69,16 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
         //constructor with positions and distances
-        Point3D[] positions = new Point3D[2];
+        Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
-        double[] distances = new double[2];
+        positions[2] = new InhomogeneousPoint3D();
+        positions[3] = new InhomogeneousPoint3D();
+        double[] distances = new double[4];
         solver = new NonLinearLeastSquaresTrilateration3DSolver(positions, distances);
 
         //check correctness
@@ -92,6 +95,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         double[] wrong = new double[3];
@@ -135,6 +139,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
         //constructor with positions, distances and initial position
@@ -154,6 +159,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -195,6 +201,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
         //constructor with positions, distances and listener
@@ -214,6 +221,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -253,6 +261,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
         //constructor with positions, distances, initial position and listener
@@ -272,6 +281,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -298,9 +308,11 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
 
 
         //constructor with spheres
-        Sphere[] spheres = new Sphere[2];
+        Sphere[] spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
+        spheres[2] = new Sphere(positions[2], distances[2]);
+        spheres[3] = new Sphere(positions[3], distances[3]);
         solver = new NonLinearLeastSquaresTrilateration3DSolver(spheres);
 
         //check correctness
@@ -317,6 +329,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         Sphere[] shortSpheres = new Sphere[1];
@@ -350,6 +363,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -381,6 +395,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -412,6 +427,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -427,7 +443,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
 
 
         //constructor with positions, distances and standard deviations
-        double[] standardDeviations = new double[2];
+        double[] standardDeviations = new double[4];
         solver = new NonLinearLeastSquaresTrilateration3DSolver(positions, distances,
                 standardDeviations);
 
@@ -445,6 +461,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -499,6 +516,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -553,6 +571,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -607,6 +626,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -661,6 +681,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -695,6 +716,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -729,6 +751,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getInitialPosition());
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -763,6 +786,7 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertSame(solver.getInitialPosition(), initialPosition);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.NON_LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -789,18 +813,27 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getSpheres());
 
         //set new value
-        Point3D[] positions = new Point3D[2];
+        Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
-        double[] distances = new double[2];
+        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+
+        double[] distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        Sphere[] spheres = new Sphere[2];
+        Sphere[] spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
+        spheres[2] = new Sphere(positions[2], distances[2]);
+        spheres[3] = new Sphere(positions[3], distances[3]);
 
         solver.setSpheres(spheres);
 
@@ -808,8 +841,12 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         Sphere[] spheres2 = solver.getSpheres();
         assertSame(spheres[0].getCenter(), spheres2[0].getCenter());
         assertSame(spheres[1].getCenter(), spheres2[1].getCenter());
+        assertSame(spheres[2].getCenter(), spheres2[2].getCenter());
+        assertSame(spheres[3].getCenter(), spheres2[3].getCenter());
         assertEquals(spheres[0].getRadius(), spheres2[0].getRadius(), 0.0);
         assertEquals(spheres[1].getRadius(), spheres2[1].getRadius(), 0.0);
+        assertEquals(spheres[2].getRadius(), spheres2[2].getRadius(), 0.0);
+        assertEquals(spheres[3].getRadius(), spheres2[3].getRadius(), 0.0);
 
         //force IllegalArgumentException
         try {
@@ -833,20 +870,29 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertNull(solver.getDistanceStandardDeviations());
 
         //set new value
-        Point3D[] positions = new Point3D[2];
+        Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
                 randomizer.nextDouble());
-        double[] distances = new double[2];
+        positions[2] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+        positions[3] = new InhomogeneousPoint3D(randomizer.nextDouble(), randomizer.nextDouble(),
+                randomizer.nextDouble());
+
+        double[] distances = new double[4];
         distances[0] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
         distances[1] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[2] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
+        distances[3] = randomizer.nextDouble(1.0, MAX_RANDOM_VALUE);
 
-        Sphere[] spheres = new Sphere[2];
+        Sphere[] spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
+        spheres[2] = new Sphere(positions[2], distances[2]);
+        spheres[3] = new Sphere(positions[3], distances[3]);
 
-        double[] standardDeviations = new double[2];
+        double[] standardDeviations = new double[4];
 
         solver.setSpheresAndStandardDeviations(spheres, standardDeviations);
 
@@ -854,8 +900,12 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         Sphere[] spheres2 = solver.getSpheres();
         assertSame(spheres[0].getCenter(), spheres2[0].getCenter());
         assertSame(spheres[1].getCenter(), spheres2[1].getCenter());
+        assertSame(spheres[2].getCenter(), spheres2[2].getCenter());
+        assertSame(spheres[3].getCenter(), spheres2[3].getCenter());
         assertEquals(spheres[0].getRadius(), spheres2[0].getRadius(), 0.0);
         assertEquals(spheres[1].getRadius(), spheres2[1].getRadius(), 0.0);
+        assertEquals(spheres[2].getRadius(), spheres2[2].getRadius(), 0.0);
+        assertEquals(spheres[3].getRadius(), spheres2[3].getRadius(), 0.0);
         assertSame(solver.getDistanceStandardDeviations(), standardDeviations);
 
         //force IllegalArgumentException
@@ -903,10 +953,12 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertFalse(solver.isReady());
 
         //set new values
-        Point3D[] positions = new Point3D[2];
+        Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
-        double[] distances = new double[2];
+        positions[2] = new InhomogeneousPoint3D();
+        positions[3] = new InhomogeneousPoint3D();
+        double[] distances = new double[4];
 
         solver.setPositionsAndDistances(positions, distances);
 
@@ -945,11 +997,13 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         assertFalse(solver.isReady());
 
         //set new values
-        Point3D[] positions = new Point3D[2];
+        Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
-        double[] distances = new double[2];
-        double[] standardDeviations = new double[2];
+        positions[2] = new InhomogeneousPoint3D();
+        positions[3] = new InhomogeneousPoint3D();
+        double[] distances = new double[4];
+        double[] standardDeviations = new double[4];
 
         solver.setPositionsDistancesAndStandardDeviations(positions, distances,
                 standardDeviations);
@@ -1051,10 +1105,10 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
         } catch (NotReadyException ignore) { }
 
         //Force TrilaterationException
-        Sphere[] spheres = new Sphere[2];
+        Sphere[] spheres = new Sphere[4];
         InhomogeneousPoint3D center;
         double radius;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 4; i++) {
             center = new InhomogeneousPoint3D(Double.NaN, Double.NaN, Double.NaN);
             radius = TrilaterationSolver.EPSILON;
             spheres[i] = new Sphere(center, radius);
@@ -1220,6 +1274,78 @@ public class NonLinearLeastSquaresTrilateration3DSolverTest implements Trilatera
             Point3D estimatedPosition = solver.getEstimatedPosition();
             assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
         }
+    }
+
+    @Test
+    public void testSolveNoInitialPositionAndNoError4Spheres()
+            throws TrilaterationException, NotReadyException, LockedException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        int numValid = 0, numInvalid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = MIN_SPHERES;
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius;
+            Sphere[] spheres = new Sphere[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver(
+                    spheres, this);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertTrue(solver.isReady());
+            assertNull(solver.getEstimatedPosition());
+            assertNull(solver.getEstimatedPositionCoordinates());
+
+            solver.solve();
+
+            Point3D estimatedPosition = solver.getEstimatedPosition();
+            double distance = estimatedPosition.distanceTo(position);
+            if (distance >= ABSOLUTE_ERROR) {
+                numInvalid++;
+            } else {
+                numValid++;
+                assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            }
+        }
+
+        assertTrue(numValid > numInvalid);
+
+        //Force NotReadyException
+        NonLinearLeastSquaresTrilateration3DSolver solver = new NonLinearLeastSquaresTrilateration3DSolver();
+        try {
+            solver.solve();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+
+        //Force TrilaterationException
+        Sphere[] spheres = new Sphere[4];
+        InhomogeneousPoint3D center;
+        double radius;
+        for (int i = 0; i < 4; i++) {
+            center = new InhomogeneousPoint3D(Double.NaN, Double.NaN, Double.NaN);
+            radius = TrilaterationSolver.EPSILON;
+            spheres[i] = new Sphere(center, radius);
+        }
+        solver.setSpheres(spheres);
+        try {
+            solver.solve();
+            fail("TrilaterationException expected but not thrown");
+        } catch (TrilaterationException ignore) { }
     }
 
     @Override

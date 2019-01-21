@@ -326,6 +326,16 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
     }
 
     /**
+     * Minimum required number of positions and distances.
+     * At least 4 positions and distances will be required to solve a 3D problem.
+     * @return minimum required number of positions and distances.
+     */
+    @Override
+    public int getMinRequiredPositionsAndDistances() {
+        return Point3D.POINT3D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;
+    }
+
+    /**
      * Gets estimated position.
      * @return estimated position.
      */
@@ -347,7 +357,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      * is less than 2.
      */
     public void internalSetSpheres(Sphere[] spheres) {
-        if (spheres == null || spheres.length < MIN_POINTS) {
+        if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
@@ -372,7 +382,7 @@ public class NonLinearLeastSquaresTrilateration3DSolver extends NonLinearLeastSq
      */
     private void internalSetSpheresAndStandardDeviations(Sphere[] spheres,
             double[] radiusStandardDeviations) {
-        if (spheres == null || spheres.length < MIN_POINTS) {
+        if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 

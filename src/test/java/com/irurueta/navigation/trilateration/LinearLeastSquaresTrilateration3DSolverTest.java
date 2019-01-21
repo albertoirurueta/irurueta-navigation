@@ -62,6 +62,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
         //constructor with positions and distances
@@ -83,6 +84,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         double[] wrong = new double[5];
@@ -123,6 +125,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
         //constructor with positions, distances and listener
@@ -138,6 +141,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -178,6 +182,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         Sphere[] shortSpheres = new Sphere[1];
@@ -207,6 +212,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
         //Force IllegalArgumentException
         solver = null;
@@ -452,6 +458,77 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         }
 
         assertTrue(numValid > numInvalid);
+    }
+
+    @Test
+    public void testSolve4SpheresNoError() throws TrilaterationException, NotReadyException, LockedException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = MIN_SPHERES;
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver(
+                    spheres, this);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertTrue(solver.isReady());
+            assertNull(solver.getEstimatedPosition());
+            assertNull(solver.getEstimatedPositionCoordinates());
+
+            solver.solve();
+
+            Point3D estimatedPosition = solver.getEstimatedPosition();
+            if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+
+        //Force NotReadyException
+        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        try {
+            solver.solve();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+
+        //Force TrilaterationException
+        Sphere[] circles = new Sphere[4];
+        InhomogeneousPoint3D center;
+        double radius;
+        for (int i = 0; i < 4; i++) {
+            center = new InhomogeneousPoint3D(0.0, 0.0, 0.0);
+            radius = TrilaterationSolver.EPSILON;
+            circles[i] = new Sphere(center, radius);
+        }
+        solver.setSpheres(circles);
+        try {
+            solver.solve();
+            fail("TrilaterationException expected but not thrown");
+        } catch (TrilaterationException ignore) { }
     }
 
     @Override

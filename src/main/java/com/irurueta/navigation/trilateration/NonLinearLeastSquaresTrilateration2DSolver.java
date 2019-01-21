@@ -326,6 +326,16 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
     }
 
     /**
+     * Minimum required number of positions and distances.
+     * At least 3 positions and distances will be required to solve a 2D problem.
+     * @return minimum required number of positions and distances.
+     */
+    @Override
+    public int getMinRequiredPositionsAndDistances() {
+        return Point2D.POINT2D_INHOMOGENEOUS_COORDINATES_LENGTH + 1;
+    }
+
+    /**
      * Gets estimated position.
      * @return estimated position.
      */
@@ -347,7 +357,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      * is less than 2.
      */
     private void internalSetCircles(Circle[] circles) {
-        if (circles == null || circles.length < MIN_POINTS) {
+        if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 
@@ -372,7 +382,7 @@ public class NonLinearLeastSquaresTrilateration2DSolver extends NonLinearLeastSq
      */
     private void internalSetCirclesAndStandardDeviations(Circle[] circles,
             double[] radiusStandardDeviations) {
-        if (circles == null || circles.length < MIN_POINTS) {
+        if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {
             throw new IllegalArgumentException();
         }
 

@@ -42,11 +42,6 @@ import java.util.List;
 public abstract class NonLinearPositionEstimator<P extends Point> extends PositionEstimator<P> {
 
     /**
-     * Minimum required number of sources to solve trilateration.
-     */
-    public static final int MIN_SOURCES = NonLinearLeastSquaresTrilaterationSolver.MIN_POINTS;
-
-    /**
      * Distance standard deviation assumed for provided distances as a fallback when
      * none can be determined.
      */
@@ -198,7 +193,7 @@ public abstract class NonLinearPositionEstimator<P extends Point> extends Positi
      */
     @Override
     public int getMinRequiredSources() {
-        return MIN_SOURCES;
+        return mTrilaterationSolver.getMinRequiredPositionsAndDistances();
     }
 
     /**

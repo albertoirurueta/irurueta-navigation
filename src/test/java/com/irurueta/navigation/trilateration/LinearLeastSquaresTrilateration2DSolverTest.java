@@ -62,6 +62,7 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertNull(solver.getCircles());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
 
 
         //constructor with positions and distances
@@ -82,6 +83,7 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertNotNull(solver.getCircles());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
 
         //Force IllegalArgumentException
         double[] wrong = new double[4];
@@ -122,6 +124,7 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertNull(solver.getCircles());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
 
 
         //constructor with positions, distances and listener
@@ -137,6 +140,7 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertNotNull(solver.getCircles());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
 
         //Force IllegalArgumentException
         solver = null;
@@ -176,6 +180,7 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertNotNull(solver.getCircles());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
 
         //Force IllegalArgumentException
         Circle[] shortCircles = new Circle[1];
@@ -205,6 +210,7 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         assertEquals(solver.getNumberOfDimensions(), 2);
         assertNotNull(solver.getCircles());
         assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
 
         //Force IllegalArgumentException
         solver = null;
@@ -438,6 +444,75 @@ public class LinearLeastSquaresTrilateration2DSolverTest implements Trilateratio
         }
 
         assertTrue(numValid > numInvalid);
+    }
+
+    @Test
+    public void testSolve3CirclesNoError() throws TrilaterationException, NotReadyException, LockedException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = MIN_CIRCLES;
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+                circles[i] = new Circle(center, radius);
+            }
+
+            LinearLeastSquaresTrilateration2DSolver solver = new LinearLeastSquaresTrilateration2DSolver(
+                    circles, this);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertTrue(solver.isReady());
+            assertNull(solver.getEstimatedPosition());
+            assertNull(solver.getEstimatedPositionCoordinates());
+
+            solver.solve();
+
+            Point2D estimatedPosition = solver.getEstimatedPosition();
+            if (estimatedPosition.distanceTo(position) > ABSOLUTE_ERROR) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+
+        //Force NotReadyException
+        LinearLeastSquaresTrilateration2DSolver solver = new LinearLeastSquaresTrilateration2DSolver();
+        try {
+            solver.solve();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+
+        //Force TrilaterationException
+        Circle[] circles = new Circle[3];
+        InhomogeneousPoint2D center;
+        double radius;
+        for (int i = 0; i < 3; i++) {
+            center = new InhomogeneousPoint2D(0.0, 0.0);
+            radius = TrilaterationSolver.EPSILON;
+            circles[i] = new Circle(center, radius);
+        }
+        solver.setCircles(circles);
+        try {
+            solver.solve();
+            fail("TrilaterationException expected but not thrown");
+        } catch (TrilaterationException ignore) { }
     }
 
     @Override
