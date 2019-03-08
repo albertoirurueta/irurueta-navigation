@@ -75,11 +75,12 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
 
     @Test
     public void testConstructor() {
-        //empty constructor
+        // empty constructor
         LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -91,7 +92,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getDistances());
 
 
-        //constructor with sources
+        // constructor with sources
         List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
@@ -99,8 +100,9 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         }
         estimator = new LinearPositionEstimator3D(sources);
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -111,7 +113,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new LinearPositionEstimator3D(
@@ -126,13 +128,14 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator);
 
 
-        //constructor with fingerprint
+        // constructor with fingerprint
         RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
         estimator = new LinearPositionEstimator3D(fingerprint);
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -143,7 +146,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new LinearPositionEstimator3D(
@@ -153,11 +156,12 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator);
 
 
-        //constructor with sources and fingerprint
+        // constructor with sources and fingerprint
         estimator = new LinearPositionEstimator3D(sources, fingerprint);
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -168,7 +172,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new LinearPositionEstimator3D(null, fingerprint);
@@ -187,11 +191,12 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator);
 
 
-        //constructor with listener
+        // constructor with listener
         estimator = new LinearPositionEstimator3D(this);
 
-        //check
+        // check
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -203,11 +208,12 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getDistances());
 
 
-        //constructor with sources and listener
+        // constructor with sources and listener
         estimator = new LinearPositionEstimator3D(sources, this);
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -218,7 +224,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new LinearPositionEstimator3D(
@@ -233,11 +239,12 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator);
 
 
-        //constructor with fingerprint and listener
+        // constructor with fingerprint and listener
         estimator = new LinearPositionEstimator3D(fingerprint, this);
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -248,7 +255,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new LinearPositionEstimator3D(
@@ -259,11 +266,12 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator);
 
 
-        //constructor with sources, fingerprint and listener
+        // constructor with sources, fingerprint and listener
         estimator = new LinearPositionEstimator3D(sources, fingerprint, this);
 
-        //check default values
+        // check default values
         assertNull(estimator.getEstimatedPosition());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertEquals(estimator.getMinRequiredSources(), 4);
         assertFalse(estimator.isReady());
         assertFalse(estimator.isLocked());
@@ -274,7 +282,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new LinearPositionEstimator3D(null, fingerprint,
@@ -299,10 +307,10 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
     public void testGetSetSources() throws LockedException {
         LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getSources());
 
-        //set new value
+        // set new value
         List<WifiAccessPointLocated3D> sources = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             sources.add(new WifiAccessPointLocated3D("id1", FREQUENCY,
@@ -311,10 +319,10 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
 
         estimator.setSources(sources);
 
-        //check
+        // check
         assertSame(estimator.getSources(), sources);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setSources(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -329,18 +337,18 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
     public void testGetSetFingerprint() throws LockedException {
         LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getFingerprint());
 
-        //set new value
+        // set new value
         RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
         estimator.setFingerprint(fingerprint);
 
-        //check
+        // check
         assertSame(estimator.getFingerprint(), fingerprint);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setFingerprint(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -351,18 +359,18 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
     public void testGetSetListener() throws LockedException {
         LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
 
-        //check default size
+        // check default size
         assertNull(estimator.getListener());
 
-        //set new value
+        // set new value
         estimator.setListener(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
     }
 
     @Test
-    public void testEstimateNoError() throws LockedException, NotReadyException,
+    public void testEstimateNoErrorHomogeneous() throws LockedException, NotReadyException,
             PositionEstimationException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -414,7 +422,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
 
             reset();
 
-            //check initial state
+            // check initial state
+            assertTrue(estimator.isHomogeneousLinearSolverUsed());
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -435,7 +444,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
             assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
         }
 
-        //force NotReadyException
+        // force NotReadyException
         LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
         try {
             estimator.estimate();
@@ -444,7 +453,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
     }
 
     @Test
-    public void testEstimateWithError() throws LockedException, NotReadyException,
+    public void testEstimateWithErrorHomogeneous() throws LockedException, NotReadyException,
             PositionEstimationException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
@@ -500,7 +509,8 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
 
             reset();
 
-            //check initial state
+            // check initial state
+            assertTrue(estimator.isHomogeneousLinearSolverUsed());
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -530,7 +540,7 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
 
         assertTrue(numValid > 0);
 
-        //force NotReadyException
+        // force NotReadyException
         LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
         try {
             estimator.estimate();
@@ -538,6 +548,186 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
         } catch (NotReadyException ignore) { }
     }
 
+    @Test
+    public void testEstimateNoErrorInhomogeneous() throws LockedException, NotReadyException,
+            PositionEstimationException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm, pathLossExponent,
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                readings.add(new RssiReading<>(accessPoint, rssi));
+            }
+
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+
+            LinearPositionEstimator3D estimator =
+                    new LinearPositionEstimator3D(sources, fingerprint, this);
+            estimator.setHomogeneousLinearSolverUsed(false);
+
+            reset();
+
+            // check initial state
+            assertFalse(estimator.isHomogeneousLinearSolverUsed());
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+        }
+
+        // force NotReadyException
+        LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWithErrorInhomogeneous() throws LockedException, NotReadyException,
+            PositionEstimationException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(new Random(),
+                0.0, ERROR_STD);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm, pathLossExponent,
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double error = errorRandomizer.nextDouble();
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent)) + error;
+
+                readings.add(new RssiReading<>(accessPoint, rssi));
+            }
+
+            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
+                    new RssiFingerprint<>(readings);
+
+
+            LinearPositionEstimator3D estimator =
+                    new LinearPositionEstimator3D(sources, fingerprint, this);
+            estimator.setHomogeneousLinearSolverUsed(false);
+
+            reset();
+
+            // check initial state
+            assertFalse(estimator.isHomogeneousLinearSolverUsed());
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            double distance = position.distanceTo(estimatedPosition);
+            if (distance >= LARGE_ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            numValid++;
+            assertTrue(position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR));
+            break;
+        }
+
+        assertTrue(numValid > 0);
+
+        // force NotReadyException
+        LinearPositionEstimator3D estimator = new LinearPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
 
     @Override
     public void onEstimateStart(PositionEstimator<Point3D> estimator) {
@@ -568,6 +758,10 @@ public class LinearPositionEstimator3DTest implements PositionEstimatorListener<
     }
 
     private void checkLocked(LinearPositionEstimator3D estimator) {
+        try {
+            estimator.setHomogeneousLinearSolverUsed(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
         try {
             estimator.setSources(null);
             fail("LockedException expected but not thrown");

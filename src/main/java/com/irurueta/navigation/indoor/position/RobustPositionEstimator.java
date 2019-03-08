@@ -352,6 +352,74 @@ public abstract class RobustPositionEstimator<P extends Point> {
     }
 
     /**
+     * Indicates whether a linear solver is used or not (either homogeneour or inhomogeneous)
+     * for preliminary solutions.
+     * @return true if a linear solver is used, false otherwise.
+     */
+    public boolean isLinearSolverUsed() {
+        return mTrilaterationSolver.isLinearSolverUsed();
+    }
+
+    /**
+     * Specifies whether a linear solver is used or not (either homogeneous or inhomogeneous)
+     * for preliminary solutions.
+     * @param linearSolverUsed true if a linear solver is used, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setLinearSolverUsed(boolean linearSolverUsed) throws LockedException {
+        mTrilaterationSolver.setLinearSolverUsed(linearSolverUsed);
+    }
+
+    /**
+     * Indicates whether an homogeneous linear solver is used either to estimate preliminary
+     * solutions or an initial solution for preliminary solutions that will be later refined.
+     * @return true if homogeneous linear solver is used, false otherwise.
+     */
+    public boolean isHomogeneousLinearSolverUsed() {
+        return mTrilaterationSolver.isHomogeneousLinearSolverUsed();
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used either to estimate preliminary
+     * solutions or an initial solution for preliminary solutions that will be later refined.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException {
+        mTrilaterationSolver.setHomogeneousLinearSolverUsed(useHomogeneousLinearSolver);
+    }
+
+    /**
+     * Indicates whether preliminary solutions must be refined after an initial linear
+     * solution is found.
+     * If no initial solution is found using a linear solver, a non linear solver will be
+     * used regardless of this value using an average solution as the initial value to be
+     * refined.
+     * @return true if preliminary solutions must be refined after an initial linear
+     * solution, false otherwise.
+     */
+    public boolean isPreliminarySolutionRefined() {
+        return mTrilaterationSolver.isPreliminarySolutionRefined();
+    }
+
+    /**
+     * Specifies whether preliminary solutions must be refined after an initial linear
+     * solution is found.
+     * If no initial solution is found using a linear solver, a non linear solver will be
+     * used regardless of this value using an average solution as the initial value to be
+     * refined.
+     * @param preliminarySolutionRefined true if preliminary solutions must be refined
+     *                                   after an initial linear solution, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
+            throws LockedException {
+        mTrilaterationSolver.setPreliminarySolutionRefined(preliminarySolutionRefined);
+    }
+
+    /**
      * Gets data related to inliers found after estimation.
      * Inlier data is related to the internal positions and distances used
      * for solving trilateration.

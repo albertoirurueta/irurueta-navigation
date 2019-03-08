@@ -34,6 +34,23 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 public abstract class RobustTrilaterationSolver<P extends Point> {
 
     /**
+     * Indicates that by default a linear solver is used for preliminary solution estimation.
+     * The result obtained on each preliminary solution might be later refined.
+     */
+    private static final boolean DEFAULT_USE_LINEAR_SOLVER = true;
+
+    /**
+     * Indicates that by default an homogeneous linear solver is used either to estimate preliminary
+     * solutions or an initial solution for preliminary solutions that will be later refined.
+     */
+    public static final boolean DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = true;
+
+    /**
+     * Indicates that by default preliminary solutions are refined.
+     */
+    public static final boolean DEFAULT_REFINE_PRELIMINARY_SOLUTIONS = true;
+
+    /**
      * Default robust estimator method when none is provided.
      */
     public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
@@ -113,6 +130,23 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * progress significantly changes.
      */
     protected RobustTrilaterationSolverListener<P> mListener;
+
+    /**
+     * Indicates whether a linear solver is used or not (either homogeneous or inomogeneous)
+     * for preliminary solutions.
+     */
+    protected boolean mUseLinearSolver = DEFAULT_USE_LINEAR_SOLVER;
+
+    /**
+     * Indicates whether an homogeneous linear solver is used either to estimate preliminary solutions
+     * or an initial solution for preliminary solutions that will be later refined.
+     */
+    protected boolean mUseHomogeneousLinearSolver = DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
+
+    /**
+     * Indicates whether preliminary solutions must be refined after an initial linear solution is found.
+     */
+    protected boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;
 
     /**
      * Estimated position.
@@ -260,6 +294,84 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
             throw new LockedException();
         }
         mListener = listener;
+    }
+
+    /**
+     * Indicates whether a linear solver is used or not (either homogeneous or inhomogeneous)
+     * for preliminary solutions.
+     * @return true if a linear solver is used, false otherwise.
+     */
+    public boolean isLinearSolverUsed() {
+        return mUseLinearSolver;
+    }
+
+    /**
+     * Specifies whether a linear solver is used or not (either homogeneous or inhomogeneous)
+     * for preliminary solutions.
+     * @param linearSolverUsed true if a linear solver is used, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setLinearSolverUsed(boolean linearSolverUsed) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mUseLinearSolver = linearSolverUsed;
+    }
+
+    /**
+     * Indicates whether an homogeneous linear solver is used either to estimate preliminary solutions
+     * or an initial solution for preliminary solutions that will be later refined.
+     * @return true if homogeneous linear solver is used, false otherwise.
+     */
+    public boolean isHomogeneousLinearSolverUsed() {
+        return mUseHomogeneousLinearSolver;
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used either to estimate preliminary solutions
+     * or an initial solution for preliminary solutions that will be later refined.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mUseHomogeneousLinearSolver = useHomogeneousLinearSolver;
+    }
+
+    /**
+     * Indicates whether preliminary solutions must be refined after an initial linear solution is found.
+     * If no initial solution is found using a linear solver, a non linear solver will be
+     * used regardless of this value using an average solution as the initial value to be
+     * refined.
+     * @return true if preliminary solutions must be refined after an initial linear solution, false
+     * otherwise.
+     */
+    public boolean isPreliminarySolutionRefined() {
+        return mRefinePreliminarySolutions;
+    }
+
+    /**
+     * Specifies whether preliminary solutions must be refined after an initial linear solution is found.
+     * If no initial solution is found using a linear solver, a non linear solver will be
+     * used regardless of this value using an average solution as the initial value to be
+     * refined.
+     * @param preliminarySolutionRefined true if preliminary solutions must be refined after an
+     *                                   initial linear solution, false otherwise.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mRefinePreliminarySolutions = preliminarySolutionRefined;
     }
 
     /**

@@ -15,6 +15,7 @@
  */
 package com.irurueta.navigation.indoor.position;
 
+import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
@@ -263,6 +264,14 @@ public abstract class NonLinearPositionEstimator<P extends Point> extends Positi
     @Override
     public double[] getDistances() {
         return mTrilaterationSolver.getDistances();
+    }
+
+    /**
+     * Gets estimated covariance matrix for estimated position.
+     * @return estimated covariance matrix for estimated position.
+     */
+    public Matrix getCovariance() {
+        return mTrilaterationSolver.getCovariance();
     }
 
     /**

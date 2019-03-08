@@ -96,11 +96,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
     public void testConstructor() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        //test empty constructor
+        // test empty constructor
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -145,9 +145,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings
+        // test constructor with readings
         List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
                 new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
@@ -162,7 +163,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -207,8 +208,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -223,11 +225,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with listener
+        // test constructor with listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -272,13 +274,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings and listener
+        // test constructor with readings and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 readings, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -323,8 +326,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -341,7 +345,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings and initial position
+        // test constructor with readings and initial position
         InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -350,7 +354,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 initialPosition);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -395,8 +399,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -413,11 +418,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position
+        // test constructor with initial position
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 initialPosition);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -462,13 +467,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with initial position and listener
+        // test constructor with initial position and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 initialPosition, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -513,13 +519,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial position and listener
+        // test constructor with readings, initial position and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 initialPosition, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -564,8 +571,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -582,10 +590,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power
+        // test constructor with initial transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -631,13 +639,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings and initial trnasmitted power
+        // test constructor with readings and initial trnasmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -684,7 +693,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -701,11 +710,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power and listener
+        // test constructor with initial transmitted power and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(MAX_RSSI,
                 this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -751,13 +760,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial transmitted power and listener
+        // test constructor with readings, initial transmitted power and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -803,8 +813,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -821,11 +832,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position and initial transmitted power
+        // test constructor with readings, initial position and initial transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -871,8 +882,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -889,11 +901,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -939,13 +951,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with initial position, initial transmitted power and listener
+        // test constructor with initial position, initial transmitted power and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -991,14 +1004,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial position, initial transmitted power
-        //and listener
+        // test constructor with readings, initial position, initial transmitted power
+        // and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1044,8 +1058,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1062,12 +1077,12 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position, initial transmitted power
-        //and initial pathloss exponent
+        // test constructor with readings, initial position, initial transmitted power
+        // and initial pathloss exponent
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 initialPosition, MAX_RSSI, 1.0);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1112,8 +1127,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1130,12 +1146,12 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position, initial transmitted power
+        // test constructor with initial position, initial transmitted power
         // and initial pathloss exponent
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 initialPosition, MAX_RSSI, 1.0);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1180,14 +1196,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with initial position, initial transmitted power,
+        // test constructor with initial position, initial transmitted power,
         // initial pathloss exponent and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 initialPosition, MAX_RSSI, 1.0, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1232,14 +1249,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial position, initial transmitted power,
-        //initial pathloss exponent and listener
+        // test constructor with readings, initial position, initial transmitted power,
+        // initial pathloss exponent and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(readings,
                 initialPosition, MAX_RSSI, 1.0, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1284,8 +1302,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1302,13 +1321,13 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores
+        // test constructor with quality scores
         double[] qualityScores = new double[5];
 
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1353,13 +1372,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores and readings
+        // test constructor with quality scores and readings
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1404,8 +1424,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1422,11 +1443,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores and listener
+        // test constructor with quality scores and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1471,13 +1492,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores, readings and listener
+        // test constructor with quality scores, readings and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1522,8 +1544,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1542,11 +1565,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores, readings and initial position
+        // test constructor with quality scores, readings and initial position
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, initialPosition);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1591,8 +1614,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1609,11 +1633,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores and initial position
+        // test constructor with quality scores and initial position
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, initialPosition);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1658,13 +1682,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores, initial position and listener
+        // test constructor with quality scores, initial position and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, initialPosition, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1709,13 +1734,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores, readings, initial position and listener
+        // test constructor with quality scores, readings, initial position and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, initialPosition, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1760,8 +1786,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1778,11 +1805,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores, initial transmitted power
+        // test constructor with quality scores, initial transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1828,13 +1855,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores, readings and initial trnasmitted power
+        // test constructor with quality scores, readings and initial transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1880,8 +1908,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -1900,11 +1929,11 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores, initial transmitted power and listener
+        // test constructor with quality scores, initial transmitted power and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1950,14 +1979,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores, readings, initial transmitted power
+        // test constructor with quality scores, readings, initial transmitted power
         // and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2003,8 +2033,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -2023,12 +2054,12 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores, readings, initial position and
+        // test constructor with quality scores, readings, initial position and
         // initial transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2074,8 +2105,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -2092,12 +2124,12 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with quality scores, initial position and initial
+        // test constructor with quality scores, initial position and initial
         // transmitted power
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2143,14 +2175,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with quality scores, initial position, initial
+        // test constructor with quality scores, initial position, initial
         // transmitted power and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2196,14 +2229,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial position, initial transmitted power
-        //and listener
+        // test constructor with readings, initial position, initial transmitted power
+        // and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2249,8 +2283,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -2268,13 +2303,13 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position, initial transmitted power
-        //and initial pathloss exponent
+        // test constructor with readings, initial position, initial transmitted power
+        // and initial pathloss exponent
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, initialPosition, MAX_RSSI,
                 1.0);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2319,8 +2354,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -2337,13 +2373,13 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position, initial transmitted power
+        // test constructor with initial position, initial transmitted power
         // and initial pathloss exponent
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, initialPosition, MAX_RSSI,
                 1.0);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2388,15 +2424,16 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with initial position, initial transmitted power,
+        // test constructor with initial position, initial transmitted power,
         // initial pathloss exponent and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, initialPosition, MAX_RSSI,
                 1.0, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2441,15 +2478,16 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertFalse(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial position, initial transmitted power,
-        //initial pathloss exponent and listener
+        // test constructor with readings, initial position, initial transmitted power,
+        // initial pathloss exponent and listener
         estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
                 qualityScores, readings, initialPosition, MAX_RSSI,
                 1.0, this);
 
-        //check default values
+        // check default values
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -2494,8 +2532,9 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         assertTrue(estimator.isReady());
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new SequentialRobustRangingAndRssiRadioSourceEstimator3D(
@@ -2518,17 +2557,17 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getProgressDelta(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PROGRESS_DELTA, 0.0);
 
-        //set new value
+        // set new value
         estimator.setProgressDelta(0.5f);
 
-        //check
+        // check
         assertEquals(estimator.getProgressDelta(), 0.5f, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
@@ -2544,14 +2583,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getRangingRobustMethod(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_PANGING_ROBUST_METHOD);
 
-        //set new value
+        // set new value
         estimator.setRangingRobustMethod(RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertEquals(estimator.getRangingRobustMethod(),
                 RobustEstimatorMethod.RANSAC);
     }
@@ -2561,14 +2600,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getRssiRobustMethod(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_RSSI_ROBUST_METHOD);
 
-        //set new value
+        // set new value
         estimator.setRssiRobustMethod(RobustEstimatorMethod.RANSAC);
 
-        //check
+        // check
         assertEquals(estimator.getRssiRobustMethod(),
                 RobustEstimatorMethod.RANSAC);
     }
@@ -2578,13 +2617,13 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getRangingThreshold());
 
-        //set new value
+        // set new value
         estimator.setRangingThreshold(INLIER_ERROR_STD);
 
-        //check
+        // check
         assertEquals(estimator.getRangingThreshold(), INLIER_ERROR_STD, 0.0);
     }
 
@@ -2593,13 +2632,13 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getRssiThreshold());
 
-        //set new value
+        // set new value
         estimator.setRssiThreshold(INLIER_ERROR_STD);
 
-        //check
+        // check
         assertEquals(estimator.getRssiThreshold(), INLIER_ERROR_STD, 0.0);
     }
 
@@ -2608,18 +2647,18 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getRangingConfidence(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE,
                 0.0);
 
-        //set new value
+        // set new value
         estimator.setRangingConfidence(0.5);
 
-        //check
+        // check
         assertEquals(estimator.getRangingConfidence(), 0.5, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setRangingConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -2635,18 +2674,18 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getRssiConfidence(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_CONFIDENCE,
                 0.0);
 
-        //set new value
+        // set new value
         estimator.setRssiConfidence(0.5);
 
-        //check
+        // check
         assertEquals(estimator.getRssiConfidence(), 0.5, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setRssiConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -2662,17 +2701,17 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getRangingMaxIterations(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         estimator.setRangingMaxIterations(50);
 
-        //check
+        // check
         assertEquals(estimator.getRangingMaxIterations(), 50);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setRangingMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
@@ -2684,17 +2723,17 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getRssiMaxIterations(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         estimator.setRssiMaxIterations(50);
 
-        //check
+        // check
         assertEquals(estimator.getRssiMaxIterations(), 50);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setRssiMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
@@ -2706,15 +2745,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.isResultRefined(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
 
-        //set new value
+        // set new value
         estimator.setResultRefined(
                 !SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
 
-        //check
+        // check
         assertEquals(estimator.isResultRefined(),
                 !SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_REFINE_RESULT);
     }
@@ -2724,15 +2763,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.isCovarianceKept(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
 
-        //set new value
+        // set new value
         estimator.setCovarianceKept(
                 !SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
 
-        //check
+        // check
         assertEquals(estimator.isCovarianceKept(),
                 !SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_KEEP_COVARIANCE);
     }
@@ -2742,10 +2781,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getReadings());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
@@ -2762,10 +2801,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
         estimator.setReadings(readings);
 
-        //check correctness
+        // check correctness
         assertSame(estimator.getReadings(), readings);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setReadings(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -2781,13 +2820,13 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getListener());
 
-        //set new value
+        // set new value
         estimator.setListener(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
     }
 
@@ -2796,17 +2835,17 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getQualityScores());
 
-        //set new value
+        // set new value
         double[] qualityScores = new double[5];
         estimator.setQualityScores(qualityScores);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setQualityScores(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -2822,7 +2861,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPowerdBm());
 
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -2830,7 +2869,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
         estimator.setInitialTransmittedPowerdBm(transmittedPowerdBm);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(),
                 transmittedPowerdBm, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2842,7 +2881,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPower());
 
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -2851,7 +2890,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
         estimator.setInitialTransmittedPower(transmittedPower);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(),
                 transmittedPowerdBm, ABSOLUTE_ERROR);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -2863,14 +2902,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialPosition());
 
-        //set new value
+        // set new value
         Point3D initialPosition = Point3D.create();
         estimator.setInitialPosition(initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
     }
 
@@ -2879,14 +2918,14 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getInitialPathLossExponent(),
                 RangingAndRssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT, 0.0);
 
-        //set new value
+        // set new value
         estimator.setInitialPathLossExponent(1.0);
 
-        //check
+        // check
         assertEquals(estimator.getInitialPathLossExponent(), 1.0, 0.0);
     }
 
@@ -2895,15 +2934,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.isTransmittedPowerEstimationEnabled(),
                 RangingAndRssiRadioSourceEstimator.DEFAULT_TRANSMITTED_POWER_ESTIMATION_ENABLED);
 
-        //set new value
+        // set new value
         estimator.setTransmittedPowerEstimationEnabled(
                 !RangingAndRssiRadioSourceEstimator.DEFAULT_TRANSMITTED_POWER_ESTIMATION_ENABLED);
 
-        //check
+        // check
         assertEquals(estimator.isTransmittedPowerEstimationEnabled(),
                 !RangingAndRssiRadioSourceEstimator.DEFAULT_TRANSMITTED_POWER_ESTIMATION_ENABLED);
     }
@@ -2913,15 +2952,15 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.isPathLossEstimationEnabled(),
                 RangingAndRssiRadioSourceEstimator.DEFAULT_PATHLOSS_ESTIMATION_ENABLED);
 
-        //set new value
+        // set new value
         estimator.setPathLossEstimationEnabled(
                 !RangingAndRssiRadioSourceEstimator.DEFAULT_PATHLOSS_ESTIMATION_ENABLED);
 
-        //check
+        // check
         assertEquals(estimator.isPathLossEstimationEnabled(),
                 !RangingAndRssiRadioSourceEstimator.DEFAULT_PATHLOSS_ESTIMATION_ENABLED);
     }
@@ -2931,17 +2970,32 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_USE_READING_POSITION_COVARIANCES);
 
-        //set new value
+        // set new value
         estimator.setUseReadingPositionCovariances(
                 !SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_USE_READING_POSITION_COVARIANCES);
 
-        //check
+        // check
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 !SequentialRobustRangingAndRssiRadioSourceEstimator.DEFAULT_USE_READING_POSITION_COVARIANCES);
+    }
+
+    @Test
+    public void testIsSetHomogeneousRangingLinearSolverUsed() throws LockedException {
+        SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
+                new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
+
+        // check default value
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
+
+        // set new value
+        estimator.setHomogeneousRangingLinearSolverUsed(false);
+
+        // check
+        assertFalse(estimator.isHomogeneousRangingLinearSolverUsed());
     }
 
     @Test
@@ -2977,37 +3031,37 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         SequentialRobustRangingAndRssiRadioSourceEstimator3D estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getMinReadings(), 5);
 
-        //position only
+        // position only
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 4);
 
-        //position and transmitted power
+        // position and transmitted power
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 5);
 
 
-        //position and pathloss
+        // position and pathloss
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 5);
 
 
-        //position, transmitted power and patloss
+        // position, transmitted power and patloss
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 6);
     }
 
@@ -3053,10 +3107,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -3090,7 +3144,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -3159,7 +3213,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power error: {0} dB",
                 powerError);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3214,10 +3268,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -3251,7 +3305,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -3352,7 +3406,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3409,10 +3463,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -3449,7 +3503,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -3548,7 +3602,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3605,10 +3659,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -3649,7 +3703,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -3750,7 +3804,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3806,10 +3860,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -3847,7 +3901,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -3947,7 +4001,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4004,10 +4058,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -4051,7 +4105,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -4160,7 +4214,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4217,10 +4271,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -4267,7 +4321,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -4361,7 +4415,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4421,10 +4475,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -4461,7 +4515,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -4586,7 +4640,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4643,10 +4697,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -4681,7 +4735,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -4780,7 +4834,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4837,10 +4891,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -4872,7 +4926,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4965,7 +5019,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5020,10 +5074,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -5062,7 +5116,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -5144,7 +5198,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5199,10 +5253,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -5240,7 +5294,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -5322,7 +5376,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5377,10 +5431,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -5416,10 +5470,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //repeat again so that position covariance matrix is reused
+            // repeat again so that position covariance matrix is reused
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 2);
             assertEquals(estimateEnd, 2);
             assertTrue(estimateProgressChange >= 0);
@@ -5501,7 +5555,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5558,10 +5612,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -5596,7 +5650,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -5696,7 +5750,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5753,10 +5807,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -5794,7 +5848,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -5894,7 +5948,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5949,10 +6003,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
                 double error;
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -5993,7 +6047,7 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertEquals(estimateStart, 1);
             assertEquals(estimateEnd, 1);
             assertTrue(estimateProgressChange >= 0);
@@ -6094,13 +6148,385 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWitHomogeneousRangingLinearSolver()
+            throws LockedException, NotReadyException, RobustEstimatorException,
+            AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
+            double[] qualityScores = new double[numReadings];
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                double error;
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
+            }
+
+            SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>(
+                            qualityScores, readings, this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+
+            estimator.setResultRefined(true);
+            estimator.setHomogeneousRangingLinearSolverUsed(true);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+            assertEquals(estimateProgressChange, 0);
+
+            estimator.estimate();
+
+            // check
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
+            assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
+
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                powerStd);
+    }
+
+    @Test
+    public void testEstimateWitInhomogeneousRangingLinearSolver()
+            throws LockedException, NotReadyException, RobustEstimatorException,
+            AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
+            double[] qualityScores = new double[numReadings];
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                double error;
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
+            }
+
+            SequentialRobustRangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new SequentialRobustRangingAndRssiRadioSourceEstimator3D<>(
+                            qualityScores, readings, this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+
+            estimator.setResultRefined(true);
+            estimator.setHomogeneousRangingLinearSolverUsed(false);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+            assertEquals(estimateProgressChange, 0);
+
+            estimator.estimate();
+
+            // check
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+            assertNotNull(estimator.getEstimatedTransmittedPowerVariance());
+            assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            assertNotNull(estimator.getInliersData());
+
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                powerStd);
     }
 
     @Override
@@ -6128,10 +6554,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
 
     private double receivedPower(double equivalentTransmittedPower, double distance, double frequency,
                                  double pathLossExponent) {
-        //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
+        // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
-        //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
+        // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
         double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
@@ -6220,6 +6646,10 @@ public class SequentialRobustRangingAndRssiRadioSourceEstimator3DTest implements
         } catch (LockedException ignore) { }
         try {
             estimator.setUseReadingPositionCovariances(true);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setHomogeneousRangingLinearSolverUsed(false);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

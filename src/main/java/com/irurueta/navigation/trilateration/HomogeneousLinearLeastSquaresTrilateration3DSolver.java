@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,16 @@ import com.irurueta.geometry.Sphere;
 import com.irurueta.navigation.LockedException;
 
 /**
- * Linearly solves the trilateration problem.
+ * Linearly solves the trilateration problem using an homogeneous LMSE solution.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresTrilaterationSolver<Point3D> {
+public class HomogeneousLinearLeastSquaresTrilateration3DSolver extends
+        HomogeneousLinearLeastSquaresTrilaterationSolver<Point3D> {
 
     /**
      * Constructor.
      */
-    public LinearLeastSquaresTrilateration3DSolver() {
+    public HomogeneousLinearLeastSquaresTrilateration3DSolver() {
         super();
     }
 
@@ -38,9 +39,9 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     * length is smaller than required (4 points).
      */
-    public LinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances) {
+    public HomogeneousLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -48,7 +49,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * Constructor.
      * @param listener listener to be notified of events raised by this instance.
      */
-    public LinearLeastSquaresTrilateration3DSolver(TrilaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresTrilateration3DSolver(TrilaterationSolverListener<Point3D> listener) {
         super(listener);
     }
 
@@ -58,19 +59,19 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     * length is smaller than required (4 points).
      */
-    public LinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
-            TrilaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresTrilateration3DSolver(Point3D[] positions, double[] distances,
+                                                              TrilaterationSolverListener<Point3D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
      * @param spheres spheres defining positions and distances.
-     * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 4.
      */
-    public LinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) {
+    public HomogeneousLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres) {
         super();
         internalSetSpheres(spheres);
     }
@@ -79,10 +80,10 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * Constructor.
      * @param spheres spheres defining positions and distances.
      * @param listener listener to be notified of events raised by this instance.
-     * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 2.
+     * @throws IllegalArgumentException if spheres is null or if length of spheres array is less than 4.
      */
-    public LinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
-            TrilaterationSolverListener<Point3D> listener) {
+    public HomogeneousLinearLeastSquaresTrilateration3DSolver(Sphere[] spheres,
+                                                              TrilaterationSolverListener<Point3D> listener) {
         super(listener);
         internalSetSpheres(spheres);
     }
@@ -156,7 +157,7 @@ public class LinearLeastSquaresTrilateration3DSolver extends LinearLeastSquaresT
      * Internally sets spheres defining positions and euclidean distances.
      * @param spheres spheres defining positions and distances.
      * @throws IllegalArgumentException if spheres is null or length of array of spheres
-     * is less than 2.
+     * is less than 4.
      */
     private void internalSetSpheres(Sphere[] spheres) {
         if (spheres == null || spheres.length < getMinRequiredPositionsAndDistances()) {

@@ -23,17 +23,20 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 
 /**
- * Linearly solves the trilateration problem.
+ * Linearly solves the trilateration problem using an inhomogeneous solution.
  * This class is base on the implementation found at: https://github.com/lemmingapex/trilateration
+ * Further information and algorithms can be found at Willy Hereman and William S. Murphy Jr. Determination of a
+ * Position in Three Dimensions Using Trilateration and Approximate Distances.
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> extends TrilaterationSolver<P> {
+public abstract class InhomogeneousLinearLeastSquaresTrilaterationSolver<P extends Point> extends
+        TrilaterationSolver<P> {
 
     /**
      * Constructor.
      */
-    public LinearLeastSquaresTrilaterationSolver() {
+    public InhomogeneousLinearLeastSquaresTrilaterationSolver() {
         super();
     }
 
@@ -42,9 +45,9 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required 2 points.
+     * length is smaller than required points.
      */
-    public LinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) {
+    public InhomogeneousLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -52,7 +55,7 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * Constructor.
      * @param listener listener to be notified of events raised by this instance.
      */
-    public LinearLeastSquaresTrilaterationSolver(TrilaterationSolverListener<P> listener) {
+    public InhomogeneousLinearLeastSquaresTrilaterationSolver(TrilaterationSolverListener<P> listener) {
         super(listener);
     }
 
@@ -62,10 +65,10 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required 2 points.
+     * length is smaller than required points.
      */
-    public LinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
-            TrilaterationSolverListener<P> listener) {
+    public InhomogeneousLinearLeastSquaresTrilaterationSolver(P[] positions, double[] distances,
+                                                              TrilaterationSolverListener<P> listener) {
         super(positions, distances, listener);
     }
 
@@ -76,8 +79,47 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      * @throws LockedException if instance is busy solving the trilateration problem.
      */
     @Override
+    @SuppressWarnings("Duplicates")
     public void solve() throws TrilaterationException, NotReadyException,
             LockedException {
+        // The implementation on this method follows the algorithm bellow for 3D but
+        // generalized for both 2D and 3D:
+
+        // The constraints are the equations of the spheres with radii ri,
+        // (x - xi)^2 + (y - yi)^2 + (z - zi)^2 = ri^2 (i = 1,2,...,n)
+        // where (xi, yi, zi) is the center of each sphere and ri is the radius of
+        // each sphere.
+
+        // The jth constraint is used as a linearizing tool (in this implementation we
+        // always used the 1 point as a reference point). Adding and subtracting xj,yj and zj gives
+        // (x - xj + xj - xi)^2 + (y - yj + yj - yi)^2 + (z - zj + zj - zi)^2 = ri^2
+        // with (i = 1,2,...j-1,j+1,...,n).
+
+        // Expanding and regrouping the terms, leads to
+        // (x - xj)*(xi - xj) + (y - yj)*(yi - yj) + (z - zj)*(zi - zj) =
+        // 0.5*((x - xj)^2 + (y - yj)^2 + (z - zj)^2 - ri^2 + (yi - yj)^2 + (zi - zj)^2) =
+        // 0.5*(rj^2 - ri^2 + dij^2) = bij
+        // where
+        // dij = sqrt((xi - xj^2 + (yi - yj^2 + (zi - zj)^2)
+        // is the distance between position i and position j.
+
+        // Since it does not matter which constraint is used as a linearizing tool, arbitrarily select
+        // the first constraint (j = 1). This is analogous to selecting the first position.
+        // Since i = 2,3,...,n, this leads to a linear system of (n - 1) equations in 3 unknowns.
+        // (x - x1)*(x2 - x1) + (y - y1)*(y2 - y1) + (z - z1)*(z2 - z1) = 0.5*(r1^2 - r2^2 + d21^2) = b21
+        // (x - x1)*(x3 - x1) + (y - y1)*(y3 - y1) + (z - z1)*(z3 - z1) = 0.5*(r1^2 - r3^2 + d31^2) = b31
+        // ...
+        // (x - x1)*(xn - x1) + (y - y1)*(yn - y1) + (z - z1)*(zn - z1) = 0.5*(r1^2 - rn^2 + dn1^2) = bn1
+
+        // This linear system is easily written in matrix form A*x = b, with
+        // A =  [x2 - x1    y2 - y1     z2 - z1],   x = [x - x1],   b = [b21]
+        //      [x3 - x1    y3 - y1     z3 - z1]        [y - y1]        [b31]
+        //      [...        ...         ...    ]        [z - z1]        [...]
+        //      [xn - x1    yn - y1     zn - z1]                        [bn1]
+
+        // Hence, the linear system of equations solves (x - x1, y - y1, z - z1), we need a final step to
+        // add the reference point (x1, y1, z1) in order to solve (x, y, z).
+
         if (!isReady()) {
             throw new NotReadyException();
         }
@@ -141,6 +183,6 @@ public abstract class LinearLeastSquaresTrilaterationSolver<P extends Point> ext
      */
     @Override
     public TrilaterationSolverType getType() {
-        return TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER;
+        return TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER;
     }
 }

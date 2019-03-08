@@ -22,7 +22,8 @@ import com.irurueta.navigation.indoor.Fingerprint;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
 import com.irurueta.navigation.indoor.Reading;
-import com.irurueta.navigation.trilateration.LinearLeastSquaresTrilateration3DSolver;
+import com.irurueta.navigation.trilateration.HomogeneousLinearLeastSquaresTrilateration3DSolver;
+import com.irurueta.navigation.trilateration.InhomogeneousLinearLeastSquaresTrilateration3DSolver;
 
 import java.util.List;
 
@@ -178,7 +179,8 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
         }
 
         try {
-            mTrilaterationSolver.setPositionsAndDistances(positionsArray, distancesArray);
+            mHomogeneousTrilaterationSolver.setPositionsAndDistances(positionsArray, distancesArray);
+            mInhomogeneousTrilaterationSolver.setPositionsAndDistances(positionsArray, distancesArray);
         } catch (LockedException e) {
             throw new IllegalArgumentException(e);
         }
@@ -188,7 +190,9 @@ public class LinearPositionEstimator3D extends LinearPositionEstimator<Point3D> 
      * Initializes trilateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new LinearLeastSquaresTrilateration3DSolver(
+        mHomogeneousTrilaterationSolver = new HomogeneousLinearLeastSquaresTrilateration3DSolver(
+                mTrilaterationSolverListener);
+        mInhomogeneousTrilaterationSolver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(
                 mTrilaterationSolverListener);
     }
 }

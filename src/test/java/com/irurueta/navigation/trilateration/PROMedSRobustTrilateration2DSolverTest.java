@@ -73,10 +73,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
     @Test
     @SuppressWarnings("all")
     public void testConstructor() {
-        //empty constructor
+        // empty constructor
         PROMedSRobustTrilateration2DSolver solver = new PROMedSRobustTrilateration2DSolver();
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -84,6 +84,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -105,10 +108,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getEstimatedPosition());
 
 
-        //constructor with listener
+        // constructor with listener
         solver = new PROMedSRobustTrilateration2DSolver(this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -116,6 +119,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -137,7 +143,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getEstimatedPosition());
 
 
-        //constructor with positions and distances
+        // constructor with positions and distances
         Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D();
         positions[1] = new InhomogeneousPoint2D();
@@ -145,7 +151,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         double[] distances = new double[3];
         solver = new PROMedSRobustTrilateration2DSolver(positions, distances);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -153,6 +159,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -173,7 +182,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] wrong = new double[4];
         Point2D[] shortPositions = new Point2D[1];
         double[] shortDistances = new double[1];
@@ -197,12 +206,12 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with positions, distances and standard deviations
+        // constructor with positions, distances and standard deviations
         double[] standardDeviations = new double[3];
         solver = new PROMedSRobustTrilateration2DSolver(positions, distances,
                 standardDeviations);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -210,6 +219,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -230,7 +242,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null, distances,
@@ -265,11 +277,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with positions, distances, standard deviations and listener
+        // constructor with positions, distances, standard deviations and listener
         solver = new PROMedSRobustTrilateration2DSolver(positions, distances,
                 standardDeviations, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -277,6 +289,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -297,7 +312,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null, distances,
@@ -332,11 +347,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with positions, distances and listener
+        // constructor with positions, distances and listener
         solver = new PROMedSRobustTrilateration2DSolver(positions, distances,
                 this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -344,6 +359,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -364,7 +382,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver((Point2D[])null, distances,
@@ -389,14 +407,14 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles
+        // constructor with circles
         Circle[] circles = new Circle[3];
         circles[0] = new Circle(positions[0], distances[0]);
         circles[1] = new Circle(positions[1], distances[1]);
         circles[2] = new Circle(positions[2], distances[2]);
         solver = new PROMedSRobustTrilateration2DSolver(circles);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -404,6 +422,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -424,7 +445,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         Circle[] shortCircles = new Circle[1];
 
         solver = null;
@@ -439,11 +460,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles and standard deviations
+        // constructor with circles and standard deviations
         solver = new PROMedSRobustTrilateration2DSolver(circles,
                 standardDeviations);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -451,6 +472,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -472,7 +496,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver((Circle[])null,
@@ -496,10 +520,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles and listener
+        // constructor with circles and listener
         solver = new PROMedSRobustTrilateration2DSolver(circles, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -507,6 +531,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -527,7 +554,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver((Circle[])null,
@@ -542,11 +569,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles, standard deviation and listener
+        // constructor with circles, standard deviation and listener
         solver = new PROMedSRobustTrilateration2DSolver(circles,
                 standardDeviations, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -554,6 +581,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -575,7 +605,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver((Circle[])null,
@@ -600,11 +630,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores
+        // constructor with quality scores
         double[] qualityscores = new double[3];
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -612,6 +642,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -632,7 +665,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver((double[])null);
@@ -645,10 +678,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores and listener
+        // constructor with quality scores and listener
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -656,6 +689,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -676,7 +712,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver((double[])null, this);
@@ -689,11 +725,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, positions and distances
+        // constructor with quality scores, positions and distances
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 positions, distances);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -701,6 +737,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -721,7 +760,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] shortQualityScores = new double[1];
 
         solver = null;
@@ -758,11 +797,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, positions and distances
+        // constructor with quality scores, positions and distances
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 positions, distances, standardDeviations);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -770,6 +809,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -791,7 +833,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null, positions,
@@ -837,12 +879,12 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, positions, distances,
+        // constructor with quality scores, positions, distances,
         // standard deviations and listener
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 positions, distances, standardDeviations, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -850,6 +892,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -871,7 +916,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null, positions,
@@ -922,12 +967,12 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, positions, distances
-        //and listener
+        // constructor with quality scores, positions, distances
+        // and listener
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 positions, distances, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -935,6 +980,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -955,7 +1003,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null, positions,
@@ -991,11 +1039,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores and circles
+        // constructor with quality scores and circles
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 circles);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -1003,6 +1051,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1023,7 +1074,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null,
@@ -1048,11 +1099,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, circles and standard deviations
+        // constructor with quality scores, circles and standard deviations
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 circles, standardDeviations);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -1060,6 +1111,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1081,7 +1135,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null,
@@ -1116,11 +1170,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, circles and listener
+        // constructor with quality scores, circles and listener
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 circles, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -1128,6 +1182,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1148,7 +1205,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null,
@@ -1173,12 +1230,12 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with quality scores, circles, standard deviations
-        //and listener
+        // constructor with quality scores, circles, standard deviations
+        // and listener
         solver = new PROMedSRobustTrilateration2DSolver(qualityscores,
                 circles, standardDeviations, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
         assertEquals(solver.getMethod(), RobustEstimatorMethod.PROMedS);
@@ -1186,6 +1243,9 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -1207,7 +1267,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new PROMedSRobustTrilateration2DSolver(null,
@@ -1247,17 +1307,17 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check initial value
+        // check initial value
         assertEquals(solver.getStopThreshold(),
                 PROMedSRobustTrilateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         solver.setStopThreshold(1.0);
 
-        //check
+        // check
         assertEquals(solver.getStopThreshold(), 1.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setStopThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -1271,10 +1331,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check initial value
+        // check initial value
         assertNull(solver.getCircles());
 
-        //set new value
+        // set new value
         Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
@@ -1290,14 +1350,14 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         circles[2] = new Circle(positions[2], distances[2]);
         solver.setCircles(circles);
 
-        //check
+        // check
         Circle[] circles2 = solver.getCircles();
         for (int i = 0; i < 3; i++) {
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
             assertEquals(circles[i].getRadius(), circles2[i].getRadius(), 0.0);
         }
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setCircles(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -1315,10 +1375,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check initial value
+        // check initial value
         assertNull(solver.getCircles());
 
-        //set new value
+        // set new value
         Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
@@ -1338,7 +1398,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         circles[2] = new Circle(positions[2], distances[2]);
         solver.setCirclesAndStandardDeviations(circles, standardDeviations);
 
-        //check
+        // check
         Circle[] circles2 = solver.getCircles();
         for (int i = 0; i < 3; i++) {
             assertSame(circles[i].getCenter(), circles2[i].getCenter());
@@ -1347,7 +1407,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setCirclesAndStandardDeviations(null,
                     standardDeviations);
@@ -1375,14 +1435,59 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getListener());
 
-        //set new value
+        // set new value
         solver.setListener(this);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
+    }
+
+    @Test
+    public void testIsSetLinearSolverUsed() throws LockedException {
+        PROMedSRobustTrilateration2DSolver solver =
+                new PROMedSRobustTrilateration2DSolver();
+
+        // check default value
+        assertTrue(solver.isLinearSolverUsed());
+
+        // set new value
+        solver.setLinearSolverUsed(false);
+
+        // check
+        assertFalse(solver.isLinearSolverUsed());
+    }
+
+    @Test
+    public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
+        PROMedSRobustTrilateration2DSolver solver =
+                new PROMedSRobustTrilateration2DSolver();
+
+        // check default value
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+
+        // set new value
+        solver.setHomogeneousLinearSolverUsed(false);
+
+        // check
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
+    }
+
+    @Test
+    public void testIsSetPreliminarySolutionRefined() throws LockedException {
+        PROMedSRobustTrilateration2DSolver solver =
+                new PROMedSRobustTrilateration2DSolver();
+
+        // check default value
+        assertTrue(solver.isPreliminarySolutionRefined());
+
+        // set new value
+        solver.setPreliminarySolutionRefined(false);
+
+        // check
+        assertFalse(solver.isPreliminarySolutionRefined());
     }
 
     @Test
@@ -1390,17 +1495,17 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
 
-        //set new value
+        // set new value
         solver.setProgressDelta(0.5f);
 
-        //check
+        // check
         assertEquals(solver.getProgressDelta(), 0.5f, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
@@ -1416,17 +1521,17 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.getConfidence(),
                 RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         solver.setConfidence(0.8);
 
-        //check
+        // check
         assertEquals(solver.getConfidence(), 0.8, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -1442,17 +1547,17 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.getMaxIterations(),
                 RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         solver.setMaxIterations(10);
 
-        //check
+        // check
         assertEquals(solver.getMaxIterations(), 10);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
@@ -1464,15 +1569,15 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.isResultRefined(),
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
 
-        //set new value
+        // set new value
         solver.setResultRefined(
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
 
-        //check
+        // check
         assertEquals(solver.isResultRefined(),
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
     }
@@ -1482,15 +1587,15 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
 
-        //set new value
+        // set new value
         solver.setCovarianceKept(
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
 
-        //check
+        // check
         assertEquals(solver.isCovarianceKept(),
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
     }
@@ -1500,14 +1605,14 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getQualityScores());
 
-        //set new value
+        // set new value
         double[] qualityScores = new double[3];
         solver.setQualityScores(qualityScores);
 
-        //check
+        // check
         assertSame(solver.getQualityScores(), qualityScores);
     }
 
@@ -1518,11 +1623,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
 
-        //set new values
+        // set new values
         Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
@@ -1534,11 +1639,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
 
         solver.setPositionsAndDistances(positions, distances);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] wrong = new double[4];
         Point2D[] shortPositions = new Point2D[1];
         double[] shortDistances = new double[1];
@@ -1567,11 +1672,11 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         PROMedSRobustTrilateration2DSolver solver =
                 new PROMedSRobustTrilateration2DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
 
-        //set new values
+        // set new values
         Point2D[] positions = new Point2D[3];
         positions[0] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
         positions[1] = new InhomogeneousPoint2D(randomizer.nextDouble(), randomizer.nextDouble());
@@ -1588,13 +1693,13 @@ public class PROMedSRobustTrilateration2DSolverTest implements
         solver.setPositionsDistancesAndStandardDeviations(
                 positions, distances, standardDeviations);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] wrong = new double[4];
         Point2D[] shortPositions = new Point2D[1];
         double[] shortDistances = new double[1];
@@ -1655,10 +1760,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -1683,7 +1788,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
 
             Point2D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1700,7 +1805,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new PROMedSRobustTrilateration2DSolver();
 
             try {
@@ -1740,10 +1845,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 qualityScores[i] = 1.0 / (1.0 + error);
@@ -1768,7 +1873,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
 
             Point2D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1785,7 +1890,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new PROMedSRobustTrilateration2DSolver();
 
             try {
@@ -1825,10 +1930,10 @@ public class PROMedSRobustTrilateration2DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
@@ -1854,7 +1959,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
 
             Point2D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1873,7 +1978,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new PROMedSRobustTrilateration2DSolver();
 
             try {
@@ -1914,18 +2019,18 @@ public class PROMedSRobustTrilateration2DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                     standardDeviations[i] = STD_OUTLIER_ERROR;
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                     standardDeviations[i] = 0.0;
                 }
-                //add variance of uniform distribution containing inlier error
+                // add variance of uniform distribution containing inlier error
                 standardDeviations[i] += Math.pow(MAX_DISTANCE_ERROR - MIN_DISTANCE_ERROR, 2.0) / 12.0;
                 standardDeviations[i] = Math.sqrt(standardDeviations[i]);
-                //add inlier error
+                // add inlier error
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1949,7 +2054,7 @@ public class PROMedSRobustTrilateration2DSolverTest implements
 
             Point2D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1968,7 +2073,523 @@ public class PROMedSRobustTrilateration2DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoPreliminaryLinearSolver() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] qualityScores = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            PROMedSRobustTrilateration2DSolver solver =
+                    new PROMedSRobustTrilateration2DSolver(qualityScores,
+                            circles, this);
+            solver.setLinearSolverUsed(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveInhomogeneousPreliminaryLinearSolver() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] qualityScores = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            PROMedSRobustTrilateration2DSolver solver =
+                    new PROMedSRobustTrilateration2DSolver(qualityScores,
+                            circles, this);
+            solver.setLinearSolverUsed(true);
+            solver.setHomogeneousLinearSolverUsed(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveHomogeneousPreliminaryLinearSolver() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] qualityScores = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            PROMedSRobustTrilateration2DSolver solver =
+                    new PROMedSRobustTrilateration2DSolver(qualityScores,
+                            circles, this);
+            solver.setLinearSolverUsed(true);
+            solver.setHomogeneousLinearSolverUsed(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveRefinePreliminarySolutions() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] qualityScores = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            PROMedSRobustTrilateration2DSolver solver =
+                    new PROMedSRobustTrilateration2DSolver(qualityScores,
+                            circles, this);
+            solver.setLinearSolverUsed(true);
+            solver.setPreliminarySolutionRefined(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolvePreliminarySolutionsNotRefined() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] qualityScores = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            PROMedSRobustTrilateration2DSolver solver =
+                    new PROMedSRobustTrilateration2DSolver(qualityScores,
+                            circles, this);
+            solver.setLinearSolverUsed(true);
+            solver.setPreliminarySolutionRefined(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement()
+            throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            double[] qualityScores = new double[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            PROMedSRobustTrilateration2DSolver solver =
+                    new PROMedSRobustTrilateration2DSolver(qualityScores,
+                            circles, this);
+            solver.setLinearSolverUsed(false);
+            solver.setPreliminarySolutionRefined(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
             solver = new PROMedSRobustTrilateration2DSolver();
 
             try {
@@ -2016,6 +2637,18 @@ public class PROMedSRobustTrilateration2DSolverTest implements
     private void checkLocked(PROMedSRobustTrilateration2DSolver solver) {
         try {
             solver.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setLinearSolverUsed(true);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setHomogeneousLinearSolverUsed(true);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setPreliminarySolutionRefined(true);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

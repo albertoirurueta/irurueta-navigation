@@ -21,7 +21,8 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.LinearLeastSquaresTrilateration3DSolver;
+import com.irurueta.navigation.trilateration.HomogeneousLinearLeastSquaresTrilateration3DSolver;
+import com.irurueta.navigation.trilateration.InhomogeneousLinearLeastSquaresTrilateration3DSolver;
 import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilateration3DSolver;
 
 import java.util.List;
@@ -207,9 +208,13 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
      */
     @Override
     protected void buildLinearSolverIfNeeded() {
-        if ((mInitialPosition == null || !mNonLinearSolverEnabled) &&
-                mLinearSolver == null) {
-            mLinearSolver = new LinearLeastSquaresTrilateration3DSolver();
+        if (mInitialPosition == null || !mNonLinearSolverEnabled) {
+            if (mUseHomogeneousLinearSolver && mHomogeneousLinearSolver == null) {
+                mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresTrilateration3DSolver();
+            }
+            if (!mUseHomogeneousLinearSolver && mInhomogeneousLinearSolver == null) {
+                mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
+            }
         }
     }
 
@@ -261,10 +266,15 @@ public class RangingRadioSourceEstimator3D<S extends RadioSource> extends
             distanceStandardDeviationsArray[i] = distanceStandardDeviations.get(i);
         }
 
-        if (mLinearSolver != null &&
-                (mInitialPosition == null || !mNonLinearSolverEnabled)) {
-            mLinearSolver.setPositionsAndDistances(positionsArray, distancesArray);
+        if (mInitialPosition == null || !mNonLinearSolverEnabled) {
+            if (mHomogeneousLinearSolver != null) {
+                mHomogeneousLinearSolver.setPositionsAndDistances(positionsArray, distancesArray);
+            }
+            if (mInhomogeneousLinearSolver != null) {
+                mInhomogeneousLinearSolver.setPositionsAndDistances(positionsArray, distancesArray);
+            }
         }
+
         if (mNonLinearSolver != null && mNonLinearSolverEnabled) {
             mNonLinearSolver.setPositionsDistancesAndStandardDeviations(positionsArray, distancesArray,
                     distanceStandardDeviationsArray);

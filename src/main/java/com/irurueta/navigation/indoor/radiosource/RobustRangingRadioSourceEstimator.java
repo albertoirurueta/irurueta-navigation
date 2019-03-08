@@ -206,6 +206,24 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
     }
 
     /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    public abstract boolean isHomogeneousLinearSolverUsed();
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    public abstract void setHomogeneousLinearSolverUsed(
+            boolean useHomogeneousLinearSolver) throws LockedException;
+
+    /**
      * Returns method being used for robust estimation.
      * @return method being used for robust estimation.
      */

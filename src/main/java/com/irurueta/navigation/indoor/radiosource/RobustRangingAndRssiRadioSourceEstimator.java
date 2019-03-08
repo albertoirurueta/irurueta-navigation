@@ -649,14 +649,32 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator<S extends RadioSo
     }
 
     /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    public abstract boolean isHomogeneousRangingLinearSolverUsed();
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    public abstract void setHomogeneousRangingLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException;
+
+    /**
      * Indicates whether this instance is ready to start the estimation.
      * @return true if this instance is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
-        //if transmitted power estimation is disabled, an initial transmitted power must be provided
+        // if transmitted power estimation is disabled, an initial transmitted power must be provided
         return !(!mTransmittedPowerEstimationEnabled && mInitialTransmittedPowerdBm == null) &&
-                //readings must also be valid
+                // readings must also be valid
                 areValidReadings(mReadings);
     }
 

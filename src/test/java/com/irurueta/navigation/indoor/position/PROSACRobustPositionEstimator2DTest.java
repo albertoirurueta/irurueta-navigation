@@ -86,11 +86,11 @@ public class PROSACRobustPositionEstimator2DTest implements
 
     @Test
     public void testConstructor() {
-        //empty constructor
+        // empty constructor
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -116,6 +116,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -128,7 +131,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
 
-        //constructor with sources
+        // constructor with sources
         List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
@@ -162,6 +165,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -173,7 +179,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(
@@ -188,12 +194,12 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with fingerprints
+        // constructor with fingerprints
         RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
         estimator = new PROSACRobustPositionEstimator2D(fingerprint);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -219,6 +225,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -230,7 +239,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(
@@ -240,10 +249,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with sources and fingerprint
+        // constructor with sources and fingerprint
         estimator = new PROSACRobustPositionEstimator2D(sources, fingerprint);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -269,6 +278,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -280,7 +292,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(
@@ -300,10 +312,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with listener
+        // constructor with listener
         estimator = new PROSACRobustPositionEstimator2D(this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -329,6 +341,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -341,10 +356,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
 
-        //constructor with sources and listener
+        // constructor with sources and listener
         estimator = new PROSACRobustPositionEstimator2D(sources, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -370,6 +385,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -381,7 +399,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(
@@ -396,10 +414,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with fingerprint and listener
+        // constructor with fingerprint and listener
         estimator = new PROSACRobustPositionEstimator2D(fingerprint, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -425,6 +443,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -436,7 +457,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(
@@ -447,11 +468,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with sources, fingerprint and listener
+        // constructor with sources, fingerprint and listener
         estimator = new PROSACRobustPositionEstimator2D(sources, fingerprint,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -477,6 +498,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -488,7 +512,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(
@@ -510,11 +534,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores
+        // constructor with quality scores
         double[] qualityScores = new double[3];
         estimator = new PROSACRobustPositionEstimator2D(qualityScores);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -540,6 +564,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -551,7 +578,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D((double[])null);
@@ -564,10 +591,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores and sources
+        // constructor with quality scores and sources
         estimator = new PROSACRobustPositionEstimator2D(qualityScores, sources);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -593,6 +620,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -604,7 +634,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(null,
@@ -629,10 +659,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores and fingerprint
+        // constructor with quality scores and fingerprint
         estimator = new PROSACRobustPositionEstimator2D(qualityScores, fingerprint);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -658,6 +688,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -669,7 +702,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D((double[])null,
@@ -689,11 +722,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores, sources and fingerprint
+        // constructor with quality scores, sources and fingerprint
         estimator = new PROSACRobustPositionEstimator2D(qualityScores, sources,
                 fingerprint);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -719,6 +752,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -730,7 +766,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(null,
@@ -760,11 +796,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores and listener
+        // constructor with quality scores and listener
         estimator = new PROSACRobustPositionEstimator2D(qualityScores,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -790,6 +826,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -801,7 +840,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D((double[])null,
@@ -816,11 +855,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores, sources and listener
+        // constructor with quality scores, sources and listener
         estimator = new PROSACRobustPositionEstimator2D(qualityScores, sources,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -846,6 +885,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -857,7 +899,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(null,
@@ -882,11 +924,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores, fingerprint and listener
+        // constructor with quality scores, fingerprint and listener
         estimator = new PROSACRobustPositionEstimator2D(qualityScores,
                 fingerprint, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -912,6 +954,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -923,7 +968,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D((double[])null,
@@ -944,11 +989,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertNull(estimator);
 
 
-        //constructor with quality scores, sources, fingerprint listener
+        // constructor with quality scores, sources, fingerprint listener
         estimator = new PROSACRobustPositionEstimator2D(qualityScores, sources,
                 fingerprint, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.isComputeAndKeepInliersEnabled(),
@@ -974,6 +1019,9 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertTrue(estimator.isLinearSolverUsed());
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+        assertTrue(estimator.isPreliminarySolutionRefined());
         assertNull(estimator.getInliersData());
         assertNull(estimator.getPositions());
         assertNull(estimator.getDistances());
@@ -985,7 +1033,7 @@ public class PROSACRobustPositionEstimator2DTest implements
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.PROSAC);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new PROSACRobustPositionEstimator2D(null,
@@ -1021,17 +1069,17 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getThreshold(),
                 PROSACRobustTrilateration2DSolver.DEFAULT_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         estimator.setThreshold(1.0);
 
-        //check
+        // check
         assertEquals(estimator.getThreshold(), 1.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -1043,13 +1091,13 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertFalse(estimator.isComputeAndKeepInliersEnabled());
 
-        //set new value
+        // set new value
         estimator.setComputeAndKeepInliersEnabled(true);
 
-        //check
+        // check
         assertTrue(estimator.isComputeAndKeepInliersEnabled());
     }
 
@@ -1058,13 +1106,13 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertFalse(estimator.isComputeAndKeepResiduals());
 
-        //set new value
+        // set new value
         estimator.setComputeAndKeepResidualsEnabled(true);
 
-        //check
+        // check
         assertTrue(estimator.isComputeAndKeepResiduals());
     }
 
@@ -1073,10 +1121,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getSources());
 
-        //set new value
+        // set new value
         List<WifiAccessPointLocated2D> sources = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             sources.add(new WifiAccessPointLocated2D("id1", FREQUENCY,
@@ -1085,10 +1133,10 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         estimator.setSources(sources);
 
-        //check
+        // check
         assertSame(estimator.getSources(), sources);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setSources(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -1104,18 +1152,18 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getFingerprint());
 
-        //set new value
+        // set new value
         RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
                 new RssiFingerprint<>();
         estimator.setFingerprint(fingerprint);
 
-        //check
+        // check
         assertSame(estimator.getFingerprint(), fingerprint);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setFingerprint(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -1127,13 +1175,13 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getListener());
 
-        //set new value
+        // set new value
         estimator.setListener(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
     }
 
@@ -1142,13 +1190,13 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertFalse(estimator.isRadioSourcePositionCovarianceUsed());
 
-        //set new value
+        // set new value
         estimator.setRadioSourcePositionCovarianceUsed(true);
 
-        //chekc
+        // check
         assertTrue(estimator.isRadioSourcePositionCovarianceUsed());
     }
 
@@ -1157,15 +1205,15 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 RobustPositionEstimator.FALLBACK_DISTANCE_STANDARD_DEVIATION,
                 0.0);
 
-        //set new value
+        // set new value
         estimator.setFallbackDistanceStandardDeviation(1.0);
 
-        //check
+        // check
         assertEquals(estimator.getFallbackDistanceStandardDeviation(),
                 1.0, 0.0);
     }
@@ -1175,17 +1223,17 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
 
-        //set new value
+        // set new value
         estimator.setProgressDelta(0.5f);
 
-        //check
+        // check
         assertEquals(estimator.getProgressDelta(), 0.5f, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
@@ -1197,11 +1245,11 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getConfidence(),
                 RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         try {
             estimator.setConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -1217,17 +1265,17 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getMaxIterations(),
                 RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         estimator.setMaxIterations(100);
 
-        //check
+        // check
         assertEquals(estimator.getMaxIterations(), 100);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
@@ -1239,13 +1287,13 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertTrue(estimator.isResultRefined());
 
-        //set new value
+        // set new value
         estimator.setResultRefined(false);
 
-        //check
+        // check
         assertFalse(estimator.isResultRefined());
     }
 
@@ -1254,14 +1302,59 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertTrue(estimator.isCovarianceKept());
 
-        //set new value
+        // set new value
         estimator.setCovarianceKept(false);
 
-        //check
+        // check
         assertFalse(estimator.isCovarianceKept());
+    }
+
+    @Test
+    public void testIsSetLinearSolverUsed() throws LockedException {
+        PROSACRobustPositionEstimator2D estimator =
+                new PROSACRobustPositionEstimator2D();
+
+        // check default value
+        assertTrue(estimator.isLinearSolverUsed());
+
+        // set new value
+        estimator.setLinearSolverUsed(false);
+
+        // check
+        assertFalse(estimator.isLinearSolverUsed());
+    }
+
+    @Test
+    public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
+        PROSACRobustPositionEstimator2D estimator =
+                new PROSACRobustPositionEstimator2D();
+
+        // check default value
+        assertTrue(estimator.isHomogeneousLinearSolverUsed());
+
+        // set new value
+        estimator.setHomogeneousLinearSolverUsed(false);
+
+        // check
+        assertFalse(estimator.isHomogeneousLinearSolverUsed());
+    }
+
+    @Test
+    public void testIsSetPreliminarySolutionRefined() throws LockedException {
+        PROSACRobustPositionEstimator2D estimator =
+                new PROSACRobustPositionEstimator2D();
+
+        // check default value
+        assertTrue(estimator.isPreliminarySolutionRefined());
+
+        // set new value
+        estimator.setPreliminarySolutionRefined(false);
+
+        // check
+        assertFalse(estimator.isPreliminarySolutionRefined());
     }
 
     @Test
@@ -1269,17 +1362,17 @@ public class PROSACRobustPositionEstimator2DTest implements
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
 
-        //check default value
+        // check default value
         assertNull(estimator.getQualityScores());
 
-        //set new value
+        // set new value
         double[] qualityScores = new double[3];
         estimator.setQualityScores(qualityScores);
 
-        //check
+        // check
         assertSame(estimator.getQualityScores(), qualityScores);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setQualityScores(new double[1]);
             fail("IllegalArgumentException expected but not thrown");
@@ -1338,10 +1431,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                         distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -1364,7 +1457,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -1422,7 +1515,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -1485,10 +1578,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                         distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -1513,7 +1606,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -1571,7 +1664,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -1620,10 +1713,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -1647,7 +1740,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -1705,7 +1798,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -1757,10 +1850,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                 double distance = position.distanceTo(accessPointPosition);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -1786,7 +1879,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -1844,7 +1937,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -1905,10 +1998,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                         distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -1932,7 +2025,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -1990,7 +2083,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -2053,10 +2146,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                         distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -2082,7 +2175,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -2140,7 +2233,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -2201,10 +2294,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                         distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -2233,7 +2326,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -2291,7 +2384,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
@@ -2354,10 +2447,10 @@ public class PROSACRobustPositionEstimator2DTest implements
                         distance, pathLossExponent));
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
 
@@ -2388,7 +2481,7 @@ public class PROSACRobustPositionEstimator2DTest implements
 
             reset();
 
-            //check initial state
+            // check initial state
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
             assertNull(estimator.getEstimatedPosition());
@@ -2446,13 +2539,740 @@ public class PROSACRobustPositionEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         PROSACRobustPositionEstimator2D estimator =
                 new PROSACRobustPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateMixedLinearSolverUsedHomogeneousAndPreliminaryRefined() throws LockedException,
+            NotReadyException, RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            PROSACRobustPositionEstimator2D estimator =
+                    new PROSACRobustPositionEstimator2D(qualityScores, sources,
+                            fingerprint, this);
+            estimator.setComputeAndKeepInliersEnabled(true);
+            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setResultRefined(true);
+            estimator.setLinearSolverUsed(true);
+            estimator.setHomogeneousLinearSolverUsed(true);
+            estimator.setPreliminarySolutionRefined(true);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point2D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy2D accuracyStd = new Accuracy2D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+    }
+
+    @Test
+    public void testEstimateMixedLinearSolverUsedInhomogeneousAndPreliminaryRefined() throws LockedException,
+            NotReadyException, RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            PROSACRobustPositionEstimator2D estimator =
+                    new PROSACRobustPositionEstimator2D(qualityScores, sources,
+                            fingerprint, this);
+            estimator.setComputeAndKeepInliersEnabled(true);
+            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setResultRefined(true);
+            estimator.setLinearSolverUsed(true);
+            estimator.setHomogeneousLinearSolverUsed(false);
+            estimator.setPreliminarySolutionRefined(true);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point2D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy2D accuracyStd = new Accuracy2D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+    }
+
+    @Test
+    public void testEstimateMixedPreliminaryNotRefined() throws LockedException,
+            NotReadyException, RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            PROSACRobustPositionEstimator2D estimator =
+                    new PROSACRobustPositionEstimator2D(qualityScores, sources,
+                            fingerprint, this);
+            estimator.setComputeAndKeepInliersEnabled(true);
+            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setResultRefined(true);
+            estimator.setLinearSolverUsed(true);
+            estimator.setPreliminarySolutionRefined(false);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point2D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy2D accuracyStd = new Accuracy2D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+    }
+
+    @Test
+    public void testEstimateMixedLinearDisabled() throws LockedException,
+            NotReadyException, RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            PROSACRobustPositionEstimator2D estimator =
+                    new PROSACRobustPositionEstimator2D(qualityScores, sources,
+                            fingerprint, this);
+            estimator.setComputeAndKeepInliersEnabled(true);
+            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setResultRefined(true);
+            estimator.setLinearSolverUsed(false);
+            estimator.setPreliminarySolutionRefined(true);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point2D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy2D accuracyStd = new Accuracy2D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+    }
+
+    @Test
+    public void testEstimateMixedLinearDisabledAndNotPreliminaryRefined() throws LockedException,
+            NotReadyException, RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            PROSACRobustPositionEstimator2D estimator =
+                    new PROSACRobustPositionEstimator2D(qualityScores, sources,
+                            fingerprint, this);
+            estimator.setComputeAndKeepInliersEnabled(true);
+            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setResultRefined(true);
+            estimator.setLinearSolverUsed(false);
+            estimator.setPreliminarySolutionRefined(false);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point2D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy2D accuracyStd = new Accuracy2D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
     }
 
     @Override

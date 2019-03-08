@@ -57,10 +57,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
     @Test
     public void testConstructor() {
-        //empty constructor
+        // empty constructor
         RANSACRobustTrilateration3DSolver solver = new RANSACRobustTrilateration3DSolver();
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -72,6 +72,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -93,10 +96,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getEstimatedPosition());
 
 
-        //constructor with listener
+        // constructor with listener
         solver = new RANSACRobustTrilateration3DSolver(this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -108,6 +111,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -129,7 +135,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getEstimatedPosition());
 
 
-        //constructor with positions and distances
+        // constructor with positions and distances
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
@@ -138,7 +144,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         double[] distances = new double[4];
         solver = new RANSACRobustTrilateration3DSolver(positions, distances);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -150,6 +156,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -170,7 +179,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] wrong = new double[5];
         Point3D[] shortPositions = new Point3D[1];
         double[] shortDistances = new double[1];
@@ -194,12 +203,12 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with positions, distances and standard deviations
+        // constructor with positions, distances and standard deviations
         double[] standardDeviations = new double[4];
         solver = new RANSACRobustTrilateration3DSolver(positions, distances,
                 standardDeviations);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -211,6 +220,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -231,7 +243,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new RANSACRobustTrilateration3DSolver(null, distances,
@@ -266,11 +278,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with positions, distances, standard deviations and listener
+        // constructor with positions, distances, standard deviations and listener
         solver = new RANSACRobustTrilateration3DSolver(positions, distances,
                 standardDeviations, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -282,6 +294,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -302,7 +317,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new RANSACRobustTrilateration3DSolver(null, distances,
@@ -337,11 +352,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with positions, distances and listener
+        // constructor with positions, distances and listener
         solver = new RANSACRobustTrilateration3DSolver(positions, distances,
                 this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -353,6 +368,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -373,7 +391,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new RANSACRobustTrilateration3DSolver((Point3D[])null, distances,
@@ -398,7 +416,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles
+        // constructor with circles
         Sphere[] spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
@@ -406,7 +424,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         spheres[3] = new Sphere(positions[3], distances[3]);
         solver = new RANSACRobustTrilateration3DSolver(spheres);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -418,6 +436,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -438,7 +459,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         Sphere[] shortCircles = new Sphere[1];
 
         solver = null;
@@ -453,11 +474,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles and standard deviations
+        // constructor with circles and standard deviations
         solver = new RANSACRobustTrilateration3DSolver(spheres,
                 standardDeviations);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -469,6 +490,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -490,7 +514,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new RANSACRobustTrilateration3DSolver((Sphere[])null,
@@ -514,10 +538,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles and listener
+        // constructor with circles and listener
         solver = new RANSACRobustTrilateration3DSolver(spheres, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -529,6 +553,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -549,7 +576,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new RANSACRobustTrilateration3DSolver(null,
@@ -564,11 +591,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver);
 
 
-        //constructor with circles, standard deviation and listener
+        // constructor with circles, standard deviation and listener
         solver = new RANSACRobustTrilateration3DSolver(spheres,
                 standardDeviations, this);
 
-        //check correctness
+        // check correctness
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
@@ -580,6 +607,9 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertTrue(solver.isLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
@@ -601,7 +631,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertNull(solver.getCovariance());
         assertNull(solver.getEstimatedPosition());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         solver = null;
         try {
             solver = new RANSACRobustTrilateration3DSolver((Sphere[])null,
@@ -631,17 +661,17 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check initial value
+        // check initial value
         assertEquals(solver.getThreshold(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
 
-        //set new value
+        // set new value
         solver.setThreshold(1.0);
 
-        //check
+        // check
         assertEquals(solver.getThreshold(), 1.0, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setThreshold(0.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -653,15 +683,15 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check initial value
+        // check initial value
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
 
-        //set new value
+        // set new value
         solver.setComputeAndKeepInliersEnabled(
                 !RANSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
 
-        //check
+        // check
         assertEquals(solver.isComputeAndKeepInliersEnabled(),
                 !RANSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_INLIERS);
     }
@@ -671,15 +701,15 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check initial value
+        // check initial value
         assertEquals(solver.isComputeAndKeepResiduals(),
                 RANSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
 
-        //set new value
+        // set new value
         solver.setComputeAndKeepResidualsEnabled(
                 !RANSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
 
-        //check
+        // check
         assertEquals(solver.isComputeAndKeepResiduals(),
                 !RANSACRobustTrilateration3DSolver.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
     }
@@ -691,10 +721,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check initial value
+        // check initial value
         assertNull(solver.getSpheres());
 
-        //set new value
+        // set new value
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
@@ -717,14 +747,14 @@ public class RANSACRobustTrilateration3DSolverTest implements
         spheres[3] = new Sphere(positions[3], distances[3]);
         solver.setSpheres(spheres);
 
-        //check
+        // check
         Sphere[] spheres2 = solver.getSpheres();
         for (int i = 0; i < 3; i++) {
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
             assertEquals(spheres[i].getRadius(), spheres2[i].getRadius(), 0.0);
         }
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setSpheres(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -742,10 +772,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check initial value
+        // check initial value
         assertNull(solver.getSpheres());
 
-        //set new value
+        // set new value
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
@@ -773,7 +803,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         spheres[3] = new Sphere(positions[3], distances[3]);
         solver.setSpheresAndStandardDeviations(spheres, standardDeviations);
 
-        //check
+        // check
         Sphere[] spheres2 = solver.getSpheres();
         for (int i = 0; i < 3; i++) {
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
@@ -782,7 +812,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setSpheresAndStandardDeviations(null,
                     standardDeviations);
@@ -810,14 +840,59 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getListener());
 
-        //set new value
+        // set new value
         solver.setListener(this);
 
-        //check
+        // check
         assertSame(solver.getListener(), this);
+    }
+
+    @Test
+    public void testIsSetLinearSolverUsed() throws LockedException {
+        RANSACRobustTrilateration3DSolver solver =
+                new RANSACRobustTrilateration3DSolver();
+
+        // check default value
+        assertTrue(solver.isLinearSolverUsed());
+
+        // set new value
+        solver.setLinearSolverUsed(false);
+
+        // check
+        assertFalse(solver.isLinearSolverUsed());
+    }
+
+    @Test
+    public void testIsSetHomogeneousLinearSolverUsed() throws LockedException {
+        RANSACRobustTrilateration3DSolver solver =
+                new RANSACRobustTrilateration3DSolver();
+
+        // check default value
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
+
+        // set new value
+        solver.setHomogeneousLinearSolverUsed(false);
+
+        // check
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
+    }
+
+    @Test
+    public void testIsSetPreliminarySolutionRefined() throws LockedException {
+        RANSACRobustTrilateration3DSolver solver =
+                new RANSACRobustTrilateration3DSolver();
+
+        // check default value
+        assertTrue(solver.isPreliminarySolutionRefined());
+
+        // set new value
+        solver.setPreliminarySolutionRefined(false);
+
+        // check
+        assertFalse(solver.isPreliminarySolutionRefined());
     }
 
     @Test
@@ -825,17 +900,17 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.getProgressDelta(),
                 RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
 
-        //set new value
+        // set new value
         solver.setProgressDelta(0.5f);
 
-        //check
+        // check
         assertEquals(solver.getProgressDelta(), 0.5f, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setProgressDelta(-1.0f);
             fail("IllegalArgumentException expected but not thrown");
@@ -851,17 +926,17 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.getConfidence(),
                 RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
 
-        //set new value
+        // set new value
         solver.setConfidence(0.8);
 
-        //check
+        // check
         assertEquals(solver.getConfidence(), 0.8, 0.0);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setConfidence(-1.0);
             fail("IllegalArgumentException expected but not thrown");
@@ -877,17 +952,17 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.getMaxIterations(),
                 RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
 
-        //set new value
+        // set new value
         solver.setMaxIterations(10);
 
-        //check
+        // check
         assertEquals(solver.getMaxIterations(), 10);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setMaxIterations(0);
             fail("IllegalArgumentException expected but not thrown");
@@ -899,15 +974,15 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.isResultRefined(),
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
 
-        //set new value
+        // set new value
         solver.setResultRefined(
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
 
-        //check
+        // check
         assertEquals(solver.isResultRefined(),
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
     }
@@ -917,15 +992,15 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertEquals(solver.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
 
-        //set new value
+        // set new value
         solver.setCovarianceKept(
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
 
-        //check
+        // check
         assertEquals(solver.isCovarianceKept(),
                 !RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
     }
@@ -935,13 +1010,13 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getQualityScores());
 
-        //set new value
+        // set new value
         solver.setQualityScores(new double[3]);
 
-        //check
+        // check
         assertNull(solver.getQualityScores());
     }
 
@@ -952,11 +1027,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
 
-        //set new values
+        // set new values
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
@@ -974,11 +1049,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
         solver.setPositionsAndDistances(positions, distances);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] wrong = new double[5];
         Point3D[] shortPositions = new Point3D[1];
         double[] shortDistances = new double[1];
@@ -1007,11 +1082,11 @@ public class RANSACRobustTrilateration3DSolverTest implements
         RANSACRobustTrilateration3DSolver solver =
                 new RANSACRobustTrilateration3DSolver();
 
-        //check default value
+        // check default value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
 
-        //set new values
+        // set new values
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
@@ -1033,13 +1108,13 @@ public class RANSACRobustTrilateration3DSolverTest implements
         solver.setPositionsDistancesAndStandardDeviations(
                 positions, distances, standardDeviations);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertSame(solver.getDistanceStandardDeviations(),
                 standardDeviations);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         double[] wrong = new double[5];
         Point3D[] shortPositions = new Point3D[1];
         double[] shortDistances = new double[1];
@@ -1101,10 +1176,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1129,7 +1204,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1144,7 +1219,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1185,10 +1260,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1213,7 +1288,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1230,7 +1305,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1271,10 +1346,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1299,7 +1374,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1315,7 +1390,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1356,10 +1431,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1384,7 +1459,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1400,7 +1475,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1441,10 +1516,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1469,7 +1544,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1486,7 +1561,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1527,10 +1602,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1555,7 +1630,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1572,7 +1647,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1613,10 +1688,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
@@ -1641,7 +1716,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1658,7 +1733,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1699,10 +1774,10 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                 }
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
@@ -1729,7 +1804,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1746,7 +1821,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1763,7 +1838,8 @@ public class RANSACRobustTrilateration3DSolverTest implements
     }
 
     @Test
-    public void testSolveWithInlierErrorWithRefinementWithInlierDataWithResidualsAndStandardDeviations() throws Exception {
+    public void testSolveWithInlierErrorWithRefinementWithInlierDataWithResidualsAndStandardDeviations()
+            throws Exception {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         GaussianRandomizer errorRandomizer = new GaussianRandomizer(
                 new Random(), 0.0, STD_OUTLIER_ERROR);
@@ -1788,18 +1864,18 @@ public class RANSACRobustTrilateration3DSolverTest implements
                 radius = center.distanceTo(position);
 
                 if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
-                    //outlier
+                    // outlier
                     error = errorRandomizer.nextDouble();
                     standardDeviations[i] = STD_OUTLIER_ERROR;
                 } else {
-                    //inlier
+                    // inlier
                     error = 0.0;
                     standardDeviations[i] = 0.0;
                 }
-                //add variance of uniform distribution containing inlier error
+                // add variance of uniform distribution containing inlier error
                 standardDeviations[i] += Math.pow(MAX_DISTANCE_ERROR - MIN_DISTANCE_ERROR, 2.0) / 12.0;
                 standardDeviations[i] = Math.sqrt(standardDeviations[i]);
-                //add inlier error
+                // add inlier error
                 error += randomizer.nextDouble(MIN_DISTANCE_ERROR, MAX_DISTANCE_ERROR);
                 radius = Math.max(RobustTrilaterationSolver.EPSILON,
                         radius + error);
@@ -1825,7 +1901,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
 
             Point3D estimatedPosition = solver.solve();
 
-            //check
+            // check
             if (!position.equals(estimatedPosition, LARGE_ABSOLUTE_ERROR)) {
                 continue;
             }
@@ -1842,7 +1918,7 @@ public class RANSACRobustTrilateration3DSolverTest implements
             assertTrue(solver.isReady());
             assertFalse(solver.isLocked());
 
-            //force NotReadyException
+            // force NotReadyException
             solver = new RANSACRobustTrilateration3DSolver();
 
             try {
@@ -1858,6 +1934,532 @@ public class RANSACRobustTrilateration3DSolverTest implements
         assertTrue(numValid > 0);
     }
 
+    @Test
+    public void testSolveNoPreliminaryLinearSolver() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            RANSACRobustTrilateration3DSolver solver =
+                    new RANSACRobustTrilateration3DSolver(spheres, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setLinearSolverUsed(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new RANSACRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveInhomogeneousPreliminaryLinearSolver() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            RANSACRobustTrilateration3DSolver solver =
+                    new RANSACRobustTrilateration3DSolver(spheres, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setLinearSolverUsed(true);
+            solver.setHomogeneousLinearSolverUsed(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new RANSACRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveHomogeneousPreliminaryLinearSolver() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            RANSACRobustTrilateration3DSolver solver =
+                    new RANSACRobustTrilateration3DSolver(spheres, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setLinearSolverUsed(true);
+            solver.setHomogeneousLinearSolverUsed(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new RANSACRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveRefinePreliminarySolutions() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            RANSACRobustTrilateration3DSolver solver =
+                    new RANSACRobustTrilateration3DSolver(spheres, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setLinearSolverUsed(true);
+            solver.setPreliminarySolutionRefined(true);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new RANSACRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolvePreliminarySolutionsNotRefined() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            RANSACRobustTrilateration3DSolver solver =
+                    new RANSACRobustTrilateration3DSolver(spheres, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setLinearSolverUsed(true);
+            solver.setPreliminarySolutionRefined(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new RANSACRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testSolveNoPreliminaryLinearSolverAndNoPreliminarySolutionsRefinement() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            RANSACRobustTrilateration3DSolver solver =
+                    new RANSACRobustTrilateration3DSolver(spheres, this);
+            solver.setResultRefined(true);
+            solver.setComputeAndKeepInliersEnabled(true);
+            solver.setComputeAndKeepResidualsEnabled(true);
+            solver.setLinearSolverUsed(false);
+            solver.setPreliminarySolutionRefined(false);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange > 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new RANSACRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
 
     @Override
     public void onSolveStart(RobustTrilaterationSolver<Point3D> solver) {
@@ -1891,6 +2493,18 @@ public class RANSACRobustTrilateration3DSolverTest implements
     private void checkLocked(RANSACRobustTrilateration3DSolver solver) {
         try {
             solver.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setLinearSolverUsed(true);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setHomogeneousLinearSolverUsed(true);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setPreliminarySolutionRefined(true);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

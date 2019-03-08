@@ -17,6 +17,7 @@ package com.irurueta.navigation.indoor.radiosource;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point2D;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.navigation.indoor.*;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -689,6 +690,33 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
         } else {
             return null;
         }
+    }
+
+    /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    @Override
+    public boolean isHomogeneousLinearSolverUsed() {
+        return mInnerEstimator.isHomogeneousLinearSolverUsed();
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    @Override
+    public void setHomogeneousLinearSolverUsed(
+            boolean useHomogeneousLinearSolver) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        mInnerEstimator.setHomogeneousLinearSolverUsed(useHomogeneousLinearSolver);
     }
 
     /**

@@ -20,9 +20,14 @@ package com.irurueta.navigation.trilateration;
  */
 public enum TrilaterationSolverType {
     /**
-     * Linear trilateration solver.
+     * Inhomogeneous linear trilateration solver.
      */
-    LINEAR_TRILATERATION_SOLVER,
+    INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER,
+
+    /**
+     * Homogeneous linear trilateration solver.
+     */
+    HOMOGENEOUS_LINEAR_TRILATERATION_SOLVER,
 
     /**
      * Non linear trilateration solver.

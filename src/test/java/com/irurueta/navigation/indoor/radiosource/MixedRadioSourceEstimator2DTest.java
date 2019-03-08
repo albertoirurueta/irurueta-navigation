@@ -90,11 +90,11 @@ public class MixedRadioSourceEstimator2DTest implements
     public void testConstructor() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        //test empty constructor
+        // test empty constructor
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -111,6 +111,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -127,7 +129,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings
+        // test constructor with readings
         List<RangingAndRssiReadingLocated2D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 4; i++) {
@@ -140,7 +142,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
         estimator = new MixedRadioSourceEstimator2D<>(readings);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -157,6 +159,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -172,7 +176,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -187,10 +191,10 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with listener
+        // test constructor with listener
         estimator = new MixedRadioSourceEstimator2D<>(this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -207,6 +211,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -223,11 +229,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings and listener
+        // test constructor with readings and listener
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -244,6 +250,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -259,7 +267,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -276,13 +284,13 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position
+        // test constructor with initial position
         InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator = new MixedRadioSourceEstimator2D<>(initialPosition);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -299,6 +307,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -315,11 +325,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings and initial position
+        // test constructor with readings and initial position
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 initialPosition);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -336,6 +346,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -351,7 +363,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -367,11 +379,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and listener
+        // test constructor with initial position and listener
         estimator = new MixedRadioSourceEstimator2D<>(initialPosition,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -388,6 +400,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -404,11 +418,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings, initial position and listener
+        // test constructor with readings, initial position and listener
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 initialPosition, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -425,6 +439,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -440,7 +456,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -457,10 +473,10 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power
+        // test constructor with initial transmitted power
         estimator = new MixedRadioSourceEstimator2D<>(MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -478,6 +494,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -494,11 +512,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings and initial transmitted power
+        // test constructor with readings and initial transmitted power
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -516,6 +534,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -531,7 +551,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -548,11 +568,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power and listener
+        // test constructor with initial transmitted power and listener
         estimator = new MixedRadioSourceEstimator2D<>(MAX_RSSI,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -570,6 +590,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -586,11 +608,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings, initial transmitted power and listener
+        // test constructor with readings, initial transmitted power and listener
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -608,6 +630,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -623,7 +647,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -640,12 +664,12 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position and
-        //initial transmitted power
+        // test constructor with readings, initial position and
+        // initial transmitted power
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -662,6 +686,8 @@ public class MixedRadioSourceEstimator2DTest implements
                 0.0);
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -677,7 +703,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -693,11 +719,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new MixedRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -715,6 +741,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -731,12 +759,12 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with initial position, initial transmitted power and
-        //listener
+        // test constructor with initial position, initial transmitted power and
+        // listener
         estimator = new MixedRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -754,6 +782,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -770,12 +800,12 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and listener
+        // test constructor with readings, initial position, initial
+        // transmitted power and listener
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -793,6 +823,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertSame(estimator.getListener(), this);
@@ -808,7 +840,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -824,12 +856,12 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and initial path loss exponent
+        // test constructor with readings, initial position, initial
+        // transmitted power and initial path loss exponent
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -845,6 +877,8 @@ public class MixedRadioSourceEstimator2DTest implements
                 MIN_PATH_LOSS_EXPONENT, 0.0);
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertSame(estimator.getReadings(), readings);
         assertNull(estimator.getListener());
@@ -860,7 +894,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -877,11 +911,11 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new MixedRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -898,6 +932,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertNull(estimator.getListener());
@@ -914,13 +950,13 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with initial position, initial transmitted power and
-        //listener
+        // test constructor with initial position, initial transmitted power and
+        // listener
         estimator = new MixedRadioSourceEstimator2D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -937,6 +973,8 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.isPathLossEstimationEnabled());
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+        assertEquals(estimator.isHomogeneousRangingLinearSolverUsed(),
+                RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER);
         assertFalse(estimator.isLocked());
         assertNull(estimator.getReadings());
         assertSame(estimator.getListener(), this);
@@ -953,13 +991,13 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and listener
+        // test constructor with readings, initial position, initial
+        // transmitted power and listener
         estimator = new MixedRadioSourceEstimator2D<>(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinRangingReadings(), 3);
         assertEquals(estimator.getMinRssiReadings(), 4);
         assertEquals(estimator.getMinReadings(), 4);
@@ -991,7 +1029,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new MixedRadioSourceEstimator2D<>(
@@ -1013,38 +1051,38 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getMinReadings(), 4);
 
-        //position only
+        // position only
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 3);
 
 
-        //transmitted power and position
+        // transmitted power and position
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 4);
 
 
-        //pathloss and position
+        // pathloss and position
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 4);
 
 
-        //position, transmitted power and patloss
+        // position, transmitted power and patloss
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 5);
     }
 
@@ -1053,15 +1091,15 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPowerdBm());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
         estimator.setInitialTransmittedPowerdBm(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), value, 0.0);
     }
 
@@ -1070,29 +1108,29 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPower());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = Utils.dBmToPower(
                 randomizer.nextDouble(MIN_RSSI, MAX_RSSI));
         estimator.setInitialTransmittedPower(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPower(), value,
                 ABSOLUTE_ERROR);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setInitialTransmittedPower(-1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
 
-        //set null value
+        // set null value
         estimator.setInitialTransmittedPower(null);
 
-        //check
+        // check
         assertNull(estimator.getInitialTransmittedPower());
     }
 
@@ -1101,17 +1139,17 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialPosition());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         InhomogeneousPoint2D initialPosition = new InhomogeneousPoint2D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator.setInitialPosition(initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
     }
 
@@ -1120,18 +1158,18 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = randomizer.nextDouble(
                 MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
         estimator.setInitialPathLossExponent(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialPathLossExponent(),
                 value, 0.0);
     }
@@ -1141,13 +1179,13 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertTrue(estimator.isTransmittedPowerEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setTransmittedPowerEstimationEnabled(false);
 
-        //check
+        // check
         assertFalse(estimator.isTransmittedPowerEstimationEnabled());
     }
 
@@ -1156,13 +1194,13 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertFalse(estimator.isPathLossEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertTrue(estimator.isPathLossEstimationEnabled());
     }
 
@@ -1171,24 +1209,39 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
 
-        //set new value
+        // set new value
         estimator.setUseReadingPositionCovariances(
                 !MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
 
-        //chekc
+        // check
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 !MixedRadioSourceEstimator2D.DEFAULT_USE_READING_POSITION_COVARIANCES);
+    }
+
+    @Test
+    public void testIsSetHomogeneousRangingLinearSolverUsed() throws LockedException {
+        MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new MixedRadioSourceEstimator2D<>();
+
+        // check default value
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
+
+        // set new value
+        estimator.setHomogeneousRangingLinearSolverUsed(false);
+
+        // check
+        assertFalse(estimator.isHomogeneousRangingLinearSolverUsed());
     }
 
     @Test
     public void testAreValidReadings() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        //test with enough ranging+rssi readings
+        // test with enough ranging+rssi readings
         List<ReadingLocated<Point2D>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
@@ -1208,7 +1261,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
 
 
-        //test with only ranging readings
+        // test with only ranging readings
         readings = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
@@ -1226,7 +1279,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
 
 
-        //test with only rssi readings
+        // test with only rssi readings
         readings = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
@@ -1243,7 +1296,7 @@ public class MixedRadioSourceEstimator2DTest implements
         assertFalse(estimator.areValidReadings(readings));
 
 
-        //test with ranging readings and rssi readings
+        // test with ranging readings and rssi readings
         readings = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             InhomogeneousPoint2D position = new InhomogeneousPoint2D(
@@ -1268,7 +1321,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
 
 
-        //test with null or empty readings
+        // test with null or empty readings
         assertFalse(estimator.areValidReadings(null));
         assertFalse(estimator.areValidReadings(
                 new ArrayList<ReadingLocated<Point2D>>()));
@@ -1296,18 +1349,18 @@ public class MixedRadioSourceEstimator2DTest implements
         estimator.setPathLossEstimationEnabled(false);
         estimator.setInitialPathLossExponent(MAX_PATH_LOSS_EXPONENT);
 
-        //initial value
+        // initial value
         assertNull(estimator.getReadings());
         assertFalse(estimator.isReady());
 
-        //set new value
+        // set new value
         estimator.setReadings(readings);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator.isReady());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setReadings(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -1319,13 +1372,13 @@ public class MixedRadioSourceEstimator2DTest implements
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getListener());
 
-        //set new value
+        // set new value
         estimator.setListener(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
     }
 
@@ -1396,7 +1449,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1491,7 +1544,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -1569,7 +1622,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1664,7 +1717,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -1741,7 +1794,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1836,7 +1889,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -1917,7 +1970,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2012,7 +2065,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -2086,7 +2139,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2179,7 +2232,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -2258,7 +2311,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2351,7 +2404,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -2429,7 +2482,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2522,7 +2575,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -2603,7 +2656,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2696,7 +2749,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -2773,7 +2826,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2892,7 +2945,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -2972,7 +3025,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3091,7 +3144,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -3167,7 +3220,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3262,7 +3315,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -3333,7 +3386,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3425,7 +3478,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<Beacon> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -3500,7 +3553,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3576,7 +3629,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -3652,7 +3705,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3728,7 +3781,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -3803,10 +3856,10 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //repeat again so that position covariance matrix is reused
+            // repeat again so that position covariance matrix is reused
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3882,7 +3935,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -3958,7 +4011,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4055,7 +4108,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -4134,7 +4187,7 @@ public class MixedRadioSourceEstimator2DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4233,7 +4286,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -4313,7 +4366,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4408,7 +4461,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -4488,7 +4541,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4583,7 +4636,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -4669,7 +4722,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4764,7 +4817,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -4847,7 +4900,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4942,7 +4995,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -5029,7 +5082,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5124,7 +5177,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -5211,7 +5264,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5306,7 +5359,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -5397,7 +5450,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5492,7 +5545,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator2D<>();
         try {
@@ -5572,7 +5625,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5667,7 +5720,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -5743,7 +5796,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5838,7 +5891,7 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
@@ -5886,16 +5939,16 @@ public class MixedRadioSourceEstimator2DTest implements
             estimator.setTransmittedPowerEstimationEnabled(true);
             estimator.setPathLossEstimationEnabled(false);
 
-            //because transmitted power is required, estimator is not ready without
-            //enough RSSI readings
+            // because transmitted power is required, estimator is not ready without
+            // enough RSSI readings
             try {
                 estimator.setReadings(readings);
                 fail("IllegalArgumentException expected but not thrown");
             } catch (IllegalArgumentException ignore) { }
             assertFalse(estimator.isReady());
 
-            //if we enable only position estimation, then estimator becomes ready
-            //when readings are set
+            // if we enable only position estimation, then estimator becomes ready
+            // when readings are set
             estimator.setTransmittedPowerEstimationEnabled(false);
             estimator.setPathLossEstimationEnabled(false);
 
@@ -5919,7 +5972,7 @@ public class MixedRadioSourceEstimator2DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5986,13 +6039,349 @@ public class MixedRadioSourceEstimator2DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
+        // force NotReadyException
         MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
                 new MixedRadioSourceEstimator2D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWithMixedRangingAndRssiReadingsAndHomogeneousRangingLinearSolver() throws LockedException,
+            NotReadyException, AlgebraException {
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint2D accessPointPosition =
+                    new InhomogeneousPoint2D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point2D[] readingsPositions = new Point2D[numReadings];
+            List<ReadingLocated<Point2D>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                readings.add(new RangingReadingLocated2D<>(accessPoint, distance,
+                        readingsPositions[i]));
+                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi,
+                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated2D<>(accessPoint,
+                        distance, rssi, readingsPositions[i]));
+            }
+
+            MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                    new MixedRadioSourceEstimator2D<>(readings,
+                            this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+            estimator.setHomogeneousRangingLinearSolverUsed(true);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy2D accuracyStd = new Accuracy2D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                powerStd);
+    }
+
+    @Test
+    public void testEstimateWithMixedRangingAndRssiReadingsAndInhomogeneousRangingLinearSolver() throws LockedException,
+            NotReadyException, AlgebraException {
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint2D accessPointPosition =
+                    new InhomogeneousPoint2D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point2D[] readingsPositions = new Point2D[numReadings];
+            List<ReadingLocated<Point2D>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                readings.add(new RangingReadingLocated2D<>(accessPoint, distance,
+                        readingsPositions[i]));
+                readings.add(new RssiReadingLocated2D<>(accessPoint, rssi,
+                        readingsPositions[i]));
+                readings.add(new RangingAndRssiReadingLocated2D<>(accessPoint,
+                        distance, rssi, readingsPositions[i]));
+            }
+
+            MixedRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                    new MixedRadioSourceEstimator2D<>(readings,
+                            this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+            estimator.setHomogeneousRangingLinearSolverUsed(false);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getEstimatedTransmittedPower());
+            assertNull(estimator.getEstimatedTransmittedPowerdBm());
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy2D accuracyStd = new Accuracy2D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                powerStd);
     }
 
     @Override
@@ -6013,10 +6402,10 @@ public class MixedRadioSourceEstimator2DTest implements
 
     private double receivedPower(double equivalentTransmittedPower,
                                  double distance, double frequency, double pathLossExponent) {
-        //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
+        // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
-        //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
+        // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
         double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
@@ -6025,6 +6414,10 @@ public class MixedRadioSourceEstimator2DTest implements
     private void checkLocked(MixedRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         try {
             estimator.setUseReadingPositionCovariances(false);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setHomogeneousRangingLinearSolverUsed(false);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

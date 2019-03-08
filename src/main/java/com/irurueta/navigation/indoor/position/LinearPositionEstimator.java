@@ -7,10 +7,7 @@ import com.irurueta.navigation.indoor.Fingerprint;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
 import com.irurueta.navigation.indoor.Reading;
-import com.irurueta.navigation.trilateration.LinearLeastSquaresTrilaterationSolver;
-import com.irurueta.navigation.trilateration.TrilaterationException;
-import com.irurueta.navigation.trilateration.TrilaterationSolver;
-import com.irurueta.navigation.trilateration.TrilaterationSolverListener;
+import com.irurueta.navigation.trilateration.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +24,29 @@ import java.util.List;
 public abstract class LinearPositionEstimator<P extends Point> extends PositionEstimator<P> {
 
     /**
-     * A linear trilateration solver to solve position.
+     * Indicates that by default an homogeneous linear solver is used to estimate position.
      */
-    protected LinearLeastSquaresTrilaterationSolver<P> mTrilaterationSolver;
+    public static final boolean DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = true;
+
+    /**
+     * An homogeneous linear trilateration solver to solve position.
+     */
+    protected HomogeneousLinearLeastSquaresTrilaterationSolver<P> mHomogeneousTrilaterationSolver;
+
+    /**
+     * An inhomogeneous linear trilateration solver to solve position.
+     */
+    protected InhomogeneousLinearLeastSquaresTrilaterationSolver<P> mInhomogeneousTrilaterationSolver;
 
     /**
      * Listener for the trilateration solver.
      */
     protected TrilaterationSolverListener<P> mTrilaterationSolverListener;
+
+    /**
+     * Indicates whether an homogeneous linear solver is used to estimate position.
+     */
+    protected boolean mUseHomogeneousLinearSolver = DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
 
     /**
      * Constructor.
@@ -54,12 +66,38 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
     }
 
     /**
+     * Indicates whether an homogeneous linear solver is used to estimate position.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    public boolean isHomogeneousLinearSolverUsed() {
+        return mUseHomogeneousLinearSolver;
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate position.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mUseHomogeneousLinearSolver = useHomogeneousLinearSolver;
+    }
+
+    /**
      * Gets minimum required number of located radio sources to perform trilateration.
      * @return minimum required number of located radio sources to perform trilateration.
      */
     @Override
     public int getMinRequiredSources() {
-        return mTrilaterationSolver.getMinRequiredPositionsAndDistances();
+        return mUseHomogeneousLinearSolver?
+                mHomogeneousTrilaterationSolver.getMinRequiredPositionsAndDistances() :
+                mInhomogeneousTrilaterationSolver.getMinRequiredPositionsAndDistances();
     }
 
     /**
@@ -68,7 +106,8 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      */
     @Override
     public boolean isReady() {
-        return mTrilaterationSolver.isReady();
+        return (!mUseHomogeneousLinearSolver && mInhomogeneousTrilaterationSolver.isReady()) ||
+                (mUseHomogeneousLinearSolver && mHomogeneousTrilaterationSolver.isReady());
     }
 
     /**
@@ -77,7 +116,8 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      */
     @Override
     public boolean isLocked() {
-        return mTrilaterationSolver.isLocked();
+        return mInhomogeneousTrilaterationSolver.isLocked() ||
+                mHomogeneousTrilaterationSolver.isLocked();
     }
 
     /**
@@ -91,9 +131,15 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
     public void estimate() throws LockedException, NotReadyException,
             PositionEstimationException {
         try {
-            mTrilaterationSolver.solve();
-            mEstimatedPositionCoordinates =
-                    mTrilaterationSolver.getEstimatedPositionCoordinates();
+            if (mUseHomogeneousLinearSolver) {
+                mHomogeneousTrilaterationSolver.solve();
+                mEstimatedPositionCoordinates =
+                        mHomogeneousTrilaterationSolver.getEstimatedPositionCoordinates();
+            } else {
+                mInhomogeneousTrilaterationSolver.solve();
+                mEstimatedPositionCoordinates =
+                        mInhomogeneousTrilaterationSolver.getEstimatedPositionCoordinates();
+            }
         } catch (TrilaterationException e) {
             throw new PositionEstimationException(e);
         }
@@ -105,7 +151,9 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      */
     @Override
     public P[] getPositions() {
-        return mTrilaterationSolver.getPositions();
+        return mUseHomogeneousLinearSolver ?
+                mHomogeneousTrilaterationSolver.getPositions() :
+                mInhomogeneousTrilaterationSolver.getPositions();
     }
 
     /**
@@ -116,7 +164,9 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      */
     @Override
     public double[] getDistances() {
-        return mTrilaterationSolver.getDistances();
+        return mUseHomogeneousLinearSolver ?
+                mHomogeneousTrilaterationSolver.getDistances() :
+                mInhomogeneousTrilaterationSolver.getDistances();
     }
 
     /**
@@ -174,7 +224,8 @@ public abstract class LinearPositionEstimator<P extends Point> extends PositionE
      * Builds positions and distances for the internal trilateration solver.
      */
     private void buildPositionsAndDistances() {
-        if (mTrilaterationSolver == null) {
+        if ((mUseHomogeneousLinearSolver && mHomogeneousTrilaterationSolver == null) ||
+                (!mUseHomogeneousLinearSolver && mInhomogeneousTrilaterationSolver == null)) {
             return;
         }
 

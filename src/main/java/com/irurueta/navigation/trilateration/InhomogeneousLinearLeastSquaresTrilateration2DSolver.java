@@ -21,15 +21,16 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 
 /**
- * Linearly solves the trilateration problem.
+ * Linearly solves the trilateration problem using an inhomogeneous solution.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresTrilaterationSolver<Point2D> {
+public class InhomogeneousLinearLeastSquaresTrilateration2DSolver extends
+        InhomogeneousLinearLeastSquaresTrilaterationSolver<Point2D> {
 
     /**
      * Constructor.
      */
-    public LinearLeastSquaresTrilateration2DSolver() {
+    public InhomogeneousLinearLeastSquaresTrilateration2DSolver() {
         super();
     }
 
@@ -38,9 +39,9 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @param positions known positions of static nodes.
      * @param distances euclidean distances from static nodes to mobile node.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     * length is smaller than required (3 points).
      */
-    public LinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances) {
+    public InhomogeneousLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances) {
         super(positions, distances);
     }
 
@@ -48,7 +49,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * Constructor.
      * @param listener listener to be notified of events raised by this instance.
      */
-    public LinearLeastSquaresTrilateration2DSolver(TrilaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresTrilateration2DSolver(TrilaterationSolverListener<Point2D> listener) {
         super(listener);
     }
 
@@ -58,19 +59,19 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * @param distances euclidean distances from static nodes to mobile node.
      * @param listener listener to be notified of events raised by this instance.
      * @throws IllegalArgumentException if either positions or distances are null, don't have the same length or their
-     * length is smaller than required (2 points).
+     * length is smaller than required (3 points).
      */
-    public LinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
-            TrilaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresTrilateration2DSolver(Point2D[] positions, double[] distances,
+                                                                TrilaterationSolverListener<Point2D> listener) {
         super(positions, distances, listener);
     }
 
     /**
      * Constructor.
      * @param circles circles defining positions and distances.
-     * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
+     * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
      */
-    public LinearLeastSquaresTrilateration2DSolver(Circle[] circles) {
+    public InhomogeneousLinearLeastSquaresTrilateration2DSolver(Circle[] circles) {
         super();
         internalSetCircles(circles);
     }
@@ -79,10 +80,10 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * Constructor.
      * @param circles circles defining positions and distances.
      * @param listener listener to be notified of events raised by this instance.
-     * @throws IllegalArgumentException if circles is null or if length of circles array is less than 2.
+     * @throws IllegalArgumentException if circles is null or if length of circles array is less than 3.
      */
-    public LinearLeastSquaresTrilateration2DSolver(Circle[] circles,
-            TrilaterationSolverListener<Point2D> listener) {
+    public InhomogeneousLinearLeastSquaresTrilateration2DSolver(Circle[] circles,
+                                                                TrilaterationSolverListener<Point2D> listener) {
         super(listener);
         internalSetCircles(circles);
     }
@@ -156,7 +157,7 @@ public class LinearLeastSquaresTrilateration2DSolver extends LinearLeastSquaresT
      * Internally sets circles defining positions and euclidean distances.
      * @param circles circles defining positions and distances.
      * @throws IllegalArgumentException if circles is null or length of array of circles
-     * is less than 2.
+     * is less than 3.
      */
     private void internalSetCircles(Circle[] circles) {
         if (circles == null || circles.length < getMinRequiredPositionsAndDistances()) {

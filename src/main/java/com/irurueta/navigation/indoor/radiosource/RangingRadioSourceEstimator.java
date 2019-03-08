@@ -22,7 +22,8 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RangingReadingLocated;
-import com.irurueta.navigation.trilateration.LinearLeastSquaresTrilaterationSolver;
+import com.irurueta.navigation.trilateration.HomogeneousLinearLeastSquaresTrilaterationSolver;
+import com.irurueta.navigation.trilateration.InhomogeneousLinearLeastSquaresTrilaterationSolver;
 import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilaterationSolver;
 import com.irurueta.navigation.trilateration.TrilaterationException;
 
@@ -49,10 +50,22 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     public static final boolean DEFAULT_USE_READING_POSITION_COVARIANCES = true;
 
     /**
-     * Internal linear solver to find radio source position when no initial
+     * Indicates that by default an homogeneous linear solver is used to estimate an
+     * initial position.
+     */
+    public static final boolean DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = true;
+
+    /**
+     * Internal homogeneous linear solver to find radio source position when no initial
      * position is provided.
      */
-    protected LinearLeastSquaresTrilaterationSolver<P> mLinearSolver;
+    protected HomogeneousLinearLeastSquaresTrilaterationSolver<P> mHomogeneousLinearSolver;
+
+    /**
+     * Internal inhomogeneous linear solver to find radio source position when no initial
+     * position is provided.
+     */
+    protected InhomogeneousLinearLeastSquaresTrilaterationSolver<P> mInhomogeneousLinearSolver;
 
     /**
      * Internal non linear solver to estimate radio source position and covariance
@@ -78,6 +91,12 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
      * covariance is not computed.
      */
     protected boolean mNonLinearSolverEnabled = true;
+
+    /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     */
+    protected boolean mUseHomogeneousLinearSolver = DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
 
     /**
      * Indicates whether position covariances of readings must be taken into account to increase
@@ -230,6 +249,33 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     }
 
     /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    public boolean isHomogeneousLinearSolverUsed() {
+        return mUseHomogeneousLinearSolver;
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate an initial
+     * position.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mUseHomogeneousLinearSolver = useHomogeneousLinearSolver;
+    }
+
+
+    /**
      * Indicates whether position covariances of readings must be taken into account to increase
      * the amount of standard deviation of each ranging measure by the amount of position standard
      * deviation assuming that both measures are statistically independent.
@@ -291,11 +337,17 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
             buildSolversIfNeeded();
             buildPositionsDistancesAndDistanceStandardDeviations();
 
-            if (mLinearSolver != null &&
+            if (((mUseHomogeneousLinearSolver && mHomogeneousLinearSolver != null) ||
+                    (!mUseHomogeneousLinearSolver && mInhomogeneousLinearSolver != null)) &&
                     (mInitialPosition == null || !mNonLinearSolverEnabled)) {
                 //if no initial position is provided, use linear solver to estimate one
-                mLinearSolver.solve();
-                mInitialPosition = mLinearSolver.getEstimatedPosition();
+                if (mUseHomogeneousLinearSolver) {
+                    mHomogeneousLinearSolver.solve();
+                    mInitialPosition = mHomogeneousLinearSolver.getEstimatedPosition();
+                } else {
+                    mInhomogeneousLinearSolver.solve();
+                    mInitialPosition = mInhomogeneousLinearSolver.getEstimatedPosition();
+                }
             }
 
             if (mNonLinearSolver != null && mNonLinearSolverEnabled) {
@@ -309,9 +361,15 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
                         mNonLinearSolver.getCovariance();
             } else {
                 //non linear solver disabled
-                mEstimatedPositionCoordinates =
-                        mLinearSolver != null ?
-                                mLinearSolver.getEstimatedPositionCoordinates() : null;
+                if (mUseHomogeneousLinearSolver) {
+                    mEstimatedPositionCoordinates =
+                            mHomogeneousLinearSolver != null ?
+                                    mHomogeneousLinearSolver.getEstimatedPositionCoordinates() : null;
+                } else {
+                    mEstimatedPositionCoordinates =
+                            mInhomogeneousLinearSolver != null ?
+                                    mInhomogeneousLinearSolver.getEstimatedPositionCoordinates() : null;
+                }
                 mEstimatedPositionCovariance = mEstimatedCovariance = null;
             }
 

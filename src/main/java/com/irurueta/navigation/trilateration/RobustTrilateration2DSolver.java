@@ -37,7 +37,12 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
     /**
      * Linear trilateration solver internally used by a robust algorithm.
      */
-    protected LinearLeastSquaresTrilateration2DSolver mLinearSolver;
+    protected InhomogeneousLinearLeastSquaresTrilateration2DSolver mInhomogeneousLinearSolver;
+
+    /**
+     * Homogeneous linear trilateration solver internally used by a robust algorithm.
+     */
+    protected HomogeneousLinearLeastSquaresTrilateration2DSolver mHomogeneousLinearSolver;
 
     /**
      * Non linear trilateration solver internally used to refine solution
@@ -54,6 +59,11 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
      * Distances for linear inner solver used during robust estimation.
      */
     protected double[] mInnerDistances;
+
+    /**
+     * Standard deviations for non-linear inner solver used during robut estimation.
+     */
+    protected double[] mInnerDistanceStandardDeviations;
 
     /**
      * Constructor.
@@ -1282,11 +1292,37 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
                 index = samplesIndices[i];
                 mInnerPositions[i] = mPositions[index];
                 mInnerDistances[i] = mDistances[index];
+                mInnerDistanceStandardDeviations[i] = mDistanceStandardDeviations != null ?
+                        mDistanceStandardDeviations[index] :
+                        NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
-            mLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
-            mLinearSolver.solve();
-            solutions.add(mLinearSolver.getEstimatedPosition());
+            Point2D estimatedPosition = null;
+            if (mUseLinearSolver) {
+                if (mUseHomogeneousLinearSolver) {
+                    mHomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                    mHomogeneousLinearSolver.solve();
+                    estimatedPosition = mHomogeneousLinearSolver.getEstimatedPosition();
+                } else {
+                    mInhomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                    mInhomogeneousLinearSolver.solve();
+                    estimatedPosition = mInhomogeneousLinearSolver.getEstimatedPosition();
+                }
+            }
+
+            if (mRefinePreliminarySolutions || estimatedPosition == null) {
+                mNonLinearSolver.setInitialPosition(estimatedPosition);
+                if (mDistanceStandardDeviations != null) {
+                    mNonLinearSolver.setPositionsDistancesAndStandardDeviations(mInnerPositions,
+                            mInnerDistances, mInnerDistanceStandardDeviations);
+                } else {
+                    mNonLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                }
+                mNonLinearSolver.solve();
+                estimatedPosition = mNonLinearSolver.getEstimatedPosition();
+            }
+
+            solutions.add(estimatedPosition);
         } catch (NavigationException ignore) {
             //if anything fails, no solution is added
         }
@@ -1355,8 +1391,10 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
         int points = getMinRequiredPositionsAndDistances();
         mInnerPositions = new Point2D[points];
         mInnerDistances = new double[points];
+        mInnerDistanceStandardDeviations = new double[points];
 
-        mLinearSolver = new LinearLeastSquaresTrilateration2DSolver();
+        mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresTrilateration2DSolver();
+        mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresTrilateration2DSolver();
         mNonLinearSolver = new NonLinearLeastSquaresTrilateration2DSolver();
     }
 }

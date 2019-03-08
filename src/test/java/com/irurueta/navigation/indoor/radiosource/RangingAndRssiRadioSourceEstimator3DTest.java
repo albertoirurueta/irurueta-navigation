@@ -90,11 +90,11 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
     public void testConstructor() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        //test empty constructor
+        // test empty constructor
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -124,9 +124,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings
+        // test constructor with readings
         List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
         WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
         for (int i = 0; i < 5; i++) {
@@ -140,7 +141,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -171,8 +172,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -187,10 +189,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with listener
+        // test constructor with listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -221,13 +223,14 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings and listener
+        // test constructor with readings and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -258,8 +261,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -276,14 +280,14 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position
+        // test constructor with initial position
         InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS),
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(initialPosition);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -314,13 +318,14 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings and initial position
+        // test constructor with readings and initial position
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 initialPosition);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -350,8 +355,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -367,11 +373,11 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and listener
+        // test constructor with initial position and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(initialPosition,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -402,13 +408,14 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial position and listener
+        // test constructor with readings, initial position and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 initialPosition, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -439,8 +446,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -457,10 +465,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power
+        // test constructor with initial transmitted power
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -492,13 +500,14 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings and initial transmitted power
+        // test constructor with readings and initial transmitted power
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -530,8 +539,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -548,11 +558,11 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial transmitted power and listener
+        // test constructor with initial transmitted power and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(MAX_RSSI,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -584,13 +594,14 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
 
-        //test constructor with readings, initial transmitted power and listener
+        // test constructor with readings, initial transmitted power and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -622,8 +633,9 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPositionCovariance());
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -640,12 +652,12 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position and
-        //initial transmitted power
+        // test constructor with readings, initial position and
+        // initial transmitted power
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -677,7 +689,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -693,11 +705,11 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -731,12 +743,12 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with initial position, initial transmitted power and
-        //listener
+        // test constructor with initial position, initial transmitted power and
+        // listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -770,12 +782,12 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and listener
+        // test constructor with readings, initial position, initial
+        // transmitted power and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 initialPosition, MAX_RSSI, this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -808,7 +820,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -824,12 +836,12 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and initial path loss exponent
+        // test constructor with readings, initial position, initial
+        // transmitted power and initial path loss exponent
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -860,7 +872,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -877,11 +889,11 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator);
 
 
-        //test constructor with initial position and initial transmitted power
+        // test constructor with initial position and initial transmitted power
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -914,13 +926,13 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with initial position, initial transmitted power and
-        //listener
+        // test constructor with initial position, initial transmitted power and
+        // listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -953,13 +965,13 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
 
-        //test constructor with readings, initial position, initial
-        //transmitted power and listener
+        // test constructor with readings, initial position, initial
+        // transmitted power and listener
         estimator = new RangingAndRssiRadioSourceEstimator3D<>(readings,
                 initialPosition, MAX_RSSI, MIN_PATH_LOSS_EXPONENT,
                 this);
 
-        //check default values
+        // check default values
         assertEquals(estimator.getMinReadings(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
@@ -991,7 +1003,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         assertNull(estimator.getEstimatedTransmittedPowerVariance());
         assertNull(estimator.getEstimatedPathLossExponentVariance());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         estimator = null;
         try {
             estimator = new RangingAndRssiRadioSourceEstimator3D<>(
@@ -1013,38 +1025,38 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getMinReadings(), 5);
 
-        //position only
+        // position only
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 4);
 
 
-        //transmitted power and position
+        // transmitted power and position
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(false);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 5);
 
 
-        //pathloss and position
+        // pathloss and position
         estimator.setTransmittedPowerEstimationEnabled(false);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 5);
 
 
-        //position, transmitted power and patloss
+        // position, transmitted power and patloss
         estimator.setTransmittedPowerEstimationEnabled(true);
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertEquals(estimator.getMinReadings(), 6);
     }
 
@@ -1053,15 +1065,15 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPowerdBm());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
         estimator.setInitialTransmittedPowerdBm(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPowerdBm(), value, 0.0);
     }
 
@@ -1070,29 +1082,29 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialTransmittedPower());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = Utils.dBmToPower(
                 randomizer.nextDouble(MIN_RSSI, MAX_RSSI));
         estimator.setInitialTransmittedPower(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialTransmittedPower(), value,
                 ABSOLUTE_ERROR);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setInitialTransmittedPower(-1.0);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
 
-        //set null value
+        // set null value
         estimator.setInitialTransmittedPower(null);
 
-        //check
+        // check
         assertNull(estimator.getInitialTransmittedPower());
     }
 
@@ -1101,10 +1113,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getInitialPosition());
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         InhomogeneousPoint3D initialPosition = new InhomogeneousPoint3D(
                 randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1112,7 +1124,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 randomizer.nextDouble(MIN_POS, MAX_POS));
         estimator.setInitialPosition(initialPosition);
 
-        //check
+        // check
         assertSame(estimator.getInitialPosition(), initialPosition);
     }
 
@@ -1121,18 +1133,18 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getInitialPathLossExponent(),
                 RssiRadioSourceEstimator.DEFAULT_PATH_LOSS_EXPONENT,
                 0.0);
 
-        //set new value
+        // set new value
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
         double value = randomizer.nextDouble(
                 MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
         estimator.setInitialPathLossExponent(value);
 
-        //check
+        // check
         assertEquals(estimator.getInitialPathLossExponent(),
                 value, 0.0);
     }
@@ -1142,13 +1154,13 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertTrue(estimator.isTransmittedPowerEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setTransmittedPowerEstimationEnabled(false);
 
-        //check
+        // check
         assertFalse(estimator.isTransmittedPowerEstimationEnabled());
     }
 
@@ -1157,13 +1169,13 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertFalse(estimator.isPathLossEstimationEnabled());
 
-        //set new value
+        // set new value
         estimator.setPathLossEstimationEnabled(true);
 
-        //check
+        // check
         assertTrue(estimator.isPathLossEstimationEnabled());
     }
 
@@ -1172,15 +1184,15 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 RangingAndRssiRadioSourceEstimator.DEFAULT_USE_READING_POSITION_COVARIANCES);
 
-        //set new value
+        // set new value
         estimator.setUseReadingPositionCovariances(
                 !RangingAndRssiRadioSourceEstimator.DEFAULT_USE_READING_POSITION_COVARIANCES);
 
-        //chekc
+        // check
         assertEquals(estimator.getUseReadingPositionCovariance(),
                 !RangingAndRssiRadioSourceEstimator.DEFAULT_USE_READING_POSITION_COVARIANCES);
     }
@@ -1236,18 +1248,18 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         estimator.setPathLossEstimationEnabled(false);
         estimator.setInitialPathLossExponent(MAX_PATH_LOSS_EXPONENT);
 
-        //initial value
+        // initial value
         assertNull(estimator.getReadings());
         assertFalse(estimator.isReady());
 
-        //set new value
+        // set new value
         estimator.setReadings(readings);
 
-        //check
+        // check
         assertSame(estimator.getReadings(), readings);
         assertTrue(estimator.isReady());
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             estimator.setReadings(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -1259,14 +1271,29 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
 
-        //check default value
+        // check default value
         assertNull(estimator.getListener());
 
-        //set new value
+        // set new value
         estimator.setListener(this);
 
-        //check
+        // check
         assertSame(estimator.getListener(), this);
+    }
+
+    @Test
+    public void testIsSetHomogeneousRangingLinearSolverUsed() throws LockedException {
+        RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RangingAndRssiRadioSourceEstimator3D<>();
+
+        // check default value
+        assertTrue(estimator.isHomogeneousRangingLinearSolverUsed());
+
+        // set new value
+        estimator.setHomogeneousRangingLinearSolverUsed(false);
+
+        // check
+        assertFalse(estimator.isHomogeneousRangingLinearSolverUsed());
     }
 
     @Test
@@ -1340,7 +1367,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1438,7 +1465,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -1521,7 +1548,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1616,7 +1643,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -1697,7 +1724,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1792,7 +1819,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -1878,7 +1905,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -1973,7 +2000,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -2051,7 +2078,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2144,7 +2171,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -2228,7 +2255,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2321,7 +2348,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -2403,7 +2430,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2496,7 +2523,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -2582,7 +2609,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2675,7 +2702,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -2756,7 +2783,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -2875,7 +2902,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -2959,7 +2986,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3078,7 +3105,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3158,7 +3185,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3253,7 +3280,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3328,7 +3355,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3420,7 +3447,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<Beacon> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3499,7 +3526,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3578,7 +3605,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3658,7 +3685,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3737,7 +3764,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Position error: {0} meters",
                 positionError);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3816,10 +3843,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //repeat again so that position covariance matrix is reused
+            // repeat again so that position covariance matrix is reused
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -3895,7 +3922,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -3975,7 +4002,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4072,7 +4099,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4154,7 +4181,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
             estimator.estimate();
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4251,7 +4278,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Path loss standard deviation {0}",
                 pathLossStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4335,7 +4362,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4430,7 +4457,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4514,7 +4541,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4609,7 +4636,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4700,7 +4727,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4795,7 +4822,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -4882,7 +4909,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -4977,7 +5004,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5069,7 +5096,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5164,7 +5191,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5256,7 +5283,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5351,7 +5378,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
@@ -5447,7 +5474,7 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
                 continue;
             }
 
-            //check
+            // check
             assertTrue(estimator.isReady());
             assertFalse(estimator.isLocked());
 
@@ -5542,13 +5569,349 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
                 powerStd);
 
-        //force NotReadyException
+        // force NotReadyException
         RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
                 new RangingAndRssiRadioSourceEstimator3D<>();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
+    }
+
+    @Test
+    public void testEstimateWithHomogeneousRangingLinearSolver() throws LockedException,
+            NotReadyException, AlgebraException {
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi, readingsPositions[i]));
+            }
+
+            RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RangingAndRssiRadioSourceEstimator3D<>(readings,
+                            this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+            estimator.setHomogeneousRangingLinearSolverUsed(true);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                    0.0);
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                powerStd);
+    }
+
+    @Test
+    public void testEstimateWithInhomogeneousRangingLinearSolver() throws LockedException,
+            NotReadyException, AlgebraException {
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        double positionStd = 0.0, positionStdConfidence = 0.0;
+        double powerStd = 0.0;
+        double positionAccuracy = 0.0, positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingAndRssiReadingLocated3D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                readings.add(new RangingAndRssiReadingLocated3D<>(accessPoint,
+                        distance, rssi, readingsPositions[i]));
+            }
+
+            RangingAndRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RangingAndRssiRadioSourceEstimator3D<>(readings,
+                            this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+            estimator.setHomogeneousRangingLinearSolverUsed(false);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                    0.0);
+            assertNull(estimator.getEstimatedPositionCoordinates());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            try {
+                estimator.estimate();
+            } catch (IndoorException e) {
+                continue;
+            }
+
+            // check
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getEstimatedCovariance());
+            assertNotNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getTransmittedPowerStandardDeviation(),
+                    Math.sqrt(estimator.getEstimatedTransmittedPowerVariance()), 0.0);
+            assertEquals(estimatedAccessPoint.getPositionCovariance(),
+                    estimator.getEstimatedPositionCovariance());
+
+            double powerVariance = estimator.getEstimatedTransmittedPowerVariance();
+            assertTrue(powerVariance > 0.0);
+
+            Accuracy3D accuracyStd = new Accuracy3D(
+                    estimator.getEstimatedPositionCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getEstimatedPositionCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+            powerStd = Math.sqrt(powerVariance);
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertArrayEquals(estimator.getEstimatedPosition().asArray(),
+                    estimator.getEstimatedPositionCoordinates(), 0.0);
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+        LOGGER.log(Level.INFO, "Power standard deviation {0} dB",
+                powerStd);
     }
 
     @Override
@@ -5571,10 +5934,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
 
     private double receivedPower(double equivalentTransmittedPower,
                                  double distance, double frequency, double pathLossExponent) {
-        //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
+        // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
-        //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
+        // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
         double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * frequency), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
@@ -5611,6 +5974,10 @@ public class RangingAndRssiRadioSourceEstimator3DTest implements
         } catch (LockedException ignore) { }
         try {
             estimator.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setHomogeneousRangingLinearSolverUsed(false);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

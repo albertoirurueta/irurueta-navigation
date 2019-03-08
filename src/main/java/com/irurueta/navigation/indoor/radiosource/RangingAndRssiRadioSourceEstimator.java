@@ -183,6 +183,13 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     private boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
 
     /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     */
+    private boolean mUseHomogeneousRangingLinearSolver =
+            RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
+
+    /**
      * Constructor.
      */
     public RangingAndRssiRadioSourceEstimator() {
@@ -717,6 +724,32 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
     }
 
     /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    public boolean isHomogeneousRangingLinearSolverUsed() {
+        return mUseHomogeneousRangingLinearSolver;
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomogeneousRangingLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mUseHomogeneousRangingLinearSolver = useHomogeneousLinearSolver;
+    }
+
+    /**
      * Gets minimum required number of readings to estimate
      * power, position and pathloss exponent.
      * This value depends on the number of parameters to
@@ -805,6 +838,8 @@ public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, 
             //estimate position using ranging data
             mRangingInnerEstimator.setUseReadingPositionCovariances(
                     mUseReadingPositionCovariances);
+            mRangingInnerEstimator.setHomogeneousLinearSolverUsed(
+                    mUseHomogeneousRangingLinearSolver);
             mRangingInnerEstimator.setReadings(rangingReadings);
             mRangingInnerEstimator.setInitialPosition(mInitialPosition);
 

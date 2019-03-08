@@ -360,6 +360,12 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     private boolean mUseReadingPositionCovariances = DEFAULT_USE_READING_POSITION_COVARIANCES;
 
     /**
+     * Indicates whether an homogeneous ranging linear solver is used to estimate preliminary positions.
+     */
+    private boolean mUseHomogeneousRangingLinearSolver =
+            RangingRadioSourceEstimator.DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER;
+
+    /**
      * Number of ranging readings available among all readings.
      */
     private int mNumRangingReadings;
@@ -1658,6 +1664,33 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
     }
 
     /**
+     * Indicates whether an homogeneous ranging linear solver is used to estimate preliminary
+     * positions.
+     * @return true if homogeneous ranging linear solver is used, false if an inhomogeneous ranging linear
+     * one is used instead.
+     */
+    public boolean isHomogeneousRangingLinearSolverUsed() {
+        return mUseHomogeneousRangingLinearSolver;
+    }
+
+    /**
+     * Specifies whether an homogeneous ranging linear solver is used to estimate preliminary
+     * positions.
+     * @param useHomogeneousRangingLinearSolver true if homogeneous ranging linear solver is used, false
+     *                                          if an inhomogeneous ranging linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setHomogeneousRangingLinearSolverUsed(
+            boolean useHomogeneousRangingLinearSolver) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mUseHomogeneousRangingLinearSolver = useHomogeneousRangingLinearSolver;
+    }
+
+
+    /**
      * Gets covariance for estimated position and power.
      * Matrix contains information in the following order:
      * Top-left submatrix contains covariance of position,
@@ -1773,7 +1806,6 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
      * @return number of dimensions of position points.
      */
     public abstract int getNumberOfDimensions();
-
 
     /**
      * Gets estimated transmitted power variance.
@@ -2040,6 +2072,8 @@ public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioS
         mRangingEstimator.setCovarianceKept(mKeepCovariance);
         mRangingEstimator.setUseReadingPositionCovariances(
                 mUseReadingPositionCovariances);
+        mRangingEstimator.setHomogeneousLinearSolverUsed(
+                mUseHomogeneousRangingLinearSolver);
 
         mRangingEstimator.setInitialPosition(mInitialPosition);
 

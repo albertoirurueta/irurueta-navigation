@@ -35,15 +35,14 @@ import java.util.List;
 public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSolver<Point3D> {
 
     /**
-     * Default robust estimator method when none is provided.
+     * Inhomogeneous linear trilateration solver internally used by a robust algorithm.
      */
-    public static final RobustEstimatorMethod DEFAULT_ROBUST_METHOD =
-            RobustEstimatorMethod.PROMedS;
+    protected InhomogeneousLinearLeastSquaresTrilateration3DSolver mInhomogeneousLinearSolver;
 
     /**
-     * Linear trilateration solver internally used by a robust algorithm.
+     * Homogeneous linear trilateration solver internally used by a robust algorithm.
      */
-    protected LinearLeastSquaresTrilateration3DSolver mLinearSolver;
+    protected HomogeneousLinearLeastSquaresTrilateration3DSolver mHomogeneousLinearSolver;
 
     /**
      * Non linear trilateration solver internally used to refine solution
@@ -60,6 +59,11 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
      * Distances for linear inner solver used during robust estimation.
      */
     protected double[] mInnerDistances;
+
+    /**
+     * Standard deviations for non-linear inner solver used during robut estimation.
+     */
+    protected double[] mInnerDistanceStandardDeviations;
 
     /**
      * Constructor.
@@ -1288,11 +1292,37 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
                 index = samplesIndices[i];
                 mInnerPositions[i] = mPositions[index];
                 mInnerDistances[i] = mDistances[index];
+                mInnerDistanceStandardDeviations[i] = mDistanceStandardDeviations != null ?
+                        mDistanceStandardDeviations[index] :
+                        NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
-            mLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
-            mLinearSolver.solve();
-            solutions.add(mLinearSolver.getEstimatedPosition());
+            Point3D estimatedPosition = null;
+            if (mUseLinearSolver) {
+                if (mUseHomogeneousLinearSolver) {
+                    mHomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                    mHomogeneousLinearSolver.solve();
+                    estimatedPosition = mHomogeneousLinearSolver.getEstimatedPosition();
+                } else {
+                    mInhomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                    mInhomogeneousLinearSolver.solve();
+                    estimatedPosition = mInhomogeneousLinearSolver.getEstimatedPosition();
+                }
+            }
+
+            if (mRefinePreliminarySolutions || estimatedPosition == null) {
+                mNonLinearSolver.setInitialPosition(estimatedPosition);
+                if (mDistanceStandardDeviations != null) {
+                    mNonLinearSolver.setPositionsDistancesAndStandardDeviations(mInnerPositions,
+                            mInnerDistances, mInnerDistanceStandardDeviations);
+                } else {
+                    mNonLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);
+                }
+                mNonLinearSolver.solve();
+                estimatedPosition = mNonLinearSolver.getEstimatedPosition();
+            }
+
+            solutions.add(estimatedPosition);
         } catch (NavigationException ignore) {
             //if anything fails, no solution is added
         }
@@ -1361,8 +1391,10 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
         int points = getMinRequiredPositionsAndDistances();
         mInnerPositions = new Point3D[points];
         mInnerDistances = new double[points];
+        mInnerDistanceStandardDeviations = new double[points];
 
-        mLinearSolver = new LinearLeastSquaresTrilateration3DSolver();
+        mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
+        mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresTrilateration3DSolver();
         mNonLinearSolver = new NonLinearLeastSquaresTrilateration3DSolver();
     }
 }

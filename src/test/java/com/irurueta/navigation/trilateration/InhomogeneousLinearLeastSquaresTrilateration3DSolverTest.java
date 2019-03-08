@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 @SuppressWarnings("Duplicates")
-public class LinearLeastSquaresTrilateration3DSolverTest implements TrilaterationSolverListener<Point3D> {
+public class InhomogeneousLinearLeastSquaresTrilateration3DSolverTest implements TrilaterationSolverListener<Point3D> {
 
     private static final int MIN_SPHERES = 4;
     private static final int MAX_SPHERES = 10;
@@ -33,7 +33,7 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
     private int solveStart;
     private int solveEnd;
 
-    public LinearLeastSquaresTrilateration3DSolverTest() { }
+    public InhomogeneousLinearLeastSquaresTrilateration3DSolverTest() { }
 
     @BeforeClass
     public static void setUpClass() { }
@@ -49,10 +49,10 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
 
     @Test
     public void testConstructor() {
-        //empty constructor
-        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        // empty constructor
+        InhomogeneousLinearLeastSquaresTrilateration3DSolver solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
 
-        //check correctness
+        // check correctness
         assertNull(solver.getListener());
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
@@ -61,20 +61,20 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertNull(solver.getEstimatedPosition());
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNull(solver.getSpheres());
-        assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getType(), TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
-        //constructor with positions and distances
+        // constructor with positions and distances
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
         positions[2] = new InhomogeneousPoint3D();
         positions[3] = new InhomogeneousPoint3D();
         double[] distances = new double[4];
-        solver = new LinearLeastSquaresTrilateration3DSolver(positions, distances);
+        solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(positions, distances);
 
-        //check correctness
+        // check correctness
         assertNull(solver.getListener());
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -83,39 +83,39 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertNull(solver.getEstimatedPosition());
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getType(), TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         double[] wrong = new double[5];
         Point3D[] shortPositions = new Point3D[1];
         double[] shortDistances = new double[1];
         solver = null;
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(null, distances);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(null, distances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(positions, null);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(positions, null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(positions, wrong);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(positions, wrong);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(shortPositions, shortDistances);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(shortPositions, shortDistances);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
 
 
-        //constructor with listener
-        //noinspection unchecked
+        // constructor with listener
+        // noinspection unchecked
         TrilaterationSolverListener<Point3D> listener = mock(TrilaterationSolverListener.class);
-        solver = new LinearLeastSquaresTrilateration3DSolver(listener);
+        solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(listener);
 
-        //check correctness
+        // check correctness
         assertSame(solver.getListener(), listener);
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
@@ -124,14 +124,14 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertNull(solver.getEstimatedPosition());
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNull(solver.getSpheres());
-        assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getType(), TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
 
-        //constructor with positions, distances and listener
-        solver = new LinearLeastSquaresTrilateration3DSolver(positions, distances, listener);
+        // constructor with positions, distances and listener
+        solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(positions, distances, listener);
 
-        //check correctness
+        // check correctness
         assertSame(solver.getListener(), listener);
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
@@ -140,39 +140,39 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertNull(solver.getEstimatedPosition());
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getType(), TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         solver = null;
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(null, distances, listener);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(null, distances, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(positions, null, listener);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(positions, null, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(positions, wrong, listener);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(positions, wrong, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(shortPositions, shortDistances, listener);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(shortPositions, shortDistances, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
 
 
-        //constructor with spheres
+        // constructor with spheres
         Sphere[] spheres = new Sphere[4];
         spheres[0] = new Sphere(positions[0], distances[0]);
         spheres[1] = new Sphere(positions[1], distances[1]);
         spheres[2] = new Sphere(positions[1], distances[1]);
         spheres[3] = new Sphere(positions[1], distances[1]);
-        solver = new LinearLeastSquaresTrilateration3DSolver(spheres);
+        solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(spheres);
 
-        //check correctness
+        // check correctness
         assertNull(solver.getListener());
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
@@ -181,28 +181,28 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertNull(solver.getEstimatedPosition());
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getType(), TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         Sphere[] shortSpheres = new Sphere[1];
 
         solver = null;
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver((Sphere[]) null);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver((Sphere[]) null);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(shortSpheres);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(shortSpheres);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
 
 
-        //constructor with spheres and listener
-        solver = new LinearLeastSquaresTrilateration3DSolver(spheres, listener);
+        // constructor with spheres and listener
+        solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(spheres, listener);
 
-        //check correctness
+        // check correctness
         assertSame(solver.getListener(), listener);
         assertNotNull(solver.getPositions());
         assertNotNull(solver.getDistances());
@@ -211,17 +211,17 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
         assertNull(solver.getEstimatedPosition());
         assertEquals(solver.getNumberOfDimensions(), 3);
         assertNotNull(solver.getSpheres());
-        assertEquals(solver.getType(), TrilaterationSolverType.LINEAR_TRILATERATION_SOLVER);
+        assertEquals(solver.getType(), TrilaterationSolverType.INHOMOGENEOUS_LINEAR_TRILATERATION_SOLVER);
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         solver = null;
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(null, listener);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(null, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
-            solver = new LinearLeastSquaresTrilateration3DSolver(shortSpheres, listener);
+            solver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(shortSpheres, listener);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(solver);
@@ -231,12 +231,13 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
     public void testGetSetSpheres() throws LockedException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
-        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
 
-        //initial value
+        // initial value
         assertNull(solver.getSpheres());
 
-        //set new value
+        // set new value
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D(randomizer.nextDouble(),
                 randomizer.nextDouble(), randomizer.nextDouble());
@@ -260,14 +261,14 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
 
         solver.setSpheres(spheres);
 
-        //check
+        // check
         Sphere[] spheres2 = solver.getSpheres();
         for (int i = 0; i < 4; i++) {
             assertSame(spheres[i].getCenter(), spheres2[i].getCenter());
             assertEquals(spheres[i].getRadius(), spheres2[i].getRadius(), 0.0);
         }
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         try {
             solver.setSpheres(null);
             fail("IllegalArgumentException expected but not thrown");
@@ -280,30 +281,32 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
 
     @Test
     public void testGetSetListener() throws LockedException {
-        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
 
-        //initial value
+        // initial value
         assertNull(solver.getListener());
 
-        //set new value
-        //noinspection unchecked
+        // set new value
+        // noinspection unchecked
         TrilaterationSolverListener<Point3D> listener = mock(TrilaterationSolverListener.class);
         solver.setListener(listener);
 
-        //check
+        // check
         assertSame(solver.getListener(), listener);
     }
 
     @Test
     public void testGetSetPositionsAndDistances() throws LockedException {
-        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
 
-        //initial value
+        // initial value
         assertNull(solver.getPositions());
         assertNull(solver.getDistances());
         assertFalse(solver.isReady());
 
-        //set new values
+        // set new values
         Point3D[] positions = new Point3D[4];
         positions[0] = new InhomogeneousPoint3D();
         positions[1] = new InhomogeneousPoint3D();
@@ -313,12 +316,12 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
 
         solver.setPositionsAndDistances(positions, distances);
 
-        //check
+        // check
         assertSame(solver.getPositions(), positions);
         assertSame(solver.getDistances(), distances);
         assertTrue(solver.isReady());
 
-        //Force IllegalArgumentException
+        // Force IllegalArgumentException
         try {
             solver.setPositionsAndDistances(null, distances);
             fail("IllegalArgumentException expected but not thrown");
@@ -361,7 +364,8 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
                 spheres[i] = new Sphere(center, radius);
             }
 
-            LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver(
+            InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                    new InhomogeneousLinearLeastSquaresTrilateration3DSolver(
                     spheres, this);
 
             reset();
@@ -385,14 +389,15 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
 
         assertTrue(numValid > 0);
 
-        //Force NotReadyException
-        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        // Force NotReadyException
+        InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
         try {
             solver.solve();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
 
-        //Force TrilaterationException
+        // Force TrilaterationException
         Sphere[] circles = new Sphere[4];
         InhomogeneousPoint3D center;
         double radius;
@@ -435,7 +440,8 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
                 distances[i] = distance + error;
             }
 
-            LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver(
+            InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                    new InhomogeneousLinearLeastSquaresTrilateration3DSolver(
                     positions, distances, this);
 
             reset();
@@ -484,7 +490,8 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
                 spheres[i] = new Sphere(center, radius);
             }
 
-            LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver(
+            InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                    new InhomogeneousLinearLeastSquaresTrilateration3DSolver(
                     spheres, this);
 
             reset();
@@ -508,14 +515,15 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
 
         assertTrue(numValid > 0);
 
-        //Force NotReadyException
-        LinearLeastSquaresTrilateration3DSolver solver = new LinearLeastSquaresTrilateration3DSolver();
+        // Force NotReadyException
+        InhomogeneousLinearLeastSquaresTrilateration3DSolver solver =
+                new InhomogeneousLinearLeastSquaresTrilateration3DSolver();
         try {
             solver.solve();
             fail("NotReadyException expected but not thrown");
         } catch (NotReadyException ignore) { }
 
-        //Force TrilaterationException
+        // Force TrilaterationException
         Sphere[] circles = new Sphere[4];
         InhomogeneousPoint3D center;
         double radius;
@@ -534,20 +542,20 @@ public class LinearLeastSquaresTrilateration3DSolverTest implements Trilateratio
     @Override
     public void onSolveStart(TrilaterationSolver<Point3D> solver) {
         solveStart++;
-        checkLocked((LinearLeastSquaresTrilateration3DSolver)solver);
+        checkLocked((InhomogeneousLinearLeastSquaresTrilateration3DSolver)solver);
     }
 
     @Override
     public void onSolveEnd(TrilaterationSolver<Point3D> solver) {
         solveEnd++;
-        checkLocked((LinearLeastSquaresTrilateration3DSolver)solver);
+        checkLocked((InhomogeneousLinearLeastSquaresTrilateration3DSolver)solver);
     }
 
     private void reset() {
         solveStart = solveEnd = 0;
     }
 
-    private void checkLocked(LinearLeastSquaresTrilateration3DSolver solver) {
+    private void checkLocked(InhomogeneousLinearLeastSquaresTrilateration3DSolver solver) {
         try {
             solver.setListener(null);
             fail("LockedException expected but not thrown");

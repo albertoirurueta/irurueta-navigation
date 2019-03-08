@@ -2,6 +2,7 @@ package com.irurueta.navigation.indoor.radiosource;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NavigationException;
 import com.irurueta.navigation.indoor.*;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -2600,6 +2601,34 @@ public abstract class RobustRangingAndRssiRadioSourceEstimator3D<S extends Radio
         return create(qualityScores, readings, initialPosition,
                 initialTransmittedPowerdBm, initialPathLossExponent, listener,
                 DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Indicates whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
+     * one is used instead.
+     */
+    @Override
+    public boolean isHomogeneousRangingLinearSolverUsed() {
+        return mInnerEstimator.isHomogeneousRangingLinearSolverUsed();
+    }
+
+    /**
+     * Specifies whether an homogeneous linear solver is used to estimate an initial
+     * position for the internal ranging radio source estimator.
+     * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
+     *                                   if an inhomogeneous linear one is used instead.
+     * @throws LockedException if estimator is locked.
+     */
+    @Override
+    public void setHomogeneousRangingLinearSolverUsed(boolean useHomogeneousLinearSolver)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mInnerEstimator.setHomogeneousRangingLinearSolverUsed(useHomogeneousLinearSolver);
     }
 
     /**
