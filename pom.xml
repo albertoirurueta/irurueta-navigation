@@ -81,7 +81,7 @@
     </dependencies>
 
     <properties>
-          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <github.global.server>github</github.global.server>
@@ -303,9 +303,7 @@
                 <configuration>
                     <show>private</show>
                     <nohelp>true</nohelp>
-                    <links>
-                        <link>http://docs.oracle.com/en/javase/11/docs/api/</link>
-                    </links>
+                    <detectJavaApiLink>true</detectJavaApiLink>
                 </configuration>
             </plugin>
             <!-- adds unit tests report into site -->
