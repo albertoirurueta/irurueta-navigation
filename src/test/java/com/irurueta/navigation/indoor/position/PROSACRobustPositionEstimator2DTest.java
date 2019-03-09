@@ -116,6 +116,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -165,6 +166,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -225,6 +227,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -278,6 +281,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -341,6 +345,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -385,6 +390,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -443,6 +449,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -498,6 +505,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -564,6 +572,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -620,6 +629,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -688,6 +698,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -752,6 +763,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -826,6 +838,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -885,6 +898,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -954,6 +968,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -1019,6 +1034,7 @@ public class PROSACRobustPositionEstimator2DTest implements
                 RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
                 RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+        assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertTrue(estimator.isHomogeneousLinearSolverUsed());
         assertTrue(estimator.isPreliminarySolutionRefined());
@@ -1183,6 +1199,22 @@ public class PROSACRobustPositionEstimator2DTest implements
 
         // check
         assertSame(estimator.getListener(), this);
+    }
+
+    @Test
+    public void testGetSetInitialPosition() throws LockedException {
+        PROSACRobustPositionEstimator2D solver =
+                new PROSACRobustPositionEstimator2D();
+
+        // check default value
+        assertNull(solver.getInitialPosition());
+
+        // set new value
+        Point2D p = Point2D.create();
+        solver.setInitialPosition(p);
+
+        // check
+        assertSame(solver.getInitialPosition(), p);
     }
 
     @Test
@@ -3275,6 +3307,152 @@ public class PROSACRobustPositionEstimator2DTest implements
                 positionAccuracy, formattedConfidence));
     }
 
+    @Test
+    public void testEstimateMixedLinearDisabledWithInitialPosition() throws LockedException,
+            NotReadyException, RobustEstimatorException, AlgebraException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] qualityScores = new double[numSources];
+            double error;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                qualityScores[i] = 1.0 / (1.0 + Math.abs(error));
+
+                readings.add(new RssiReading<>(accessPoint, rssi + error,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint,
+                        Math.max(0.0, distance + error),
+                        RANGING_STD));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + error), rssi + error,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+
+            PROSACRobustPositionEstimator2D estimator =
+                    new PROSACRobustPositionEstimator2D(qualityScores, sources,
+                            fingerprint, this);
+            estimator.setComputeAndKeepInliersEnabled(true);
+            estimator.setComputeAndKeepResidualsEnabled(true);
+            estimator.setResultRefined(true);
+            estimator.setLinearSolverUsed(false);
+            estimator.setPreliminarySolutionRefined(true);
+            estimator.setInitialPosition(position);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point2D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point2D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy2D accuracyStd = new Accuracy2D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy2D accuracy = new Accuracy2D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+    }
+
     @Override
     public void onEstimateStart(RobustPositionEstimator<Point2D> estimator) {
         estimateStart++;
@@ -3372,6 +3550,10 @@ public class PROSACRobustPositionEstimator2DTest implements
         } catch (LockedException ignore) { }
         try {
             estimator.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            estimator.setInitialPosition(null);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

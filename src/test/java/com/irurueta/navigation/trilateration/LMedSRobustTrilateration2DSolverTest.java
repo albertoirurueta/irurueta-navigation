@@ -68,6 +68,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -102,6 +103,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -141,6 +143,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -201,6 +204,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -271,6 +275,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -341,6 +346,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -404,6 +410,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -454,6 +461,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -513,6 +521,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -563,6 +572,7 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 3);
         assertNotNull(solver.getCircles());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -753,6 +763,22 @@ public class LMedSRobustTrilateration2DSolverTest implements
 
         // check
         assertSame(solver.getListener(), this);
+    }
+
+    @Test
+    public void testGetSetInitialPosition() throws LockedException {
+        LMedSRobustTrilateration2DSolver solver =
+                new LMedSRobustTrilateration2DSolver();
+
+        // check default value
+        assertNull(solver.getInitialPosition());
+
+        // set new value
+        Point2D p = Point2D.create();
+        solver.setInitialPosition(p);
+
+        // check
+        assertSame(solver.getInitialPosition(), p);
     }
 
     @Test
@@ -1881,6 +1907,89 @@ public class LMedSRobustTrilateration2DSolverTest implements
         assertTrue(numValid > 0);
     }
 
+    @Test
+    public void testSolveNoPreliminaryLinearSolverWithInitialPosition() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numCircles = randomizer.nextInt(MIN_CIRCLES, MAX_CIRCLES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint2D center;
+            double radius, error;
+            Circle[] circles = new Circle[numCircles];
+            for (int i = 0; i < numCircles; i++) {
+                center = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                circles[i] = new Circle(center, radius);
+            }
+
+            LMedSRobustTrilateration2DSolver solver =
+                    new LMedSRobustTrilateration2DSolver(circles, this);
+            solver.setLinearSolverUsed(false);
+            solver.setInitialPosition(position);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point2D estimatedPosition = solver.solve();
+
+            //check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new LMedSRobustTrilateration2DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
     @Override
     public void onSolveStart(RobustTrilaterationSolver<Point2D> solver) {
         solveStart++;
@@ -1913,6 +2022,10 @@ public class LMedSRobustTrilateration2DSolverTest implements
     private void checkLocked(LMedSRobustTrilateration2DSolver solver) {
         try {
             solver.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setInitialPosition(null);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

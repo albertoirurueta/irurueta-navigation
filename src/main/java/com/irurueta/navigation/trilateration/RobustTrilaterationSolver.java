@@ -132,6 +132,13 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
     protected RobustTrilaterationSolverListener<P> mListener;
 
     /**
+     * Initial position to use as a starting point to find a new solution.
+     * This is optional, but if provided, when no linear solvers are used, this is
+     * taken into account. If linear solvers are used, this is ignored.
+     */
+    protected P mInitialPosition;
+
+    /**
      * Indicates whether a linear solver is used or not (either homogeneous or inomogeneous)
      * for preliminary solutions.
      */
@@ -297,6 +304,31 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
     }
 
     /**
+     * Gets initial position to use as a starting point to find a new solution.
+     * This is optional, but if provided, when no linear solvers are used, this is
+     * taken into account. If linear solvers are used, this is ignored.
+     * @return an initial position.
+     */
+    public P getInitialPosition() {
+        return mInitialPosition;
+    }
+
+    /**
+     * Sets initial position to use as a starting point to find a new solution.
+     * This is optional, but if provided, when no linear solvers are used, this is
+     * taken into account. If linear solvers are used, this is ignored.
+     * @param initialPosition an initial position.
+     * @throws LockedException if instance is busy solving the trilateration problem.
+     */
+    public void setInitialPosition(P initialPosition) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+
+        mInitialPosition = initialPosition;
+    }
+
+    /**
      * Indicates whether a linear solver is used or not (either homogeneous or inhomogeneous)
      * for preliminary solutions.
      * @return true if a linear solver is used, false otherwise.
@@ -309,7 +341,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * Specifies whether a linear solver is used or not (either homogeneous or inhomogeneous)
      * for preliminary solutions.
      * @param linearSolverUsed true if a linear solver is used, false otherwise.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setLinearSolverUsed(boolean linearSolverUsed) throws LockedException {
         if (isLocked()) {
@@ -333,7 +365,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * or an initial solution for preliminary solutions that will be later refined.
      * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
      *                                   otherwise.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
             throws LockedException {
@@ -363,7 +395,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * refined.
      * @param preliminarySolutionRefined true if preliminary solutions must be refined after an
      *                                   initial linear solution, false otherwise.
-     * @throws LockedException if estimator is locked.
+     * @throws LockedException if instance is busy solving the trilateration problem.
      */
     public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
             throws LockedException {

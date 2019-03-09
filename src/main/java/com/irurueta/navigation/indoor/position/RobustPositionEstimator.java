@@ -352,7 +352,28 @@ public abstract class RobustPositionEstimator<P extends Point> {
     }
 
     /**
-     * Indicates whether a linear solver is used or not (either homogeneour or inhomogeneous)
+     * Gets initial position to use as a starting point to find a new solution.
+     * This is optional, but if provided, when no linear solvers are used, this is
+     * taken into account. If linear solvers are used, this is ignored.
+     * @return an initial position.
+     */
+    public P getInitialPosition() {
+        return mTrilaterationSolver.getInitialPosition();
+    }
+
+    /**
+     * Sets initial position to use as a starting point to find a new solution.
+     * This is optional, but if provided, when no linear solvers are used, this is
+     * taken into account. If linear solvers are used, this is ignored.
+     * @param initialPosition an initial position.
+     * @throws LockedException if estimator is locked.
+     */
+    public void setInitialPosition(P initialPosition) throws LockedException {
+        mTrilaterationSolver.setInitialPosition(initialPosition);
+    }
+
+    /**
+     * Indicates whether a linear solver is used or not (either homogeneous or inhomogeneous)
      * for preliminary solutions.
      * @return true if a linear solver is used, false otherwise.
      */

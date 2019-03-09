@@ -1297,7 +1297,7 @@ public abstract class RobustTrilateration2DSolver extends RobustTrilaterationSol
                         NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
-            Point2D estimatedPosition = null;
+            Point2D estimatedPosition = mInitialPosition;
             if (mUseLinearSolver) {
                 if (mUseHomogeneousLinearSolver) {
                     mHomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);

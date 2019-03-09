@@ -1297,7 +1297,7 @@ public abstract class RobustTrilateration3DSolver extends RobustTrilaterationSol
                         NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
-            Point3D estimatedPosition = null;
+            Point3D estimatedPosition = mInitialPosition;
             if (mUseLinearSolver) {
                 if (mUseHomogeneousLinearSolver) {
                     mHomogeneousLinearSolver.setPositionsAndDistances(mInnerPositions, mInnerDistances);

@@ -84,6 +84,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -119,6 +120,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -160,6 +162,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -220,6 +223,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -290,6 +294,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -360,6 +365,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -424,6 +430,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -474,6 +481,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -533,6 +541,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -583,6 +592,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -644,6 +654,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -691,6 +702,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -739,6 +751,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -811,6 +824,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -894,6 +908,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -982,6 +997,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -1053,6 +1069,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -1113,6 +1130,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertNull(solver.getListener());
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -1184,6 +1202,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -1245,6 +1264,7 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertEquals(solver.getMinRequiredPositionsAndDistances(), 4);
         assertNotNull(solver.getSpheres());
         assertSame(solver.getListener(), this);
+        assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
         assertTrue(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
@@ -1460,6 +1480,22 @@ public class PROMedSRobustTrilateration3DSolverTest implements
 
         // check
         assertSame(solver.getListener(), this);
+    }
+
+    @Test
+    public void testGetSetInitialPosition() throws LockedException {
+        PROMedSRobustTrilateration3DSolver solver =
+                new PROMedSRobustTrilateration3DSolver();
+
+        // check default value
+        assertNull(solver.getInitialPosition());
+
+        // set new value
+        Point3D p = Point3D.create();
+        solver.setInitialPosition(p);
+
+        // check
+        assertSame(solver.getInitialPosition(), p);
     }
 
     @Test
@@ -2655,6 +2691,94 @@ public class PROMedSRobustTrilateration3DSolverTest implements
         assertTrue(numValid > 0);
     }
 
+    @Test
+    public void testSolveNoPreliminaryLinearSolverWithInitialPosition() throws Exception {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSpheres = randomizer.nextInt(MIN_SPHERES, MAX_SPHERES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                    randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+            InhomogeneousPoint3D center;
+            double radius, error;
+            Sphere[] spheres = new Sphere[numSpheres];
+            double[] qualityScores = new double[numSpheres];
+            for (int i = 0; i < numSpheres; i++) {
+                center = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE),
+                        randomizer.nextDouble(MIN_RANDOM_VALUE, MAX_RANDOM_VALUE));
+                radius = center.distanceTo(position);
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+                qualityScores[i] = 1.0 / (1.0 + error);
+                radius = Math.max(RobustTrilaterationSolver.EPSILON,
+                        radius + error);
+                spheres[i] = new Sphere(center, radius);
+            }
+
+            PROMedSRobustTrilateration3DSolver solver =
+                    new PROMedSRobustTrilateration3DSolver(qualityScores,
+                            spheres, this);
+            solver.setLinearSolverUsed(false);
+            solver.setInitialPosition(position);
+
+            reset();
+            assertEquals(solveStart, 0);
+            assertEquals(solveEnd, 0);
+            assertEquals(solveNextIteration, 0);
+            assertEquals(solveProgressChange, 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+            assertNull(solver.getEstimatedPosition());
+
+            Point3D estimatedPosition = solver.solve();
+
+            // check
+            if (!position.equals(estimatedPosition, ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            assertNotNull(solver.getCovariance());
+            assertNotNull(solver.getInliersData());
+            assertNotNull(solver.getInliersData().getInliers());
+            assertNotNull(solver.getInliersData().getResiduals());
+
+            assertEquals(solveStart, 1);
+            assertEquals(solveEnd, 1);
+            assertTrue(solveNextIteration > 0);
+            assertTrue(solveProgressChange >= 0);
+            assertTrue(solver.isReady());
+            assertFalse(solver.isLocked());
+
+            // force NotReadyException
+            solver = new PROMedSRobustTrilateration3DSolver();
+
+            try {
+                solver.solve();
+                fail("LockedException expected but not thrown");
+            } catch (NotReadyException ignore) { }
+
+            numValid++;
+
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
     @Override
     public void onSolveStart(RobustTrilaterationSolver<Point3D> solver) {
         solveStart++;
@@ -2687,6 +2811,10 @@ public class PROMedSRobustTrilateration3DSolverTest implements
     private void checkLocked(PROMedSRobustTrilateration3DSolver solver) {
         try {
             solver.setListener(null);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
+        try {
+            solver.setInitialPosition(null);
             fail("LockedException expected but not thrown");
         } catch (LockedException ignore) { }
         try {

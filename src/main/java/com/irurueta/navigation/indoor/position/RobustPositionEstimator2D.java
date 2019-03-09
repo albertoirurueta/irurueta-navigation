@@ -245,7 +245,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param source located radio sources used for trilateration.
+     * @param sources located radio sources used for trilateration.
      * @param fingerprint fingerprint containing readings at an unknown location for
      *                    provided located radio sources.
      * @param listener listener in charge of handling events.
@@ -255,26 +255,26 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
      * is null or the number of provided sources is less than the required minimum.
      */
     public static RobustPositionEstimator2D create(
-            List<? extends RadioSourceLocated<Point2D>> source,
+            List<? extends RadioSourceLocated<Point2D>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             RobustPositionEstimatorListener<Point2D> listener,
             RobustEstimatorMethod method) {
         switch (method) {
             case RANSAC:
-                return new RANSACRobustPositionEstimator2D(source, fingerprint,
+                return new RANSACRobustPositionEstimator2D(sources, fingerprint,
                         listener);
             case LMedS:
-                return new LMedSRobustPositionEstimator2D(source, fingerprint,
+                return new LMedSRobustPositionEstimator2D(sources, fingerprint,
                         listener);
             case MSAC:
-                return new MSACRobustPositionEstimator2D(source, fingerprint,
+                return new MSACRobustPositionEstimator2D(sources, fingerprint,
                         listener);
             case PROSAC:
-                return new PROSACRobustPositionEstimator2D(source, fingerprint,
+                return new PROSACRobustPositionEstimator2D(sources, fingerprint,
                         listener);
             case PROMedS:
             default:
-                return new PROMedSRobustPositionEstimator2D(source, fingerprint,
+                return new PROMedSRobustPositionEstimator2D(sources, fingerprint,
                         listener);
         }
     }
