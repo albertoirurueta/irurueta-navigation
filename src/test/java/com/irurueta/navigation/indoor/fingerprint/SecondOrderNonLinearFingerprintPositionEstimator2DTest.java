@@ -73,7 +73,7 @@ public class SecondOrderNonLinearFingerprintPositionEstimator2DTest
 
     private static final double ERROR_STD = 1.0e-1;
 
-    private static final double ERROR_MARGIN = 1e-3;
+    private static final double ERROR_MARGIN = 1e-1;
 
     private static final int TIMES = 50;
 
