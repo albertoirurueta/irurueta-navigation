@@ -44,6 +44,25 @@ public class RangingReadingLocated2D<S extends RadioSource> extends RangingReadi
      * @param source radio source associated to this reading.
      * @param distance distance in meters to the radio source.
      * @param position position where reading was made.
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null, number of attempted measures is less than 1 or number of successful
+     * measures is negative.
+     */
+    public RangingReadingLocated2D(S source, double distance,
+            Point2D position, int numAttemptedMeasurements,
+            int numSuccessfulMeasurements) {
+        super(source, distance, position, numAttemptedMeasurements,
+                numSuccessfulMeasurements);
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
      * position is null or standard deviation is zero or negative.
@@ -51,6 +70,26 @@ public class RangingReadingLocated2D<S extends RadioSource> extends RangingReadi
     public RangingReadingLocated2D(S source, double distance,
             Point2D position, Double distanceStandardDeviation) {
         super(source, distance, position, distanceStandardDeviation);
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
+     * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null or standard deviation is zero or negative, number of attempted
+     * measures is less than 1 or number of successful measures is negative.
+     */
+    public RangingReadingLocated2D(S source, double distance,
+            Point2D position, Double distanceStandardDeviation,
+            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+        super(source, distance, position, distanceStandardDeviation,
+                numAttemptedMeasurements, numSuccessfulMeasurements);
     }
 
     /**
@@ -73,6 +112,27 @@ public class RangingReadingLocated2D<S extends RadioSource> extends RangingReadi
      * @param source radio source associated to this reading.
      * @param distance distance in meters to the radio source.
      * @param position position where reading was made.
+     * @param positionCovariance covariance of inhomogeneous coordinates of
+     *                           current position (if available).
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null, position covariance has wrong size, number of attempted
+     * measures is less than 1 or number of successful measures is negative.
+     */
+    public RangingReadingLocated2D(S source, double distance,
+            Point2D position, Matrix positionCovariance,
+            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+        super(source, distance, position, positionCovariance, numAttemptedMeasurements,
+                numSuccessfulMeasurements);
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
      * @param positionCovariance covariance of inhomogeneous coordinates of
      *                           current position (if available).
@@ -84,6 +144,31 @@ public class RangingReadingLocated2D<S extends RadioSource> extends RangingReadi
             Matrix positionCovariance) {
         super(source, distance, position, distanceStandardDeviation,
                 positionCovariance);
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
+     * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param positionCovariance covariance of inhomogeneous coordinates of
+     *                           current position (if available).
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null, distance standard deviation is zero or negative, position
+     * covariance has wrong size, number of attempted measures is less than 1 or
+     * number of successful measures is negative.
+     */
+    public RangingReadingLocated2D(S source, double distance,
+            Point2D position, Double distanceStandardDeviation,
+            Matrix positionCovariance, int numAttemptedMeasurements,
+            int numSuccessfulMeasurements) {
+        super(source, distance, position, distanceStandardDeviation,
+                positionCovariance, numAttemptedMeasurements,
+                numSuccessfulMeasurements);
     }
 
     /**

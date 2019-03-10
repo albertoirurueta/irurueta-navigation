@@ -20,7 +20,13 @@ package com.irurueta.navigation.indoor;
  * access point or bluetooth beacon), indicating the distance to such source.
  * @param <S> a {@link RadioSource} type.
  */
+@SuppressWarnings("WeakerAccess")
 public class RangingReading<S extends RadioSource> extends Reading<S> {
+
+    /**
+     * Default number of measurements.
+     */
+    public static final int DEFAULT_NUM_MEASUREMENTS = 1;
 
     /**
      * Distance in meters to the radio source.
@@ -31,6 +37,17 @@ public class RangingReading<S extends RadioSource> extends Reading<S> {
      * Standard deviation of distance, if available.
      */
     private Double mDistanceStandardDeviation;
+
+    /**
+     * Number of attempted measurements used in the RTT exchange.
+     */
+    private int mNumAttemptedMeasurements = DEFAULT_NUM_MEASUREMENTS;
+
+    /**
+     * Number of successful measurements used to calculate the distance and standard
+     * deviation.
+     */
+    private int mNumSuccessfulMeasurements = DEFAULT_NUM_MEASUREMENTS;
 
     /**
      * Constructor.
@@ -52,6 +69,29 @@ public class RangingReading<S extends RadioSource> extends Reading<S> {
      * Constructor.
      * @param source radio source associated to this reading.
      * @param distance distance in meters to the radio source.
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * number of attempted measures is less than 1 or number of successful measures is negative.
+     */
+    public RangingReading(S source, double distance, int numAttemptedMeasurements,
+                          int numSuccessfulMeasurements) {
+        this(source, distance);
+
+        if (numAttemptedMeasurements < DEFAULT_NUM_MEASUREMENTS ||
+                numSuccessfulMeasurements < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        mNumAttemptedMeasurements = numAttemptedMeasurements;
+        mNumSuccessfulMeasurements = numSuccessfulMeasurements;
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
      * @param distanceStandardDeviation standard deviation of distance, if available.
      * @throws IllegalArgumentException if radio source data is null, distance is negative or
      * standard deviation is zero or negative.
@@ -65,6 +105,33 @@ public class RangingReading<S extends RadioSource> extends Reading<S> {
         }
 
         mDistanceStandardDeviation = distanceStandardDeviation;
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative or
+     * standard deviation is zero or negative, number of attempted measures is less
+     * than 1 or number of successful measures is negative.
+     */
+    public RangingReading(S source, double distance,
+                          Double distanceStandardDeviation,
+                          int numAttemptedMeasurements,
+                          int numSuccessfulMeasurements) {
+        this(source, distance, distanceStandardDeviation);
+
+        if (numAttemptedMeasurements < DEFAULT_NUM_MEASUREMENTS ||
+                numSuccessfulMeasurements < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        mNumAttemptedMeasurements = numAttemptedMeasurements;
+        mNumSuccessfulMeasurements = numSuccessfulMeasurements;
     }
 
     /**
@@ -97,5 +164,23 @@ public class RangingReading<S extends RadioSource> extends Reading<S> {
      */
     public Double getDistanceStandardDeviation() {
         return mDistanceStandardDeviation;
+    }
+
+    /**
+     * Gets number of attempted measurements used in the RTT exchange.
+     * @return number of attempted measurements used in the RTT exchange.
+     */
+    public int getNumAttemptedMeasurements() {
+        return mNumAttemptedMeasurements;
+    }
+
+    /**
+     * Gets number of successful measurements used to calculate the distance and
+     * standard deviation.
+     * @return number of successful measurements used to calculate the distance and
+     * standard deviation.
+     */
+    public int getNumSuccessfulMeasurements() {
+        return mNumSuccessfulMeasurements;
     }
 }

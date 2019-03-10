@@ -62,6 +62,29 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
      * @param source radio source associated to this reading.
      * @param distance distance in meters to the radio source.
      * @param position position where reading was made.
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null, number of attempted measures is less than 1 or number of successful
+     * measures is negative.
+     */
+    public RangingReadingLocated(S source, double distance,
+            P position, int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+        super(source, distance, numAttemptedMeasurements, numSuccessfulMeasurements);
+
+        if (position == null) {
+            throw new IllegalArgumentException();
+        }
+
+        mPosition = position;
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
      * @param distanceStandardDeviation standard deviation of distance, if available.
      * @throws IllegalArgumentException if radio source data is null, distance is negative,
      * position is null or standard deviation is zero or negative.
@@ -82,10 +105,36 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
      * @param source radio source associated to this reading.
      * @param distance distance in meters to the radio source.
      * @param position position where reading was made.
+     * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null or standard deviation is zero or negative, number of attempted
+     * measures is less than 1 or number of successful measures is negative.
+     */
+    public RangingReadingLocated(S source, double distance,
+            P position, Double distanceStandardDeviation,
+            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+        super(source, distance, distanceStandardDeviation,
+                numAttemptedMeasurements, numSuccessfulMeasurements);
+
+        if (position == null) {
+            throw new IllegalArgumentException();
+        }
+
+        mPosition = position;
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
      * @param positionCovariance covariance of inhomogeneous coordinates of
      *                           current position (if available).
-     * @throws IllegalArgumentException if radio source data is null, distance is negative
-     * or position is null.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null or position covariance has wrong size.
      */
     public RangingReadingLocated(S source, double distance,
             P position, Matrix positionCovariance) {
@@ -98,6 +147,41 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
                 throw new IllegalArgumentException();
             }
         }
+        mPositionCovariance = positionCovariance;
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
+     * @param positionCovariance covariance of inhomogeneous coordinates of
+     *                           current position (if available).
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null, position covariance has wrong size, number of attempted
+     * measures is less than 1 or number of successful measures is negative.
+     */
+    public RangingReadingLocated(S source, double distance, P position,
+            Matrix positionCovariance, int numAttemptedMeasurements,
+            int numSuccessfulMeasurements) {
+        super(source, distance, numAttemptedMeasurements, numSuccessfulMeasurements);
+
+        if (position == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (positionCovariance != null) {
+            int dims = position.getDimensions();
+            if (positionCovariance.getRows() != dims ||
+                    positionCovariance.getColumns() != dims) {
+                throw new IllegalArgumentException();
+            }
+        }
+
+        mPosition = position;
         mPositionCovariance = positionCovariance;
     }
 
@@ -124,6 +208,44 @@ public class RangingReadingLocated<S extends RadioSource, P extends Point> exten
                 throw new IllegalArgumentException();
             }
         }
+        mPositionCovariance = positionCovariance;
+    }
+
+    /**
+     * Constructor.
+     * @param source radio source associated to this reading.
+     * @param distance distance in meters to the radio source.
+     * @param position position where reading was made.
+     * @param distanceStandardDeviation standard deviation of distance, if available.
+     * @param positionCovariance covariance of inhomogeneous coordinates of
+     *                           current position (if available).
+     * @param numAttemptedMeasurements number of attempted measurements used in the RTT exchange.
+     * @param numSuccessfulMeasurements number of successful measurements used to calculate the
+     *                                  distance and standard deviation.
+     * @throws IllegalArgumentException if radio source data is null, distance is negative,
+     * position is null, distance standard deviation is zero or negative, position
+     * covariance has wrong size, number of attempted measures is less than 1 or
+     * number of successful measures is negative.
+     */
+    public RangingReadingLocated(S source, double distance, P position,
+            Double distanceStandardDeviation, Matrix positionCovariance,
+            int numAttemptedMeasurements, int numSuccessfulMeasurements) {
+        super(source, distance, distanceStandardDeviation,
+                numAttemptedMeasurements, numSuccessfulMeasurements);
+
+        if (position == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (positionCovariance != null) {
+            int dims = position.getDimensions();
+            if (positionCovariance.getRows() != dims ||
+                    positionCovariance.getColumns() != dims) {
+                throw new IllegalArgumentException();
+            }
+        }
+
+        mPosition = position;
         mPositionCovariance = positionCovariance;
     }
 

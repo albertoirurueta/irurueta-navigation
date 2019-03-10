@@ -42,10 +42,11 @@ public class RangingAndRssiReadingLocated2DTest {
 
     @Test
     public void testConstructor() throws AlgebraException {
-        //test empty constructor
-        RangingAndRssiReadingLocated2D<WifiAccessPoint> reading = new RangingAndRssiReadingLocated2D<>();
+        // test empty constructor
+        RangingAndRssiReadingLocated2D<WifiAccessPoint> reading =
+                new RangingAndRssiReadingLocated2D<>();
 
-        //check
+        // check
         assertNull(reading.getSource());
         assertEquals(reading.getDistance(), 0.0, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
@@ -54,15 +55,19 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading.getPosition());
         assertNull(reading.getPositionCovariance());
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
 
-        //test constructor with access point, distance, rssi and position
+        // test constructor with access point, distance, rssi and position
         WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
         InhomogeneousPoint2D position = new InhomogeneousPoint2D();
         reading = new RangingAndRssiReadingLocated2D<>(ap, 1.2,
                 -50.0, position);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.2, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
@@ -71,8 +76,12 @@ public class RangingAndRssiReadingLocated2DTest {
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         reading = null;
         try {
             reading = new RangingAndRssiReadingLocated2D<>(null,
@@ -92,12 +101,64 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading);
 
 
-        //test constructor with access point, distance, rssi, position,
-        //distance standard deviation and rssi standard deviation
+        // test constructor with access point, distance, rssi, position and number
+        // of measurements.
+        reading = new RangingAndRssiReadingLocated2D<>(ap, 1.2, -50.0,
+                position, 8, 7);
+
+        // check
+        assertSame(reading.getSource(), ap);
+        assertEquals(reading.getDistance(), 1.2, 0.0);
+        assertNull(reading.getDistanceStandardDeviation());
+        assertEquals(reading.getRssi(), -50.0, 0.0);
+        assertNull(reading.getRssiStandardDeviation());
+        assertSame(reading.getPosition(), position);
+        assertNull(reading.getPositionCovariance());
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(), 8);
+        assertEquals(reading.getNumSuccessfulMeasurements(), 7);
+
+        // force IllegalArgumentException
+        reading = null;
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(null, 1.2,
+                    -50.0, position, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, -1.0,
+                    -50.0, position, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.2,
+                    -50.0, null, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.2,
+                    -50.0, position, 0,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.2,
+                    -50.0, position, 8,
+                    -1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(reading);
+
+
+        // test constructor with access point, distance, rssi, position,
+        // distance standard deviation and rssi standard deviation
         reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5, -50.0,
                 position, 0.1, 0.2);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.5, 0.0);
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
@@ -106,6 +167,10 @@ public class RangingAndRssiReadingLocated2DTest {
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
         reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5, -50.0,
                 position, null, null);
@@ -119,12 +184,17 @@ public class RangingAndRssiReadingLocated2DTest {
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         reading = null;
         try {
-            reading = new RangingAndRssiReadingLocated2D<>(null, 1.5, -50.0,
-                    position, 0.1, 0.2);
+            reading = new RangingAndRssiReadingLocated2D<>(null, 1.5,
+                    -50.0, position, 0.1,
+                    0.2);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
@@ -150,12 +220,84 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading);
 
 
-        //test constructor with access point, distance, rssi, position and position covariance
+        // test constructor with access point, distance, rssi, position, distance
+        // standard deviation, rssi standard deviation and number of measurements
+        reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5, -50.0,
+                position, 0.1, 0.2,
+                8, 7);
+
+        // check
+        assertSame(reading.getSource(), ap);
+        assertEquals(reading.getDistance(), 1.5, 0.0);
+        assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
+        assertEquals(reading.getRssi(), -50.0, 0.0);
+        assertEquals(reading.getRssiStandardDeviation(), 0.2, 0.0);
+        assertSame(reading.getPosition(), position);
+        assertNull(reading.getPositionCovariance());
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(), 8);
+        assertEquals(reading.getNumSuccessfulMeasurements(), 7);
+
+        // force IllegalArgumentException
+        reading = null;
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(null, 1.5,
+                    -50.0, position, 0.1,
+                    0.2, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, -1.0,
+                    -50.0, position, 0.1,
+                    0.2, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5,
+                    -50.0, null, 0.1,
+                    0.2, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5,
+                    -50.0, position, 0.0,
+                    0.2, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5,
+                    -50.0, position, 0.1,
+                    0.0, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5,
+                    -50.0, position, 0.1,
+                    0.2, 0,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 1.5,
+                    -50.0, position, 0.1,
+                    0.2, 8,
+                    -1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(reading);
+
+
+        // test constructor with access point, distance, rssi, position and position covariance
         Matrix cov = new Matrix(2, 2);
         reading = new RangingAndRssiReadingLocated2D<>(ap, 2.0, -50.0,
                 position, cov);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 2.0, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
@@ -164,8 +306,12 @@ public class RangingAndRssiReadingLocated2DTest {
         assertSame(reading.getPosition(), position);
         assertSame(reading.getPositionCovariance(), cov);
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         reading = null;
         try {
             reading = new RangingAndRssiReadingLocated2D<>(null,
@@ -190,13 +336,71 @@ public class RangingAndRssiReadingLocated2DTest {
         assertNull(reading);
 
 
-        //test constructor with access point, distance, rssi, position,
-        //distance standard deviation, rssi standard deviation and position
-        //covariance
+        // test constructor with access point, distance, rssi, position, position
+        // covariance and number of measurements.
+        reading = new RangingAndRssiReadingLocated2D<>(ap, 2.0, -50.0,
+                position, cov, 8, 7);
+
+        // check
+        assertSame(reading.getSource(), ap);
+        assertEquals(reading.getDistance(), 2.0, 0.0);
+        assertNull(reading.getDistanceStandardDeviation());
+        assertEquals(reading.getRssi(), -50.0, 0.0);
+        assertNull(reading.getRssiStandardDeviation());
+        assertSame(reading.getPosition(), position);
+        assertSame(reading.getPositionCovariance(), cov);
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(), 8);
+        assertEquals(reading.getNumSuccessfulMeasurements(), 7);
+
+        // force IllegalArgumentException
+        reading = null;
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(null,
+                    2.0, -50.0, position, cov, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, -1.0, -50.0,
+                    position, cov, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.0, -50.0,
+                    null, cov, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.0, -50.0,
+                    position, new Matrix(1,1),
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.0, -50.0,
+                    position, cov, 0,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.0, -50.0,
+                    position, cov, 8,
+                    -1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(reading);
+
+
+        // test constructor with access point, distance, rssi, position,
+        // distance standard deviation, rssi standard deviation and position
+        // covariance
         reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
                 position, 0.1, 0.2, cov);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 2.5, 0.0);
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
@@ -205,11 +409,16 @@ public class RangingAndRssiReadingLocated2DTest {
         assertSame(reading.getPosition(), position);
         assertSame(reading.getPositionCovariance(), cov);
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
         reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
-                position, null, null, null);
+                position, null, null,
+                null);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 2.5, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
@@ -218,12 +427,17 @@ public class RangingAndRssiReadingLocated2DTest {
         assertSame(reading.getPosition(), position);
         assertNull(reading.getPositionCovariance());
         assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingAndRssiReading.DEFAULT_NUM_MEASUREMENTS);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         reading = null;
         try {
-            reading = new RangingAndRssiReadingLocated2D<>(null, 2.5, -50.0,
-                    position, 0.1, 0.2, cov);
+            reading = new RangingAndRssiReadingLocated2D<>(null, 2.5,
+                    -50.0, position, 0.1,
+                    0.2, cov);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         try {
@@ -250,6 +464,86 @@ public class RangingAndRssiReadingLocated2DTest {
             reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
                     position, 0.1, 0.2,
                     new Matrix(1, 1));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(reading);
+
+
+        // test constructor with access point, distance, rssi, position,
+        // distance standard deviation, rssi standard deviation, position covariance
+        // and number of measurements.
+        reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                position, 0.1, 0.2, cov,
+                8, 7);
+
+        // check
+        assertSame(reading.getSource(), ap);
+        assertEquals(reading.getDistance(), 2.5, 0.0);
+        assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
+        assertEquals(reading.getRssi(), -50.0, 0.0);
+        assertEquals(reading.getRssiStandardDeviation(), 0.2, 0.0);
+        assertSame(reading.getPosition(), position);
+        assertSame(reading.getPositionCovariance(), cov);
+        assertEquals(reading.getType(), ReadingType.RANGING_AND_RSSI_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(), 8);
+        assertEquals(reading.getNumSuccessfulMeasurements(), 7);
+
+        // force IllegalArgumentException
+        reading = null;
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(null, 2.5, -50.0,
+                    position, 0.1, 0.2, cov,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, -1.0, -50.0,
+                    position, 0.1, 0.2, cov,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    null, 0.1, 0.2, cov,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    position, 0.0, 0.2, cov,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    position, 0.1, 0.0, cov,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    position, 0.1, 0.2,
+                    new Matrix(1, 1),
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    position, 0.1, 0.2,
+                    new Matrix(2, 1),
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    position, 0.1, 0.2, cov,
+                    0, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingAndRssiReadingLocated2D<>(ap, 2.5, -50.0,
+                    position, 0.1, 0.2, cov,
+                    8, -1);
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);

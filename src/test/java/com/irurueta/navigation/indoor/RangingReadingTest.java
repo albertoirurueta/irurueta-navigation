@@ -39,17 +39,21 @@ public class RangingReadingTest {
 
     @Test
     public void testConstructor() {
-        //test empty constructor
+        // test empty constructor
         RangingReading<WifiAccessPoint> reading = new RangingReading<>();
 
-        //check
+        // check
         assertNull(reading.getSource());
         assertEquals(reading.getDistance(), 0.0, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
         assertEquals(reading.getType(), ReadingType.RANGING_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
 
 
-        //test constructor with access point and distance
+        // test constructor with access point and distance
         WifiAccessPoint ap = new WifiAccessPoint("bssid", FREQUENCY);
         reading = new RangingReading<>(ap, 1.2);
 
@@ -58,8 +62,12 @@ public class RangingReadingTest {
         assertEquals(reading.getDistance(), 1.2, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
         assertEquals(reading.getType(), ReadingType.RANGING_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
 
-        //force IllegalArgumentException
+        // force IllegalArgumentException
         reading = null;
         try {
             reading = new RangingReading<>(null, 1.2);
@@ -72,24 +80,71 @@ public class RangingReadingTest {
         assertNull(reading);
 
 
-        //test constructor with access point, distance and distance standard deviation
-        reading = new RangingReading<>(ap, 1.5, 0.1);
+        // test constructor with access point, distance and number of measurements
+        reading = new RangingReading<>(ap, 1.2, 8,
+                7);
 
         //check
+        assertSame(reading.getSource(), ap);
+        assertEquals(reading.getDistance(), 1.2, 0.0);
+        assertNull(reading.getDistanceStandardDeviation());
+        assertEquals(reading.getType(), ReadingType.RANGING_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(), 8);
+        assertEquals(reading.getNumSuccessfulMeasurements(), 7);
+
+        // force IllegalArgumentException
+        reading = null;
+        try {
+            reading = new RangingReading<>(null, 1.2,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        }  catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, -1.0,
+                    8, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, 1.2,
+                    0, 7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, 1.2,
+                    8, -1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(reading);
+
+
+        // test constructor with access point, distance and distance standard deviation
+        reading = new RangingReading<>(ap, 1.5, 0.1);
+
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.5, 0.0);
         assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
         assertEquals(reading.getType(), ReadingType.RANGING_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
+
 
         reading = new RangingReading<>(ap, 1.5, null);
 
-        //check
+        // check
         assertSame(reading.getSource(), ap);
         assertEquals(reading.getDistance(), 1.5, 0.0);
         assertNull(reading.getDistanceStandardDeviation());
         assertEquals(reading.getType(), ReadingType.RANGING_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
+        assertEquals(reading.getNumSuccessfulMeasurements(),
+                RangingReading.DEFAULT_NUM_MEASUREMENTS);
 
-        //force IllegalArgumentException
+
+        // force IllegalArgumentException
         reading = null;
         try {
             reading = new RangingReading<>(null, 1.5,
@@ -107,6 +162,54 @@ public class RangingReadingTest {
             fail("IllegalArgumentException expected but not thrown");
         } catch (IllegalArgumentException ignore) { }
         assertNull(reading);
+
+
+        // test constructor with access point, distance, distance standard deviation an
+        // number of measurements
+        reading = new RangingReading<>(ap, 1.5, 0.1,
+                8, 7);
+
+        // check
+        assertSame(reading.getSource(), ap);
+        assertEquals(reading.getDistance(), 1.5, 0.0);
+        assertEquals(reading.getDistanceStandardDeviation(), 0.1, 0.0);
+        assertEquals(reading.getType(), ReadingType.RANGING_READING);
+        assertEquals(reading.getNumAttemptedMeasurements(), 8);
+        assertEquals(reading.getNumSuccessfulMeasurements(), 7);
+
+        // force IllegalArgumentException
+        reading = null;
+        try {
+            reading = new RangingReading<>(null, 1.5,
+                    0.1, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, -1.0,
+                    0.1, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, 1.5,
+                    0.0, 8,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, 1.5,
+                    0.1, 0,
+                    7);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        try {
+            reading = new RangingReading<>(ap, 1.5,
+                    0.1, 8,
+                    -1);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
+        assertNull(reading);
     }
 
     @Test
@@ -118,7 +221,7 @@ public class RangingReadingTest {
         RangingReading<WifiAccessPoint> reading2 = new RangingReading<>(ap1, 50.0);
         RangingReading<WifiAccessPoint> reading3 = new RangingReading<>(ap2, 50.0);
 
-        //check
+        // check
         assertTrue(reading1.hasSameSource(reading1));
         assertTrue(reading1.hasSameSource(reading2));
         assertFalse(reading1.hasSameSource(reading3));
