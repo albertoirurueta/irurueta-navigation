@@ -43,7 +43,7 @@ public abstract class RobustTrilaterationSolver<P extends Point> {
      * Indicates that by default an homogeneous linear solver is used either to estimate preliminary
      * solutions or an initial solution for preliminary solutions that will be later refined.
      */
-    public static final boolean DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = true;
+    public static final boolean DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = false;
 
     /**
      * Indicates that by default preliminary solutions are refined.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,11 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import org.junit.*;
+import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
 public class PositionEstimationExceptionTest {
-
-    public PositionEstimationExceptionTest() { }
-
-    @BeforeClass
-    public static void setUpClass() { }
-
-    @AfterClass
-    public static void tearDownClass() { }
-
-    @Before
-    public void setUp() { }
-
-    @After
-    public void tearDown() { }
 
     @Test
     public void testConstructor() {

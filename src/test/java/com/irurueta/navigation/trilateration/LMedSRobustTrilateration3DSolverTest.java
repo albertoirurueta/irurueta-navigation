@@ -70,7 +70,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -105,7 +105,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -146,7 +146,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -207,7 +207,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -278,7 +278,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -349,7 +349,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -414,7 +414,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -465,7 +465,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertNull(solver.getListener());
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -525,7 +525,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -576,7 +576,7 @@ public class LMedSRobustTrilateration3DSolverTest implements
         assertSame(solver.getListener(), this);
         assertNull(solver.getInitialPosition());
         assertTrue(solver.isLinearSolverUsed());
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
         assertTrue(solver.isPreliminarySolutionRefined());
         assertFalse(solver.isLocked());
         assertEquals(solver.getProgressDelta(),
@@ -819,13 +819,13 @@ public class LMedSRobustTrilateration3DSolverTest implements
                 new LMedSRobustTrilateration3DSolver();
 
         // check default value
-        assertTrue(solver.isHomogeneousLinearSolverUsed());
+        assertFalse(solver.isHomogeneousLinearSolverUsed());
 
         // set new value
-        solver.setHomogeneousLinearSolverUsed(false);
+        solver.setHomogeneousLinearSolverUsed(true);
 
         // check
-        assertFalse(solver.isHomogeneousLinearSolverUsed());
+        assertTrue(solver.isHomogeneousLinearSolverUsed());
     }
 
     @Test

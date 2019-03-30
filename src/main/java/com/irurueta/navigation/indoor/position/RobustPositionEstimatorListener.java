@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,41 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.Point;
-
 /**
  * Listener to be notified of events produced by a robust position estimator when
  * estimation starts, ends or when progress changes.
- * @param <P> a {@link Point} type.
+ *
+ * @param <E> a {@link RobustPositionEstimator} type.
  */
-public interface RobustPositionEstimatorListener<P extends Point> {
+public interface RobustPositionEstimatorListener<E extends RobustPositionEstimator> {
 
     /**
      * Called when estimation starts.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(RobustPositionEstimator<P> estimator);
+    void onEstimateStart(E estimator);
 
     /**
      * Called when estimation ends.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(RobustPositionEstimator<P> estimator);
+    void onEstimateEnd(E estimator);
 
     /**
      * Called when estimator iterates to refine a possible solution.
+     *
      * @param estimator estimator raising the event.
      * @param iteration current iteration.
      */
-    void onEstimateNextIteration(RobustPositionEstimator<P> estimator, int iteration);
+    void onEstimateNextIteration(E estimator, int iteration);
 
     /**
      * Called when estimation progress changes significantly.
+     *
      * @param estimator estimator raising the event.
-     * @param progress progress of estimation expressed as a value between 0.0 and 1.0.
+     * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onEstimateProgressChange(RobustPositionEstimator<P> estimator, float progress);
+    void onEstimateProgressChange(E estimator, float progress);
 }

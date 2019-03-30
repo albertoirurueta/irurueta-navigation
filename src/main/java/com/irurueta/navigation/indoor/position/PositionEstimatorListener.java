@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,24 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.Point;
-
 /**
  * Listener to be notified of events such as when estimation starts or ends.
- * @param <P> a {@link Point} type.
+ *
+ * @param <E> a {@link PositionEstimator} type.
  */
-public interface PositionEstimatorListener<P extends Point> {
+public interface PositionEstimatorListener<E extends PositionEstimator> {
 
     /**
      * Called when estimation starts.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(PositionEstimator<P> estimator);
+    void onEstimateStart(E estimator);
 
     /**
      * Called when estimation ends.
+     *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(PositionEstimator<P> estimator);
+    void onEstimateEnd(E estimator);
 }

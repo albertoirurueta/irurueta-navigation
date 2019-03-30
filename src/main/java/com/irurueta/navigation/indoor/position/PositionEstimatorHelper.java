@@ -26,9 +26,9 @@ import com.irurueta.statistics.MultivariateNormalDist;
 import java.util.List;
 
 /**
- * Utility class that converts located radio sources and
- * fingerprints into positions, distances and distance standard deviations that can be
- * used to solve the trilateration problem.
+ * Utility class that converts located radio sources and fingerprints into positions,
+ * distances and distance standard deviations that can be used to solve the trilateration
+ * problem.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
 public class PositionEstimatorHelper {
@@ -46,10 +46,12 @@ public class PositionEstimatorHelper {
      * between sources and fingerprint readings match.
      * If no sources, fingerprint readings, positions and distances are provided, this
      * method makes no action.
-     * @param sources located radio sources to obtain positions and other parameters.
-     * @param fingerprint fingerprint containing ranged RSSI readings.
-     * @param positions list where extracted positions will be stored.
-     * @param distances list where extracted distances will be stored.
+     *
+     * @param sources       located radio sources to obtain positions and other
+     *                      parameters.
+     * @param fingerprint   fingerprint containing ranged RSSI readings.
+     * @param positions     list where extracted positions will be stored.
+     * @param distances     list where extracted distances will be stored.
      * @param <P> a {@link Point} type.
      */
     public static <P extends Point> void buildPositionsAndDistances(
@@ -114,25 +116,30 @@ public class PositionEstimatorHelper {
     }
 
     /**
-     * Builds positions, distances and standard deviations from provided locatd radio
+     * Builds positions, distances and standard deviations from provided located radio
      * sources and fingerprint readings.
-     * Notice that positions, distances and standard deviations lists might not have the
-     * same size as provided sources list or fingerprint readings list if not all radio
-     * sources between sources and fingerprint readings match.
+     * Notice that positions, distances and standard deviations lists might not have
+     * the same size as provided sources list or fingerprint readings list if not all
+     * radio sources between sources and fingerprint readings match.
      * If no sources, fingerprint readings, positions, distances and standard deviations
      * are provided, this method makes no action.
-     * @param sources located radio sources to obtain positions and other parameters.
-     * @param fingerprint fingerprint containing ranged RSSI readings.
-     * @param useRadioSourcePositionCovariance true to take into account radio source
-     *                                         position covariance, false otherwise.
-     * @param fallbackDistanceStandardDeviation distance standard deviation to be assumed
-     *                                          when it cannot be determined.
-     * @param positions list where extracted positions will be stored.
-     * @param distances list where extracted distances will be stored.
-     * @param distanceStandardDeviations list where extracted standard deviations of
-     *                                   distances will be stored.
-     * @throws IllegalArgumentException if provided distance standard deviation
-     * fallback is negative.
+     *
+     * @param sources                           located radio sources to obtain positions
+     *                                          and other parameters.
+     * @param fingerprint                       fingerprint containing ranged or RSSI
+     *                                          readings.
+     * @param useRadioSourcePositionCovariance  true to take into account radio source
+     *                                          position covariance, false otherwise.
+     * @param fallbackDistanceStandardDeviation distance standard deviation to be
+     *                                          assumed when it cannot be determined.
+     * @param positions                         list where extracted positions will be
+     *                                          stored.
+     * @param distances                         list where extracted distances will be
+     *                                          stored.
+     * @param distanceStandardDeviations        list where extracted standard deviations
+     *                                          of distances will be stored.
+     * @throws IllegalArgumentException if provided distance standard deviation fallback
+     * is negative.
      * @param <P> a {@link Point} type.
      */
     public static <P extends Point> void buildPositionsDistancesAndDistanceStandardDeviations(
@@ -142,36 +149,43 @@ public class PositionEstimatorHelper {
             double fallbackDistanceStandardDeviation,
             List<P> positions, List<Double> distances,
             List<Double> distanceStandardDeviations) {
-        buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(sources, fingerprint,
-                null, useRadioSourcePositionCovariance,
+        buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(sources,
+                fingerprint, null, null, useRadioSourcePositionCovariance,
                 fallbackDistanceStandardDeviation, positions, distances,
                 distanceStandardDeviations, null);
     }
 
     /**
-     * Builds positions, distances and standard deviations from provided locatd radio
+     * Builds positions, distances and standard deviations from provided located radio
      * sources and fingerprint readings.
-     * Notice that positions, distances and standard deviations lists might not have the
+     * Notice that positions, distance and standard deviations lists might not have the
      * same size as provided sources list or fingerprint readings list if not all radio
      * sources between sources and fingerprint readings match.
      * If no sources, fingerprint readings, positions, distances and standard deviations
      * are provided, this method makes no action.
-     * @param sources located radio sources to obtain positions and other parameters.
-     * @param fingerprint fingerprint containing ranged RSSI readings.
-     * @param qualityScores quality scores corresponding to each provided located
-     *                      radio source. The larger the score value the better the
-     *                      quality of the sample. If null, no distance quality
-     *                      scores will be stored.
-     * @param useRadioSourcePositionCovariance true to take into account radio source
-     *                                         position covariance, false otherwise.
-     * @param fallbackDistanceStandardDeviation distance standard deviation to be assumed
-     *                                          when it cannot be determined.
-     * @param positions list where extracted positions will be stored.
-     * @param distances list where extracted distances will be stored.
-     * @param distanceStandardDeviations list where extracted standard deviations of
-     *                                   distances will be stored.
-     * @param distanceQualityScores list where extracted quality scores will be stored.
-     *                              If null, quality scores will be ignored.
+     *
+     * @param sources                           located radio sources to obtain
+     *                                          positions and other parameters.
+     * @param fingerprint                       fingerprint containing ranged or RSSI
+     *                                          readings.
+     * @param sourceQualityScores               quality scores corresponding to each
+     *                                          provided located radio source. The larger
+     *                                          the score value the better the quality of
+     *                                          the sample. If null, no quality scores
+     *                                          will be stored.
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to each
+     *                                          reading within provided fingerprint.
+     * @param useRadioSourcePositionCovariance  true to take into account radio source
+     *                                          position covariance, false otherwise.
+     * @param fallbackDistanceStandardDeviation distance standard deviation to be
+     *                                          assumed when it cannot be determined.
+     * @param positions                         list where extracted positions will be stored.
+     * @param distances                         list where extracted distances will be stored.
+     * @param distanceStandardDeviations        list where extracted standard deviations of
+     *                                          distances will be stored.
+     * @param distanceQualityScores             list where extracted quality scores will
+     *                                          be stored. If null, quality scores will
+     *                                          be ignored.
      * @throws IllegalArgumentException if provided distance standard deviation
      * fallback is negative.
      * @param <P> a {@link Point} type.
@@ -179,7 +193,7 @@ public class PositionEstimatorHelper {
     public static <P extends Point> void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
-            double[] qualityScores,
+            double[] sourceQualityScores, double[] fingerprintReadingsQualityScores,
             boolean useRadioSourcePositionCovariance,
             double fallbackDistanceStandardDeviation,
             List<P> positions, List<Double> distances,
@@ -201,7 +215,8 @@ public class PositionEstimatorHelper {
         distances.clear();
         distanceStandardDeviations.clear();
 
-        if (qualityScores != null && distanceQualityScores != null) {
+        if ((sourceQualityScores != null || fingerprintReadingsQualityScores != null) &&
+                distanceQualityScores != null) {
             distanceQualityScores.clear();
         }
 
@@ -210,15 +225,30 @@ public class PositionEstimatorHelper {
 
         List<? extends Reading<? extends RadioSource>> readings =
                 fingerprint.getReadings();
+        int readingIndex = 0;
         for (Reading<? extends RadioSource> reading : readings) {
-            //noinspection all
-            int index = sources.indexOf(reading.getSource());
+            // noinspection all
+            int sourceIndex = sources.indexOf(reading.getSource());
+            Double readingQualityScore = fingerprintReadingsQualityScores != null ?
+                    fingerprintReadingsQualityScores[readingIndex] : null;
+            Double sourceQualityScore = null;
             Double qualityScore = null;
-            if (index >= 0) {
-                RadioSourceLocated<P> locatedSource = sources.get(index);
+            if (sourceIndex >= 0) {
+                RadioSourceLocated<P> locatedSource = sources.get(sourceIndex);
                 P position = locatedSource.getPosition();
-                if (qualityScores != null) {
-                    qualityScore = qualityScores[index];
+                if (sourceQualityScores != null) {
+                    sourceQualityScore = sourceQualityScores[sourceIndex];
+                }
+                readingIndex++;
+
+                if (readingQualityScore != null || sourceQualityScore != null) {
+                    qualityScore = 0.0;
+                    if (readingQualityScore != null) {
+                        qualityScore += readingQualityScore;
+                    }
+                    if (sourceQualityScore != null) {
+                        qualityScore += sourceQualityScore;
+                    }
                 }
 
                 Matrix positionCovariance = null;
@@ -229,16 +259,17 @@ public class PositionEstimatorHelper {
                 Double positionStandardDeviation = null;
                 if (positionCovariance != null) {
                     try {
-                        //compute standard deviation associated to position uncertainty
+                        // compute standard deviation associated to position
+                        // uncertainty
                         SingularValueDecomposer decomposer =
                                 new SingularValueDecomposer(positionCovariance);
                         decomposer.decompose();
 
-                        //singular values contain variances on each principal axis
+                        // singular values contain variances on each principal axis
                         double[] singularValues = decomposer.getSingularValues();
 
-                        //compute average of singular values as an "average" variance
-                        //of position
+                        // compute average of singular values as an "average" variance
+                        // of position
                         double variance = 0.0;
                         for (double singularValue : singularValues) {
                             variance += singularValue / singularValues.length;
@@ -251,12 +282,12 @@ public class PositionEstimatorHelper {
                     }
                 }
 
-                //compute distance and standard deviation
+                // compute distance and standard deviation
                 result1[0] = result1[1] = result2[0] = result2[1] = null;
                 switch (reading.getType()) {
                     case RANGING_READING:
                         computeDistanceAndStandardDeviationRanging(
-                                (RangingReading<? extends RadioSource>)reading,
+                                (RangingReading<? extends RadioSource>) reading,
                                 positionStandardDeviation, result1);
                         break;
                     case RSSI_READING:
@@ -266,7 +297,7 @@ public class PositionEstimatorHelper {
                         break;
                     case RANGING_AND_RSSI_READING:
                         computeDistanceAndStandardDeviationRanging(
-                                (RangingAndRssiReading<? extends RadioSource>)reading,
+                                (RangingAndRssiReading<? extends RadioSource>) reading,
                                 positionStandardDeviation, result1);
                         computeDistanceAndStandardDeviationRssi(locatedSource,
                                 (RangingAndRssiReading<? extends RadioSource>) reading,
@@ -291,6 +322,7 @@ public class PositionEstimatorHelper {
                             distanceQualityScores.add(qualityScore);
                         }
                     }
+
                     if (distance2 != null) {
                         Double standardDeviation2 = result2[1];
 
@@ -310,6 +342,7 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance for a ranging reading.
+     *
      * @param reading a ranging reading.
      * @return distance to reading source or null if not available.
      */
@@ -320,6 +353,7 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance for a ranging reading.
+     *
      * @param reading a ranging reading.
      * @return distance to reading source or null if not available.
      */
@@ -330,6 +364,7 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance for an RSSI reading.
+     *
      * @param locatedSource a located source, that must also have power information.
      * @param reading an RSSI reading.
      * @return estimated distance or null if not available.
@@ -343,6 +378,7 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance for a ranging and RSSI reading.
+     *
      * @param locatedSource a located source, that must also have power information.
      * @param reading a ranging and RSSI reading.
      * @return estimated distance or null if not available.
@@ -356,6 +392,7 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance.
+     *
      * @param locatedSource a located source, that must also have power information.
      * @param rxPower ;
      * @return estimated distance or null if not available.
@@ -397,14 +434,14 @@ public class PositionEstimatorHelper {
         return Math.pow(10.0,logSqrDistance / 2.0);
     }
 
-
     /**
      * Obtains distance and its standard deviation for a ranging reading.
-     * @param reading a ranging reading.
-     * @param positionStandardDeviation position standard deviation, or null
-     *                                  if not available.
-     * @param result array containing distance and its standard deviation, in such
-     *               order.
+     *
+     * @param reading                   a ranging reading.
+     * @param positionStandardDeviation position standard deviation, or null if
+     *                                  not available.
+     * @param result                    array containing distance and its standard
+     *                                  deviation, in such order.
      */
     private static void computeDistanceAndStandardDeviationRanging(
             RangingReading<? extends RadioSource> reading,
@@ -416,11 +453,12 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance and its standard deviation for a ranging reading.
-     * @param reading a ranging reading.
-     * @param positionStandardDeviation position standard deviation, or null
-     *                                  if not available.
-     * @param result array containing distance and its standard deviation, in such
-     *               order.
+     *
+     * @param reading                   a ranging reading.
+     * @param positionStandardDeviation position standard deviation, or null if
+     *                                  not available
+     * @param result                    array containing distance and its standard
+     *                                  deviation, in such order.
      */
     private static void computeDistanceAndStandardDeviationRanging(
             RangingAndRssiReading<? extends RadioSource> reading,
@@ -432,11 +470,12 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance and its standard deviation.
-     * @param distance a distance.
+     *
+     * @param distance                  a distance.
      * @param distanceStandardDeviation distance standard deviation.
-     * @param positionStandardDeviation position standard deviation
-     * @param result array containing distance and its standard deviation, in such
-     *               order.
+     * @param positionStandardDeviation position standard deviation.
+     * @param result                    array containing distance and its standard
+     *                                  deviation, in such order.
      */
     private static void computeDistanceAndStandardDeviationRanging(double distance,
             Double distanceStandardDeviation, Double positionStandardDeviation,
@@ -459,12 +498,14 @@ public class PositionEstimatorHelper {
 
     /**
      * Obtains distance and its standard deviation for an RSSI reading.
-     * @param locatedSource a located source, that must also have power information.
-     * @param reading an RSSI reading.
-     * @param positionStandardDeviation position standard deviation, or null
-     *                                  if not available.
-     * @param result array containing distance and its standard deviation, in such
-     *               order.
+     *
+     * @param locatedSource             a located source, that must also have pwoer
+     *                                  information.
+     * @param reading                   an RSSI reading.
+     * @param positionStandardDeviation position standard deviation, or null if not
+     *                                  available.
+     * @param result                    array containing distance and its standard
+     *                                  deviation, in such order.
      * @param <P> a {@link Point} type.
      */
     private static <P extends Point> void computeDistanceAndStandardDeviationRssi(
@@ -472,17 +513,20 @@ public class PositionEstimatorHelper {
             RssiReading<? extends RadioSource> reading,
             Double positionStandardDeviation, Double[] result) {
         computeDistanceAndStandardDeviationRssi(locatedSource, reading.getRssi(),
-                reading.getRssiStandardDeviation(), positionStandardDeviation, result);
+                reading.getRssiStandardDeviation(), positionStandardDeviation,
+                result);
     }
 
     /**
      * Obtains distance and its standard deviation for a ranging and RSSI reading.
-     * @param locatedSource a located source, that must also have power information.
-     * @param reading a ranging and RSSI reading.
-     * @param positionStandardDeviation position standard deviation, or null
-     *                                  if not available.
-     * @param result array containing distance and its standard deviation, in such
-     *               order.
+     *
+     * @param locatedSource             a located source, that must also have power
+     *                                  information.
+     * @param reading                   a ranging and RSSI reading.
+     * @param positionStandardDeviation position standard deviation, or null if not
+     *                                  available.
+     * @param result                    array containing distance and its standard
+     *                                  deviation, in such order.
      * @param <P> a {@link Point} type.
      */
     private static <P extends Point> void computeDistanceAndStandardDeviationRssi(
@@ -490,17 +534,20 @@ public class PositionEstimatorHelper {
             RangingAndRssiReading<? extends RadioSource> reading,
             Double positionStandardDeviation, Double[] result) {
         computeDistanceAndStandardDeviationRssi(locatedSource, reading.getRssi(),
-                reading.getRssiStandardDeviation(), positionStandardDeviation, result);
+                reading.getRssiStandardDeviation(), positionStandardDeviation,
+                result);
     }
 
     /**
      * Obtains distance and its standard deviation.
-     * @param locatedSource a located source, that must also have power information.
-     * @param rxPower received power expressed in dBm's.
-     * @param rxPowerStandardDeviation received power standard deviation.
+     *
+     * @param locatedSource             a located source, that must also have power
+     *                                  information.
+     * @param rxPower                   received power expressed in dBm's.
+     * @param rxPowerStandardDeviation  received power standard deviation.
      * @param positionStandardDeviation position standard deviation.
-     * @param result array containing distance and its standard deviation, in such
-     *               order.
+     * @param result                    array containing distance and its standard
+     *                                  deviation, in such order.
      * @param <P> a {@link Point} type.
      */
     private static <P extends Point> void computeDistanceAndStandardDeviationRssi(
@@ -508,22 +555,25 @@ public class PositionEstimatorHelper {
             Double rxPowerStandardDeviation,
             Double positionStandardDeviation,
             Double[] result) {
+
         if (!(locatedSource instanceof RadioSourceWithPower)) {
             return;
         }
 
-        RadioSourceWithPower poweredSource = (RadioSourceWithPower)locatedSource;
+        RadioSourceWithPower poweredSource = (RadioSourceWithPower) locatedSource;
 
-        //source related parameters
-        //transmitted power in dBm's
+        // source related parameters
+        // transmitted power in dBm's
         double txPower = poweredSource.getTransmittedPower();
-        Double txPowerStandardDeviation = poweredSource.getTransmittedPowerStandardDeviation();
+        Double txPowerStandardDeviation =
+                poweredSource.getTransmittedPowerStandardDeviation();
 
-        //path loss exponent
+        // path loss exponent
         double pathLossExponent = poweredSource.getPathLossExponent();
-        Double pathLossExponentStandardDeviation = poweredSource.getPathLossExponentStandardDeviation();
+        Double pathLossExponentStandardDeviation =
+                poweredSource.getPathLossExponentStandardDeviation();
 
-        //TODO: take into account covariance between tx power and path loss exponent
+        //WARNING: covariance between tx power and path loss exponent is ignored
 
         double frequency = poweredSource.getFrequency();
 
@@ -532,22 +582,23 @@ public class PositionEstimatorHelper {
         double rxPowerVariance = rxPowerStandardDeviation != null ?
                 rxPowerStandardDeviation * rxPowerStandardDeviation : 0.0;
         double pathLossVariance = pathLossExponentStandardDeviation != null ?
-                pathLossExponentStandardDeviation * pathLossExponentStandardDeviation : 0.0;
+                pathLossExponentStandardDeviation * pathLossExponentStandardDeviation :
+                0.0;
 
         double distanceVariance = 0.0;
         try {
             MultivariateNormalDist dist = Utils.propagateVariancesToDistanceVariance(
                     txPower, rxPower, pathLossExponent, frequency, txPowerVariance,
                     rxPowerVariance, pathLossVariance);
-            //distance
+            // distance
             result[0] = dist.getMean()[0];
 
-            //distance variance
+            // distance variance
             distanceVariance = dist.getCovariance().getElementAt(0, 0);
         } catch (IndoorException e) {
             result[0] = computeDistanceRssi(locatedSource, rxPower);
             if (rxPowerStandardDeviation != null) {
-                //take into account only received power standard deviation
+                // take into account only received power standard deviation
                 distanceVariance = Utils.propagatePowerVarianceToDistanceVariance(
                         txPower, rxPower, pathLossExponent, frequency, rxPowerVariance);
             }

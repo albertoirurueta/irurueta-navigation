@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,19 @@ import com.irurueta.navigation.indoor.Reading;
 import java.util.List;
 
 /**
- * Base class for position estimators using located radio sources and their readings at unknown locations.
- * These kind of estimators can be used to determine the position of a given device by getting readings at
- * an unknown location of different radio sources whose locations are known.
+ * Base class for position estimators using located radio sources and their readings at
+ * an unknown location (i.e. a non located fingerprint).
+ * These kind of estimators can be used to determine the position of a given device by
+ * getting readings at an unknown location of different radio sources whose locations
+ * are known.
+ *
  * @param <P> a {@link Point} type.
+ * @param <R> a {@link Reading} type.
+ * @param <L> a {@link PositionEstimatorListener} type.
  */
-@SuppressWarnings("WeakerAccess")
-public abstract class PositionEstimator<P extends Point> {
+public abstract class PositionEstimator<P extends Point,
+        R extends Reading<? extends RadioSource>,
+        L extends PositionEstimatorListener<? extends PositionEstimator>> {
 
     /**
      * Located radio sources used for trilateration.
@@ -42,12 +48,12 @@ public abstract class PositionEstimator<P extends Point> {
     /**
      * Fingerprint containing readings at an unknown location for provided located radio sources.
      */
-    protected Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> mFingerprint;
+    protected Fingerprint<? extends RadioSource, ? extends R> mFingerprint;
 
     /**
      * Listener to be notified of events raised by this instance.
      */
-    protected PositionEstimatorListener<P> mListener;
+    protected L mListener;
 
     /**
      * Estimated inhomogeneous position coordinates.
@@ -61,14 +67,16 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
-    public PositionEstimator(PositionEstimatorListener<P> listener) {
+    public PositionEstimator(L listener) {
         mListener = listener;
     }
 
     /**
-     * Gets located radio sources used for trilateration.
+     * Gets located radio sources ussed for trilateration.
+     *
      * @return located radio sources used for trilateration.
      */
     public List<? extends RadioSourceLocated<P>> getSources() {
@@ -77,10 +85,11 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Sets located radio sources used for trilateration.
+     *
      * @param sources located radio sources used for trilateration.
-     * @throws LockedException if estimator is locked.
-     * @throws IllegalArgumentException if provided value is null or the number of provided sources is less
-     * than the required minimum.
+     * @throws LockedException          if estimator is locked.
+     * @throws IllegalArgumentException if provided value is null or the number of provided
+     *                                  sources is less than the required minimum.
      */
     public void setSources(List<? extends RadioSourceLocated<P>> sources)
             throws LockedException {
@@ -92,21 +101,25 @@ public abstract class PositionEstimator<P extends Point> {
     }
 
     /**
-     * Gets fingerprint containing readings at an unknown location for provided located radio sources.
-     * @return fingerprint containing readings at an unknown location for provided located radio sources.
+     * Gets fingerprint containing readings at an unknown location for provided located
+     * radio sources.
+     *
+     * @return  fingerprint containing readings at an unknown location for provided
+     *          located radio sources.
      */
-    public Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> getFingerprint() {
+    public Fingerprint<? extends RadioSource, ? extends R> getFingerprint() {
         return mFingerprint;
     }
 
     /**
-     * Sets fingerprint containing readings at an unknown location for provided located radio sources.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
-     * @throws LockedException if estimator is locked.
+     * Sets fingerprint containing readings at an unknown location for provided located
+     * radio sources.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
+     * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null.
      */
-    public void setFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint)
+    public void setFingerprint(Fingerprint<? extends RadioSource, ? extends R> fingerprint)
             throws LockedException {
         if (isLocked()) {
             throw new LockedException();
@@ -117,18 +130,20 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Gets listener to be notified of events raised by this instance.
+     *
      * @return listener to be notified of events raised by this instance.
      */
-    public PositionEstimatorListener<P> getListener() {
+    public L getListener() {
         return mListener;
     }
 
     /**
      * Sets listener to be notified of events raised by this instance.
+     *
      * @param listener listener to be notified of events raised by this instance.
      * @throws LockedException if estimator is locked.
      */
-    public void setListener(PositionEstimatorListener<P> listener) throws LockedException {
+    public void setListener(L listener) throws LockedException {
         if (isLocked()) {
             throw new LockedException();
         }
@@ -137,6 +152,7 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Gets estimated inhomogeneous position coordinates.
+     *
      * @return estimated inhomogeneous position coordinates.
      */
     public double[] getEstimatedPositionCoordinates() {
@@ -145,7 +161,9 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Gets estimated estimated position and stores result into provided instance.
-     * @param estimatedPosition instance where estimated estimated position will be stored.
+     *
+     * @param estimatedPosition instance where estimated estimated position will be
+     *                          stored.
      */
     public void getEstimatedPosition(P estimatedPosition) {
         if (mEstimatedPositionCoordinates != null) {
@@ -158,39 +176,47 @@ public abstract class PositionEstimator<P extends Point> {
 
     /**
      * Gets minimum required number of located radio sources to perform trilateration.
-     * @return minimum required number of located radio sources to perform trilateration.
+     *
+     * @return  minimum required number of located radio sources to perform
+     *          trilateration.
      */
     public abstract int getMinRequiredSources();
 
     /**
      * Indicates whether estimator is ready to find a solution.
+     *
      * @return true if estimator is ready, false otherwise.
      */
     public abstract boolean isReady();
 
     /**
-     * Returns boolean indicating whether this estimator is locked because an estimation is already in progress.
+     * Returns boolean indicating whether this estimator is locked because an
+     * estimation is already in progress.
+     *
      * @return true if estimator is locked, false otherwise.
      */
     public abstract boolean isLocked();
 
     /**
-     * Estimates position based on provided located radio sources and readings of such radio sources at
-     * an unknown location.
-     * @throws LockedException if estimator is locked.
-     * @throws NotReadyException if estimator is not ready.
-     * @throws PositionEstimationException if estimation fails for some other reason.
+     * Estimates position based on provided located radio sources and readings of such
+     * radio sources at an unknown location.
+     *
+     * @throws LockedException              if estimator is locked.
+     * @throws NotReadyException            if estimator is not ready.
+     * @throws PositionEstimationException  if estimation fails for some other reason.
      */
     public abstract void estimate() throws LockedException, NotReadyException, PositionEstimationException;
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     public abstract P getEstimatedPosition();
 
     /**
      * Gets known positions of radio sources used internally to solve trilateration.
+     *
      * @return known positions used internally.
      */
     public abstract P[] getPositions();
@@ -199,15 +225,18 @@ public abstract class PositionEstimator<P extends Point> {
      * Gets euclidean distances from known located radio sources to
      * the location of provided readings in a fingerprint.
      * Distance values are used internally to solve trilateration.
+     *
      * @return euclidean distances used internally.
      */
     public abstract double[] getDistances();
 
     /**
      * Internally sets located radio sources used for trilateration.
-     * @param sources located radio sources used for trilateration.
-     * @throws IllegalArgumentException if provided value is null or the number of provided sources is less
-     * than the required minimum.
+     *
+     * @param sources                   located radio sources used for trilateration.
+     * @throws IllegalArgumentException if provided value is null or the number of
+     *                                  provided sources is less than the required
+     *                                  minimum.
      */
     @SuppressWarnings("Duplicates")
     protected void internalSetSources(List<? extends RadioSourceLocated<P>> sources) {
@@ -223,12 +252,14 @@ public abstract class PositionEstimator<P extends Point> {
     }
 
     /**
-     * Internally sets fingerprint containing readings at an unknown location for provided located radio sources.
-     * @param fingerprint fingerprint containing readings at an unknown location for provided located radio sources.
+     * Internally sets fingerprint containing readings at an unknown location for
+     * provided located radio sources.
+     * @param fingerprint fingerprint containing readings at an unknown location for
+     *                    provided located radio sources.
      * @throws IllegalArgumentException if provided value is null.
      */
     protected void internalSetFingerprint(
-            Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint) {
+            Fingerprint<? extends RadioSource, ? extends R> fingerprint) {
         if (fingerprint == null) {
             throw new IllegalArgumentException();
         }

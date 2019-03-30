@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.irurueta.navigation.indoor.IndoorException;
 /**
  * Exception raised if position estimation fails.
  */
-@SuppressWarnings("WeakerAccess")
 public class PositionEstimationException extends IndoorException {
 
     /**
@@ -32,6 +31,7 @@ public class PositionEstimationException extends IndoorException {
 
     /**
      * Constructor with String containing message.
+     *
      * @param message message indicating the cause of the exception.
      */
     public PositionEstimationException(String message) {
@@ -40,8 +40,9 @@ public class PositionEstimationException extends IndoorException {
 
     /**
      * Constructor with message and cause.
-     * @param message message describing the cause of the exception.
-     * @param cause instance containing the cause of the exception.
+     *
+     * @param message   message describing the cause of the exception.
+     * @param cause     instance containing the cause of the exception.
      */
     public PositionEstimationException(String message, Throwable cause) {
         super(message, cause);
@@ -49,6 +50,7 @@ public class PositionEstimationException extends IndoorException {
 
     /**
      * Constructor with cause.
+     *
      * @param cause instance containing the cause of the exception.
      */
     public PositionEstimationException(Throwable cause) {

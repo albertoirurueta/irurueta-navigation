@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.indoor.*;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,6 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("Duplicates")
 public class PositionEstimatorHelperTest {
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
@@ -58,20 +57,6 @@ public class PositionEstimatorHelperTest {
     private static final double PATHLOSS_EXPONENT_VARIANCE = 0.001;
 
     private static final double POSITION_VARIANCE = 0.01;
-
-    public PositionEstimatorHelperTest() { }
-
-    @BeforeClass
-    public static void setUpClass() { }
-
-    @AfterClass
-    public static void tearDownClass() { }
-
-    @Before
-    public void setUp() { }
-
-    @After
-    public void tearDown() { }
 
     @Test
     public void testBuildPositionsAndDistancesRssiReadings() {
@@ -121,12 +106,12 @@ public class PositionEstimatorHelperTest {
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
-            //check that positions and distances are not modified if no sources or
+            // check that positions and distances are not modified if no sources or
             // fingerprint are provided
             PositionEstimatorHelper.buildPositionsAndDistances(
                     null, null, positions, distances);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
 
@@ -181,18 +166,19 @@ public class PositionEstimatorHelperTest {
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
-            //check that positions and distances are not modified if no sources or
+            // check that positions and distances are not modified if no sources or
             // fingerprint are provided
             PositionEstimatorHelper.buildPositionsAndDistances(
                     null, null, positions, distances);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
 
             for (int i = 0; i < numSources; i++) {
                 assertEquals(sources.get(i).getPosition(), positions.get(i));
-                assertEquals(distances.get(i), readings.get(i).getDistance(), 0.0);
+                assertEquals(distances.get(i), readings.get(i).getDistance(),
+                        0.0);
             }
         }
     }
@@ -245,14 +231,14 @@ public class PositionEstimatorHelperTest {
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
-            //check that positions and distances are not modified if no sources or
+            // check that positions and distances are not modified if no sources or
             // fingerprint are provided
             PositionEstimatorHelper.buildPositionsAndDistances(
                     null, null, positions, distances);
 
-            //check
-            assertEquals(positions.size(), 2*numSources);
-            assertEquals(distances.size(), 2*numSources);
+            // check
+            assertEquals(positions.size(), 2 * numSources);
+            assertEquals(distances.size(), 2 * numSources);
 
             for (int i = 0, j = 0; i < numSources; i++, j += 2) {
                 assertEquals(sources.get(i).getPosition(), positions.get(j));
@@ -311,14 +297,14 @@ public class PositionEstimatorHelperTest {
             PositionEstimatorHelper.buildPositionsAndDistances(sources, fingerprint,
                     positions, distances);
 
-            //check
+            // check
             assertTrue(positions.isEmpty());
             assertTrue(distances.isEmpty());
         }
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRssiReadings() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRssiReadings() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -372,14 +358,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -393,7 +379,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRangingReadings() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingReadings() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -443,14 +429,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -464,7 +450,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRangingAndRssiReadings() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingAndRssiReadings() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -519,17 +505,17 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
-            assertEquals(positions.size(), 2*numSources);
-            assertEquals(distances.size(), 2*numSources);
-            assertEquals(distanceStandardDeviations.size(), 2*numSources);
+            // check
+            assertEquals(positions.size(), 2 * numSources);
+            assertEquals(distances.size(), 2 * numSources);
+            assertEquals(distanceStandardDeviations.size(), 2 * numSources);
 
             for (int i = 0, j = 0; i < numSources; i++, j += 2) {
                 assertEquals(sources.get(i).getPosition(), positions.get(j));
@@ -545,7 +531,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsNoRadioSourceWithPower() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsNoRadioSourceWithPower() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -569,8 +555,8 @@ public class PositionEstimatorHelperTest {
                 String bssid = String.valueOf(i);
 
                 WifiAccessPointLocated2D locatedAccessPoint =
-                        new WifiAccessPointLocated2D(bssid, FREQUENCY,
-                                accessPointPosition);
+                        new WifiAccessPointLocated2D(bssid,
+                                FREQUENCY, accessPointPosition);
                 sources.add(locatedAccessPoint);
 
                 WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
@@ -595,7 +581,7 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertTrue(positions.isEmpty());
             assertTrue(distances.isEmpty());
             assertTrue(distanceStandardDeviations.isEmpty());
@@ -603,7 +589,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsForceIllegalArgumentException() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsForceIllegalArgumentException() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
@@ -661,7 +647,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRssiReadingsWithPositionCovariance() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRssiReadingsWithPositionCovariance() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -717,14 +703,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -738,7 +724,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRangingReadingsWithPositionCovariance() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingReadingsWithPositionCovariance() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -790,14 +776,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -811,7 +797,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRssiReadingsNoVariances() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRssiReadingsNoVariances() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -861,14 +847,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -883,7 +869,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsRangingReadingsNoVariances() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsRangingReadingsNoVariances() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -929,14 +915,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -951,7 +937,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesAndDistanceStandardDeviationsInvalidPositionCovariance() {
+    public void testBuildPositionsDistancesAndDistancesStandardDeviationsInvalidPositionCovariance() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -1007,14 +993,14 @@ public class PositionEstimatorHelperTest {
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
             PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
                     null, null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations);
 
-            //check
+            // check
             assertEquals(positions.size(), numSources);
             assertEquals(distances.size(), numSources);
             assertEquals(distanceStandardDeviations.size(), numSources);
@@ -1028,7 +1014,7 @@ public class PositionEstimatorHelperTest {
     }
 
     @Test
-    public void testBuildPositionsDistancesDistanceStandardDeviationsAndQualityScoresRssiReadings() {
+    public void testBuildPositionsDistancesDistanceStandardDeviationsAndSourcesQualityScoresReadings() {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
         for (int t = 0; t < TIMES; t++) {
@@ -1041,8 +1027,8 @@ public class PositionEstimatorHelperTest {
                     MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
 
             List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
-            List<RssiReading<WifiAccessPoint>> readings = new ArrayList<>();
-            double[] qualityScores = new double[numSources];
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] sourcesQualityScores = new double[numSources];
             for (int i = 0; i < numSources; i++) {
                 InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
                         randomizer.nextDouble(MIN_POS, MAX_POS),
@@ -1060,7 +1046,7 @@ public class PositionEstimatorHelperTest {
                                 Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
                                 accessPointPosition);
                 sources.add(locatedAccessPoint);
-                qualityScores[i] = randomizer.nextDouble();
+                sourcesQualityScores[i] = randomizer.nextDouble();
 
                 WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
@@ -1071,48 +1057,312 @@ public class PositionEstimatorHelperTest {
 
                 readings.add(new RssiReading<>(accessPoint, rssi,
                         Math.sqrt(RX_POWER_VARIANCE)));
+                readings.add(new RangingReading<>(accessPoint, distance,
+                        FALLBACK_DISTANCE_STANDARD_DEVIATION));
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        distance, rssi, FALLBACK_DISTANCE_STANDARD_DEVIATION,
+                        Math.sqrt(RX_POWER_VARIANCE)));
             }
 
-            RssiFingerprint<WifiAccessPoint, RssiReading<WifiAccessPoint>> fingerprint =
-                    new RssiFingerprint<>(readings);
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
 
             List<Point2D> positions = new ArrayList<>();
             List<Double> distances = new ArrayList<>();
             List<Double> distanceStandardDeviations = new ArrayList<>();
             List<Double> distanceQualityScores = new ArrayList<>();
             PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
-                    sources, fingerprint, qualityScores, true,
+                    sources, fingerprint, sourcesQualityScores, null,
+                    true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
                     distanceStandardDeviations, distanceQualityScores);
 
-            //check that positions, distances and distance standard deviations are not
-            //modified if no sources or fingerprint are provided
-            PositionEstimatorHelper.buildPositionsDistancesAndDistanceStandardDeviations(
-                    null, null, true,
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
+            PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+                    null, null, sourcesQualityScores,
+                    null, true,
                     FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
-                    distanceStandardDeviations);
+                    distanceStandardDeviations, distanceQualityScores);
 
-            //check
-            assertEquals(positions.size(), numSources);
-            assertEquals(distances.size(), numSources);
-            assertEquals(distanceStandardDeviations.size(), numSources);
+            // check
+            assertEquals(positions.size(), 4 * numSources);
+            assertEquals(distances.size(), 4 * numSources);
+            assertEquals(distanceStandardDeviations.size(), 4 * numSources);
+            assertEquals(distanceQualityScores.size(), 4 * numSources);
 
-            for (int i = 0; i < numSources; i++) {
-                assertEquals(sources.get(i).getPosition(), positions.get(i));
-                assertTrue(distances.get(i) > 0.0);
-                assertTrue(distanceStandardDeviations.get(i) > 0.0);
-                assertEquals(qualityScores[i], distanceQualityScores.get(i), 0.0);
+            for (int i = 0, j = 0; i < numSources; i++, j += 4) {
+                assertEquals(sources.get(i).getPosition(), positions.get(j));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 1));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 2));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 3));
+
+                assertTrue(distances.get(j) > 0.0);
+                assertTrue(distances.get(j + 1) > 0.0);
+                assertTrue(distances.get(j + 2) > 0.0);
+                assertTrue(distances.get(j + 3) > 0.0);
+                assertEquals(distances.get(j), distances.get(j + 1), ABSOLUTE_ERROR);
+                assertEquals(distances.get(j + 1),
+                        ((RangingReading<WifiAccessPoint>)readings.get(3 * i + 1)).getDistance(),
+                        0.0);
+                assertEquals(distances.get(j + 2),
+                        ((RangingAndRssiReading<WifiAccessPoint>)readings.get(3 * i + 2)).getDistance(),
+                        0.0);
+                assertEquals(distances.get(j), distances.get(j + 3), ABSOLUTE_ERROR);
+
+                assertTrue(distanceStandardDeviations.get(j) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+
+                assertEquals(sourcesQualityScores[i], distanceQualityScores.get(j), 0.0);
+                assertEquals(sourcesQualityScores[i], distanceQualityScores.get(j + 1), 0.0);
+                assertEquals(sourcesQualityScores[i], distanceQualityScores.get(j + 2), 0.0);
+                assertEquals(sourcesQualityScores[i], distanceQualityScores.get(j + 3), 0.0);
             }
         }
     }
 
+    @Test
+    public void testBuildPositionsDistancesDistanceStandardDeviationsAndReadingsQualityScoresReadings() {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] readingsQualityScores = new double[3 * numSources];
+            for (int i = 0, j = 0; i < numSources; i++, j += 3) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                readings.add(new RssiReading<>(accessPoint, rssi,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readingsQualityScores[j] = randomizer.nextDouble();
+                readings.add(new RangingReading<>(accessPoint, distance,
+                        FALLBACK_DISTANCE_STANDARD_DEVIATION));
+                readingsQualityScores[j + 1] = randomizer.nextDouble();
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        distance, rssi, FALLBACK_DISTANCE_STANDARD_DEVIATION,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readingsQualityScores[j + 2] = randomizer.nextDouble();
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+            List<Point2D> positions = new ArrayList<>();
+            List<Double> distances = new ArrayList<>();
+            List<Double> distanceStandardDeviations = new ArrayList<>();
+            List<Double> distanceQualityScores = new ArrayList<>();
+            PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+                    sources, fingerprint, null, readingsQualityScores,
+                    true,
+                    FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
+                    distanceStandardDeviations, distanceQualityScores);
+
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
+            PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+                    null, null, null,
+                    readingsQualityScores, true,
+                    FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
+                    distanceStandardDeviations, distanceQualityScores);
+
+            // check
+            assertEquals(positions.size(), 4 * numSources);
+            assertEquals(distances.size(), 4 * numSources);
+            assertEquals(distanceStandardDeviations.size(), 4 * numSources);
+            assertEquals(distanceQualityScores.size(), 4 * numSources);
+
+            for (int i = 0, j = 0, k = 0; i < numSources; i++, j += 4, k += 3) {
+                assertEquals(sources.get(i).getPosition(), positions.get(j));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 1));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 2));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 3));
+
+                assertTrue(distances.get(j) > 0.0);
+                assertTrue(distances.get(j + 1) > 0.0);
+                assertTrue(distances.get(j + 2) > 0.0);
+                assertTrue(distances.get(j + 3) > 0.0);
+                assertEquals(distances.get(j), distances.get(j + 1), ABSOLUTE_ERROR);
+                assertEquals(distances.get(j + 1),
+                        ((RangingReading<WifiAccessPoint>)readings.get(3 * i + 1)).getDistance(),
+                        0.0);
+                assertEquals(distances.get(j + 2),
+                        ((RangingAndRssiReading<WifiAccessPoint>)readings.get(3 * i + 2)).getDistance(),
+                        0.0);
+                assertEquals(distances.get(j), distances.get(j + 3), ABSOLUTE_ERROR);
+
+                assertTrue(distanceStandardDeviations.get(j) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+
+                assertEquals(readingsQualityScores[k], distanceQualityScores.get(j),
+                        0.0);
+                assertEquals(readingsQualityScores[k + 1],
+                        distanceQualityScores.get(j + 1), 0.0);
+                assertEquals(readingsQualityScores[k + 2],
+                        distanceQualityScores.get(j + 2), 0.0);
+                assertEquals(readingsQualityScores[k + 2],
+                        distanceQualityScores.get(j + 3), 0.0);
+            }
+        }
+    }
+
+    @Test
+    public void testBuildPositionsDistancesDistanceStandardDeviationsSourcesAndReadingsQualityScoresReadings() {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint2D position = new InhomogeneousPoint2D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            List<WifiAccessPointWithPowerAndLocated2D> sources = new ArrayList<>();
+            List<Reading<WifiAccessPoint>> readings = new ArrayList<>();
+            double[] sourcesQualityScores = new double[numSources];
+            double[] readingsQualityScores = new double[3 * numSources];
+            for (int i = 0, j = 0; i < numSources; i++, j += 3) {
+                InhomogeneousPoint2D accessPointPosition = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated2D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated2D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+                sourcesQualityScores[i] = randomizer.nextDouble();
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                readings.add(new RssiReading<>(accessPoint, rssi,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readingsQualityScores[j] = randomizer.nextDouble();
+                readings.add(new RangingReading<>(accessPoint, distance,
+                        FALLBACK_DISTANCE_STANDARD_DEVIATION));
+                readingsQualityScores[j + 1] = randomizer.nextDouble();
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        distance, rssi, FALLBACK_DISTANCE_STANDARD_DEVIATION,
+                        Math.sqrt(RX_POWER_VARIANCE)));
+                readingsQualityScores[j + 2] = randomizer.nextDouble();
+            }
+
+            Fingerprint<WifiAccessPoint, Reading<WifiAccessPoint>> fingerprint =
+                    new Fingerprint<>(readings);
+
+            List<Point2D> positions = new ArrayList<>();
+            List<Double> distances = new ArrayList<>();
+            List<Double> distanceStandardDeviations = new ArrayList<>();
+            List<Double> distanceQualityScores = new ArrayList<>();
+            PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+                    sources, fingerprint, sourcesQualityScores, readingsQualityScores,
+                    true,
+                    FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
+                    distanceStandardDeviations, distanceQualityScores);
+
+            // check that positions, distances and distance standard deviations are not
+            // modified if no sources or fingerprint are provided
+            PositionEstimatorHelper.buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+                    null, null, sourcesQualityScores,
+                    readingsQualityScores, true,
+                    FALLBACK_DISTANCE_STANDARD_DEVIATION, positions, distances,
+                    distanceStandardDeviations, distanceQualityScores);
+
+            // check
+            assertEquals(positions.size(), 4 * numSources);
+            assertEquals(distances.size(), 4 * numSources);
+            assertEquals(distanceStandardDeviations.size(), 4 * numSources);
+            assertEquals(distanceQualityScores.size(), 4 * numSources);
+
+            for (int i = 0, j = 0, k = 0; i < numSources; i++, j += 4, k += 3) {
+                assertEquals(sources.get(i).getPosition(), positions.get(j));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 1));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 2));
+                assertEquals(sources.get(i).getPosition(), positions.get(j + 3));
+
+                assertTrue(distances.get(j) > 0.0);
+                assertTrue(distances.get(j + 1) > 0.0);
+                assertTrue(distances.get(j + 2) > 0.0);
+                assertTrue(distances.get(j + 3) > 0.0);
+                assertEquals(distances.get(j), distances.get(j + 1), ABSOLUTE_ERROR);
+                assertEquals(distances.get(j + 1),
+                        ((RangingReading<WifiAccessPoint>)readings.get(3 * i + 1)).getDistance(),
+                        0.0);
+                assertEquals(distances.get(j + 2),
+                        ((RangingAndRssiReading<WifiAccessPoint>)readings.get(3 * i + 2)).getDistance(),
+                        0.0);
+                assertEquals(distances.get(j), distances.get(j + 3), ABSOLUTE_ERROR);
+
+                assertTrue(distanceStandardDeviations.get(j) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+                assertTrue(distanceStandardDeviations.get(j + 1) > 0.0);
+
+                assertEquals(sourcesQualityScores[i] + readingsQualityScores[k],
+                        distanceQualityScores.get(j), 0.0);
+                assertEquals(sourcesQualityScores[i] + readingsQualityScores[k + 1],
+                        distanceQualityScores.get(j + 1), 0.0);
+                assertEquals(sourcesQualityScores[i] + + readingsQualityScores[k + 2],
+                        distanceQualityScores.get(j + 2), 0.0);
+                assertEquals(sourcesQualityScores[i] + readingsQualityScores[k + 2],
+                        distanceQualityScores.get(j + 3), 0.0);
+            }
+        }
+    }
 
     private double receivedPower(double equivalentTransmittedPower,
                                  double distance, double pathLossExponent) {
-        //Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
+        // Pr = Pt*Gt*Gr*lambda^2/(4*pi*d)^2,    where Pr is the received power
         // lambda = c/f, where lambda is wavelength,
         // Pte = Pt*Gt*Gr, is the equivalent transmitted power, Gt is the transmitted Gain and Gr is the received Gain
-        //Pr = Pte*c^2/((4*pi*f)^2 * d^2)
+        // Pr = Pte*c^2/((4*pi*f)^2 * d^2)
         double k = Math.pow(SPEED_OF_LIGHT / (4.0 * Math.PI * FREQUENCY), pathLossExponent);
         return equivalentTransmittedPower * k /
                 Math.pow(distance, pathLossExponent);
