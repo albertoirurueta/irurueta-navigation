@@ -1641,8 +1641,8 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROMedSRobustRssiPositionEstimator3D estimator =
+                new PROMedSRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1699,6 +1699,8 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
                 WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
                 double distance = position.distanceTo(accessPointPosition);
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
@@ -1709,8 +1711,6 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
 
                 sourceQualityScores[i] = 1.0 / (1.0 + Math.abs(error1));
                 for (int j = 0; j < NUM_READINGS; j++) {
-                    double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                            distance, pathLossExponent));
 
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier
@@ -1798,8 +1798,8 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROMedSRobustRssiPositionEstimator3D estimator =
+                new PROMedSRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1953,8 +1953,8 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROMedSRobustRssiPositionEstimator3D estimator =
+                new PROMedSRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -2015,6 +2015,8 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
                 WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
                 double distance = position.distanceTo(accessPointPosition);
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
@@ -2025,9 +2027,6 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
 
                 sourceQualityScores[i] = 1.0 / (1.0 + Math.abs(error1));
                 for (int j = 0; j < NUM_READINGS; j++) {
-                    double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                            distance, pathLossExponent));
-
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier
                         error2 = errorRandomizer.nextDouble();
@@ -2117,8 +2116,8 @@ public class PROMedSRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROMedSRobustRssiPositionEstimator3D estimator =
+                new PROMedSRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");

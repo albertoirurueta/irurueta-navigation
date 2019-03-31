@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,29 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.RANSACRobustTrilateration3DSolver;
+import com.irurueta.navigation.trilateration.RANSACRobustTrilateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
 /**
- * Robustly estimates 3D position using located RSSI radio sources and their
- * RSSI readings at unknown locations and using RANSAC algorithm to discard outliers.
- * This kind of estimator can be used to robustly determine the 3D position of a given
+ * Robustly estimates 2D position using located ranging radio sources and their
+ * ranging readings at unknown locations and using RANSAC algorithm to discard outliers.
+ * This kind of estimator can be used to robustly determine the 2D position of a given
  * device by getting readings at an unknown location of different radio sources whose
- * 3D locations are known.
+ * 2D locations are known.
  */
 @SuppressWarnings("WeakerAccess")
-public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimator3D {
+public class RANSACRobustRangingPositionEstimator2D extends
+        RobustRangingPositionEstimator2D {
 
     /**
      * Constructor.
      */
-    public RANSACRobustRssiPositionEstimator3D() {
+    public RANSACRobustRangingPositionEstimator2D() {
         super();
         init();
     }
@@ -47,8 +48,8 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+    public RANSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -57,12 +58,12 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param fingerprint fingerprint containing RSSI readings at an unknown location for
-     *                    provided located radio sources.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public RANSACRobustRangingPositionEstimator2D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -72,14 +73,14 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
+     * @param fingerprint   fingerprint containing ranging readings at an unknown location for
      *                      provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public RANSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -91,8 +92,8 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *
      * @param listener listener in charge of handling events.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public RANSACRobustRangingPositionEstimator2D(
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -105,9 +106,9 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public RANSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -121,9 +122,9 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public RANSACRobustRangingPositionEstimator2D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -139,10 +140,10 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      * null or the number of provided sources is less than the required minimum.
      */
-    public RANSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public RANSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -158,7 +159,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((RANSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 getThreshold();
     }
 
@@ -173,7 +174,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws LockedException          if this estimator is locked.
      */
     public void setThreshold(double threshold) throws LockedException {
-        ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((RANSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 setThreshold(threshold);
     }
 
@@ -184,7 +185,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-        return ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((RANSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 isComputeAndKeepInliersEnabled();
     }
 
@@ -198,7 +199,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      */
     public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
             throws LockedException {
-        ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((RANSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
     }
 
@@ -209,7 +210,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResiduals() {
-        return ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((RANSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 isComputeAndKeepResiduals();
     }
 
@@ -222,7 +223,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      */
     public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
             throws LockedException {
-        ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((RANSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);
     }
 
@@ -240,7 +241,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * Initializes robust trilateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new RANSACRobustTrilateration3DSolver(
+        mTrilaterationSolver = new RANSACRobustTrilateration2DSolver(
                 mTrilaterationSolverListener);
     }
 }

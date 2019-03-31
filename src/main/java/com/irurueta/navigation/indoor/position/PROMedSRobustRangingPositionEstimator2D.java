@@ -15,26 +15,24 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.indoor.RadioSource;
-import com.irurueta.navigation.indoor.RadioSourceLocated;
-import com.irurueta.navigation.indoor.RssiFingerprint;
-import com.irurueta.navigation.indoor.RssiReading;
-import com.irurueta.navigation.trilateration.PROSACRobustTrilateration3DSolver;
+import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.trilateration.PROMedSRobustTrilateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
 /**
- * Robustly estimates 3D position using located radio sources and their RSSI readings at
- * unknown locations and using PROSAC algorithm to discard outliers.
- * This kind of estimator can be used to robustly determine the 3D position of a given
- * device by getting RSSI readings at an unknown location of different radio sources whose
- * 3D locations are known.
+ * Robustly estimates 2D position using located radio sources and their
+ * ranging readings at unknown locations and using PROMedS algorithm to discard outliers.
+ * This kind of estimator can be used to robustly determine the 2D position of a given
+ * device by getting readings at an unknown location of different radio sources whose
+ * 2D locations are known.
  */
 @SuppressWarnings("WeakerAccess")
-public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimator3D {
+public class PROMedSRobustRangingPositionEstimator2D extends
+        RobustRangingPositionEstimator2D {
 
     /**
      * Quality scores corresponding to each provided located radio source.
@@ -51,7 +49,7 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      */
-    public PROSACRobustRssiPositionEstimator3D() {
+    public PROMedSRobustRangingPositionEstimator2D() {
         super();
         init();
     }
@@ -63,8 +61,8 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -73,12 +71,12 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param fingerprint fingerprint containing RSSI readings at an unknown location for
-     *                    provided located radio sources.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -88,14 +86,14 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -107,8 +105,8 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *
      * @param listener listener in charge of handling events.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -121,9 +119,9 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -132,14 +130,14 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided location radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -149,16 +147,16 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      * null or the number of provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -171,16 +169,16 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores) {
         this();
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -190,7 +188,7 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
@@ -199,12 +197,12 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         this(sources);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -214,21 +212,21 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
-     * @param fingerprint                       fingerprint containing RSSI readings at an
-     *                                          unknown location for provided located
+     * @param fingerprint                       fingerprint containing ranging readings at
+     *                                          an unknown location for provided located
      *                                          radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         this(fingerprint);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -238,25 +236,25 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
      *                                          trilateration.
-     * @param fingerprint                       fingerprint containing RSSI readings at an
-     *                                          unknown location for provided located
+     * @param fingerprint                       fingerprint containing ranging readings at
+     *                                          an unknown location for provided located
      *                                          radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         this(sources, fingerprint);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -266,18 +264,18 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
      * @param listener                          listener in charge of handling events.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         this(listener);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -287,7 +285,7 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
@@ -297,13 +295,13 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         this(sources, listener);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -313,23 +311,23 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
-     * @param fingerprint                       fingerprint containing RSSI readings at an
-     *                                          unknown location for provided location
-     *                                          radio sources.
+     * @param fingerprint                       fingerprint containing ranging readings
+     *                                          at an unknown location for provided
+     *                                          location radio sources.
      * @param listener                          listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         this(fingerprint, listener);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -339,27 +337,27 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      *                                          each provided located radio source.
      *                                          The larger the score value the better
      *                                          the quality of the radio source.
-     * @param fingerprintReadingQualityScores   quality scores corresponding to readings
+     * @param fingerprintReadingsQualityScores  quality scores corresponding to readings
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
      *                                          trilateration.
-     * @param fingerprint                       fingerprint containing RSSI readings at an
-     *                                          unknown location for provided located
-     *                                          radio sources.
+     * @param fingerprint                       fingerprint containing ranging readings
+     *                                          at an unknown location for provided
+     *                                          located radio sources.
      * @param listener                          listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      * null or the number of provided sources is less than the required minimum.
      */
-    public PROSACRobustRssiPositionEstimator3D(double[] sourceQualityScores,
-            double[] fingerprintReadingQualityScores,
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public PROMedSRobustRangingPositionEstimator2D(double[] sourceQualityScores,
+            double[] fingerprintReadingsQualityScores,
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         this(sources, fingerprint, listener);
         internalSetSourceQualityScores(sourceQualityScores);
-        internalSetFingerprintReadingsQualityScores(fingerprintReadingQualityScores);
+        internalSetFingerprintReadingsQualityScores(fingerprintReadingsQualityScores);
     }
 
     /**
@@ -423,71 +421,53 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     }
 
     /**
-     * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and distances
-     * provided for each sample.
-     * @return threshold to determine whether samples are inliers or not.
+     * Returns threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value, the
+     * algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algrithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @return stop threshold to stop the algorithm prematurely when a certain
+     * accuracy has been reached.
      */
-    public double getThreshold() {
-        return ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                getThreshold();
+    public double getStopThreshold() {
+        return ((PROMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+                getStopThreshold();
     }
 
     /**
-     * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
-     * The threshold refers to the amount of error on distance between estimated position and distances
-     * provided for each sample.
-     * @param threshold threshold to determine whether samples are inliers or not.
-     * @throws IllegalArgumentException if provided value is equal or less than zero.
+     * Sets threshold to be used to keep the algorithm iterating in case that
+     * best estimated threshold using median of residuals is not small enough.
+     * Once a solution is found that generates a threshold below this value,
+     * the algorithm will stop.
+     * The stop threshold can be used to prevent the LMedS algorithm to iterate
+     * too many times in cases where samples have a very similar accuracy.
+     * For instance, in cases where proportion of outliers is very small (close
+     * to 0%), and samples are very accurate (i.e. 1e-6), the algorithm would
+     * iterate for a long time trying to find the best solution when indeed
+     * there is no need to do that if a reasonable threshold has already been
+     * reached.
+     * Because of this behaviour the stop threshold can be set to a value much
+     * lower than the one typically used in RANSAC, and yet the algorithm could
+     * still produce even smaller thresholds in estimated results.
+     *
+     * @param stopThreshold stop threshold to stop the algorithm prematurely
+     *                      when a certain accuracy has been reached.
+     * @throws IllegalArgumentException if provided value is zero or negative.
      * @throws LockedException if this solver is locked.
      */
-    public void setThreshold(double threshold) throws LockedException {
-        ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                setThreshold(threshold);
-    }
-
-    /**
-     * Indicates whether inliers must be computed and kept.
-     * @return true if inliers must be computed and kept, false if inliers
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepInliersEnabled() {
-        return ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                isComputeAndKeepInliersEnabled();
-    }
-
-    /**
-     * Specifies whether inliers must be computed and kept.
-     * @param computeAndKeepInliers true if inliers must be computed and kept,
-     *                              false if inliers only need to be computed but not kept.
-     * @throws LockedException if this solver is locked.
-     */
-    public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
-            throws LockedException {
-        ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                setComputeAndKeepInliersEnabled(computeAndKeepInliers);
-    }
-
-    /**
-     * Indicates whether residuals must be computed and kept.
-     * @return true if residuals must be computed and kept, false if residuals
-     * only need to be computed but not kept.
-     */
-    public boolean isComputeAndKeepResiduals() {
-        return ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                isComputeAndKeepResiduals();
-    }
-
-    /**
-     * Specifies whether residuals must be computed and kept.
-     * @param computeAndKeepResiduals true if residuals must be computed and kept,
-     *                                false if residuals only need to be computed but not kept.
-     * @throws LockedException if this solver is locked.
-     */
-    public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
-            throws LockedException {
-        ((PROSACRobustTrilateration3DSolver)mTrilaterationSolver).
-                setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);
+    public void setStopThreshold(double stopThreshold) throws LockedException {
+        ((PROMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+                setStopThreshold(stopThreshold);
     }
 
     /**
@@ -496,14 +476,14 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      */
     @Override
     public RobustEstimatorMethod getMethod() {
-        return RobustEstimatorMethod.PROSAC;
+        return RobustEstimatorMethod.PROMedS;
     }
 
     /**
      * Initializes robust trilateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new PROSACRobustTrilateration3DSolver(
+        mTrilaterationSolver = new PROMedSRobustTrilateration2DSolver(
                 mTrilaterationSolverListener);
     }
 
@@ -547,3 +527,4 @@ public class PROSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
         buildPositionsDistancesDistanceStandardDeviationsAndQualityScores();
     }
 }
+

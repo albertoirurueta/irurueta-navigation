@@ -24,10 +24,10 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates 2D position using located radio sources and their
+ * Robustly estimates 2D position using located radio sources and their RSSI
  * readings at unknown locations and using PROMedS algorithm to discard outliers.
  * This kind of estimator can be used to robustly determine the 2D position of a given
- * device by getting readings at an unknown location of different radio sources whose
+ * device by getting RSSI readings at an unknown location of different radio sources whose
  * 2D locations are known.
  */
 @SuppressWarnings("WeakerAccess")
@@ -70,7 +70,7 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
     /**
      * Constructor.
      *
-     * @param fingerprint fingerprint containing readings at an unknown location for
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location for
      *                    provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -85,8 +85,8 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
@@ -129,8 +129,8 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided location radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided location radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -146,8 +146,8 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      * null or the number of provided sources is less than the required minimum.
@@ -215,8 +215,8 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
-     * @param fingerprint                       fingerprint containing readings at an
-     *                                          unknown location for provided located
+     * @param fingerprint                       fingerprint containing RSSI readings at
+     *                                          an unknown location for provided located
      *                                          radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -241,7 +241,7 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
      *                                          reading.
      * @param sources                           located radio sources used for
      *                                          trilateration.
-     * @param fingerprint                       fingerprint containing readings at an
+     * @param fingerprint                       fingerprint containing RSSI readings at an
      *                                          unknown location for provided located
      *                                          radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -314,7 +314,7 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
      *                                          within provided fingerprint. The larger
      *                                          the score the better the quality of the
      *                                          reading.
-     * @param fingerprint                       fingerprint containing readings at an
+     * @param fingerprint                       fingerprint containing RSSI readings at an
      *                                          unknown location for provided location
      *                                          radio sources.
      * @param listener                          listener in charge of handling events.
@@ -342,7 +342,7 @@ public class PROMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEsti
      *                                          reading.
      * @param sources                           located radio sources used for
      *                                          trilateration.
-     * @param fingerprint                       fingerprint containing readings at an
+     * @param fingerprint                       fingerprint containing RSSI readings at an
      *                                          unknown location for provided located
      *                                          radio sources.
      * @param listener                          listener in charge of handling events.

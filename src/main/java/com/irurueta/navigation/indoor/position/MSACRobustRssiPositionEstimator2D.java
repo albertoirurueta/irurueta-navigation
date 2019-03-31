@@ -27,12 +27,13 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimates 2D position using located RSSI radio sources and their
+ * Robustly estimates 2D position using located radio sources and their
  * RSSI readings at unknown locations and using MSAC algorithm to discard outliers.
  * This kind of estimator can be used to robustly determine the 2D position of a given
  * device by getting readings at an unknown location of different radio sources whose
  * 2D locations are known.
  */
+@SuppressWarnings("WeakerAccess")
 public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimator2D {
 
     /**
@@ -60,8 +61,8 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public MSACRobustRssiPositionEstimator2D(
@@ -75,8 +76,8 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
@@ -119,8 +120,8 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided location radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided location radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -136,8 +137,8 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided lcoated radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
      */
     public MSACRobustRssiPositionEstimator2D(
@@ -154,6 +155,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -165,6 +167,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
@@ -176,6 +179,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

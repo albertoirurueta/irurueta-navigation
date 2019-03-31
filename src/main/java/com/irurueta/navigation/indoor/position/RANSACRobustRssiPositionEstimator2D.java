@@ -30,6 +30,7 @@ import java.util.List;
  * device by getting readings at an unknown location of different radio sources whose
  * 2D locations are known.
  */
+@SuppressWarnings("WeakerAccess")
 public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimator2D {
 
     /**
@@ -71,14 +72,14 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
     public RANSACRobustRssiPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -121,7 +122,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
     public RANSACRobustRssiPositionEstimator2D(
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
             RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
@@ -140,7 +141,7 @@ public class RANSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      */
     public RANSACRobustRssiPositionEstimator2D(
             List<? extends RadioSourceLocated<Point2D>> sources,
-            Fingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
+            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
             RobustRssiPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();

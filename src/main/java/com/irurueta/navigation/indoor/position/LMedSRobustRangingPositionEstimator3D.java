@@ -15,31 +15,32 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.Point2D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
-import com.irurueta.navigation.indoor.RssiFingerprint;
-import com.irurueta.navigation.indoor.RssiReading;
-import com.irurueta.navigation.trilateration.LMedSRobustTrilateration2DSolver;
+import com.irurueta.navigation.indoor.RangingFingerprint;
+import com.irurueta.navigation.indoor.RangingReading;
+import com.irurueta.navigation.trilateration.LMedSRobustTrilateration3DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
 /**
- * Robustly estimates 2D position using located radio sources and their RSSI readings
+ * Robustly estimates 3D position using located radio sources and their ranging readings
  * at unknown locations and using LMedS algorithm to discard outliers.
- * This kind of estimator can be used to robustly determine the 2D position of a given
- * device by getting RSSI readings at an unknown location of different radio sources
- * whose 2D locations are known.
+ * This kind of estimator can be used to robustly determine the 3D position of a given
+ * device by getting ranging readings at an unknown location of different radio sources
+ * whose 3D locations are known.
  */
 @SuppressWarnings("WeakerAccess")
-public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstimator2D {
+public class LMedSRobustRangingPositionEstimator3D extends
+        RobustRangingPositionEstimator3D {
 
     /**
      * Constructor.
      */
-    public LMedSRobustRssiPositionEstimator2D() {
+    public LMedSRobustRangingPositionEstimator3D() {
         super();
         init();
     }
@@ -51,8 +52,8 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources) {
+    public LMedSRobustRangingPositionEstimator3D(
+            List<? extends RadioSourceLocated<Point3D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -61,12 +62,12 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param fingerprint fingerprint containing RSSI readings at an unknown location for
-     *                    provided located radio sources.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public LMedSRobustRangingPositionEstimator3D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
@@ -76,14 +77,14 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public LMedSRobustRangingPositionEstimator3D(
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -95,8 +96,8 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      *
      * @param listener listener in charge of handling events.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+    public LMedSRobustRangingPositionEstimator3D(
+            RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
     }
@@ -109,9 +110,9 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+    public LMedSRobustRangingPositionEstimator3D(
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -120,14 +121,14 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided location radio sources.
+     * @param fingerprint   fingerprint containing ranging readings at an unknown
+     *                      location for provided location radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+    public LMedSRobustRangingPositionEstimator3D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -141,12 +142,12 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      *                      provided located radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
-     * null or the number of provided sources is less than the required minimum.
+     * null or the number of provided sources is les than the required minimum.
      */
-    public LMedSRobustRssiPositionEstimator2D(
-            List<? extends RadioSourceLocated<Point2D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point2D> listener) {
+    public LMedSRobustRangingPositionEstimator3D(
+            List<? extends RadioSourceLocated<Point3D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point3D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -173,7 +174,7 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return ((LMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((LMedSRobustTrilateration3DSolver)mTrilaterationSolver).
                 getStopThreshold();
     }
 
@@ -199,13 +200,12 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * @throws LockedException if this solver is locked.
      */
     public void setStopThreshold(double stopThreshold) throws LockedException {
-        ((LMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((LMedSRobustTrilateration3DSolver)mTrilaterationSolver).
                 setStopThreshold(stopThreshold);
     }
 
     /**
      * Returns method being used for robust estimation.
-     *
      * @return method being used for robust estimation.
      */
     @Override
@@ -217,7 +217,7 @@ public class LMedSRobustRssiPositionEstimator2D extends RobustRssiPositionEstima
      * Initializes robust trilateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new LMedSRobustTrilateration2DSolver(
+        mTrilaterationSolver = new LMedSRobustTrilateration3DSolver(
                 mTrilaterationSolverListener);
     }
 }

@@ -15,31 +15,29 @@
  */
 package com.irurueta.navigation.indoor.position;
 
-import com.irurueta.geometry.Point3D;
+import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.indoor.RadioSource;
-import com.irurueta.navigation.indoor.RadioSourceLocated;
-import com.irurueta.navigation.indoor.RssiFingerprint;
-import com.irurueta.navigation.indoor.RssiReading;
-import com.irurueta.navigation.trilateration.MSACRobustTrilateration3DSolver;
+import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.trilateration.MSACRobustTrilateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
 
 /**
- * Robustly estimates 3D position using located radio sources and their
+ * Robustly estimates 2D position using located radio sources and their
  * RSSI readings at unknown locations and using MSAC algorithm to discard outliers.
- * This kind of estimator can be used to robustly determine the 3D position of a given
+ * This kind of estimator can be used to robustly determine the 2D position of a given
  * device by getting readings at an unknown location of different radio sources whose
- * 3D locations are known.
+ * 2D locations are known.
  */
 @SuppressWarnings("WeakerAccess")
-public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimator3D {
+public class MSACRobustRangingPositionEstimator2D extends
+        RobustRangingPositionEstimator2D {
 
     /**
      * Constructor.
      */
-    public MSACRobustRssiPositionEstimator3D() {
+    public MSACRobustRangingPositionEstimator2D() {
         super();
         init();
     }
@@ -51,8 +49,8 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources) {
+    public MSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources) {
         super();
         init();
         internalSetSources(sources);
@@ -61,29 +59,29 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided located radio sources.
+     * @param fingerprint fingerprint containing ranging readings at an unknown location
+     *                    for provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public MSACRobustRangingPositionEstimator2D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetFingerprint(fingerprint);
     }
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint) {
+    public MSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint) {
         super();
         init();
         internalSetSources(sources);
@@ -95,8 +93,8 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      *
      * @param listener listener in charge of handling events.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public MSACRobustRangingPositionEstimator2D(
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
     }
@@ -109,9 +107,9 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public MSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -120,14 +118,14 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided location radio sources.
+     * @param fingerprint   fingerprint containing ranging readings at an unknown
+     *                      location for provided location radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public MSACRobustRangingPositionEstimator2D(
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetFingerprint(fingerprint);
@@ -137,14 +135,14 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
-     *                      for provided lcoated radio sources.
+     * @param fingerprint   fingerprint containing ranging readings at an unknown
+     *                      location for provided located radio sources.
      * @param listener      listener in charge of handling events.
      */
-    public MSACRobustRssiPositionEstimator3D(
-            List<? extends RadioSourceLocated<Point3D>> sources,
-            RssiFingerprint<? extends RadioSource, ? extends RssiReading<? extends RadioSource>> fingerprint,
-            RobustRssiPositionEstimatorListener<Point3D> listener) {
+    public MSACRobustRangingPositionEstimator2D(
+            List<? extends RadioSourceLocated<Point2D>> sources,
+            RangingFingerprint<? extends RadioSource, ? extends RangingReading<? extends RadioSource>> fingerprint,
+            RobustRangingPositionEstimatorListener<Point2D> listener) {
         super(listener);
         init();
         internalSetSources(sources);
@@ -155,10 +153,11 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return ((MSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((MSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 getThreshold();
     }
 
@@ -166,17 +165,19 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
      */
     public void setThreshold(double threshold) throws LockedException {
-        ((MSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((MSACRobustTrilateration2DSolver)mTrilaterationSolver).
                 setThreshold(threshold);
     }
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override
@@ -188,7 +189,7 @@ public class MSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstimat
      * Initializes robust trilateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new MSACRobustTrilateration3DSolver(
+        mTrilaterationSolver = new MSACRobustTrilateration2DSolver(
                 mTrilaterationSolverListener);
     }
 }

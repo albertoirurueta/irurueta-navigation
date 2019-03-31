@@ -1178,6 +1178,36 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
     }
 
     @Test
+    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
+        PROSACRobustRssiPositionEstimator2D estimator =
+                new PROSACRobustRssiPositionEstimator2D();
+
+        // check default value
+        assertFalse(estimator.isComputeAndKeepInliersEnabled());
+
+        // set new value
+        estimator.setComputeAndKeepInliersEnabled(true);
+
+        // check
+        assertTrue(estimator.isComputeAndKeepInliersEnabled());
+    }
+
+    @Test
+    public void testIsSetComputeAndKeepResiduals() throws LockedException {
+        PROSACRobustRssiPositionEstimator2D estimator =
+                new PROSACRobustRssiPositionEstimator2D();
+
+        // check default value
+        assertFalse(estimator.isComputeAndKeepResiduals());
+
+        // set new value
+        estimator.setComputeAndKeepResidualsEnabled(true);
+
+        // check
+        assertTrue(estimator.isComputeAndKeepResiduals());
+    }
+
+    @Test
     public void testGetSetSources() throws LockedException {
         PROSACRobustRssiPositionEstimator2D estimator =
                 new PROSACRobustRssiPositionEstimator2D();
@@ -1639,8 +1669,8 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator2D estimator =
-                new RANSACRobustRssiPositionEstimator2D();
+        PROSACRobustRssiPositionEstimator2D estimator =
+                new PROSACRobustRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1695,6 +1725,8 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
                 WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
                 double distance = position.distanceTo(accessPointPosition);
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
@@ -1705,9 +1737,6 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
 
                 sourceQualityScores[i] = 1.0 / (1.0 + Math.abs(error1));
                 for (int j = 0; j < NUM_READINGS; j++) {
-                    double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                            distance, pathLossExponent));
-
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier
                         error2 = errorRandomizer.nextDouble();
@@ -1794,8 +1823,8 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator2D estimator =
-                new RANSACRobustRssiPositionEstimator2D();
+        PROSACRobustRssiPositionEstimator2D estimator =
+                new PROSACRobustRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1947,8 +1976,8 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator2D estimator =
-                new RANSACRobustRssiPositionEstimator2D();
+        PROSACRobustRssiPositionEstimator2D estimator =
+                new PROSACRobustRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -2007,6 +2036,8 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
                 WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
 
                 double distance = position.distanceTo(accessPointPosition);
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
 
                 if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                     // outlier
@@ -2017,9 +2048,6 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
 
                 sourceQualityScores[i] = 1.0 / (1.0 + Math.abs(error1));
                 for (int j = 0; j < NUM_READINGS; j++) {
-                    double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
-                            distance, pathLossExponent));
-
                     if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
                         // outlier
                         error2 = errorRandomizer.nextDouble();
@@ -2109,8 +2137,8 @@ public class PROSACRobustRssiPositionEstimator2DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator2D estimator =
-                new RANSACRobustRssiPositionEstimator2D();
+        PROSACRobustRssiPositionEstimator2D estimator =
+                new PROSACRobustRssiPositionEstimator2D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");

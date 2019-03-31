@@ -1178,6 +1178,36 @@ public class PROSACRobustRssiPositionEstimator3DTest implements
     }
 
     @Test
+    public void testIsSetComputeAndKeepInliersEnabled() throws LockedException {
+        PROSACRobustRssiPositionEstimator3D estimator =
+                new PROSACRobustRssiPositionEstimator3D();
+
+        // check default value
+        assertFalse(estimator.isComputeAndKeepInliersEnabled());
+
+        // set new value
+        estimator.setComputeAndKeepInliersEnabled(true);
+
+        // check
+        assertTrue(estimator.isComputeAndKeepInliersEnabled());
+    }
+
+    @Test
+    public void testIsSetComputeAndKeepResiduals() throws LockedException {
+        PROSACRobustRssiPositionEstimator3D estimator =
+                new PROSACRobustRssiPositionEstimator3D();
+
+        // check default value
+        assertFalse(estimator.isComputeAndKeepResiduals());
+
+        // set new value
+        estimator.setComputeAndKeepResidualsEnabled(true);
+
+        // check
+        assertTrue(estimator.isComputeAndKeepResiduals());
+    }
+
+    @Test
     public void testGetSetSources() throws LockedException {
         PROSACRobustRssiPositionEstimator3D estimator =
                 new PROSACRobustRssiPositionEstimator3D();
@@ -1641,8 +1671,8 @@ public class PROSACRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROSACRobustRssiPositionEstimator3D estimator =
+                new PROSACRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1798,8 +1828,8 @@ public class PROSACRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROSACRobustRssiPositionEstimator3D estimator =
+                new PROSACRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -1953,8 +1983,8 @@ public class PROSACRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROSACRobustRssiPositionEstimator3D estimator =
+                new PROSACRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");
@@ -2117,8 +2147,8 @@ public class PROSACRobustRssiPositionEstimator3DTest implements
                 positionAccuracy, formattedConfidence));
 
         // force NotReadyException
-        RANSACRobustRssiPositionEstimator3D estimator =
-                new RANSACRobustRssiPositionEstimator3D();
+        PROSACRobustRssiPositionEstimator3D estimator =
+                new PROSACRobustRssiPositionEstimator3D();
         try {
             estimator.estimate();
             fail("NotReadyException expected but not thrown");

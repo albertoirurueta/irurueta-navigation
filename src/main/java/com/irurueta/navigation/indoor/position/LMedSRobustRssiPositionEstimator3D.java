@@ -27,12 +27,13 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import java.util.List;
 
 /**
- * Robustly estimated 3D position using located radio sources and their readings
+ * Robustly estimated 3D position using located radio sources and their RSSI readings
  * at unknown locations and using LMedS algorithm to discard outliers.
  * This kind of estimator can be used to robustly determine the 3D position of a given
- * device by getting readings at an unknown location of different radio sources whose
- * 3D locations are known.
+ * device by getting RSSI readings at an unknown location of different radio sources
+ * whose 3D locations are known.
  */
+@SuppressWarnings("WeakerAccess")
 public class LMedSRobustRssiPositionEstimator3D extends RobustRssiPositionEstimator3D {
     /**
      * Constructor.
@@ -59,7 +60,7 @@ public class LMedSRobustRssiPositionEstimator3D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param fingerprint fingerprint containing readings at an unknown location for
+     * @param fingerprint fingerprint containing RSSI readings at an unknown location for
      *                    provided located radio sources.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -74,8 +75,8 @@ public class LMedSRobustRssiPositionEstimator3D extends RobustRssiPositionEstima
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
      */
@@ -118,8 +119,8 @@ public class LMedSRobustRssiPositionEstimator3D extends RobustRssiPositionEstima
     /**
      * Constructor.
      *
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided location radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided location radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -135,8 +136,8 @@ public class LMedSRobustRssiPositionEstimator3D extends RobustRssiPositionEstima
      * Constructor.
      *
      * @param sources       located radio sources used for trilateration.
-     * @param fingerprint   fingerprint containing readings at an unknown location for
-     *                      provided located radio sources.
+     * @param fingerprint   fingerprint containing RSSI readings at an unknown location
+     *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
      * null or the number of provided sources is less than the required minimum.
@@ -203,6 +204,7 @@ public class LMedSRobustRssiPositionEstimator3D extends RobustRssiPositionEstima
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override
