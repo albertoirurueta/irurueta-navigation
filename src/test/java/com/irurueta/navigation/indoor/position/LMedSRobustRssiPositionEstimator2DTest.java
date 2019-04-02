@@ -1671,7 +1671,7 @@ public class LMedSRobustRssiPositionEstimator2DTest implements
     }
 
     @Test
-    public void testEstimateLineardisabledAndNotPreliminaryRefined()
+    public void testEstimateLinearDisabledAndNotPreliminaryRefined()
             throws LockedException, NotReadyException, RobustEstimatorException,
             NonSymmetricPositiveDefiniteMatrixException {
         UniformRandomizer randomizer = new UniformRandomizer(new Random());
