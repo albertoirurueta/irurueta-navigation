@@ -945,7 +945,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1093,7 +1093,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1248,7 +1248,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1387,7 +1387,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1526,7 +1526,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1664,7 +1664,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1802,7 +1802,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
@@ -1940,7 +1940,7 @@ public class RANSACRobustRangingAndRssiPositionEstimator2DTest implements
                 readings.add(new RangingAndRssiReading<>(accessPoint,
                         Math.max(0.0, distance + errorRanging),
                         rssi + errorRssi,
-                        Math.sqrt(RX_POWER_VARIANCE), RANGING_STD));
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
             }
 
             RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
