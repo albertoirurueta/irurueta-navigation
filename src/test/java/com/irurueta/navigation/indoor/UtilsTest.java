@@ -41,7 +41,7 @@ public class UtilsTest {
 
 
     private static final double ABSOLUTE_ERROR = 1e-6;
-    private static final double LARGE_ABSOLUTE_ERROR = 1e-4;
+    private static final double LARGE_ABSOLUTE_ERROR = 1e-3;
 
     private static final double FREQUENCY = 2.4e9; //(Hz)
 
