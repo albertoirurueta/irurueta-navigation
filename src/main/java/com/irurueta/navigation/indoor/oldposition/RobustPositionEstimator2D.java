@@ -47,6 +47,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of handling events.
      */
     public RobustPositionEstimator2D(RobustPositionEstimatorListener<Point2D> listener) {
@@ -55,7 +56,9 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Gets minimum required number of located radio sources to perform trilateration.
-     * @return minimum required number of located radio sources to perform trilateration.
+     *
+     * @return minimum required number of located radio sources to perform
+     * trilateration.
      */
     @Override
     public int getMinRequiredSources() {
@@ -64,6 +67,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param method robust estimator method.
      * @return a robust 2D position estimator.
      */
@@ -85,8 +89,9 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param sources located radio sources used for trilateration.
-     * @param method robust estimator method.
+     *
+     * @param sources   located radio sources used for trilateration.
+     * @param method    robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number
      * of provided sources is less than the required minimum.
@@ -111,9 +116,10 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param method robust estimator method.
+     *
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -137,10 +143,11 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param method robust estimator method.
+     *
+     * @param sources       located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
@@ -166,8 +173,9 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *
+     * @param listener  listener in charge of handling events.
+     * @param method    robust estimator method.
      * @return a robust 2D position estimator.
      */
     public static RobustPositionEstimator2D create(
@@ -190,9 +198,10 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param sources located radio sources used for trilateration.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *
+     * @param sources   located radio sources used for trilateration.
+     * @param listener  listener in charge of handling events.
+     * @param method    robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -218,10 +227,11 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided location radio sources.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided location radio sources.
+     * @param listener      listener in charge of handling events.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -246,11 +256,12 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *
+     * @param sources       located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param listener      listener in charge of handling events.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint
      * is null or the number of provided sources is less than the required minimum.
@@ -282,11 +293,12 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
@@ -308,12 +320,13 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param sources located radio sources used for trilateration.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param sources       located radio sources used for trilateration.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number
      * of provided sources is less than the required minimum.
@@ -340,13 +353,14 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -372,14 +386,15 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param sources       located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
@@ -407,12 +422,13 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param listener      listener in charge of handling events.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
@@ -437,13 +453,14 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param sources located radio sources used for trilateration.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param sources       located radio sources used for trilateration.
+     * @param listener      listener in charge of handling events.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -471,14 +488,15 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided location radio sources.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided location radio sources.
+     * @param listener      listener in charge of handling events.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -505,15 +523,16 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param source located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param listener listener in charge of handling events.
-     * @param method robust estimator method.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param source        located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param listener      listener in charge of handling events.
+     * @param method        robust estimator method.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint
      * is null or the number of provided sources is less than the required minimum.
@@ -545,6 +564,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @return a robust 2D position estimator.
      */
     public static RobustPositionEstimator2D create() {
@@ -553,6 +573,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param sources located radio sources used for trilateration.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number
@@ -565,6 +586,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param fingerprint fingerprint containing readings at an unknown location for
      *                    provided located radio sources.
      * @return a robust 2D position estimator.
@@ -577,9 +599,10 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
+     *
+     * @param sources       located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
@@ -592,6 +615,7 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param listener listener in charge of handling events.
      * @return a robust 2D position estimator.
      */
@@ -602,8 +626,9 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
-     * @param sources located radio sources used for trilateration.
-     * @param listener listener in charge of handling events.
+     *
+     * @param sources   located radio sources used for trilateration.
+     * @param listener  listener in charge of handling events.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -616,9 +641,10 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided location radio sources.
-     * @param listener listener in charge of handling events.
+     *
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided location radio sources.
+     * @param listener      listener in charge of handling events.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -630,10 +656,11 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
-     * @param source located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param listener listener in charge of handling events.
+     *
+     * @param source        located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param listener      listener in charge of handling events.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint
      * is null or the number of provided sources is less than the required minimum.
@@ -647,10 +674,11 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
      * @return a robust 2D position estimator.
      */
     public static RobustPositionEstimator2D create(double[] qualityScores) {
@@ -659,11 +687,12 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param sources located radio sources used for trilateration.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param sources       located radio sources used for trilateration.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number
      * of provided sources is less than the required minimum.
@@ -675,12 +704,13 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -691,13 +721,14 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param sources located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param sources       located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
      * or the number of provided sources is less than the required minimum.
@@ -710,11 +741,12 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param listener listener in charge of handling events.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param listener      listener in charge of handling events.
      * @return a robust 2D position estimator.
      */
     public static RobustPositionEstimator2D create(double[] qualityScores,
@@ -724,12 +756,13 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param sources located radio sources used for trilateration.
-     * @param listener listener in charge of handling events.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param sources       located radio sources used for trilateration.
+     * @param listener      listener in charge of handling events.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -742,13 +775,14 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided location radio sources.
-     * @param listener listener in charge of handling events.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided location radio sources.
+     * @param listener      listener in charge of handling events.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if provided fingerprint is null.
      */
@@ -760,14 +794,15 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
     /**
      * Creates a robust 2D position estimator using default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     located radio source. The larger the score
-     *                     value the better the quality of the radio
-     *                     source.
-     * @param source located radio sources used for trilateration.
-     * @param fingerprint fingerprint containing readings at an unknown location for
-     *                    provided located radio sources.
-     * @param listener listener in charge of handling events.
+     *                      located radio source. The larger the score
+     *                      value the better the quality of the radio
+     *                      source.
+     * @param source        located radio sources used for trilateration.
+     * @param fingerprint   fingerprint containing readings at an unknown location for
+     *                      provided located radio sources.
+     * @param listener      listener in charge of handling events.
      * @return a robust 2D position estimator.
      * @throws IllegalArgumentException if either provided sources or fingerprint
      * is null or the number of provided sources is less than the required minimum.
@@ -782,11 +817,15 @@ public abstract class RobustPositionEstimator2D extends RobustPositionEstimator<
 
 
     /**
-     * Sets positions, distances and standard deviations of distances on internal trilateration solver.
-     * @param positions positions to be set.
-     * @param distances distances to be set.
-     * @param distanceStandardDeviations standard deviations of distances to be set.
-     * @param distanceQualityScores distance quality scores or null if not required.
+     * Sets positions, distances and standard deviations of distances on
+     * internal trilateration solver.
+     *
+     * @param positions                     positions to be set.
+     * @param distances                     distances to be set.
+     * @param distanceStandardDeviations    standard deviations of distances to be
+     *                                      set.
+     * @param distanceQualityScores         distance quality scores or null if not
+     *                                      required.
      */
     @Override
     protected void setPositionsDistancesDistanceStandardDeviationsAndQualityScores(
