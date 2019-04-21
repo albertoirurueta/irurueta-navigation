@@ -215,7 +215,7 @@ public abstract class SequentialRobustRangingAndRssiRadioSourceEstimator<S exten
     private double mRangingConfidence = DEFAULT_CONFIDENCE;
 
     /**
-     * Amoung of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
+     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
      * to 100%) for robust pathloss exponent and transmitted power estimation. The amount
      * of confidence indicates the probability that the estimated result is correct.
      * Usually this value will be close to 1.0, but not exactly 1.0.

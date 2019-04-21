@@ -10,7 +10,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A GNSS/INS navigation library</description>
-    <url>https://bitbucket.org/alberto_irurueta/irurueta-navigation</url>
+    <url>https://github.com/albertoirurueta/irurueta-navigation</url>
     <inceptionYear>2018</inceptionYear>
 
     <licenses>

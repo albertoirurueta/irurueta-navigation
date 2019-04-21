@@ -532,7 +532,7 @@ public class PROSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstim
      * This method is used internally and does not check whether instance is locked
      * or not.
      * @param fingerprintReadingsQualityScores quality scores to be set.
-     * @throws IllegalArgumentException if provided quality scores lengt is
+     * @throws IllegalArgumentException if provided quality scores length is
      * smaller than 3 samples.
      */
     private void internalSetFingerprintReadingsQualityScores(

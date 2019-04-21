@@ -13,36 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.radiosource;
+package com.irurueta.navigation.indoor.position;
 
 import com.irurueta.geometry.Point;
-import com.irurueta.navigation.indoor.RadioSource;
 
 /**
- * Listener to be notified of events produced by a sequential robust radio source
- * estimator when estimation starts, ends or when progress changes.
+ * Listener to be notified of events produced by a sequential robust ranging+RSSI
+ * position estimation when estimation starts, ends or when progress changes.
  *
- * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-public interface SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S extends RadioSource,
-        P extends Point> {
+public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P extends Point> {
 
     /**
      * Called when estimation starts.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
+    void onEstimateStart(SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
 
     /**
      * Called when estimation ends.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator);
+    void onEstimateEnd(SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
 
     /**
      * Called when estimation progress significantly changes.
@@ -51,6 +46,6 @@ public interface SequentialRobustRangingAndRssiRadioSourceEstimatorListener<S ex
      * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
     void onEstimateProgressChange(
-            SequentialRobustRangingAndRssiRadioSourceEstimator<S, P> estimator,
+            SequentialRobustRangingAndRssiPositionEstimator<P> estimator,
             float progress);
 }

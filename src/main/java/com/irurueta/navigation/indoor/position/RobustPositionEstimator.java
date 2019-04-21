@@ -161,7 +161,7 @@ public abstract class RobustPositionEstimator<P extends Point,
     }
 
     /**
-     * Gets fingerprint containing readings at an unknown location for provided lcoated
+     * Gets fingerprint containing readings at an unknown location for provided located
      * radio sources.
      *
      * @return  fingerprint containing readings at an unknown location for provided
