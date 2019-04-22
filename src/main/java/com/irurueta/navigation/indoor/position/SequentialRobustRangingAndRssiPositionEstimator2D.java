@@ -325,9 +325,9 @@ public class SequentialRobustRangingAndRssiPositionEstimator2D extends
     }
 
     /**
-     * Gets number of dimesnions of provided points.
+     * Gets number of dimesnions of provided and estimated points.
      *
-     * @return number of dimensions of provided points.
+     * @return number of dimensions of provided and estimated points.
      */
     @Override
     public int getNumberOfDimensions() {

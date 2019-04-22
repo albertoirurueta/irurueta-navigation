@@ -18,26 +18,26 @@ package com.irurueta.navigation.indoor.position;
 import com.irurueta.geometry.Point;
 
 /**
- * Listener to be notified of events produced by a sequential robust ranging+RSSI
+ * Listener to be notified of events producted by a sequential robust mixed
  * position estimation when estimation starts, ends or when progress changes.
  *
  * @param <P> a {@link Point} type.
  */
-public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P extends Point> {
+public interface SequentialRobustMixedPositionEstimatorListener<P extends Point> {
 
     /**
      * Called when estimation starts.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateStart(SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
+    void onEstimateStart(SequentialRobustMixedPositionEstimator<P> estimator);
 
     /**
      * Called when estimation ends.
      *
      * @param estimator estimator raising the event.
      */
-    void onEstimateEnd(SequentialRobustRangingAndRssiPositionEstimator<P> estimator);
+    void onEstimateEnd(SequentialRobustMixedPositionEstimator<P> estimator);
 
     /**
      * Called when estimation progress significantly changes.
@@ -45,7 +45,6 @@ public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P exten
      * @param estimator estimator raising the event.
      * @param progress  progress of estimation expressed as a value between 0.0 and 1.0.
      */
-    void onEstimateProgressChange(
-            SequentialRobustRangingAndRssiPositionEstimator<P> estimator,
-            float progress);
+    void onEstimateProgressChange(SequentialRobustMixedPositionEstimator<P> estimator,
+                                  float progress);
 }
