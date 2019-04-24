@@ -1609,6 +1609,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
 
         P coarsePosition = mInitialPosition;
         if (mRssiEstimator != null) {
+            mRssiEstimator.setInitialPosition(mInitialPosition);
             try {
                 // estimate coarse position using RSSI data
                 coarsePosition = mRssiEstimator.estimate();
@@ -1618,8 +1619,9 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
         }
 
         // use coarse position as initial position for ranging estimation
-        if (coarsePosition != null && mRangingEstimator != null) {
-            mRangingEstimator.setInitialPosition(coarsePosition);
+        if (mRangingEstimator != null) {
+            mRangingEstimator.setInitialPosition(
+                    coarsePosition != null ? coarsePosition : mInitialPosition);
         }
 
         try {
