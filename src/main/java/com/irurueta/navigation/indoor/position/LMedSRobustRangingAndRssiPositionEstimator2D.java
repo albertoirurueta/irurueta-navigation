@@ -21,7 +21,7 @@ import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
 import com.irurueta.navigation.indoor.RangingAndRssiFingerprint;
 import com.irurueta.navigation.indoor.RangingAndRssiReading;
-import com.irurueta.navigation.trilateration.LMedSRobustTrilateration2DSolver;
+import com.irurueta.navigation.lateration.LMedSRobustLateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -76,7 +76,7 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing ranging+RSSI readings at an unknown
      *                      location for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -105,7 +105,7 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -137,7 +137,7 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing ranging+RSSI readings at an unknown
      *                      location for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -174,7 +174,7 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return ((LMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((LMedSRobustLateration2DSolver) mLaterationSolver).
                 getStopThreshold();
     }
 
@@ -200,7 +200,7 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
      * @throws LockedException if this solver is locked.
      */
     public void setStopThreshold(double stopThreshold) throws LockedException {
-        ((LMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((LMedSRobustLateration2DSolver) mLaterationSolver).
                 setStopThreshold(stopThreshold);
     }
 
@@ -215,10 +215,10 @@ public class LMedSRobustRangingAndRssiPositionEstimator2D extends
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new LMedSRobustTrilateration2DSolver(
+        mLaterationSolver = new LMedSRobustLateration2DSolver(
                 mTrilaterationSolverListener);
     }
 }

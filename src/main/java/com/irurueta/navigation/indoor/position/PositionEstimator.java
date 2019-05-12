@@ -41,7 +41,7 @@ public abstract class PositionEstimator<P extends Point,
         L extends PositionEstimatorListener<? extends PositionEstimator>> {
 
     /**
-     * Located radio sources used for trilateration.
+     * Located radio sources used for lateration.
      */
     protected List<? extends RadioSourceLocated<P>> mSources;
 
@@ -75,18 +75,18 @@ public abstract class PositionEstimator<P extends Point,
     }
 
     /**
-     * Gets located radio sources ussed for trilateration.
+     * Gets located radio sources ussed for lateration.
      *
-     * @return located radio sources used for trilateration.
+     * @return located radio sources used for lateration.
      */
     public List<? extends RadioSourceLocated<P>> getSources() {
         return mSources;
     }
 
     /**
-     * Sets located radio sources used for trilateration.
+     * Sets located radio sources used for lateration.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null or the number of provided
      *                                  sources is less than the required minimum.
@@ -175,10 +175,10 @@ public abstract class PositionEstimator<P extends Point,
     }
 
     /**
-     * Gets minimum required number of located radio sources to perform trilateration.
+     * Gets minimum required number of located radio sources to perform lateration.
      *
      * @return  minimum required number of located radio sources to perform
-     *          trilateration.
+     *          lateration.
      */
     public abstract int getMinRequiredSources();
 
@@ -215,7 +215,7 @@ public abstract class PositionEstimator<P extends Point,
     public abstract P getEstimatedPosition();
 
     /**
-     * Gets known positions of radio sources used internally to solve trilateration.
+     * Gets known positions of radio sources used internally to solve lateration.
      *
      * @return known positions used internally.
      */
@@ -224,16 +224,16 @@ public abstract class PositionEstimator<P extends Point,
     /**
      * Gets euclidean distances from known located radio sources to
      * the location of provided readings in a fingerprint.
-     * Distance values are used internally to solve trilateration.
+     * Distance values are used internally to solve lateration.
      *
      * @return euclidean distances used internally.
      */
     public abstract double[] getDistances();
 
     /**
-     * Internally sets located radio sources used for trilateration.
+     * Internally sets located radio sources used for lateration.
      *
-     * @param sources                   located radio sources used for trilateration.
+     * @param sources                   located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.

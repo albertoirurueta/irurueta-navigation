@@ -20,9 +20,9 @@ import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilaterationSolver;
-import com.irurueta.navigation.trilateration.RobustTrilaterationSolver;
-import com.irurueta.navigation.trilateration.RobustTrilaterationSolverListener;
+import com.irurueta.navigation.lateration.NonLinearLeastSquaresLaterationSolver;
+import com.irurueta.navigation.lateration.RobustLaterationSolver;
+import com.irurueta.navigation.lateration.RobustLaterationSolverListener;
 import com.irurueta.numerical.robust.InliersData;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
@@ -71,10 +71,10 @@ public abstract class RobustPositionEstimator<P extends Point,
      * none can be determined.
      */
     public static final double FALLBACK_DISTANCE_STANDARD_DEVIATION =
-            NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
+            NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
 
     /**
-     * Located radio sources  used for trilateration.
+     * Located radio sources  used for lateration.
      */
     protected List<? extends RadioSourceLocated<P>> mSources;
 
@@ -110,14 +110,19 @@ public abstract class RobustPositionEstimator<P extends Point,
     protected L mListener;
 
     /**
-     * A robust trilateration solver to solve position.
+     * A robust lateration solver to solve position.
      */
-    protected RobustTrilaterationSolver<P> mTrilaterationSolver;
+    protected RobustLaterationSolver<P> mLaterationSolver;
 
     /**
-     * Listener for the robust trilateration solver.
+     * Listener for the robust lateration solver.
      */
-    protected RobustTrilaterationSolverListener<P> mTrilaterationSolverListener;
+    protected RobustLaterationSolverListener<P> mTrilaterationSolverListener;
+
+    /**
+     * Size of subsets to be checked during robust estimation.
+     */
+    protected int mPreliminarySubsetSize;
 
     /**
      * Constructor.
@@ -134,18 +139,18 @@ public abstract class RobustPositionEstimator<P extends Point,
     }
 
     /**
-     * Gets located radio sources used for trilateration.
+     * Gets located radio sources used for lateration.
      *
-     * @return located radio sources used for trilateration.
+     * @return located radio sources used for lateration.
      */
     public List<? extends RadioSourceLocated<P>> getSources() {
         return mSources;
     }
 
     /**
-     * Sets located radio sources used for trilateration.
+     * Sets located radio sources used for lateration.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null or the number of
      *                                  provided sources is less than the required
@@ -303,7 +308,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return true if estimator is locked, false otherwise.
      */
     public boolean isLocked() {
-        return mTrilaterationSolver.isLocked();
+        return mLaterationSolver.isLocked();
     }
 
     /**
@@ -314,7 +319,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * estimation.
      */
     public float getProgressDelta() {
-        return mTrilaterationSolver.getProgressDelta();
+        return mLaterationSolver.getProgressDelta();
     }
 
     /**
@@ -328,7 +333,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      *                                  than 1.
      */
     public void setProgressDelta(float progressDelta) throws LockedException {
-        mTrilaterationSolver.setProgressDelta(progressDelta);
+        mLaterationSolver.setProgressDelta(progressDelta);
     }
 
     /**
@@ -340,7 +345,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
-        return mTrilaterationSolver.getConfidence();
+        return mLaterationSolver.getConfidence();
     }
 
     /**
@@ -354,7 +359,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      */
     public void setConfidence(double confidence) throws LockedException {
-        mTrilaterationSolver.setConfidence(confidence);
+        mLaterationSolver.setConfidence(confidence);
     }
 
     /**
@@ -365,7 +370,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
-        return mTrilaterationSolver.getMaxIterations();
+        return mLaterationSolver.getMaxIterations();
     }
 
     /**
@@ -378,7 +383,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @throws IllegalArgumentException if provided value is less than 1.
      */
     public void setMaxIterations(int maxIterations) throws LockedException {
-        mTrilaterationSolver.setMaxIterations(maxIterations);
+        mLaterationSolver.setMaxIterations(maxIterations);
     }
 
     /**
@@ -389,7 +394,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * estimator without further refining.
      */
     public boolean isResultRefined() {
-        return mTrilaterationSolver.isResultRefined();
+        return mLaterationSolver.isResultRefined();
     }
 
     /**
@@ -401,7 +406,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @throws LockedException if this instance is locked.
      */
     public void setResultRefined(boolean refineResult) throws LockedException {
-        mTrilaterationSolver.setResultRefined(refineResult);
+        mLaterationSolver.setResultRefined(refineResult);
     }
 
     /**
@@ -411,7 +416,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return true if covariance must be kept after refining result, false otherwise.
      */
     public boolean isCovarianceKept() {
-        return mTrilaterationSolver.isCovarianceKept();
+        return mLaterationSolver.isCovarianceKept();
     }
 
     /**
@@ -423,7 +428,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @throws LockedException if this instance is locked.
      */
     public void setCovarianceKept(boolean keepCovariance) throws LockedException {
-        mTrilaterationSolver.setCovarianceKept(keepCovariance);
+        mLaterationSolver.setCovarianceKept(keepCovariance);
     }
 
     /**
@@ -434,7 +439,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return an initial position.
      */
     public P getInitialPosition() {
-        return mTrilaterationSolver.getInitialPosition();
+        return mLaterationSolver.getInitialPosition();
     }
 
     /**
@@ -446,7 +451,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @throws LockedException if this instance is locked.
      */
     public void setInitialPosition(P initialPosition) throws LockedException {
-        mTrilaterationSolver.setInitialPosition(initialPosition);
+        mLaterationSolver.setInitialPosition(initialPosition);
     }
 
     /**
@@ -456,7 +461,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return true if a linear solver is used, false otherwise.
      */
     public boolean isLinearSolverUsed() {
-        return mTrilaterationSolver.isLinearSolverUsed();
+        return mLaterationSolver.isLinearSolverUsed();
     }
 
     /**
@@ -467,7 +472,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @throws LockedException if this instance is locked.
      */
     public void setLinearSolverUsed(boolean linearSolverUsed) throws LockedException {
-        mTrilaterationSolver.setLinearSolverUsed(linearSolverUsed);
+        mLaterationSolver.setLinearSolverUsed(linearSolverUsed);
     }
 
     /**
@@ -478,7 +483,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return true if homogeneous linear solver is used, false otherwise.
      */
     public boolean isHomogeneousLinearSolverUsed() {
-        return mTrilaterationSolver.isHomogeneousLinearSolverUsed();
+        return mLaterationSolver.isHomogeneousLinearSolverUsed();
     }
 
     /**
@@ -492,7 +497,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      */
     public void setHomogeneousLinearSolverUsed(boolean useHomogeneousLinearSolver)
             throws LockedException {
-        mTrilaterationSolver.setHomogeneousLinearSolverUsed(useHomogeneousLinearSolver);
+        mLaterationSolver.setHomogeneousLinearSolverUsed(useHomogeneousLinearSolver);
     }
 
     /**
@@ -506,7 +511,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * solution, false otherwise.
      */
     public boolean isPreliminarySolutionRefined() {
-        return mTrilaterationSolver.isPreliminarySolutionRefined();
+        return mLaterationSolver.isPreliminarySolutionRefined();
     }
 
     /**
@@ -523,49 +528,49 @@ public abstract class RobustPositionEstimator<P extends Point,
      */
     public void setPreliminarySolutionRefined(boolean preliminarySolutionRefined)
             throws LockedException {
-        mTrilaterationSolver.setPreliminarySolutionRefined(preliminarySolutionRefined);
+        mLaterationSolver.setPreliminarySolutionRefined(preliminarySolutionRefined);
     }
 
     /**
      * Gets data related to inliers found after estimation.
      * Inlier data is related to the internal positions and distances used for
-     * solving trilateration.
+     * solving lateration.
      *
      * @return data related to inliers found after estimation.
      */
     public InliersData getInliersData() {
-        return mTrilaterationSolver.getInliersData();
+        return mLaterationSolver.getInliersData();
     }
 
     /**
-     * Gets known positions of radio sources used internally to solve trilateration.
+     * Gets known positions of radio sources used internally to solve lateration.
      *
      * @return known positions used internally.
      */
     public P[] getPositions() {
-        return mTrilaterationSolver.getPositions();
+        return mLaterationSolver.getPositions();
     }
 
     /**
      * Gets euclidean distances from known located radio sources to the location of
      * provided readings in a fingerprint.
-     * Distance values are used internally to solve trilateration.
+     * Distance values are used internally to solve lateration.
      *
      * @return euclidean distances used internally.
      */
     public double[] getDistances() {
-        return mTrilaterationSolver.getDistances();
+        return mLaterationSolver.getDistances();
     }
 
     /**
      * Gets standard deviation distances from known located radio sources to the
      * location of provided readings in a fingerprint.
-     * Distance standard deviations are used internally to solve trilateration.
+     * Distance standard deviations are used internally to solve lateration.
      *
      * @return standard deviations used internally.
      */
     public double[] getDistanceStandardDeviations() {
-        return mTrilaterationSolver.getDistanceStandardDeviations();
+        return mLaterationSolver.getDistanceStandardDeviations();
     }
 
     /**
@@ -574,7 +579,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return true if estimator is ready, false otherwise.
      */
     public boolean isReady() {
-        return mTrilaterationSolver.isReady();
+        return mLaterationSolver.isReady();
     }
 
     /**
@@ -632,13 +637,42 @@ public abstract class RobustPositionEstimator<P extends Point,
             double[] fingerprintReadingsQualityScores) throws LockedException { }
 
     /**
+     * Gets size of subsets to be checked during robust estimation.
+     * This has to be at least {@link #getMinRequiredSources()}.
+     *
+     * @return size of subsets to be checked during robust estimation.
+     */
+    public int getPreliminarySubsetSize() {
+        return mPreliminarySubsetSize;
+    }
+
+    /**
+     * Sets size of subsets to be checked during robust estimation.
+     * This has to be at least {@link #getMinRequiredSources()}.
+     *
+     * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
+     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredSources()}.
+     */
+    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (preliminarySubsetSize < getMinRequiredSources()) {
+            throw new IllegalArgumentException();
+        }
+
+        mPreliminarySubsetSize = preliminarySubsetSize;
+    }
+
+    /**
      * Gets estimated covariance of estimated position if available.
      * This is only available when result has been refined and covariance is kept.
      *
      * @return estimated covariance or null.
      */
     public Matrix getCovariance() {
-        return mTrilaterationSolver.getCovariance();
+        return mLaterationSolver.getCovariance();
     }
 
     /**
@@ -647,7 +681,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return estimated position.
      */
     public P getEstimatedPosition() {
-        return mTrilaterationSolver.getEstimatedPosition();
+        return mLaterationSolver.getEstimatedPosition();
     }
 
     /**
@@ -656,7 +690,7 @@ public abstract class RobustPositionEstimator<P extends Point,
      * @return number of dimensions of provided points.
      */
     public int getNumberOfDimensions() {
-        return mTrilaterationSolver.getNumberOfDimensions();
+        return mLaterationSolver.getNumberOfDimensions();
     }
 
     /**
@@ -670,14 +704,15 @@ public abstract class RobustPositionEstimator<P extends Point,
      */
     public P estimate() throws LockedException, NotReadyException,
             RobustEstimatorException {
-        return mTrilaterationSolver.solve();
+        mLaterationSolver.setPreliminarySubsetSize(mPreliminarySubsetSize);
+        return mLaterationSolver.solve();
     }
 
     /**
-     * Gets minimum required number of located radio sources to perform trilateration.
+     * Gets minimum required number of located radio sources to perform lateration.
      *
      * @return minimum required number of located radio sources to perform
-     * trilateration.
+     * lateration.
      */
     public abstract int getMinRequiredSources();
 
@@ -689,9 +724,9 @@ public abstract class RobustPositionEstimator<P extends Point,
     public abstract RobustEstimatorMethod getMethod();
 
     /**
-     * Internally sets located radio sources used for trilateration.
+     * Internally sets located radio sources used for lateration.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -731,7 +766,7 @@ public abstract class RobustPositionEstimator<P extends Point,
 
     /**
      * Sets positions, distances and standard deviations of distances on internal
-     * trilateration solver.
+     * lateration solver.
      *
      * @param positions positions to be set.
      * @param distances distances to be set.
@@ -745,11 +780,11 @@ public abstract class RobustPositionEstimator<P extends Point,
 
     /**
      * Builds positions, distances, standard deviation of distances and quality scores
-     * for the internal trilateration solver.
+     * for the internal lateration solver.
      */
     @SuppressWarnings("Duplicates")
     protected void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores() {
-        if (mTrilaterationSolver == null) {
+        if (mLaterationSolver == null) {
             return;
         }
 

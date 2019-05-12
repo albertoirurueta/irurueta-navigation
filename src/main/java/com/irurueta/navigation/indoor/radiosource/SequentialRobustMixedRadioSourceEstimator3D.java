@@ -42,12 +42,12 @@ import java.util.List;
  * remaining parameters are robustly estimated using former estimated position as
  * an initial guess.
  *
- * Because usually information about the antena of the radio source cannot be
- * retrieved (because many measurements are made on unkown devices where
+ * Because usually information about the antenna of the radio source cannot be
+ * retrieved (because many measurements are made on unknown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  * If Readings contain RSSI standard deviations, those values will be used,
- * otherwise it will be asumed an RSSI standard deviation of 1 dB.
+ * otherwise it will be assumed an RSSI standard deviation of 1 dB.
  *
  * This implementation is like SequentialRobustRangingAndRssiRadioSourceEstimator but
  * allows mixing different kinds of located radio source readings (ranging, RSSI
@@ -62,31 +62,38 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
     /**
      * Constructor.
      */
-    public SequentialRobustMixedRadioSourceEstimator3D() { }
+    public SequentialRobustMixedRadioSourceEstimator3D() {
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
+    }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             List<? extends ReadingLocated<Point3D>> readings) {
         super(readings);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -95,49 +102,57 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             List<? extends ReadingLocated<Point3D>> readings,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition) {
         super(readings, initialPosition);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition) {
         super(initialPosition);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
@@ -145,10 +160,12 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             Point3D initialPosition,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
@@ -156,44 +173,50 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
     public SequentialRobustMixedRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             List<? extends ReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
@@ -201,63 +224,71 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      */
     public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener in charge of attenging events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
@@ -265,18 +296,20 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
@@ -285,50 +318,56 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm, double initialPathLossExponent,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, initialPathLossExponent,
                 listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructors.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
@@ -338,10 +377,12 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
@@ -350,15 +391,17 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
      */
     public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores) {
         super(qualityScores);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param readings signal readings belonging to the same radio source.
+     * @param readings      signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid, quality scores is
      * null, or length of quality scores is less than required minimum.
      */
@@ -366,14 +409,16 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double[] qualityScores,
             List<? extends ReadingLocated<Point3D>> readings) {
         super(qualityScores, readings);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -381,16 +426,18 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double[] qualityScores,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param qualityScores quality scores corresponding to each provided sample.
      *                      The larger the score value the better the quality of
      *                      the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param readings      signal readings belonging to the same radio source.
+     * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores is
      * null, or length of quality scores is less than required minimum.
      */
@@ -399,17 +446,19 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             List<? extends ReadingLocated<Point3D>> readings,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, readings, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param qualityScores     quality scores corresponding to each provided sample.
+     *                          The larger the score value the better the quality of
+     *                          the sample.
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid, quality scores is
      * null, or length of quality scores is less than required minimum.
      */
@@ -418,31 +467,35 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition) {
         super(qualityScores, readings, initialPosition);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param qualityScores     quality scores corresponding to each provided sample.
+     *                          The larger the score value the better the quality of
+     *                          the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(double[] qualityScores,
             Point3D initialPosition) {
         super(qualityScores, initialPosition);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores     quality scores corresponding to each provided sample.
+     *                          The larger the score value the better the quality of
+     *                          the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -450,18 +503,20 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double[] qualityScores, Point3D initialPosition,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, initialPosition, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores     quality scores corresponding to each provided sample.
+     *                          The larger the score value the better the quality of
+     *                          the sample.
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -471,34 +526,38 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             Point3D initialPosition,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores,readings, initialPosition, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided sample.
+     *                                      The larger the score value the better the quality of
+     *                                      the sample.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
     public SequentialRobustMixedRadioSourceEstimator3D(
             double[] qualityScores, Double initialTransmittedPowerdBm) {
         super(qualityScores, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided sample.
+     *                                      The larger the score value the better the quality of
+     *                                      the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -507,17 +566,19 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             List<? extends ReadingLocated<Point3D>> readings,
             Double initialTransmittedPowerdBm) {
         super(qualityScores, readings, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided sample.
-     *                      The larger the score value the better the quality of
-     *                      the sample.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided sample.
+     *                                      The larger the score value the better the quality of
+     *                                      the sample.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -525,19 +586,21 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double[] qualityScores, Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -547,20 +610,22 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, readings, initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -569,18 +634,20 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             List<? extends ReadingLocated<Point3D>> readings,
             Point3D initialPosition, Double initialTransmittedPowerdBm) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -588,19 +655,21 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double[] qualityScores, Point3D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener in charge of attenging events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -608,21 +677,23 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             Point3D initialPosition, Double initialTransmittedPowerdBm,
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -632,21 +703,23 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -656,19 +729,21 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double initialPathLossExponent) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -677,20 +752,22 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             double initialPathLossExponent) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -700,22 +777,24 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructors.
      * Sets signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -726,6 +805,7 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
             SequentialRobustMixedRadioSourceEstimatorListener<S, Point3D> listener) {
         super(qualityScores, readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinReadings();
     }
 
     /**
@@ -734,6 +814,7 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
      * This value depends on the number of parameters to
      * be estimated, but for position only, this is 3
      * readings.
+     *
      * @return minimum required number of readings.
      */
     @Override
@@ -750,6 +831,7 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
 
     /**
      * Gets number of dimensions of position points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -759,6 +841,7 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
 
     /**
      * Gets estimated located radio source with estimated transmitted power.
+     *
      * @return estimated located radio source with estimated transmitted power or null.
      */
     @Override
@@ -843,7 +926,8 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
     }
 
     /**
-     * build RSSI estimator.
+     * Build RSSI estimator.
+     *
      * @throws LockedException if estimator is locked.
      */
     @Override
@@ -851,8 +935,8 @@ public class SequentialRobustMixedRadioSourceEstimator3D<S extends RadioSource> 
         if (mRssiEstimator == null || mRssiEstimator.getMethod() != mRssiRobustMethod) {
             mRssiEstimator = RobustRssiRadioSourceEstimator3D.create(mRssiRobustMethod);
 
-            //rssi estimator will never need position estimator, but to
-            //ensure it is ready we need to provide an initial position
+            // rssi estimator will never need position estimator, but to
+            // ensure it is ready we need to provide an initial position
             mRssiEstimator.setPositionEstimationEnabled(false);
             mRssiEstimator.setInitialPosition(Point3D.create());
         }

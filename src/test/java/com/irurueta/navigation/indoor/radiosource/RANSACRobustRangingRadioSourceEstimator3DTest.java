@@ -102,6 +102,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -155,6 +156,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -211,6 +213,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -253,6 +256,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -315,6 +319,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -357,6 +362,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -415,6 +421,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -458,6 +465,7 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 RANSACRobustRangingRadioSourceEstimator3D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getEstimatedPosition());
         assertNull(estimator.getEstimatedRadioSource());
@@ -806,6 +814,27 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
 
         // check
         assertNull(estimator.getQualityScores());
+    }
+
+    @Test
+    public void testGetSetPreliminarySubsetSize() throws LockedException {
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
+
+        // check default value
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
+
+        // set new value
+        estimator.setPreliminarySubsetSize(5);
+
+        // check
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
+
+        // force IllegalArgumentException
+        try {
+            estimator.setPreliminarySubsetSize(3);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
@@ -1918,6 +1947,122 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
                 positionError);
     }
 
+    @Test
+    public void testEstimateLargerPreliminarySubsetSize() throws LockedException,
+            NotReadyException, RobustEstimatorException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionError = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RangingReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double error;
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = Math.abs(errorRandomizer.nextDouble());
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                readings.add(new RangingReadingLocated3D<>(accessPoint,
+                        distance + error, readingsPositions[i]));
+            }
+
+            RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new RANSACRobustRangingRadioSourceEstimator3D<>(readings,
+                            this);
+
+            estimator.setResultRefined(false);
+            estimator.setComputeAndKeepInliersEnabled(false);
+            estimator.setComputeAndKeepResidualsEnabled(false);
+
+            estimator.setPreliminarySubsetSize(estimator.getMinReadings() + 1);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+            assertEquals(estimateNextIteration, 0);
+            assertEquals(estimateProgressChange, 0);
+
+            estimator.estimate();
+
+            // check
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNull(estimator.getInliersData());
+            assertNull(estimator.getCovariance());
+            assertNull(estimator.getEstimatedPositionCovariance());
+
+            WifiAccessPointLocated3D estimatedAccessPoint =
+                    (WifiAccessPointLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertNull(estimatedAccessPoint.getPositionCovariance());
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+
+        // force NotReadyException
+        RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingRadioSourceEstimator3D<>();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
     @Override
     public void onEstimateStart(RobustRangingRadioSourceEstimator<WifiAccessPoint, Point3D> estimator) {
         estimateStart++;
@@ -1949,6 +2094,10 @@ public class RANSACRobustRangingRadioSourceEstimator3DTest implements
     }
 
     private void checkLocked(RANSACRobustRangingRadioSourceEstimator3D<WifiAccessPoint> estimator) {
+        try {
+            estimator.setPreliminarySubsetSize(4);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
         try {
             estimator.setThreshold(0.5);
             fail("LockedException expected but not thrown");

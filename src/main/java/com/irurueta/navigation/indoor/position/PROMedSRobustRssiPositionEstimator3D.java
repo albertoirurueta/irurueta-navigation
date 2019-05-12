@@ -21,7 +21,7 @@ import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
 import com.irurueta.navigation.indoor.RssiFingerprint;
 import com.irurueta.navigation.indoor.RssiReading;
-import com.irurueta.navigation.trilateration.PROMedSRobustTrilateration3DSolver;
+import com.irurueta.navigation.lateration.PROMedSRobustLateration3DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources are null or the number of
      * provided sources is less than the required minimum.
      */
@@ -89,7 +89,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing RSSI readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -118,7 +118,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -150,7 +150,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing RSSI readings at an unknown location
      *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -197,7 +197,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -245,7 +245,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing RSSI readings at an
      *                                          unknown location for provided located
      *                                          radio sources.
@@ -294,7 +294,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param listener                          listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -346,7 +346,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing RSSI readings at an
      *                                          unknown location for provided located
      *                                          radio sources.
@@ -444,7 +444,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return ((PROMedSRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((PROMedSRobustLateration3DSolver) mLaterationSolver).
                 getStopThreshold();
     }
 
@@ -470,7 +470,7 @@ public class PROMedSRobustRssiPositionEstimator3D extends
      * @throws LockedException if this solver is locked.
      */
     public void setStopThreshold(double stopThreshold) throws LockedException {
-        ((PROMedSRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((PROMedSRobustLateration3DSolver) mLaterationSolver).
                 setStopThreshold(stopThreshold);
     }
 
@@ -484,10 +484,10 @@ public class PROMedSRobustRssiPositionEstimator3D extends
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new PROMedSRobustTrilateration3DSolver(
+        mLaterationSolver = new PROMedSRobustLateration3DSolver(
                 mTrilaterationSolverListener);
     }
 

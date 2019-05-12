@@ -21,7 +21,7 @@ import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
 import com.irurueta.navigation.indoor.RssiFingerprint;
 import com.irurueta.navigation.indoor.RssiReading;
-import com.irurueta.navigation.trilateration.MSACRobustTrilateration2DSolver;
+import com.irurueta.navigation.lateration.MSACRobustLateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -75,7 +75,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing RSSI readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -104,7 +104,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -136,7 +136,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing RSSI readings at an unknown location
      *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -159,7 +159,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return ((MSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((MSACRobustLateration2DSolver) mLaterationSolver).
                 getThreshold();
     }
 
@@ -173,7 +173,7 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
      * @throws LockedException if this solver is locked.
      */
     public void setThreshold(double threshold) throws LockedException {
-        ((MSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((MSACRobustLateration2DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
 
@@ -188,10 +188,10 @@ public class MSACRobustRssiPositionEstimator2D extends RobustRssiPositionEstimat
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new MSACRobustTrilateration2DSolver(
+        mLaterationSolver = new MSACRobustLateration2DSolver(
                 mTrilaterationSolverListener);
     }
 }

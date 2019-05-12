@@ -43,7 +43,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Minimum value that can be set as threshold.
-     * Threshold must be strictly greater than 0.0.s
+     * Threshold must be strictly greater than 0.0.
      */
     public static final double MIN_THRESHOLD = 0.0;
 
@@ -61,7 +61,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
      * Threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on received power (RSSI) expressed
      * in dBm's between received value that should have been received on estimated
-     * istropical model and actual measured value.
+     * isotropical model and actual measured value.
      */
     private double mThreshold = DEFAULT_THRESHOLD;
 
@@ -85,6 +85,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
+     *
      * @param readings radio signal ranging readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
@@ -96,6 +97,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRangingRadioSourceEstimator2D(
@@ -106,6 +108,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -118,6 +121,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
@@ -128,9 +132,10 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          radio signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRangingRadioSourceEstimator2D(
@@ -141,9 +146,10 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRangingRadioSourceEstimator2D(Point2D initialPosition,
             RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
@@ -153,10 +159,11 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio source
-     *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio source
+     *                          position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRangingRadioSourceEstimator2D(
@@ -169,6 +176,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on ranging distances.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -178,6 +186,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on ranging distances.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this estimator is locked.
@@ -195,6 +204,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Indicates whether inliers must be computed and kept.
+     *
      * @return true if inliers must be computed and kept, false if inliers
      * only need to be computed but not kept.
      */
@@ -204,6 +214,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Specifies whether inliers must be computed and kept.
+     *
      * @param computeAndKeepInliers true if inliers must be computed and kept,
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
@@ -218,6 +229,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Indicates whether residuals must be computed and kept.
+     *
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
@@ -227,6 +239,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Specifies whether residuals must be computed and kept.
+     *
      * @param computeAndKeepResiduals true if residuals must be computed and kept,
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
@@ -241,6 +254,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Robustly estimates position for a radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -270,7 +284,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
                     @Override
                     public int getSubsetSize() {
-                        return getMinReadings();
+                        return Math.max(mPreliminarySubsetSize, getMinReadings());
                     }
 
                     @Override
@@ -347,6 +361,7 @@ public class RANSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

@@ -18,7 +18,7 @@ package com.irurueta.navigation.indoor.position;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.PROSACRobustTrilateration2DSolver;
+import com.irurueta.navigation.lateration.PROSACRobustLateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -85,7 +85,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -114,7 +114,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -146,7 +146,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -193,7 +193,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -241,7 +241,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing ranging+RSSI
      *                                          readings at an unknown location for
      *                                          provided located radio sources.
@@ -290,7 +290,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param listener                          listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -342,7 +342,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing ranging+RSSI
      *                                          readings at an unknown location for
      *                                          provided located radio sources.
@@ -427,7 +427,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((PROSACRobustLateration2DSolver) mLaterationSolver).
                 getThreshold();
     }
 
@@ -440,7 +440,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      * @throws LockedException if this solver is locked.
      */
     public void setThreshold(double threshold) throws LockedException {
-        ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((PROSACRobustLateration2DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
 
@@ -450,7 +450,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-        return ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((PROSACRobustLateration2DSolver) mLaterationSolver).
                 isComputeAndKeepInliersEnabled();
     }
 
@@ -462,7 +462,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      */
     public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
             throws LockedException {
-        ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((PROSACRobustLateration2DSolver) mLaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
     }
 
@@ -472,7 +472,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResiduals() {
-        return ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((PROSACRobustLateration2DSolver) mLaterationSolver).
                 isComputeAndKeepResiduals();
     }
 
@@ -484,7 +484,7 @@ public class PROSACRobustMixedPositionEstimator2D extends
      */
     public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
             throws LockedException {
-        ((PROSACRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((PROSACRobustLateration2DSolver) mLaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);
     }
 
@@ -498,10 +498,10 @@ public class PROSACRobustMixedPositionEstimator2D extends
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new PROSACRobustTrilateration2DSolver(
+        mLaterationSolver = new PROSACRobustLateration2DSolver(
                 mTrilaterationSolverListener);
     }
 

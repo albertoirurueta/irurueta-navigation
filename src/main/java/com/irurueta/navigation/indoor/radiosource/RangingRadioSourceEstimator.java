@@ -22,10 +22,10 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RangingReadingLocated;
-import com.irurueta.navigation.trilateration.HomogeneousLinearLeastSquaresTrilaterationSolver;
-import com.irurueta.navigation.trilateration.InhomogeneousLinearLeastSquaresTrilaterationSolver;
-import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilaterationSolver;
-import com.irurueta.navigation.trilateration.TrilaterationException;
+import com.irurueta.navigation.lateration.HomogeneousLinearLeastSquaresLaterationSolver;
+import com.irurueta.navigation.lateration.InhomogeneousLinearLeastSquaresLaterationSolver;
+import com.irurueta.navigation.lateration.NonLinearLeastSquaresLaterationSolver;
+import com.irurueta.navigation.lateration.LaterationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,19 +59,19 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
      * Internal homogeneous linear solver to find radio source position when no initial
      * position is provided.
      */
-    protected HomogeneousLinearLeastSquaresTrilaterationSolver<P> mHomogeneousLinearSolver;
+    protected HomogeneousLinearLeastSquaresLaterationSolver<P> mHomogeneousLinearSolver;
 
     /**
      * Internal inhomogeneous linear solver to find radio source position when no initial
      * position is provided.
      */
-    protected InhomogeneousLinearLeastSquaresTrilaterationSolver<P> mInhomogeneousLinearSolver;
+    protected InhomogeneousLinearLeastSquaresLaterationSolver<P> mInhomogeneousLinearSolver;
 
     /**
      * Internal non linear solver to estimate radio source position and covariance
      * for an initial provided or estimated position.
      */
-    protected NonLinearLeastSquaresTrilaterationSolver<P> mNonLinearSolver;
+    protected NonLinearLeastSquaresLaterationSolver<P> mNonLinearSolver;
 
     /**
      * Contains accuracy of a reading position.
@@ -377,7 +377,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
                 mListener.onEstimateEnd(this);
             }
 
-        } catch (TrilaterationException e) {
+        } catch (LaterationException e) {
             throw new RadioSourceEstimationException(e);
         } finally {
             mLocked = false;
@@ -385,12 +385,12 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
     }
 
     /**
-     * Builds an instance of a linear trilateration solver if needed.
+     * Builds an instance of a linear lateration solver if needed.
      */
     protected abstract void buildLinearSolverIfNeeded();
 
     /**
-     * Builds an instance of a non-linear trilateration solver if needed.
+     * Builds an instance of a non-linear lateration solver if needed.
      */
     protected abstract void buildNonLinearSolverIfNeeded();
 
@@ -401,7 +401,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
 
     /**
      * Sets positions, distances and standard deviations of distances on internal
-     * trilateration solver.
+     * lateration solver.
      * @param positions positions to be set.
      * @param distances distances to be set.
      * @param distanceStandardDeviations standard deviations of distances to be set or
@@ -413,7 +413,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
             List<Double> distanceStandardDeviations) throws LockedException;
 
     /**
-     * Build instances of trilateration solvers if needed.
+     * Build instances of lateration solvers if needed.
      */
     private void buildSolversIfNeeded() {
         buildLinearSolverIfNeeded();
@@ -423,7 +423,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
 
     /**
      * Builds positions, distances and standard deviations of distances for the
-     * internal trilateration solver.
+     * internal lateration solver.
      * @throws LockedException if solvers are locked.
      */
     private void buildPositionsDistancesAndDistanceStandardDeviations()
@@ -457,7 +457,7 @@ public abstract class RangingRadioSourceEstimator<S extends RadioSource, P exten
             Double distanceStandardDeviation = reading.getDistanceStandardDeviation();
             if (distanceStandardDeviation == null) {
                 distanceStandardDeviation =
-                        NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
+                        NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
             }
 
             if (mUseReadingPositionCovariances) {

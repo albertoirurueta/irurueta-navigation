@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * Utility class that converts located radio sources and fingerprints into positions,
- * distances and distance standard deviations that can be used to solve the trilateration
+ * distances and distance standard deviations that can be used to solve the lateration
  * problem.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
@@ -91,7 +91,7 @@ public class PositionEstimatorHelper {
                         break;
                     case RANGING_AND_RSSI_READING:
                         //in this case two positions and distance might be added to
-                        //the trilateration solver
+                        //the lateration solver
                         distance1 = computeDistanceRanging(
                                 (RangingAndRssiReading<? extends RadioSource>)reading);
                         distance2 =  computeDistanceRssi(locatedSource,

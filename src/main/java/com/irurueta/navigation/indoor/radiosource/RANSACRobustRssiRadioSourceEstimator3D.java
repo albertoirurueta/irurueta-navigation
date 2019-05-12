@@ -31,25 +31,25 @@ import java.util.List;
  * expression below:
  * Pr = Pt*Gt*Gr*lambda^2 / (4*pi*d)^2,
  * where Pr is the received power (expressed in mW),
- * Gt is the Gain of the transmission antena
- * Gr is the Gain of the receiver antena
+ * Gt is the Gain of the transmission antenna
+ * Gr is the Gain of the receiver antenna
  * d is the distance between emitter and receiver
  * and lambda is the wavelength and is equal to: lambda = c / f,
  * where c is the speed of light
  * and f is the carrier frequency of the signal.
- * Because usually information about the antena of the radio source cannot be
- * retrieved (because many measurements are made on unkown devices where
+ * Because usually information about the antenna of the radio source cannot be
+ * retrieved (because many measurements are made on unknown devices where
  * physical access is not possible), this implementation will estimate the
  * equivalent transmitted power as: Pte = Pt * Gt * Gr.
  * If RssiReadings contain RSSI standard deviations, those values will be used,
- * otherwise it will be asumed an RSSI standard deviation of 1 dB.
+ * otherwise it will be assumed an RSSI standard deviation of 1 dB.
  * Implementations of this class should be able to detect and discard outliers in
  * order to find the best solution.
  *
  * IMPORTANT: When using this class estimation can be done using a
  * combination of radio source position, transmitted power and path loss
  * exponent. However enabling all three estimations usually achieves
- * innacurate results. When using this class, estimation must be of at least
+ * inaccurate results. When using this class, estimation must be of at least
  * one parameter (position, transmitted power or path loss exponent) when
  * initial values are provided for the other two, and at most it should consist
  * of two parameters (either position and transmitted power, position and
@@ -88,7 +88,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
      * Threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on received power (RSSI) expressed
      * in dBm's between received value that should have been received on estimated
-     * istropical model and actual measured value.
+     * isotropical model and actual measured value.
      */
     private double mThreshold = DEFAULT_THRESHOLD;
 
@@ -112,6 +112,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
@@ -122,6 +123,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -131,7 +133,8 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
-     * Sets signal readings bleonging to the same radio source.
+     * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -145,9 +148,10 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -158,6 +162,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
@@ -167,6 +172,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @param listener listener in charge of attending events raised by this instance.
@@ -179,10 +185,11 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -194,6 +201,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
@@ -206,10 +214,11 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -220,10 +229,11 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm,
@@ -234,11 +244,12 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -251,12 +262,13 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -267,11 +279,12 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      */
     public RANSACRobustRssiRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm) {
@@ -280,12 +293,13 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      in charge of attending events raised by this instance.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm,
@@ -296,13 +310,14 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -315,13 +330,14 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -334,12 +350,13 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
             Point3D initialPosition, Double initialTransmittedPowerdBm,
@@ -350,13 +367,14 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
             Point3D initialPosition, Double initialTransmittedPowerdBm,
@@ -369,14 +387,15 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RANSACRobustRssiRadioSourceEstimator3D(
@@ -392,7 +411,8 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on received power (RSSI) expressed
      * in dBm's between received value that should have been received on estimated
-     * istropical model and actual measured value.
+     * isotropical model and actual measured value.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -403,7 +423,8 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on received power (RSSI) expressed
      * in dBm's between received value that should have been received on estimated
-     * istropical model and actual measured value.
+     * isotropical model and actual measured value.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this estimator is locked.
@@ -420,6 +441,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Indicates whether inliers must be computed and kept.
+     *
      * @return true if inliers must be computed and kept, false if inliers
      * only need to be computed but not kept.
      */
@@ -429,6 +451,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Specifies whether inliers must be computed and kept.
+     *
      * @param computeAndKeepInliers true if inliers must be computed and kept,
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
@@ -443,6 +466,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Indicates whether residuals must be computed and kept.
+     *
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
@@ -452,6 +476,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Specifies whether residuals must be computed and kept.
+     *
      * @param computeAndKeepResiduals true if residuals must be computed and kept,
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
@@ -467,6 +492,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
     /**
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -496,7 +522,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
                             @Override
                             public int getSubsetSize() {
-                                return getMinReadings();
+                                return Math.max(mPreliminarySubsetSize, getMinReadings());
                             }
 
                             @Override
@@ -573,6 +599,7 @@ public class RANSACRobustRssiRadioSourceEstimator3D<S extends RadioSource> exten
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

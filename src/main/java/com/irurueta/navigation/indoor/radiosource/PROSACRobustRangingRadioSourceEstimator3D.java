@@ -89,6 +89,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
+     *
      * @param readings radio signal ranging readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
@@ -100,6 +101,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public PROSACRobustRangingRadioSourceEstimator3D(
@@ -110,6 +112,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -122,6 +125,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
@@ -132,9 +136,10 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          radio signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingRadioSourceEstimator3D(
@@ -145,9 +150,10 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public PROSACRobustRangingRadioSourceEstimator3D(Point3D initialPosition,
             RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
@@ -157,10 +163,11 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio source
-     *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio source
+     *                          position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public PROSACRobustRangingRadioSourceEstimator3D(
@@ -172,9 +179,10 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -187,11 +195,12 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings radio signal ranging readings belonging to the same
-     *                 radio source.
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings      radio signal ranging readings belonging to the same
+     *                      radio source.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -204,10 +213,11 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param listener listener in charge of attending events raised by this instance.
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -221,11 +231,12 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
+     *                      sample. The larger the score value the better
+     *                      the quality of the sample.
+     * @param readings      radio signal readings belonging to the same radio source.
+     * @param listener      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -239,11 +250,12 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
      * @throws IllegalArgumentException if quality scores is null, or length
      * of quality scores is less than required minimum.
      */
@@ -256,12 +268,13 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param readings          radio signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -274,12 +287,13 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Constructor.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -293,13 +307,14 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param qualityScores quality scores corresponding to each provided
-     *                     sample. The larger the score value the better
-     *                     the quality of the sample.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio source
-     *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio source
+     *                          position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid, quality scores
      * is null, or length of quality scores is less than required minimum.
      */
@@ -315,6 +330,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * Gets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -325,6 +341,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * Sets threshold to determine whether samples are inliers or not when testing possible solutions.
      * The threshold refers to the amount of error on distance between estimated position and distances
      * provided for each sample.
+     *
      * @param threshold threshold to determine whether samples are inliers or not.
      * @throws IllegalArgumentException if provided value is equal or less than zero.
      * @throws LockedException if this solver is locked.
@@ -345,6 +362,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * The larger the score value the better the quality of the sample.
      * This implementation always returns null.
      * Subclasses using quality scores must implement proper behavior.
+     *
      * @return quality scores corresponding to each sample.
      */
     @Override
@@ -358,6 +376,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * The larger the score value the better the quality of the sample.
      * This implementation makes no action.
      * Subclasses using quality scores must implement proper behaviour.
+     *
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
@@ -375,6 +394,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Indicates whether solver is ready to find a solution.
+     *
      * @return true if solver is ready, false otherwise.
      */
     @Override
@@ -385,6 +405,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Indicates whether inliers must be computed and kept.
+     *
      * @return true if inliers must be computed and kept, false if inliers
      * only need to be computed but not kept.
      */
@@ -394,6 +415,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Specifies whether inliers must be computed and kept.
+     *
      * @param computeAndKeepInliers true if inliers must be computed and kept,
      *                              false if inliers only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
@@ -408,6 +430,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Indicates whether residuals must be computed and kept.
+     *
      * @return true if residuals must be computed and kept, false if residuals
      * only need to be computed but not kept.
      */
@@ -417,6 +440,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Specifies whether residuals must be computed and kept.
+     *
      * @param computeAndKeepResiduals true if residuals must be computed and kept,
      *                                false if residuals only need to be computed but not kept.
      * @throws LockedException if this solver is locked.
@@ -431,6 +455,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Robustly estimates position for a radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -466,7 +491,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
                     @Override
                     public int getSubsetSize() {
-                        return getMinReadings();
+                        return Math.max(mPreliminarySubsetSize, getMinReadings());
                     }
 
                     @Override
@@ -544,6 +569,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override
@@ -555,6 +581,7 @@ public class PROSACRobustRangingRadioSourceEstimator3D<S extends RadioSource> ex
      * Sets quality scores corresponding to each provided sample.
      * This method is used internally and does not check whether instance is
      * locked or not.
+     *
      * @param qualityScores quality scores to be set.
      * @throws IllegalArgumentException if provided quality scores length
      * is smaller than 3 samples.

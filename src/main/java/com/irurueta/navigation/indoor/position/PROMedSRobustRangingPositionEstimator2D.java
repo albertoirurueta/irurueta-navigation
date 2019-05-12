@@ -18,7 +18,7 @@ package com.irurueta.navigation.indoor.position;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.PROMedSRobustTrilateration2DSolver;
+import com.irurueta.navigation.lateration.PROMedSRobustLateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -57,7 +57,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -85,7 +85,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -114,7 +114,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -146,7 +146,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing ranging readings at an unknown location
      *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -193,7 +193,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -241,7 +241,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing ranging readings at
      *                                          an unknown location for provided located
      *                                          radio sources.
@@ -290,7 +290,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param listener                          listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -342,7 +342,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing ranging readings
      *                                          at an unknown location for provided
      *                                          located radio sources.
@@ -440,7 +440,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
      * accuracy has been reached.
      */
     public double getStopThreshold() {
-        return ((PROMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+        return ((PROMedSRobustLateration2DSolver) mLaterationSolver).
                 getStopThreshold();
     }
 
@@ -466,7 +466,7 @@ public class PROMedSRobustRangingPositionEstimator2D extends
      * @throws LockedException if this solver is locked.
      */
     public void setStopThreshold(double stopThreshold) throws LockedException {
-        ((PROMedSRobustTrilateration2DSolver)mTrilaterationSolver).
+        ((PROMedSRobustLateration2DSolver) mLaterationSolver).
                 setStopThreshold(stopThreshold);
     }
 
@@ -480,10 +480,10 @@ public class PROMedSRobustRangingPositionEstimator2D extends
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new PROMedSRobustTrilateration2DSolver(
+        mLaterationSolver = new PROMedSRobustLateration2DSolver(
                 mTrilaterationSolverListener);
     }
 

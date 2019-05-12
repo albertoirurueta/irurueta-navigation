@@ -22,8 +22,8 @@ import com.irurueta.navigation.indoor.Fingerprint;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
 import com.irurueta.navigation.indoor.RssiReading;
-import com.irurueta.navigation.trilateration.HomogeneousLinearLeastSquaresTrilateration3DSolver;
-import com.irurueta.navigation.trilateration.InhomogeneousLinearLeastSquaresTrilateration3DSolver;
+import com.irurueta.navigation.lateration.HomogeneousLinearLeastSquaresLateration3DSolver;
+import com.irurueta.navigation.lateration.InhomogeneousLinearLeastSquaresLateration3DSolver;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class LinearRssiPositionEstimator3D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
@@ -76,7 +76,7 @@ public class LinearRssiPositionEstimator3D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing RSSI readings at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -106,7 +106,7 @@ public class LinearRssiPositionEstimator3D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
@@ -139,7 +139,7 @@ public class LinearRssiPositionEstimator3D extends LinearRssiPositionEstimator<P
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing RSSI readings at an unknown location
      *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -173,7 +173,7 @@ public class LinearRssiPositionEstimator3D extends LinearRssiPositionEstimator<P
     }
 
     /**
-     * Sets positions and distances on internal trilateration solver.
+     * Sets positions and distances on internal lateration solver.
      * @param positions positions to be set.
      * @param distances distances to be set.
      * @throws IllegalArgumentException if something fails.
@@ -202,12 +202,12 @@ public class LinearRssiPositionEstimator3D extends LinearRssiPositionEstimator<P
     }
 
     /**
-     * Initializes trilateration solver.
+     * Initializes lateration solver.
      */
     private void init() {
-        mHomogeneousTrilaterationSolver = new HomogeneousLinearLeastSquaresTrilateration3DSolver(
-                mTrilaterationSolverListener);
-        mInhomogeneousTrilaterationSolver = new InhomogeneousLinearLeastSquaresTrilateration3DSolver(
-                mTrilaterationSolverListener);
+        mHomogeneousTrilaterationSolver = new HomogeneousLinearLeastSquaresLateration3DSolver(
+                mLaterationSolverListener);
+        mInhomogeneousTrilaterationSolver = new InhomogeneousLinearLeastSquaresLateration3DSolver(
+                mLaterationSolverListener);
     }
 }

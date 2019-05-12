@@ -21,9 +21,9 @@ import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.HomogeneousLinearLeastSquaresTrilateration2DSolver;
-import com.irurueta.navigation.trilateration.InhomogeneousLinearLeastSquaresTrilateration2DSolver;
-import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilateration2DSolver;
+import com.irurueta.navigation.lateration.HomogeneousLinearLeastSquaresLateration2DSolver;
+import com.irurueta.navigation.lateration.InhomogeneousLinearLeastSquaresLateration2DSolver;
+import com.irurueta.navigation.lateration.NonLinearLeastSquaresLateration2DSolver;
 
 import java.util.List;
 
@@ -204,27 +204,27 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
     }
 
     /**
-     * Builds an instance of a linear trilateration solver if needed.
+     * Builds an instance of a linear lateration solver if needed.
      */
     @Override
     protected void buildLinearSolverIfNeeded() {
         if (mInitialPosition == null || !mNonLinearSolverEnabled) {
             if (mUseHomogeneousLinearSolver && mHomogeneousLinearSolver == null) {
-                mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresTrilateration2DSolver();
+                mHomogeneousLinearSolver = new HomogeneousLinearLeastSquaresLateration2DSolver();
             }
             if (!mUseHomogeneousLinearSolver && mInhomogeneousLinearSolver == null) {
-                mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresTrilateration2DSolver();
+                mInhomogeneousLinearSolver = new InhomogeneousLinearLeastSquaresLateration2DSolver();
             }
         }
     }
 
     /**
-     * Builds an instance of a non-linear trilateration solver if needed.
+     * Builds an instance of a non-linear lateration solver if needed.
      */
     @Override
     protected void buildNonLinearSolverIfNeeded() {
         if (mNonLinearSolver == null && mNonLinearSolverEnabled) {
-            mNonLinearSolver = new NonLinearLeastSquaresTrilateration2DSolver();
+            mNonLinearSolver = new NonLinearLeastSquaresLateration2DSolver();
         }
     }
 
@@ -244,7 +244,7 @@ public class RangingRadioSourceEstimator2D<S extends RadioSource> extends
 
     /**
      * Sets positions, distances and standard deviations of distances on internal
-     * trilateration solver.
+     * lateration solver.
      * @param positions positions to be set.
      * @param distances distances to be set.
      * @param distanceStandardDeviations standard deviations of distances to be set or

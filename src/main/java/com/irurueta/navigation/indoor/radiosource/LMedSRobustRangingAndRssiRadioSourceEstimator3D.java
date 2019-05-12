@@ -103,6 +103,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
@@ -113,6 +114,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -123,6 +125,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -136,9 +139,10 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -149,6 +153,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
@@ -158,9 +163,10 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
             RobustRangingAndRssiRadioSourceEstimatorListener<S, Point3D> listener) {
@@ -170,10 +176,11 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -185,6 +192,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
@@ -197,10 +205,11 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -211,10 +220,11 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
             Double initialTransmittedPowerdBm,
@@ -225,11 +235,12 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -242,12 +253,13 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -258,11 +270,12 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm) {
@@ -271,12 +284,13 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(Point3D initialPosition,
             Double initialTransmittedPowerdBm,
@@ -287,13 +301,14 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -306,13 +321,14 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -325,12 +341,13 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
             Point3D initialPosition, Double initialTransmittedPowerdBm,
@@ -341,13 +358,14 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
             Point3D initialPosition, Double initialTransmittedPowerdBm,
@@ -360,14 +378,15 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingAndRssiRadioSourceEstimator3D(
@@ -394,6 +413,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
+     *
      * @return stop threshold to stop the algorithm prematurely when a certain
      * accuracy has been reached.
      */
@@ -416,6 +436,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
+     *
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
@@ -435,6 +456,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
     /**
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -460,7 +482,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
                     @Override
                     public int getSubsetSize() {
-                        return getMinReadings();
+                        return Math.max(mPreliminarySubsetSize, getMinReadings());
                     }
 
                     @Override
@@ -541,6 +563,7 @@ public class LMedSRobustRangingAndRssiRadioSourceEstimator3D<S extends RadioSour
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

@@ -52,11 +52,13 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
      */
     public RobustRangingRadioSourceEstimator2D() {
         super();
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
+     *
      * @param readings radio signal ranging readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
@@ -64,6 +66,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     public RobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings) {
         super(readings);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
@@ -73,11 +76,13 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     public RobustRangingRadioSourceEstimator2D(
             RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -86,49 +91,57 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
             List<? extends RangingReadingLocated<S, Point2D>> readings,
             RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
     public RobustRangingRadioSourceEstimator2D(Point2D initialPosition) {
         super(initialPosition);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          radio signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRangingRadioSourceEstimator2D(
             List<? extends RangingReadingLocated<S, Point2D>> readings,
             Point2D initialPosition) {
         super(readings, initialPosition);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public RobustRangingRadioSourceEstimator2D(Point2D initialPosition,
             RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio source
-     *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio source
+     *                          position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRangingRadioSourceEstimator2D(
@@ -136,10 +149,12 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
             Point2D initialPosition,
             RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param method robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
@@ -163,8 +178,9 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param method robust estimator method.
+     *
+     * @param readings  radio signal ranging readings belonging to the same radio source.
+     * @param method    robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -188,8 +204,9 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param listener  listener in charge of attending events raised by this instance.
+     * @param method    robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -213,9 +230,10 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param readings  radio signal ranging readings belonging to the same radio source.
+     * @param listener  listener in charge of attending events raised by this instance.
+     * @param method    robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -245,9 +263,10 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -270,10 +289,11 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -302,10 +322,11 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -335,11 +356,12 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -370,10 +392,11 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param method robust estimator method.
+     * @param method        robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -396,11 +419,12 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.*
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param method robust estimator method.
+     * @param readings      radio signal ranging readings belonging to the same radio source.
+     * @param method        robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -427,11 +451,12 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.*
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     * @param listener      listener in charge of attending events raised by this instance.
+     * @param method        robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -458,12 +483,13 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.**
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     * @param readings      radio signal ranging readings belonging to the same radio source.
+     * @param listener      listener in charge of attending events raised by this instance.
+     * @param method        robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -494,12 +520,13 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.*
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.*
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -525,13 +552,14 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.*
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.*
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -561,13 +589,14 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.*
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.*
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -597,14 +626,15 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.*
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation or radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.*
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation or radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
+     * @param method            robust estimator method.
      * @param <S> a {@link RadioSource} type.
      * @return a new robust 2D position radio source estimator.
      */
@@ -637,6 +667,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     /**
      * Gets minimum required number of readings to estimate position of radio source,
      * which is 3 readings.
+     *
      * @return minimum required number of readings.
      */
     @Override
@@ -647,6 +678,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     /**
      * Gets number of dimensions of position points.
      * This is always 2.
+     *
      * @return number of dimensions of position points.
      */
     @Override
@@ -656,6 +688,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Gets estimated located radio source.
+     *
      * @return estimated located radio source or null.
      */
     @SuppressWarnings("unchecked")
@@ -695,6 +728,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     /**
      * Indicates whether an homogeneous linear solver is used to estimate an initial
      * position.
+     *
      * @return true if homogeneous linear solver is used, false if an inhomogeneous linear
      * one is used instead.
      */
@@ -706,6 +740,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
     /**
      * Specifies whether an homogeneous linear solver is used to estimate an initial
      * position.
+     *
      * @param useHomogeneousLinearSolver true if homogeneous linear solver is used, false
      *                                   if an inhomogeneous linear one is used instead.
      * @throws LockedException if estimator is locked.
@@ -721,8 +756,9 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
 
     /**
      * Solves preliminar solution for a subset of samples.
-     * @param samplesIndices indices of subset samples.
-     * @param solutions instance where solution will be stored.
+     *
+     * @param samplesIndices    indices of subset samples.
+     * @param solutions         instance where solution will be stored.
      */
     @Override
     protected void solvePreliminarSolutions(int[] samplesIndices,
@@ -767,6 +803,7 @@ public abstract class RobustRangingRadioSourceEstimator2D<S extends RadioSource>
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined result.
      * solution if not requested or refinement failed.
+     *
      * @param result result to be refined.
      */
     protected void attemptRefine(Solution<Point2D> result) {

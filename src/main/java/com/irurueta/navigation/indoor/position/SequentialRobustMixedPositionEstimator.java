@@ -352,7 +352,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     private SequentialRobustMixedPositionEstimatorListener<P> mListener;
 
     /**
-     * Located radio sources used for trilateration.
+     * Located radio sources used for lateration.
      */
     private List<? extends RadioSourceLocated<P>> mSources;
 
@@ -415,7 +415,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required minimum.
      */
@@ -439,7 +439,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing reagins at an unknown location
      *                      for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
@@ -466,7 +466,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
@@ -497,7 +497,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown location
      *                      for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -543,7 +543,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required minimum.
      */
@@ -591,7 +591,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing readings at an
      *                                          unknown location for provided located
      *                                          radio sources.
@@ -639,7 +639,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param listener                          listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required minimum.
@@ -689,7 +689,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing readings at an
      *                                          unknown location for provided located radio
      *                                          sources.
@@ -1382,18 +1382,18 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     }
 
     /**
-     * Gets located radio sources used for trilateration.
+     * Gets located radio sources used for lateration.
      *
-     * @return located radio sources used for trilateration.
+     * @return located radio sources used for lateration.
      */
     public List<? extends RadioSourceLocated<P>> getSources() {
         return mSources;
     }
 
     /**
-     * Sets located radio sources used for trilateration.
+     * Sets located radio sources used for lateration.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @throws LockedException          if estimator is locked.
      * @throws IllegalArgumentException if provided value is null or the number of
      *                                  provided sources is less than the required
@@ -1649,7 +1649,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     }
 
     /**
-     * Gets known positions of radio sources used internally to solve trilateration.
+     * Gets known positions of radio sources used internally to solve lateration.
      *
      * @return known positions used internally.
      */
@@ -1661,7 +1661,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     /**
      * Gets euclidean distances from known located radio sources to the location of
      * provided readings in a fingerprint.
-     * Distance values are used internally to solve trilateration.
+     * Distance values are used internally to solve lateration.
      *
      * @return euclidean distances used internally.
      */
@@ -1673,7 +1673,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     /**
      * Gets standard deviation distances from known located radio sources to the
      * location of provided readings in a fingerprint.
-     * Distance standard deviations are used internally to solve trilateration.
+     * Distance standard deviations are used internally to solve lateration.
      *
      * @return standard deviations used internally.
      */
@@ -1714,10 +1714,10 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     public abstract int getNumberOfDimensions();
 
     /**
-     * Gets minimum required number of located radio sources to perform trilateration.
+     * Gets minimum required number of located radio sources to perform lateration.
      *
      * @return minimum required number of located radio sources to perform
-     * trilateration.
+     * lateration.
      */
     public abstract int getMinRequiredSources();
 
@@ -1922,9 +1922,9 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     }
 
     /**
-     * Internally sets located radio sources used for trilateration.
+     * Internally sets located radio sources used for lateration.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
      * provided sources is less than the required minimum.
      */

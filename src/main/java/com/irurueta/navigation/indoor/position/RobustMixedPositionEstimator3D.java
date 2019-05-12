@@ -44,6 +44,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      */
     public RobustMixedPositionEstimator3D() {
         super();
+        mPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -54,6 +55,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     public RobustMixedPositionEstimator3D(
             RobustMixedPositionEstimatorListener<Point3D> listener) {
         super(listener);
+        mPreliminarySubsetSize = getMinRequiredSources();
     }
 
 
@@ -83,7 +85,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param method    robust estimator method.
      * @return a robust 3D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
@@ -137,7 +139,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @param method        robust estimator method.
@@ -197,7 +199,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @param method    robust estimator method.
      * @return a robust 3D position estimator.
@@ -265,7 +267,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -346,7 +348,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param method                            robust estimator method.
      * @return a robust 3D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
@@ -430,7 +432,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing
      *                                          readings at an unknown location for
      *                                          provided located radio sources.
@@ -518,7 +520,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param listener                          listener in charge of handling events.
      * @param method                            robust estimator method.
      * @return a robust 3D position estimator.
@@ -612,7 +614,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing
      *                                          readings at an unknown location for
      *                                          provided located radio sources.
@@ -663,7 +665,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @return a robust 3D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -689,7 +691,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing ranging+RSSI readings at an unknown
      *                      location for provided located radio sources.
      * @return a robust 3D position estimator.
@@ -716,7 +718,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @return a robust 3D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
@@ -746,7 +748,7 @@ public abstract class RobustMixedPositionEstimator3D extends
     /**
      * Creates a robust 3D position estimator.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -793,7 +795,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @return a robust 3D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -843,7 +845,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing
      *                                          readings at an unknown location for
      *                                          provided located radio sources.
@@ -894,7 +896,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param listener                          listener in charge of handling events.
      * @return a robust 3D position estimator.
      * @throws IllegalArgumentException if provided sources is null or the number of
@@ -948,7 +950,7 @@ public abstract class RobustMixedPositionEstimator3D extends
      *                                          the score the better the quality of the
      *                                          reading.
      * @param sources                           located radio sources used for
-     *                                          trilateration.
+     *                                          lateration.
      * @param fingerprint                       fingerprint containing
      *                                          readings at an unknown location for
      *                                          provided located radio sources.
@@ -968,9 +970,9 @@ public abstract class RobustMixedPositionEstimator3D extends
     }
 
     /**
-     * Gets minimum required number of located radio sources to perform trilateration.
+     * Gets minimum required number of located radio sources to perform lateration.
      *
-     * @return minimum required number of located radio sources to perform trilateration.
+     * @return minimum required number of located radio sources to perform lateration.
      */
     @Override
     public int getMinRequiredSources() {
@@ -979,7 +981,7 @@ public abstract class RobustMixedPositionEstimator3D extends
 
     /**
      * Sets positions, distances and standard deviations of distances on internal
-     * trilateration solver.
+     * lateration solver.
      *
      * @param positions                     positions to be set.
      * @param distances                     distances to be set.
@@ -1014,11 +1016,11 @@ public abstract class RobustMixedPositionEstimator3D extends
         }
 
         try {
-            mTrilaterationSolver.setPositionsDistancesAndStandardDeviations(
+            mLaterationSolver.setPositionsDistancesAndStandardDeviations(
                     positionsArray, distancesArray, distanceStandardDeviationsArray);
 
             if (qualityScoresArray != null) {
-                mTrilaterationSolver.setQualityScores(qualityScoresArray);
+                mLaterationSolver.setQualityScores(qualityScoresArray);
             }
         } catch (LockedException e) {
             throw new IllegalArgumentException(e);

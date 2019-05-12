@@ -87,6 +87,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
+     *
      * @param readings radio signal ranging readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
@@ -98,6 +99,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingRadioSourceEstimator3D(
@@ -108,6 +110,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -120,6 +123,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
@@ -129,10 +133,11 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
     /**
      * Constructor.
+     *
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     * @param readings          radio signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingRadioSourceEstimator3D(
@@ -143,9 +148,10 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public LMedSRobustRangingRadioSourceEstimator3D(Point3D initialPosition,
             RobustRangingRadioSourceEstimatorListener<S, Point3D> listener) {
@@ -155,10 +161,11 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio source
-     *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio source
+     *                          position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public LMedSRobustRangingRadioSourceEstimator3D(
@@ -183,6 +190,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
+     *
      * @return stop threshold to stop the algorithm prematurely when a certain
      * accuracy has been reached.
      */
@@ -205,6 +213,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
      * Because of this behaviour the stop threshold can be set to a value much
      * lower than the one typically used in RANSAC, and yet the algorithm could
      * still produce even smaller thresholds in estimated results.
+     *
      * @param stopThreshold stop threshold to stop the algorithm prematurely
      *                      when a certain accuracy has been reached.
      * @throws IllegalArgumentException if provided value is zero or negative.
@@ -223,6 +232,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
     /**
      * Robustly estimates position for a radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -248,7 +258,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
                     @Override
                     public int getSubsetSize() {
-                        return getMinReadings();
+                        return Math.max(mPreliminarySubsetSize, getMinReadings());
                     }
 
                     @Override
@@ -319,6 +329,7 @@ public class LMedSRobustRangingRadioSourceEstimator3D<S extends RadioSource> ext
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

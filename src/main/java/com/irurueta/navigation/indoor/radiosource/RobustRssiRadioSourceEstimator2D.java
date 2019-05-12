@@ -50,7 +50,7 @@ import java.util.List;
  * IMPORTANT: Implementations of this class can choose to estimate a
  * combination of radio source position, transmitted power and path loss
  * exponent. However enabling all three estimations usually achieves
- * inacurate results. When using this class, estimation must be of at least
+ * inaccurate results. When using this class, estimation must be of at least
  * one parameter (position, transmitted power or path loss exponent) when
  * initial values are provided for the other two, and at most it should consist
  * of two parameters (either position and transmitted power, position and
@@ -79,31 +79,37 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
      */
     public RobustRssiRadioSourceEstimator2D() {
         super();
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings) {
         super(readings);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RobustRssiRadioSourceEstimator2D(
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings bleonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -112,50 +118,58 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition) {
         super(readings, initialPosition);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      */
     public RobustRssiRadioSourceEstimator2D(
             Point2D initialPosition) {
         super(initialPosition);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public RobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
@@ -163,10 +177,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             Point2D initialPosition,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's)
@@ -174,44 +190,50 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     public RobustRssiRadioSourceEstimator2D(
             Double initialTransmittedPowerdBm) {
         super(initialTransmittedPowerdBm);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings WiFi signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
+     *
+     * @param readings                      WiFi signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Double initialTransmittedPowerdBm) {
         super(readings, initialTransmittedPowerdBm);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public RobustRssiRadioSourceEstimator2D(
             Double initialTransmittedPowerdBm,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialTransmittedPowerdBm, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings WiFi signal readings belonging to the radio source point.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      WiFi signal readings belonging to the radio source point.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
@@ -219,63 +241,70 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             Double initialTransmittedPowerdBm,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialTransmittedPowerdBm, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
             List<? extends RssiReadingLocated<S, Point2D>> readings,
             Point2D initialPosition, Double initialTransmittedPowerdBm) {
         super(readings, initialPosition, initialTransmittedPowerdBm);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      */
     public RobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm) {
         super(initialPosition, initialTransmittedPowerdBm);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public RobustRssiRadioSourceEstimator2D(Point2D initialPosition,
             Double initialTransmittedPowerdBm,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
@@ -283,18 +312,20 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
@@ -303,33 +334,37 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             double initialPathLossExponent) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      */
     public RobustRssiRadioSourceEstimator2D(
             Point2D initialPosition, Double initialTransmittedPowerdBm,
             double initialPathLossExponent) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      */
     public RobustRssiRadioSourceEstimator2D(
             Point2D initialPosition, Double initialTransmittedPowerdBm,
@@ -337,19 +372,21 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Constructor.
      * Sets signal readings belonging to the same radio source.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public RobustRssiRadioSourceEstimator2D(
@@ -359,10 +396,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
             RobustRssiRadioSourceEstimatorListener<S, Point2D> listener) {
         super(readings, initialPosition, initialTransmittedPowerdBm,
                 initialPathLossExponent, listener);
+        mPreliminarySubsetSize = getMinReadings();
     }
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param method robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
@@ -386,8 +425,9 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param method robust estimator method.
+     *
+     * @param readings  signal readings belonging to the same radio source.
+     * @param method    robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -417,8 +457,9 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param listener  listener in charge of attending events raised by this instance.
+     * @param method    robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -447,9 +488,10 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param readings  signal readings belonging to the same radio source.
+     * @param listener  listener in charge of attending events raised by this instance.
+     * @param method    robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -480,10 +522,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -513,9 +556,10 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -543,10 +587,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -576,11 +621,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance
-     * @param method robust estimator method.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -612,10 +658,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -643,11 +690,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -677,11 +725,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -711,12 +760,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D radio source power and position estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -748,13 +798,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D radio source power and position estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -785,12 +836,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -819,13 +871,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -855,14 +908,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -894,14 +948,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param method robust estimator method.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -937,13 +992,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -977,14 +1033,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1020,15 +1077,16 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1066,10 +1124,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param method robust estimator method.
+     * @param method        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1094,11 +1153,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param method robust estimator method.
+     * @param readings      signal readings belonging to the same radio source.
+     * @param method        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1129,11 +1189,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     * @param listener      listener in charge of attending events raised by this instance.
+     * @param method        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1163,12 +1224,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     * @param readings      signal readings belonging to the same radio source.
+     * @param listener      listener in charge of attending events raised by this instance.
+     * @param method        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1200,13 +1262,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1237,12 +1300,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1271,13 +1335,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1307,14 +1372,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance
-     * @param method robust estimator method.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance
+     * @param method            robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1347,13 +1413,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of access point transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of access point transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1382,14 +1449,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1420,14 +1488,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1457,15 +1526,16 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1498,16 +1568,17 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1541,15 +1612,16 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1578,16 +1650,17 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1620,17 +1693,18 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1665,17 +1739,18 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1712,16 +1787,17 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1756,17 +1832,18 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1804,18 +1881,19 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Creates a robust 2D position radio source estimator.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
-     * @param method robust estimator method.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
+     * @param method                        robust estimator method.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1857,6 +1935,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1867,6 +1946,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
@@ -1880,6 +1960,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
@@ -1892,6 +1973,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
@@ -1907,9 +1989,10 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1923,6 +2006,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param initialPosition initial position to start the estimation of radio
      *                        source position.
      * @return a new robust 2D position radio source estimator.
@@ -1936,9 +2020,10 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -1951,10 +2036,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance
+     *
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -1969,6 +2055,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param initialTransmittedPowerdBm initial transmitted power to start the
      *                                   estimation of radio source transmitted power
      *                                   (expressed in dBm's).
@@ -1983,10 +2070,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2000,10 +2088,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2016,11 +2105,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2036,12 +2126,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2056,11 +2147,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2073,12 +2165,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2092,13 +2185,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2114,13 +2208,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2136,12 +2231,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2155,13 +2251,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2176,14 +2273,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2200,6 +2298,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
@@ -2214,10 +2313,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
+     * @param readings      signal readings belonging to the same radio source.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2231,10 +2331,11 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param listener      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2247,11 +2348,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
+     *
      * @param qualityScores quality scores corresponding to each provided
      *                      sample. The larger the score value the better
      *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param listener listener in charge of attending events raised by this instance.
+     * @param readings      signal readings belonging to the same radio source.
+     * @param listener      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2266,12 +2368,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2287,11 +2390,12 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2303,12 +2407,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2321,13 +2426,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance
+     *
+     * @param qualityScores     quality scores corresponding to each provided
+     *                          sample. The larger the score value the better
+     *                          the quality of the sample.
+     * @param readings          signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2344,12 +2450,13 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2362,13 +2469,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2384,13 +2492,14 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2404,14 +2513,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's)
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's)
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2428,15 +2538,16 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2452,14 +2563,15 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2473,15 +2585,16 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2496,16 +2609,17 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2522,16 +2636,17 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2549,15 +2664,16 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2572,16 +2688,17 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @param <S> a {@link RadioSource} type.
      */
@@ -2596,17 +2713,18 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
     /**
      * Creates a robust 2D position radio source estimator using
      * default method.
-     * @param qualityScores quality scores corresponding to each provided
-     *                      sample. The larger the score value the better
-     *                      the quality of the sample.
-     * @param readings signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param initialTransmittedPowerdBm initial transmitted power to start the
-     *                                   estimation of radio source transmitted power
-     *                                   (expressed in dBm's).
-     * @param initialPathLossExponent initial path loss exponent. A typical value is 2.0.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param qualityScores                 quality scores corresponding to each provided
+     *                                      sample. The larger the score value the better
+     *                                      the quality of the sample.
+     * @param readings                      signal readings belonging to the same radio source.
+     * @param initialPosition               initial position to start the estimation of radio
+     *                                      source position.
+     * @param initialTransmittedPowerdBm    initial transmitted power to start the
+     *                                      estimation of radio source transmitted power
+     *                                      (expressed in dBm's).
+     * @param initialPathLossExponent       initial path loss exponent. A typical value is 2.0.
+     * @param listener                      listener in charge of attending events raised by this instance.
      * @return a new robust 2D position radio source estimator.
      * @throws IllegalArgumentException if readings are not valid.
      * @param <S> a {@link RadioSource} type.
@@ -2628,6 +2746,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
      * This value depends on the number of parameters to
      * be estimated, but for position only, this is 3
      * readings.
+     *
      * @return minimum required number of readings.
      */
     @Override
@@ -2647,6 +2766,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Gets number of dimensions of position points.
+     *
      * @return always returns 2 dimensions.
      */
     @Override
@@ -2656,6 +2776,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Gets estimated located radio source with estimated transmitted power.
+     *
      * @return estimated located radio source with estimated transmitted power or null.
      */
     @Override
@@ -2712,6 +2833,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
 
     /**
      * Solves preliminar solution for a subset of samples.
+     *
      * @param samplesIndices indices of subset samples.
      * @param solutions instance where solution will be stored.
      */
@@ -2762,6 +2884,7 @@ public abstract class RobustRssiRadioSourceEstimator2D<S extends RadioSource> ex
      * If refinement is enabled and it is requested to keep covariance, this method
      * will also keep covariance of refined result.
      * solution if not requested or refinement failed.
+     *
      * @param result result to be refined.
      */
     protected void attemptRefine(Solution<Point2D> result) {

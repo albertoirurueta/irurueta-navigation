@@ -20,10 +20,10 @@ import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilaterationSolver;
-import com.irurueta.navigation.trilateration.TrilaterationException;
-import com.irurueta.navigation.trilateration.TrilaterationSolver;
-import com.irurueta.navigation.trilateration.TrilaterationSolverListener;
+import com.irurueta.navigation.lateration.NonLinearLeastSquaresLaterationSolver;
+import com.irurueta.navigation.lateration.LaterationException;
+import com.irurueta.navigation.lateration.LaterationSolver;
+import com.irurueta.navigation.lateration.LaterationSolverListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,17 +46,17 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
      * none can be determined.
      */
     public static final double FALLBACK_DISTANCE_STANDARD_DEVIATION =
-            NonLinearLeastSquaresTrilaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
+            NonLinearLeastSquaresLaterationSolver.DEFAULT_DISTANCE_STANDARD_DEVIATION;
 
     /**
-     * A non-linear trilateration solver to solve position.
+     * A non-linear lateration solver to solve position.
      */
-    protected NonLinearLeastSquaresTrilaterationSolver<P> mTrilaterationSolver;
+    protected NonLinearLeastSquaresLaterationSolver<P> mTrilaterationSolver;
 
     /**
-     * Listener for the trilateration solver.
+     * Listener for the lateration solver.
      */
-    protected TrilaterationSolverListener<P> mTrilaterationSolverListener;
+    protected LaterationSolverListener<P> mLaterationSolverListener;
 
     /**
      * Initial position to start position estimation.
@@ -198,9 +198,9 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
     }
 
     /**
-     * Gets minimum required number of located radio sources to perform trilateration.
+     * Gets minimum required number of located radio sources to perform lateration.
      *
-     * @return minimum required number of located radio sources to perform trilateration.
+     * @return minimum required number of located radio sources to perform lateration.
      */
     @Override
     public int getMinRequiredSources() {
@@ -231,7 +231,7 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
     /**
      * Gets standard deviations of distances from known located radio sources to the
      * location of provided readings in a fingerprint.
-     * Distance standard deviations are used internally to solve trilateration.
+     * Distance standard deviations are used internally to solve lateration.
      *
      * @return standard deviations used internally.
      */
@@ -256,13 +256,13 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
             mTrilaterationSolver.solve();
             mEstimatedPositionCoordinates =
                     mTrilaterationSolver.getEstimatedPositionCoordinates();
-        } catch (TrilaterationException e) {
+        } catch (LaterationException e) {
             throw new PositionEstimationException(e);
         }
     }
 
     /**
-     * Gets known positions of radio sources used internally to solve trilateration.
+     * Gets known positions of radio sources used internally to solve lateration.
      *
      * @return known positions used internally.
      */
@@ -274,7 +274,7 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
     /**
      * Gets euclidean distances from known located radio sources to the location of
      * provided readings in a fingerprint.
-     * Distance values are used internally to solve trilateration.
+     * Distance values are used internally to solve lateration.
      *
      * @return euclidean distances used internally.
      */
@@ -293,8 +293,8 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
     }
 
     /**
-     * Internally sets located radio sources used for trilateration.
-     * @param sources located radio sources used for trilateration.
+     * Internally sets located radio sources used for lateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -319,7 +319,7 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
 
     /**
      * Sets positions, distnaces and standard deviations of distances on internal
-     * trilateration solver.
+     * lateration solver.
      * @param positions                     positions to be set.
      * @param distances                     distances to be set.
      * @param distanceStandardDeviations    standard deviations of distances to be set.
@@ -329,13 +329,13 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
             List<Double> distanceStandardDeviations);
 
     /**
-     * Initializes trilateration solver listener.
+     * Initializes lateration solver listener.
      */
     @SuppressWarnings("Duplicates")
     private void init() {
-        mTrilaterationSolverListener = new TrilaterationSolverListener<P>() {
+        mLaterationSolverListener = new LaterationSolverListener<P>() {
             @Override
-            public void onSolveStart(TrilaterationSolver<P> solver) {
+            public void onSolveStart(LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateStart(
                             NonLinearRangingAndRssiPositionEstimator.this);
@@ -343,7 +343,7 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
             }
 
             @Override
-            public void onSolveEnd(TrilaterationSolver<P> solver) {
+            public void onSolveEnd(LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateEnd(
                             NonLinearRangingAndRssiPositionEstimator.this);
@@ -354,7 +354,7 @@ public abstract class NonLinearRangingAndRssiPositionEstimator<P extends Point> 
 
     /**
      * Builds positions, distances and standard deviation of distances for the internal
-     * trilateration solver.
+     * lateration solver.
      */
     @SuppressWarnings("Duplicates")
     private void buildPositionsDistancesAndDistanceStandardDeviations() {

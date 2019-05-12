@@ -19,7 +19,7 @@ import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.*;
+import com.irurueta.navigation.lateration.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +44,19 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
     public static final boolean DEFAULT_USE_HOMOGENEOUS_LINEAR_SOLVER = true;
 
     /**
-     * An homogeneous linear trilateration solver to solve position.
+     * An homogeneous linear lateration solver to solve position.
      */
-    protected HomogeneousLinearLeastSquaresTrilaterationSolver<P> mHomogeneousTrilaterationSolver;
+    protected HomogeneousLinearLeastSquaresLaterationSolver<P> mHomogeneousTrilaterationSolver;
 
     /**
-     * An inhomogeneous linear trilateration solver to solve position.
+     * An inhomogeneous linear lateration solver to solve position.
      */
-    protected InhomogeneousLinearLeastSquaresTrilaterationSolver<P> mInhomogeneousTrilaterationSolver;
+    protected InhomogeneousLinearLeastSquaresLaterationSolver<P> mInhomogeneousTrilaterationSolver;
 
     /**
-     * Listener for the trilateration solver.
+     * Listener for the lateration solver.
      */
-    protected TrilaterationSolverListener<P> mTrilaterationSolverListener;
+    protected LaterationSolverListener<P> mLaterationSolverListener;
 
     /**
      * Indicates whether an homogeneous linear solver is used to estimate position.
@@ -108,9 +108,9 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
     }
 
     /**
-     * Gets minimum required number of located radio sources to perform trilateration.
+     * Gets minimum required number of located radio sources to perform lateration.
      *
-     * @return minimum required number of located radio sources to perform trilateration.
+     * @return minimum required number of located radio sources to perform lateration.
      */
     @Override
     public int getMinRequiredSources() {
@@ -160,13 +160,13 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
                 mEstimatedPositionCoordinates =
                         mInhomogeneousTrilaterationSolver.getEstimatedPositionCoordinates();
             }
-        } catch (TrilaterationException e) {
+        } catch (LaterationException e) {
             throw new PositionEstimationException(e);
         }
     }
 
     /**
-     * Gets known positions of radio sources used internally to solve trilateration.
+     * Gets known positions of radio sources used internally to solve lateration.
      *
      * @return known positions used internally.
      */
@@ -180,7 +180,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
     /**
      * Gets euclidean distances from known located radio sources to
      * the location of provided readings in a fingerprint.
-     * Distance values are used internally to solve trilateration.
+     * Distance values are used internally to solve lateration.
      *
      * @return euclidean distances used internally.
      */
@@ -192,9 +192,9 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
     }
 
     /**
-     * Internally sets located radio sources used for trilateration.
+     * Internally sets located radio sources used for lateration.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided value is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
@@ -219,7 +219,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
     }
 
     /**
-     * Sets positions and distances on internal trilateration solver.
+     * Sets positions and distances on internal lateration solver.
      *
      * @param positions positions to be set.
      * @param distances distances to be set.
@@ -228,20 +228,20 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
                                                      List<Double> distances);
 
     /**
-     * Initializes trilateration solver listener.
+     * Initializes lateration solver listener.
      */
     @SuppressWarnings("Duplicates")
     private void init() {
-        mTrilaterationSolverListener = new TrilaterationSolverListener<P>() {
+        mLaterationSolverListener = new LaterationSolverListener<P>() {
             @Override
-            public void onSolveStart(TrilaterationSolver<P> solver) {
+            public void onSolveStart(LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateStart(LinearRangingPositionEstimator.this);
                 }
             }
 
             @Override
-            public void onSolveEnd(TrilaterationSolver<P> solver) {
+            public void onSolveEnd(LaterationSolver<P> solver) {
                 if (mListener != null) {
                     mListener.onEstimateEnd(LinearRangingPositionEstimator.this);
                 }
@@ -250,7 +250,7 @@ public abstract class LinearRangingPositionEstimator<P extends Point> extends
     }
 
     /**
-     * Builds positions and distances for the internal trilateration solver.
+     * Builds positions and distances for the internal lateration solver.
      */
     @SuppressWarnings("Duplicates")
     private void buildPositionsAndDistances() {

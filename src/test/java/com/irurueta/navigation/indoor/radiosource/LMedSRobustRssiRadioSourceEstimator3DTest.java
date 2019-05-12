@@ -106,6 +106,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -161,6 +162,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -219,6 +221,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -264,6 +267,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -327,6 +331,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -386,6 +391,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -431,6 +437,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -476,6 +483,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -535,6 +543,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         Assert.assertEquals(estimator.getInitialTransmittedPower(),
@@ -581,6 +590,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -641,6 +651,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -687,6 +698,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -747,6 +759,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -808,6 +821,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -854,6 +868,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -901,6 +916,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -962,6 +978,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1023,6 +1040,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1069,6 +1087,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1116,6 +1135,7 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
                 0.0);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.LMedS);
         assertEquals(estimator.getMinReadings(), 5);
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
         assertEquals(estimator.getNumberOfDimensions(), 3);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(),
@@ -1592,6 +1612,26 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
 
         //check
         assertNull(estimator.getQualityScores());
+    }
+
+    public void testGetSetPreliminarySubsetSize() throws LockedException {
+        LMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new LMedSRobustRssiRadioSourceEstimator3D<>();
+
+        // check default value
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
+
+        // set new value
+        estimator.setPreliminarySubsetSize(6);
+
+        // check
+        assertEquals(estimator.getPreliminarySubsetSize(), 6);
+
+        // force IllegalArgumentException
+        try {
+            estimator.setPreliminarySubsetSize(4);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
@@ -5649,6 +5689,163 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
         } catch (NotReadyException ignore) { }
     }
 
+    @Test
+    public void testEstimateLargerPreliminarySubsetSize()
+            throws LockedException, NotReadyException, RobustEstimatorException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            InhomogeneousPoint3D accessPointPosition =
+                    new InhomogeneousPoint3D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point3D[] readingsPositions = new Point3D[numReadings];
+            List<RssiReadingLocated3D<WifiAccessPoint>> readings = new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                double error;
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    //outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    //inlier
+                    error = 0.0;
+                }
+
+                readings.add(new RssiReadingLocated3D<>(accessPoint, rssi + error,
+                        readingsPositions[i]));
+            }
+
+            LMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                    new LMedSRobustRssiRadioSourceEstimator3D<>(
+                            readings, this);
+            estimator.setPositionEstimationEnabled(true);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+
+            estimator.setResultRefined(false);
+
+            estimator.setPreliminarySubsetSize(estimator.getMinReadings() + 1);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+            assertEquals(estimateNextIteration, 0);
+            assertEquals(estimateProgressChange, 0);
+
+            estimator.estimate();
+
+            //check
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNotNull(estimator.getInliersData());
+            assertNull(estimator.getCovariance());
+            assertNull(estimator.getEstimatedPositionCovariance());
+            assertNull(estimator.getEstimatedTransmittedPowerVariance());
+            assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            WifiAccessPointWithPowerAndLocated3D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated3D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertNull(estimatedAccessPoint.getTransmittedPowerStandardDeviation());
+            assertNull(estimatedAccessPoint.getPositionCovariance());
+            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+
+        //force NotReadyException
+        LMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator =
+                new LMedSRobustRssiRadioSourceEstimator3D<>();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
     @Override
     public void onEstimateStart(RobustRssiRadioSourceEstimator<WifiAccessPoint, Point3D> estimator) {
         estimateStart++;
@@ -5691,6 +5888,10 @@ public class LMedSRobustRssiRadioSourceEstimator3DTest implements
     }
 
     private void checkLocked(LMedSRobustRssiRadioSourceEstimator3D<WifiAccessPoint> estimator) {
+        try {
+            estimator.setPreliminarySubsetSize(5);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
         try {
             estimator.setPathLossEstimationEnabled(false);
             fail("LockedException expected but not thrown");

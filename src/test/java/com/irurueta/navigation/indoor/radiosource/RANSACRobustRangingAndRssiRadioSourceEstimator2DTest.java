@@ -111,6 +111,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -174,6 +175,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -239,6 +241,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -290,6 +293,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -358,6 +362,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -423,6 +428,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -474,6 +480,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -525,6 +532,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertNull(estimator.getInitialTransmittedPowerdBm());
         assertNull(estimator.getInitialTransmittedPower());
@@ -590,6 +598,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         Assert.assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -641,6 +650,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -706,6 +716,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -757,6 +768,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -822,6 +834,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -887,6 +900,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -938,6 +952,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -990,6 +1005,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -1058,6 +1074,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -1127,6 +1144,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -1180,6 +1198,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -1233,6 +1252,7 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 RANSACRobustRangingAndRssiRadioSourceEstimator2D.DEFAULT_COMPUTE_AND_KEEP_RESIDUALS);
         assertEquals(estimator.getMethod(), RobustEstimatorMethod.RANSAC);
         assertEquals(estimator.getMinReadings(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertEquals(estimator.getNumberOfDimensions(), 2);
         assertEquals(estimator.getInitialTransmittedPowerdBm(), MAX_RSSI, 0.0);
         assertEquals(estimator.getInitialTransmittedPower(), Utils.dBmToPower(MAX_RSSI), 0.0);
@@ -1715,6 +1735,27 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
 
         // check
         assertNull(estimator.getQualityScores());
+    }
+
+    @Test
+    public void testGetSetPreliminarySubsetSize() throws LockedException {
+        RANSACRobustRangingAndRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>();
+
+        // check default value
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
+
+        // set new value
+        estimator.setPreliminarySubsetSize(5);
+
+        // check
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
+
+        // force IllegalArgumentException
+        try {
+            estimator.setPreliminarySubsetSize(3);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
@@ -6217,6 +6258,164 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
                 powerStd);
     }
 
+    @Test
+    public void testEstimateLargerPreliminarySubsetSize()
+            throws LockedException, NotReadyException, RobustEstimatorException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0, numValidPower = 0, numValid = 0;
+        double positionError = 0.0;
+        double powerError = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            InhomogeneousPoint2D accessPointPosition =
+                    new InhomogeneousPoint2D(
+                            randomizer.nextDouble(MIN_POS, MAX_POS),
+                            randomizer.nextDouble(MIN_POS, MAX_POS));
+            double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+            double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+            WifiAccessPoint accessPoint = new WifiAccessPoint("bssid", FREQUENCY);
+
+            int numReadings = randomizer.nextInt(
+                    MIN_READINGS, MAX_READINGS);
+            Point2D[] readingsPositions = new Point2D[numReadings];
+            List<RangingAndRssiReadingLocated2D<WifiAccessPoint>> readings =
+                    new ArrayList<>();
+            for (int i = 0; i < numReadings; i++) {
+                readingsPositions[i] = new InhomogeneousPoint2D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double distance = readingsPositions[i].distanceTo(
+                        accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(
+                        transmittedPower, distance,
+                        accessPoint.getFrequency(),
+                        MAX_PATH_LOSS_EXPONENT));
+
+                double error;
+                if (randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    error = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    error = 0.0;
+                }
+
+                readings.add(new RangingAndRssiReadingLocated2D<>(accessPoint,
+                        distance, rssi + error, readingsPositions[i]));
+            }
+
+            RANSACRobustRangingAndRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                    new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>(
+                            readings, this);
+            estimator.setTransmittedPowerEstimationEnabled(true);
+            estimator.setPathLossEstimationEnabled(false);
+
+            estimator.setResultRefined(false);
+            estimator.setComputeAndKeepInliersEnabled(false);
+            estimator.setComputeAndKeepResidualsEnabled(false);
+
+            estimator.setPreliminarySubsetSize(estimator.getMinReadings() + 1);
+
+            reset();
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedTransmittedPower(), 1.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(), 0.0,
+                    0.0);
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+            assertEquals(estimateNextIteration, 0);
+            assertEquals(estimateProgressChange, 0);
+
+            estimator.estimate();
+
+            // check
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange >= 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            assertNull(estimator.getInliersData());
+            assertNull(estimator.getCovariance());
+            assertNull(estimator.getEstimatedPositionCovariance());
+            assertNull(estimator.getEstimatedTransmittedPowerVariance());
+            assertNull(estimator.getEstimatedPathLossExponentVariance());
+
+            WifiAccessPointWithPowerAndLocated2D estimatedAccessPoint =
+                    (WifiAccessPointWithPowerAndLocated2D)estimator.getEstimatedRadioSource();
+
+            assertEquals(estimatedAccessPoint.getBssid(), "bssid");
+            assertEquals(estimatedAccessPoint.getFrequency(), FREQUENCY, 0.0);
+            assertNull(estimatedAccessPoint.getSsid());
+            assertEquals(estimatedAccessPoint.getTransmittedPower(),
+                    estimator.getEstimatedTransmittedPowerdBm(), 0.0);
+            assertEquals(estimatedAccessPoint.getPosition(),
+                    estimator.getEstimatedPosition());
+            assertEquals(estimator.getEstimatedPathLossExponent(),
+                    MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertEquals(estimatedAccessPoint.getPathLossExponent(), MAX_PATH_LOSS_EXPONENT, 0.0);
+            assertNull(estimatedAccessPoint.getTransmittedPowerStandardDeviation());
+            assertNull(estimatedAccessPoint.getPositionCovariance());
+            assertNull(estimatedAccessPoint.getPathLossExponentStandardDeviation());
+
+
+            positionError = estimator.getEstimatedPosition().
+                    distanceTo(accessPointPosition);
+            if (positionError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(estimator.getEstimatedPosition().equals(accessPointPosition,
+                    ABSOLUTE_ERROR));
+            numValidPosition++;
+
+            powerError = Math.abs(estimator.getEstimatedTransmittedPowerdBm() -
+                    transmittedPowerdBm);
+            if (powerError > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(estimator.getEstimatedTransmittedPower(), transmittedPower,
+                    ABSOLUTE_ERROR);
+            assertEquals(estimator.getEstimatedTransmittedPowerdBm(),
+                    transmittedPowerdBm, ABSOLUTE_ERROR);
+            numValidPower++;
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+        assertTrue(numValidPower > 0);
+        assertTrue(numValid > 0);
+
+        LOGGER.log(Level.INFO, "Position error: {0} meters",
+                positionError);
+        LOGGER.log(Level.INFO, "Power error: {0} dB",
+                powerError);
+
+        // force NotReadyException
+        RANSACRobustRangingAndRssiRadioSourceEstimator2D<WifiAccessPoint> estimator =
+                new RANSACRobustRangingAndRssiRadioSourceEstimator2D<>();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
+    }
+
     @Override
     public void onEstimateStart(RobustRangingAndRssiRadioSourceEstimator<WifiAccessPoint, Point2D> estimator) {
         estimateStart++;
@@ -6259,6 +6458,10 @@ public class RANSACRobustRangingAndRssiRadioSourceEstimator2DTest implements
     }
 
     private void checkLocked(RANSACRobustRangingAndRssiRadioSourceEstimator2D<WifiAccessPoint> estimator) {
+        try {
+            estimator.setPreliminarySubsetSize(4);
+            fail("LockedException expected but not thrown");
+        } catch (LockedException ignore) { }
         try {
             estimator.setPathLossEstimationEnabled(false);
             fail("LockedException expected but not thrown");

@@ -19,7 +19,7 @@ import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.NonLinearLeastSquaresTrilateration2DSolver;
+import com.irurueta.navigation.lateration.NonLinearLeastSquaresLateration2DSolver;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
      *                                  minimum.
@@ -74,7 +74,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown location for
      *                      provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is
@@ -103,7 +103,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
@@ -136,7 +136,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown location for
      *                      provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -167,7 +167,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for trilateration.
+     * @param sources           located radio sources used for lateration.
      * @param initialPosition   initial position to start position estimation.
      * @throws IllegalArgumentException if provided sources is null or the number of
      *                                  provided sources is less than the required
@@ -200,7 +200,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for trilateration.
+     * @param sources           located radio sources used for lateration.
      * @param fingerprint       fingerprint containing readings at an unknown location
      *                          for provided located radio sources.
      * @param initialPosition   initial position to start position estimation
@@ -233,7 +233,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for trilateration.
+     * @param sources           located radio sources used for lateration.
      * @param initialPosition   initial position to start position estimation.
      * @param listener          listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
@@ -270,7 +270,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     /**
      * Constructor.
      *
-     * @param sources           located radio sources used for trilateration.
+     * @param sources           located radio sources used for lateration.
      * @param fingerprint       fingerprint containing readings at an unknown location
      *                          for provided located radio sources.
      * @param initialPosition   initial position to start position estimation.
@@ -307,7 +307,7 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
 
     /**
      * Sets positions, distances and standard deviations of distances on internal
-     * trilateration solver.
+     * lateration solver.
      *
      * @param positions positions to be set.
      * @param distances distances to be set.
@@ -339,10 +339,10 @@ public class NonLinearRangingAndRssiPositionEstimator2D extends
     }
 
     /**
-     * Initializes trilateration solver.
+     * Initializes lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new NonLinearLeastSquaresTrilateration2DSolver(
-                mTrilaterationSolverListener);
+        mTrilaterationSolver = new NonLinearLeastSquaresLateration2DSolver(
+                mLaterationSolverListener);
     }
 }

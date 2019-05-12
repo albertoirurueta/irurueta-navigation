@@ -172,6 +172,11 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     protected Matrix mEstimatedPositionCovariance;
 
     /**
+     * Size of subsets to be checked during robust estimation.
+     */
+    protected int mPreliminarySubsetSize;
+
+    /**
      * Constructor.
      */
     public RobustRadioSourceEstimator() { }
@@ -179,6 +184,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Constructor.
      * Sets located radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same
      *                 radio source.
      * @throws IllegalArgumentException if readings are not valid.
@@ -189,6 +195,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public RobustRadioSourceEstimator(L listener) {
@@ -198,6 +205,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Constructor.
      * Sets located radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same
      *                 radio source.
      * @param listener listener in charge of attending events raised by this instance.
@@ -210,6 +218,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Indicates whether estimator is locked during estimation.
+     *
      * @return true if estimator is locked, false otherwise.
      */
     public boolean isLocked() {
@@ -219,6 +228,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Returns amount of progress variation before notifying a progress change during
      * estimation.
+     *
      * @return amount of progress variation before notifying a progress change during
      * estimation.
      */
@@ -229,6 +239,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Sets amount of progress variation before notifying a progress change during
      * estimation.
+     *
      * @param progressDelta amount of progress variation before notifying a progress
      *                      change during estimation.
      * @throws IllegalArgumentException if progress delta is less than zero or greater than 1.
@@ -250,6 +261,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * (which is equivalent to 100%). The amount of confidence indicates the probability
      * that the estimated result is correct. Usually this value will be close to 1.0, but
      * not exactly 1.0.
+     *
      * @return amount of confidence as a value between 0.0 and 1.0.
      */
     public double getConfidence() {
@@ -261,6 +273,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * equivalent to 100%). The amount of confidence indicates the probability that
      * the estimated result is correct. Usually this value will be close to 1.0, but
      * not exactly 1.0.
+     *
      * @param confidence confidence to be set as a value between 0.0 and 1.0.
      * @throws IllegalArgumentException if provided value is not between 0.0 and 1.0.
      * @throws LockedException if estimator is locked.
@@ -279,6 +292,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * Returns maximum allowed number of iterations. If maximum allowed number of
      * iterations is achieved without converging to a result when calling estimate(),
      * a RobustEstimatorException will be raised.
+     *
      * @return maximum allowed number of iterations.
      */
     public int getMaxIterations() {
@@ -289,6 +303,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * Sets maximum allowed number of iterations. When the maximum number of iterations
      * is exceeded, result will not be available, however an approximate result will be
      * available for retrieval.
+     *
      * @param maxIterations maximum allowed number of iterations to be set.
      * @throws IllegalArgumentException if provided value is less than 1.
      * @throws LockedException if this estimator is locked.
@@ -305,6 +320,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Gets data related to inliers found after estimation.
+     *
      * @return data related to inliers found after estimation.
      */
     public InliersData getInliersData() {
@@ -313,6 +329,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Indicates whether result must be refined using a non-linear solver over found inliers.
+     *
      * @return true to refine result, false to simply use result found by robust estimator
      * without further refining.
      */
@@ -322,6 +339,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Specifies whether result must be refined using a non-linear solver over found inliers.
+     *
      * @param refineResult true to refine result, false to simply use result found by robust
      *                     estimator without further refining.
      * @throws LockedException if estimator is locked.
@@ -336,6 +354,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Indicates whether covariance must be kept after refining result.
      * This setting is only taken into account if result is refined.
+     *
      * @return true if covariance must be kept after refining result, false otherwise.
      */
     public boolean isCovarianceKept() {
@@ -345,6 +364,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Specifies whether covariance must be kept after refining result.
      * This setting is only taken into account if result is refined.
+     *
      * @param keepCovariance true if covariance must be kept after refining result,
      *                       false otherwise.
      * @throws LockedException if estimator is locked.
@@ -358,6 +378,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Gets signal readings belonging to the same radio source.
+     *
      * @return signal readings belonging to the same radio source.
      */
     public List<? extends R> getReadings() {
@@ -366,6 +387,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same
      *                 radio source.
      * @throws LockedException if estimator is locked.
@@ -382,6 +404,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Gets listener in charge of attending events raised by this instance.
+     *
      * @return listener in charge of attending events raised by this instance.
      */
     public L getListener() {
@@ -390,6 +413,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Sets listener in charge of attending events raised by this instance.
+     *
      * @param listener listener in charge of attending events raised by this
      *                 instance.
      * @throws LockedException if estimator is locked.
@@ -408,6 +432,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * The larger the score value the better the quality of the sample.
      * This implementation always returns null.
      * Subclasses using quality scores must implement proper behavior.
+     *
      * @return quality scores corresponding to each sample.
      */
     public double[] getQualityScores() {
@@ -420,6 +445,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * The larger the score value the better the quality of the sample.
      * This implementation makes no action.
      * Subclasses using quality scores must implement proper behaviour.
+     *
      * @param qualityScores quality scores corresponding to each pair of
      *                      matched points.
      * @throws IllegalArgumentException if provided quality scores length
@@ -431,12 +457,42 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
             throws LockedException { }
 
     /**
+     * Gets size of subsets to be checked during robust estimation.
+     * This has to be at least {@link #getMinReadings()}
+     *
+     * @return size of subsets to be checked during robust estimation.
+     */
+    public int getPreliminarySubsetSize() {
+        return mPreliminarySubsetSize;
+    }
+
+    /**
+     * Sets size of subsets to be checked during estimation.
+     * This has to be at least {@link #getMinReadings()}.
+     *
+     * @param preliminarySubsetSize size of subsets to be checked during robust estimation.
+     * @throws LockedException if instance is busy solving the lateration problem.
+     * @throws IllegalArgumentException if provided value is less than {@link #getMinReadings()}.
+     */
+    public void setPreliminarySubsetSize(int preliminarySubsetSize) throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (preliminarySubsetSize < getMinReadings()) {
+            throw new IllegalArgumentException();
+        }
+
+        mPreliminarySubsetSize = preliminarySubsetSize;
+    }
+
+    /**
      * Gets covariance for estimated position, power and pathloss.
      * Matrix contains information in the following order:
      * Top-left submatrix contains covariance of position,
      * then follows transmitted power variance, and finally
      * the last element contains pathloss exponent variance.
      * This is only available when result has been refined and covariance is kept.
+     *
      * @return covariance for estimated position and power.
      */
     public Matrix getCovariance() {
@@ -446,8 +502,9 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Gets estimated position covariance.
      * Size of this matrix will depend on the number of dimensions
-     * of estimated position (either 2 or 3).*
+     * of estimated position (either 2 or 3).
      * This is only available when result has been refined and covariance is kept.
+     *
      * @return estimated position covariance.
      */
     public Matrix getEstimatedPositionCovariance() {
@@ -456,6 +513,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Gets estimated position.
+     *
      * @return estimated position.
      */
     public P getEstimatedPosition() {
@@ -465,6 +523,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Indicates whether readings are valid or not.
      * Readings are considered valid when there are enough readings.
+     *
      * @param readings readings to be validated.
      * @return true if readings are valid, false otherwise.
      */
@@ -474,6 +533,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Indicates whether this instance is ready to start the estimation.
+     *
      * @return true if this instance is ready, false otherwise.
      */
     public abstract boolean isReady();
@@ -484,12 +544,14 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
      * This value depends on the number of parameters to
      * be estimated, but for position only, this is 3
      * readings for 2D, and 4 readings for 3D.
+     *
      * @return minimum required number of readings.
      */
     public abstract int getMinReadings();
 
     /**
      * Gets number of dimensions of position points.
+     *
      * @return number of dimensions of position points.
      */
     public abstract int getNumberOfDimensions();
@@ -497,6 +559,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
     /**
      * Robustly estimates position, transmitted power and pathloss exponent for a
      * radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -507,6 +570,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Gets estimated located radio source.
+     *
      * @return estimated located radio source.
      * @param <S> type of located radio source.
      */
@@ -514,6 +578,7 @@ public abstract class RobustRadioSourceEstimator<P extends Point,
 
     /**
      * Internally sets signal readings belonging to the same radio source.
+     *
      * @param readings signal readings belonging to the same radio source.
      * @throws IllegalArgumentException if readings are null, not enough readings
      * are available, or readings do not belong to the same access point.

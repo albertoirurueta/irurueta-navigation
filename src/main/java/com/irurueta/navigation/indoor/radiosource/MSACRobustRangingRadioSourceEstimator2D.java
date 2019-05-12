@@ -62,6 +62,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Constructor.
+     *
      * Sets radio signal ranging readings belonging to the same radio source.
      * @param readings radio signal ranging readings belonging to the same
      *                 radio source.
@@ -74,6 +75,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Constructor.
+     *
      * @param listener listener in charge of attending events raised by this instance.
      */
     public MSACRobustRangingRadioSourceEstimator2D(
@@ -84,6 +86,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
+     *
      * @param readings radio signal readings belonging to the same radio source.
      * @param listener listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
@@ -96,6 +99,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Constructor.
+     *
      * @param initialPosition initial position to start the estimation or radio
      *                        source position.
      */
@@ -106,9 +110,10 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
     /**
      * Constructor.
      * Sets radio signal readings belonging to the same radio source.
-     * @param readings radio signal readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
+     *
+     * @param readings          radio signal readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRangingRadioSourceEstimator2D(
@@ -119,9 +124,10 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Constructor.
-     * @param initialPosition initial position to start the estimation of radio
-     *                        source position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param initialPosition   initial position to start the estimation of radio
+     *                          source position.
+     * @param listener          listener in charge of attending events raised by this instance.
      */
     public MSACRobustRangingRadioSourceEstimator2D(Point2D initialPosition,
             RobustRangingRadioSourceEstimatorListener<S, Point2D> listener) {
@@ -131,10 +137,11 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
     /**
      * Constructor.
      * Sets radio signal ranging readings belonging to the same radio source.
-     * @param readings radio signal ranging readings belonging to the same radio source.
-     * @param initialPosition initial position to start the estimation of radio source
-     *                        position.
-     * @param listener listener in charge of attending events raised by this instance.
+     *
+     * @param readings          radio signal ranging readings belonging to the same radio source.
+     * @param initialPosition   initial position to start the estimation of radio source
+     *                          position.
+     * @param listener          listener in charge of attending events raised by this instance.
      * @throws IllegalArgumentException if readings are not valid.
      */
     public MSACRobustRangingRadioSourceEstimator2D(
@@ -146,6 +153,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Returns threshold to determine whether samples are inliers or not.
+     *
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
@@ -154,6 +162,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Sets threshold to determine whether samples are inliers or not.
+     *
      * @param threshold threshold to be set.
      * @throws IllegalArgumentException if provided value is equal or less than
      * zero.
@@ -172,6 +181,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Robustly estimates position for a radio source.
+     *
      * @throws LockedException if instance is busy during estimation.
      * @throws NotReadyException if estimator is not ready.
      * @throws RobustEstimatorException if estimation fails for any reason
@@ -202,7 +212,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
                     @Override
                     public int getSubsetSize() {
-                        return getMinReadings();
+                        return Math.max(mPreliminarySubsetSize, getMinReadings());
                     }
 
                     @Override
@@ -278,6 +288,7 @@ public class MSACRobustRangingRadioSourceEstimator2D<S extends RadioSource> exte
 
     /**
      * Returns method being used for robust estimation.
+     *
      * @return method being used for robust estimation.
      */
     @Override

@@ -18,7 +18,7 @@ package com.irurueta.navigation.indoor.position;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.RANSACRobustTrilateration3DSolver;
+import com.irurueta.navigation.lateration.RANSACRobustLateration3DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
 
     /**
      * Constructor.
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -71,7 +71,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown location for
      *                      provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -100,7 +100,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -132,7 +132,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown location for
      *                      provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -158,7 +158,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 getThreshold();
     }
 
@@ -173,7 +173,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * @throws LockedException          if this estimator is locked.
      */
     public void setThreshold(double threshold) throws LockedException {
-        ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
 
@@ -184,7 +184,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepInliersEnabled() {
-        return ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 isComputeAndKeepInliersEnabled();
     }
 
@@ -198,7 +198,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      */
     public void setComputeAndKeepInliersEnabled(boolean computeAndKeepInliers)
             throws LockedException {
-        ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setComputeAndKeepInliersEnabled(computeAndKeepInliers);
     }
 
@@ -209,7 +209,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      * only need to be computed but not kept.
      */
     public boolean isComputeAndKeepResiduals() {
-        return ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 isComputeAndKeepResiduals();
     }
 
@@ -222,7 +222,7 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
      */
     public void setComputeAndKeepResidualsEnabled(boolean computeAndKeepResiduals)
             throws LockedException {
-        ((RANSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((RANSACRobustLateration3DSolver) mLaterationSolver).
                 setComputeAndKeepResidualsEnabled(computeAndKeepResiduals);
     }
 
@@ -237,10 +237,10 @@ public class RANSACRobustRssiPositionEstimator3D extends RobustRssiPositionEstim
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new RANSACRobustTrilateration3DSolver(
+        mLaterationSolver = new RANSACRobustLateration3DSolver(
                 mTrilaterationSolverListener);
     }
 }

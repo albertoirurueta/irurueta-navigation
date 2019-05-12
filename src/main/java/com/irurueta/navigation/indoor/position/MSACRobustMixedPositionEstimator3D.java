@@ -18,7 +18,7 @@ package com.irurueta.navigation.indoor.position;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.MSACRobustTrilateration3DSolver;
+import com.irurueta.navigation.lateration.MSACRobustLateration3DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class MSACRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources located radio sources used for trilateration.
+     * @param sources located radio sources used for lateration.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
      */
@@ -73,7 +73,7 @@ public class MSACRobustMixedPositionEstimator3D extends
     /**
      * Constructor
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @throws IllegalArgumentException if either provided sources or fingerprint is null
@@ -102,7 +102,7 @@ public class MSACRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources   located radio sources used for trilateration.
+     * @param sources   located radio sources used for lateration.
      * @param listener  listener in charge of handling events.
      * @throws IllegalArgumentException if provided sources is null or the number of
      * provided sources is less than the required minimum.
@@ -134,7 +134,7 @@ public class MSACRobustMixedPositionEstimator3D extends
     /**
      * Constructor.
      *
-     * @param sources       located radio sources used for trilateration.
+     * @param sources       located radio sources used for lateration.
      * @param fingerprint   fingerprint containing readings at an unknown
      *                      location for provided located radio sources.
      * @param listener      listener in charge of handling events.
@@ -157,7 +157,7 @@ public class MSACRobustMixedPositionEstimator3D extends
      * @return threshold to determine whether samples are inliers or not.
      */
     public double getThreshold() {
-        return ((MSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        return ((MSACRobustLateration3DSolver) mLaterationSolver).
                 getThreshold();
     }
 
@@ -171,7 +171,7 @@ public class MSACRobustMixedPositionEstimator3D extends
      * @throws LockedException if this solver is locked.
      */
     public void setThreshold(double threshold) throws LockedException {
-        ((MSACRobustTrilateration3DSolver)mTrilaterationSolver).
+        ((MSACRobustLateration3DSolver) mLaterationSolver).
                 setThreshold(threshold);
     }
 
@@ -186,10 +186,10 @@ public class MSACRobustMixedPositionEstimator3D extends
     }
 
     /**
-     * Initializes robust trilateration solver.
+     * Initializes robust lateration solver.
      */
     private void init() {
-        mTrilaterationSolver = new MSACRobustTrilateration3DSolver(
+        mLaterationSolver = new MSACRobustLateration3DSolver(
                 mTrilaterationSolverListener);
     }
 }

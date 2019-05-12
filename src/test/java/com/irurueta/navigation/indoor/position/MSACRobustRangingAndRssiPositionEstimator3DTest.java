@@ -22,8 +22,8 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
-import com.irurueta.navigation.trilateration.MSACRobustTrilateration3DSolver;
-import com.irurueta.navigation.trilateration.RobustTrilaterationSolver;
+import com.irurueta.navigation.lateration.MSACRobustLateration3DSolver;
+import com.irurueta.navigation.lateration.RobustLaterationSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -92,8 +92,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
@@ -103,15 +104,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -140,8 +141,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
         assertNull(estimator.getListener());
@@ -151,15 +153,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -199,8 +201,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
@@ -210,15 +213,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -251,8 +254,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertNull(estimator.getListener());
@@ -262,15 +266,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -313,8 +317,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertNull(estimator.getSources());
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
@@ -324,15 +329,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -357,8 +362,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertSame(estimator.getSources(), sources);
         assertNull(estimator.getFingerprint());
         assertSame(estimator.getListener(), this);
@@ -368,15 +374,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -415,8 +421,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertNull(estimator.getSources());
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
@@ -426,15 +433,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -469,8 +476,9 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default values
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
         assertEquals(estimator.getMinRequiredSources(), 4);
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
         assertSame(estimator.getSources(), sources);
         assertSame(estimator.getFingerprint(), fingerprint);
         assertSame(estimator.getListener(), this);
@@ -480,15 +488,15 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
                 0.0);
         assertFalse(estimator.isLocked());
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
         assertEquals(estimator.isResultRefined(),
-                RobustTrilaterationSolver.DEFAULT_REFINE_RESULT);
+                RobustLaterationSolver.DEFAULT_REFINE_RESULT);
         assertEquals(estimator.isCovarianceKept(),
-                RobustTrilaterationSolver.DEFAULT_KEEP_COVARIANCE);
+                RobustLaterationSolver.DEFAULT_KEEP_COVARIANCE);
         assertNull(estimator.getInitialPosition());
         assertTrue(estimator.isLinearSolverUsed());
         assertFalse(estimator.isHomogeneousLinearSolverUsed());
@@ -534,7 +542,7 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default value
         assertEquals(estimator.getThreshold(),
-                MSACRobustTrilateration3DSolver.DEFAULT_THRESHOLD, 0.0);
+                MSACRobustLateration3DSolver.DEFAULT_THRESHOLD, 0.0);
 
         // set new value
         estimator.setThreshold(1.0);
@@ -674,7 +682,7 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default value
         assertEquals(estimator.getProgressDelta(),
-                RobustTrilaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
+                RobustLaterationSolver.DEFAULT_PROGRESS_DELTA, 0.0);
 
         // set new value
         estimator.setProgressDelta(0.5f);
@@ -696,7 +704,7 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default value
         assertEquals(estimator.getConfidence(),
-                RobustTrilaterationSolver.DEFAULT_CONFIDENCE, 0.0);
+                RobustLaterationSolver.DEFAULT_CONFIDENCE, 0.0);
 
         // set new value
         try {
@@ -716,7 +724,7 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check default value
         assertEquals(estimator.getMaxIterations(),
-                RobustTrilaterationSolver.DEFAULT_MAX_ITERATIONS);
+                RobustLaterationSolver.DEFAULT_MAX_ITERATIONS);
 
         // set new value
         estimator.setMaxIterations(100);
@@ -851,6 +859,27 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
 
         // check
         assertFalse(estimator.getEvenlyDistributeReadings());
+    }
+
+    @Test
+    public void testGetSetPreliminarySubsetSize() throws LockedException {
+        MSACRobustRangingAndRssiPositionEstimator3D estimator =
+                new MSACRobustRangingAndRssiPositionEstimator3D();
+
+        // check default value
+        assertEquals(estimator.getPreliminarySubsetSize(), 4);
+
+        // set new value
+        estimator.setPreliminarySubsetSize(5);
+
+        // check
+        assertEquals(estimator.getPreliminarySubsetSize(), 5);
+
+        // force IllegalArgumentException
+        try {
+            estimator.setPreliminarySubsetSize(3);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (IllegalArgumentException ignore) { }
     }
 
     @Test
@@ -1999,6 +2028,151 @@ public class MSACRobustRangingAndRssiPositionEstimator3DTest implements
         LOGGER.log(Level.INFO, MessageFormat.format(
                 "Position accuracy {0} meters ({1} confidence)",
                 positionAccuracy, formattedConfidence));
+    }
+
+    @Test
+    public void testEstimateLargerPreliminarySubsetSize() throws LockedException, RobustEstimatorException,
+            NotReadyException, NonSymmetricPositiveDefiniteMatrixException {
+        UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        GaussianRandomizer errorRandomizer = new GaussianRandomizer(
+                new Random(), 0.0, STD_OUTLIER_ERROR);
+
+        int numValidPosition = 0;
+        double positionStd = 0.0;
+        double positionStdConfidence = 0.0;
+        double positionAccuracy = 0.0;
+        double positionAccuracyConfidence = 0.0;
+        for (int t = 0; t < TIMES; t++) {
+            int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
+
+            InhomogeneousPoint3D position = new InhomogeneousPoint3D(
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS),
+                    randomizer.nextDouble(MIN_POS, MAX_POS));
+            double pathLossExponent = randomizer.nextDouble(
+                    MIN_PATH_LOSS_EXPONENT, MAX_PATH_LOSS_EXPONENT);
+
+            List<WifiAccessPointWithPowerAndLocated3D> sources = new ArrayList<>();
+            List<RangingAndRssiReading<WifiAccessPoint>> readings = new ArrayList<>();
+            double errorRssi;
+            double errorRanging;
+            for (int i = 0; i < numSources; i++) {
+                InhomogeneousPoint3D accessPointPosition = new InhomogeneousPoint3D(
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS),
+                        randomizer.nextDouble(MIN_POS, MAX_POS));
+
+                double transmittedPowerdBm = randomizer.nextDouble(MIN_RSSI, MAX_RSSI);
+                double transmittedPower = Utils.dBmToPower(transmittedPowerdBm);
+                String bssid = String.valueOf(i);
+
+                WifiAccessPointWithPowerAndLocated3D locatedAccessPoint =
+                        new WifiAccessPointWithPowerAndLocated3D(bssid,
+                                FREQUENCY, transmittedPowerdBm,
+                                Math.sqrt(TX_POWER_VARIANCE),
+                                pathLossExponent,
+                                Math.sqrt(PATHLOSS_EXPONENT_VARIANCE),
+                                accessPointPosition);
+                sources.add(locatedAccessPoint);
+
+                WifiAccessPoint accessPoint = new WifiAccessPoint(bssid, FREQUENCY);
+
+                double distance = position.distanceTo(accessPointPosition);
+
+                double rssi = Utils.powerTodBm(receivedPower(transmittedPower,
+                        distance, pathLossExponent));
+
+                if(randomizer.nextInt(0, 100) < PERCENTAGE_OUTLIERS) {
+                    // outlier
+                    errorRssi = errorRandomizer.nextDouble();
+                    errorRanging = errorRandomizer.nextDouble();
+                } else {
+                    // inlier
+                    errorRssi = 0.0;
+                    errorRanging = 0.0;
+                }
+                readings.add(new RangingAndRssiReading<>(accessPoint,
+                        Math.max(0.0, distance + errorRanging),
+                        rssi + errorRssi,
+                        RANGING_STD, Math.sqrt(RX_POWER_VARIANCE)));
+            }
+
+            RangingAndRssiFingerprint<WifiAccessPoint, RangingAndRssiReading<WifiAccessPoint>> fingerprint =
+                    new RangingAndRssiFingerprint<>(readings);
+
+            MSACRobustRangingAndRssiPositionEstimator3D estimator =
+                    new MSACRobustRangingAndRssiPositionEstimator3D(sources,
+                            fingerprint, this);
+            estimator.setResultRefined(true);
+            estimator.setPreliminarySubsetSize(5);
+
+            reset();
+
+            // check initial state
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+            assertNull(estimator.getEstimatedPosition());
+            assertNull(estimator.getCovariance());
+            assertNotNull(estimator.getPositions());
+            assertNotNull(estimator.getDistances());
+            assertEquals(estimateStart, 0);
+            assertEquals(estimateEnd, 0);
+
+            Point3D p = estimator.estimate();
+
+            assertEquals(estimateStart, 1);
+            assertEquals(estimateEnd, 1);
+            assertTrue(estimateNextIteration > 0);
+            assertTrue(estimateProgressChange > 0);
+            assertTrue(estimator.isReady());
+            assertFalse(estimator.isLocked());
+
+            Point3D estimatedPosition = estimator.getEstimatedPosition();
+            assertSame(estimatedPosition, p);
+            assertNotNull(estimator.getInliersData());
+            assertNotNull(estimator.getCovariance());
+
+            Accuracy3D accuracyStd = new Accuracy3D(estimator.getCovariance());
+            accuracyStd.setStandardDeviationFactor(1.0);
+
+            Accuracy3D accuracy = new Accuracy3D(estimator.getCovariance());
+            accuracy.setConfidence(0.99);
+
+            positionStd = accuracyStd.getAverageAccuracy();
+            positionStdConfidence = accuracyStd.getConfidence();
+            positionAccuracy = accuracy.getAverageAccuracy();
+            positionAccuracyConfidence = accuracy.getConfidence();
+
+            double positionDistance = position.distanceTo(estimatedPosition);
+            if (positionDistance > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertTrue(position.equals(estimatedPosition, ABSOLUTE_ERROR));
+            numValidPosition++;
+            break;
+        }
+
+        assertTrue(numValidPosition > 0);
+
+        NumberFormat format = NumberFormat.getPercentInstance();
+        String formattedConfidence = format.format(positionStdConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position standard deviation {0} meters ({1} confidence)",
+                positionStd, formattedConfidence));
+
+        formattedConfidence = format.format(positionAccuracyConfidence);
+        LOGGER.log(Level.INFO, MessageFormat.format(
+                "Position accuracy {0} meters ({1} confidence)",
+                positionAccuracy, formattedConfidence));
+
+        // force NotReadyException
+        MSACRobustRangingAndRssiPositionEstimator3D estimator =
+                new MSACRobustRangingAndRssiPositionEstimator3D();
+        try {
+            estimator.estimate();
+            fail("NotReadyException expected but not thrown");
+        } catch (NotReadyException ignore) { }
     }
 
     @Override
