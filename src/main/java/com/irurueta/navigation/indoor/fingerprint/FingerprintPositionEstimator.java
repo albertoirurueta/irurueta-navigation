@@ -55,8 +55,7 @@ public abstract class FingerprintPositionEstimator<P extends Point> extends
     /**
      * True indicates that mean effects are removed from located fingerprints and from
      * new fingerprints whose location is unknown.
-     * By default this is disabled to remove possible bias effects due to readings
-     * measured by different devices with different hardware.
+     * By default this is disabled.
      */
     protected boolean mRemoveMeansFromFingerprintReadings;
 
@@ -210,8 +209,7 @@ public abstract class FingerprintPositionEstimator<P extends Point> extends
      * Indicates whether mean effects are removed from fingerprints.
      * True indicates that mean effects are removed from located fingerprints and from
      * new fingerprints whose location is unknown.
-     * By default this is enabled to remove possible bias effects due to readings
-     * measured by different devices with different hardware.
+     * By default this is disabled.
      * @return true to remove mean effects, false otherwise.
      */
     public boolean isMeansFromFingerprintReadingsRemoved() {
@@ -222,8 +220,7 @@ public abstract class FingerprintPositionEstimator<P extends Point> extends
      * Specifies whether mean effects are removed from fingerprints.
      * True indicates that mean effects are removed from located fingerprints and from
      * new fingerprints whose location is unknown.
-     * By default this is enabled to remove possible bias effects due to readings
-     * measured by different devices with different hardware.
+     * By default this is disabled.
      * @param removeMeansFromFingerprintReadings true to remove mean effects, false otherwise.
      * @throws LockedException if estimator is locked.
      */

@@ -148,7 +148,6 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
         avgRssiOther /= (double)numAccessPoints;
 
 
-        numAccessPoints = 0;
         double result = 0.0;
         double diff;
         for (R reading : mReadings) {
@@ -157,7 +156,6 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
                     diff = (reading.getRssi() - avgRssiThis) -
                             (otherReading.getRssi() - avgRssiOther);
                     result += diff * diff;
-                    numAccessPoints++;
                 }
             }
         }
