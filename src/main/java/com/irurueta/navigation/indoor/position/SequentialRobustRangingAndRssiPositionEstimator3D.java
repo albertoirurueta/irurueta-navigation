@@ -27,6 +27,7 @@ import java.util.List;
  * Robustly estimates 3D position, using RSSI readings first to obtain an initial coarse
  * position estimation, and then ranging readings to refine such estimation.
  */
+@SuppressWarnings("WeakerAccess")
 public class SequentialRobustRangingAndRssiPositionEstimator3D extends
         SequentialRobustRangingAndRssiPositionEstimator<Point3D> {
 
@@ -35,6 +36,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
      */
     public SequentialRobustRangingAndRssiPositionEstimator3D() {
         super();
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -47,6 +49,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
     public SequentialRobustRangingAndRssiPositionEstimator3D(
             List<? extends RadioSourceLocated<Point3D>> sources) {
         super(sources);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -59,6 +62,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
     public SequentialRobustRangingAndRssiPositionEstimator3D(
             RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(fingerprint);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -74,6 +78,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             List<? extends RadioSourceLocated<Point3D>> sources,
             RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(sources, fingerprint);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -84,6 +89,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
     public SequentialRobustRangingAndRssiPositionEstimator3D(
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -98,6 +104,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             List<? extends RadioSourceLocated<Point3D>> sources,
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sources, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -112,6 +119,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(fingerprint, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -129,6 +137,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint,
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sources, fingerprint, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -147,6 +156,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             double[] sourceQualityScores,
             double[] fingerprintReadingQualityScores) {
         super(sourceQualityScores, fingerprintReadingQualityScores);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -170,6 +180,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             double[] fingerprintReadingQualityScores,
             List<? extends RadioSourceLocated<Point3D>> sources) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -193,6 +204,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             double[] fingerprintReadingQualityScores,
             RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(sourceQualityScores, fingerprintReadingQualityScores, fingerprint);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -221,6 +233,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             RangingAndRssiFingerprint<? extends RadioSource, ? extends RangingAndRssiReading<? extends RadioSource>> fingerprint) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources,
                 fingerprint);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -241,6 +254,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             double[] fingerprintReadingQualityScores,
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -266,6 +280,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             List<? extends RadioSourceLocated<Point3D>> sources,
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -292,6 +307,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, fingerprint,
                 listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**
@@ -322,6 +338,7 @@ public class SequentialRobustRangingAndRssiPositionEstimator3D extends
             SequentialRobustRangingAndRssiPositionEstimatorListener<Point3D> listener) {
         super(sourceQualityScores, fingerprintReadingQualityScores, sources,
                 fingerprint, listener);
+        mRangingPreliminarySubsetSize = mRssiPreliminarySubsetSize = getMinRequiredSources();
     }
 
     /**

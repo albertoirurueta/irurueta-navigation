@@ -203,6 +203,16 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
             DEFAULT_RSSI_ROBUST_METHOD;
 
     /**
+     * Size of subsets to be checked during robust estimation.
+     */
+    protected int mRangingPreliminarySubsetSize;
+
+    /**
+     * Size of subsets to be checked during RSSI robust estimation.
+     */
+    protected int mRssiPreliminarySubsetSize;
+
+    /**
      * Indicates whether located radio source position covariance is taken into account
      * (if available) to determine distance standard deviation for ranging measurements.
      */
@@ -1330,6 +1340,64 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     }
 
     /**
+     * Gets size of subsets to be checked during ranging robust estimation.
+     *
+     * @return size of subsets to be checked during ranging robust estimation.
+     */
+    public int getRangingPreliminarySubsetSize() {
+        return mRangingPreliminarySubsetSize;
+    }
+
+    /**
+     * Sets size of subsets to be checked during ranging robust estimation.
+     *
+     * @param rangingPreliminarySubsetSize  size of subsets to be checked during
+     *                                      ranging robust estimation.
+     * @throws LockedException  if estimator is locked.
+     * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredSources()}.
+     */
+    public void setRangingPreliminarySubsetSize(int rangingPreliminarySubsetSize)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (rangingPreliminarySubsetSize < getMinRequiredSources()) {
+            throw new IllegalArgumentException();
+        }
+
+        mRangingPreliminarySubsetSize = rangingPreliminarySubsetSize;
+    }
+
+    /**
+     * Gets size of subsets to be checked during RSSI robust estimation.
+     *
+     * @return size of subsets to be checked during RSSI robust estimation.
+     */
+    public int getRssiPreliminarySubsetSize() {
+        return mRssiPreliminarySubsetSize;
+    }
+
+    /**
+     * Sets size of subsets to be checked during RSSI robust estimation.
+     *
+     * @param rssiPreliminarySubsetSize size of subsets to be checked during
+     *                                  RSSI robust estimation.
+     * @throws LockedException if estimator is locked.
+     * @throws IllegalArgumentException if provided value is less than {@link #getMinRequiredSources()}.
+     */
+    public void setRssiPreliminarySubsetSize(int rssiPreliminarySubsetSize)
+            throws LockedException {
+        if (isLocked()) {
+            throw new LockedException();
+        }
+        if (rssiPreliminarySubsetSize < getMinRequiredSources()) {
+            throw new IllegalArgumentException();
+        }
+
+        mRssiPreliminarySubsetSize = rssiPreliminarySubsetSize;
+    }
+
+    /**
      * Gets threshold to determine when samples are inliers or not, used during robust
      * fine ranging position estimation.
      * If not defined, default threshold will be used.
@@ -1610,6 +1678,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
         P coarsePosition = mInitialPosition;
         if (mRssiEstimator != null) {
             mRssiEstimator.setInitialPosition(mInitialPosition);
+
             try {
                 // estimate coarse position using RSSI data
                 coarsePosition = mRssiEstimator.estimate();
@@ -1823,6 +1892,9 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
                     }
                 }
             });
+
+            mRangingEstimator.setPreliminarySubsetSize(
+                    Math.max(mRangingPreliminarySubsetSize, mRangingEstimator.getMinRequiredSources()));
         }
     }
 
@@ -1918,6 +1990,9 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
                     }
                 }
             });
+
+            mRssiEstimator.setPreliminarySubsetSize(
+                    Math.max(mRssiPreliminarySubsetSize, mRssiEstimator.getMinRequiredSources()));
         }
     }
 
