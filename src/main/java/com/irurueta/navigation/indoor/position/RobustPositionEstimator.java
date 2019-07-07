@@ -663,6 +663,8 @@ public abstract class RobustPositionEstimator<P extends Point,
         }
 
         mPreliminarySubsetSize = preliminarySubsetSize;
+
+        buildPositionsDistancesDistanceStandardDeviationsAndQualityScores();
     }
 
     /**
@@ -788,7 +790,7 @@ public abstract class RobustPositionEstimator<P extends Point,
             return;
         }
 
-        int min = getMinRequiredSources();
+        int min = getPreliminarySubsetSize();
         if (mSources == null || mFingerprint == null ||
                 mSources.size() < min ||
                 mFingerprint.getReadings() == null ||
