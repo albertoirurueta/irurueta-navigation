@@ -15,21 +15,38 @@
  */
 package com.irurueta.navigation.indoor.position;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
 import com.irurueta.geometry.Accuracy3D;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.Fingerprint;
+import com.irurueta.navigation.indoor.RangingAndRssiReading;
+import com.irurueta.navigation.indoor.RangingReading;
+import com.irurueta.navigation.indoor.Reading;
+import com.irurueta.navigation.indoor.RssiReading;
+import com.irurueta.navigation.indoor.Utils;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated3D;
+import com.irurueta.navigation.indoor.WifiAccessPointWithPowerAndLocated3D;
 import com.irurueta.navigation.lateration.PROSACRobustLateration3DSolver;
 import com.irurueta.navigation.lateration.RobustLaterationSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
-
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -37,8 +54,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class PROSACRobustMixedPositionEstimator3DTest implements
         RobustMixedPositionEstimatorListener<Point3D> {
@@ -1582,7 +1598,7 @@ public class PROSACRobustMixedPositionEstimator3DTest implements
 
     public void testGetSetPreliminarySubsetSize() throws LockedException {
         PROSACRobustMixedPositionEstimator3D estimator =
-                new PROSACRobustMixedPositionEstimator3D();
+                spy(new PROSACRobustMixedPositionEstimator3D());
 
         // check default value
         assertEquals(estimator.getPreliminarySubsetSize(), 4);
@@ -1592,6 +1608,7 @@ public class PROSACRobustMixedPositionEstimator3DTest implements
 
         // check
         assertEquals(estimator.getPreliminarySubsetSize(), 5);
+        verify(estimator, times(1)).buildPositionsDistancesDistanceStandardDeviationsAndQualityScores();
 
         // force IllegalArgumentException
         try {

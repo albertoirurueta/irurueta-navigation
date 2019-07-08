@@ -15,21 +15,35 @@
  */
 package com.irurueta.navigation.indoor.position;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.irurueta.algebra.NonSymmetricPositiveDefiniteMatrixException;
 import com.irurueta.geometry.Accuracy2D;
 import com.irurueta.geometry.InhomogeneousPoint2D;
 import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
-import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.indoor.RssiFingerprint;
+import com.irurueta.navigation.indoor.RssiReading;
+import com.irurueta.navigation.indoor.Utils;
+import com.irurueta.navigation.indoor.WifiAccessPoint;
+import com.irurueta.navigation.indoor.WifiAccessPointLocated2D;
+import com.irurueta.navigation.indoor.WifiAccessPointWithPowerAndLocated2D;
 import com.irurueta.navigation.lateration.PROMedSRobustLateration2DSolver;
 import com.irurueta.navigation.lateration.RobustLaterationSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
 import com.irurueta.statistics.UniformRandomizer;
-import org.junit.Test;
-
 import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -37,8 +51,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class PROMedSRobustRssiPositionEstimator2DTest implements
         RobustRssiPositionEstimatorListener<Point2D> {
@@ -1519,7 +1532,7 @@ public class PROMedSRobustRssiPositionEstimator2DTest implements
     @Test
     public void testGetSetPreliminarySubsetSize() throws LockedException {
         PROMedSRobustRssiPositionEstimator2D estimator =
-                new PROMedSRobustRssiPositionEstimator2D();
+                spy(new PROMedSRobustRssiPositionEstimator2D());
 
         // check default value
         assertEquals(estimator.getPreliminarySubsetSize(), 3);
@@ -1529,6 +1542,7 @@ public class PROMedSRobustRssiPositionEstimator2DTest implements
 
         // check
         assertEquals(estimator.getPreliminarySubsetSize(), 4);
+        verify(estimator, times(1)).buildPositionsDistancesDistanceStandardDeviationsAndQualityScores();
 
         // force IllegalArgumentException
         try {
