@@ -7,6 +7,11 @@ import com.irurueta.geometry.Point2D;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 import com.irurueta.navigation.indoor.*;
+import com.irurueta.navigation.lateration.LMedSRobustLateration2DSolver;
+import com.irurueta.navigation.lateration.MSACRobustLateration2DSolver;
+import com.irurueta.navigation.lateration.PROMedSRobustLateration2DSolver;
+import com.irurueta.navigation.lateration.PROSACRobustLateration2DSolver;
+import com.irurueta.navigation.lateration.RANSACRobustLateration2DSolver;
 import com.irurueta.numerical.robust.RobustEstimatorException;
 import com.irurueta.numerical.robust.RobustEstimatorMethod;
 import com.irurueta.statistics.GaussianRandomizer;
@@ -2360,6 +2365,186 @@ public class SequentialRobustMixedPositionEstimator2DTest implements
     }
 
     @Test
+    public void testGetSetRangingThresholdRANSAC() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRangingRobustMethod(RobustEstimatorMethod.RANSAC);
+
+        // check default value
+        assertNull(estimator.getRangingThreshold());
+
+        // check that internal ranging estimator has default value
+
+        // setup ranging estimator
+        estimator.buildRangingEstimator();
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(((RANSACRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getThreshold(),
+            RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRangingThreshold(value);
+
+        // check
+        assertEquals(estimator.getRangingThreshold(), value, 0.0);
+
+        // check that internal ranging estimator also has new value
+
+        // setup ranging estimator
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(((RANSACRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRangingThresholdLMedS() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRangingRobustMethod(RobustEstimatorMethod.LMedS);
+
+        // check default value
+        assertNull(estimator.getRangingThreshold());
+
+        // check that internal ranging estimator has default value
+
+        // setup ranging estimator
+        estimator.buildRangingEstimator();
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(((LMedSRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getStopThreshold(),
+            LMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRangingThreshold(value);
+
+        // check
+        assertEquals(estimator.getRangingThreshold(), value, 0.0);
+
+        // check that internal ranging estimator also has new value
+
+        // setup ranging estimator
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(((LMedSRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getStopThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRangingThresholdMSAC() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRangingRobustMethod(RobustEstimatorMethod.MSAC);
+
+        // check default value
+        assertNull(estimator.getRangingThreshold());
+
+        // check that internal ranging estimator has default value
+
+        // setup ranging estimator
+        estimator.buildRangingEstimator();
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(((MSACRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getThreshold(),
+            MSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRangingThreshold(value);
+
+        // check
+        assertEquals(estimator.getRangingThreshold(), value, 0.0);
+
+        // check that internal ranging estimator also has new value
+
+        // setup ranging estimator
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(((MSACRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRangingThresholdPROMedS() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRangingRobustMethod(RobustEstimatorMethod.PROMedS);
+
+        // check default value
+        assertNull(estimator.getRangingThreshold());
+
+        // check that internal ranging estimator has default value
+
+        // setup ranging estimator
+        estimator.buildRangingEstimator();
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(((PROMedSRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getStopThreshold(),
+            PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRangingThreshold(value);
+
+        // check
+        assertEquals(estimator.getRangingThreshold(), value, 0.0);
+
+        // check that internal ranging estimator also has new value
+
+        // setup ranging estimator
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(((PROMedSRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getStopThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRangingThresholdPROSAC() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRangingRobustMethod(RobustEstimatorMethod.PROSAC);
+
+        // check default value
+        assertNull(estimator.getRangingThreshold());
+
+        // check that internal ranging estimator has default value
+
+        // setup ranging estimator
+        estimator.buildRangingEstimator();
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(((PROSACRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getThreshold(),
+            PROSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRangingThreshold(value);
+
+        // check
+        assertEquals(estimator.getRangingThreshold(), value, 0.0);
+
+        // check that internal ranging estimator also has new value
+
+        // setup ranging estimator
+        estimator.setupRangingEstimator();
+
+        assertEquals(estimator.mRangingEstimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(((PROSACRobustRangingPositionEstimator2D)estimator.mRangingEstimator).getThreshold(),
+            value, 0.0);
+    }
+
+    @Test
     public void testGetSetRssiThreshold() throws LockedException {
         SequentialRobustMixedPositionEstimator2D estimator =
                 new SequentialRobustMixedPositionEstimator2D();
@@ -2373,6 +2558,186 @@ public class SequentialRobustMixedPositionEstimator2DTest implements
 
         // check
         assertEquals(estimator.getRssiThreshold(), value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRssiThresholdRANSAC() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRssiRobustMethod(RobustEstimatorMethod.RANSAC);
+
+        // check default value
+        assertNull(estimator.getRssiThreshold());
+
+        // check that internal rssi estimator has default value
+
+        // setup rssi estimator
+        estimator.buildRssiEstimator();
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(((RANSACRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getThreshold(),
+            RANSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRssiThreshold(value);
+
+        // check
+        assertEquals(estimator.getRssiThreshold(), value, 0.0);
+
+        // check that internal rssi estimator also has new value
+
+        // setup rssi estimator
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.RANSAC);
+        assertEquals(((RANSACRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRssiThresholdLMedS() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRssiRobustMethod(RobustEstimatorMethod.LMedS);
+
+        // check default value
+        assertNull(estimator.getRssiThreshold());
+
+        // check that internal rssi estimator has default value
+
+        // setup rssi estimator
+        estimator.buildRssiEstimator();
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(((LMedSRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getStopThreshold(),
+            LMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRssiThreshold(value);
+
+        // check
+        assertEquals(estimator.getRssiThreshold(), value, 0.0);
+
+        // check that internal rssi estimator also has new value
+
+        // setup rssi estimator
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.LMedS);
+        assertEquals(((LMedSRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getStopThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRssiThresholdMSAC() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRssiRobustMethod(RobustEstimatorMethod.MSAC);
+
+        // check default value
+        assertNull(estimator.getRssiThreshold());
+
+        // check that internal rssi estimator has default value
+
+        // setup rssi estimator
+        estimator.buildRssiEstimator();
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(((MSACRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getThreshold(),
+            MSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRssiThreshold(value);
+
+        // check
+        assertEquals(estimator.getRssiThreshold(), value, 0.0);
+
+        // check that internal rssi estimator also has new value
+
+        // setup rssi estimator
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.MSAC);
+        assertEquals(((MSACRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRssiThresholdPROMedS() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRssiRobustMethod(RobustEstimatorMethod.PROMedS);
+
+        // check default value
+        assertNull(estimator.getRssiThreshold());
+
+        // check that internal rssi estimator has default value
+
+        // setup rssi estimator
+        estimator.buildRssiEstimator();
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(((PROMedSRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getStopThreshold(),
+            PROMedSRobustLateration2DSolver.DEFAULT_STOP_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRssiThreshold(value);
+
+        // check
+        assertEquals(estimator.getRssiThreshold(), value, 0.0);
+
+        // check that internal rssi estimator also has new value
+
+        // setup rssi estimator
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.PROMedS);
+        assertEquals(((PROMedSRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getStopThreshold(),
+            value, 0.0);
+    }
+
+    @Test
+    public void testGetSetRssiThresholdPROSAC() throws LockedException {
+        SequentialRobustMixedPositionEstimator2D estimator =
+            new SequentialRobustMixedPositionEstimator2D();
+        estimator.setRssiRobustMethod(RobustEstimatorMethod.PROSAC);
+
+        // check default value
+        assertNull(estimator.getRssiThreshold());
+
+        // check that internal rssi estimator has default value
+
+        // setup rssi estimator
+        estimator.buildRssiEstimator();
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(((PROSACRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getThreshold(),
+            PROSACRobustLateration2DSolver.DEFAULT_THRESHOLD, 0.0);
+
+        // set new value
+        double value = new Random().nextDouble();
+        estimator.setRssiThreshold(value);
+
+        // check
+        assertEquals(estimator.getRssiThreshold(), value, 0.0);
+
+        // check that internal rssi estimator also has new value
+
+        // setup rssi estimator
+        estimator.setupRssiEstimator();
+
+        assertEquals(estimator.mRssiEstimator.getMethod(), RobustEstimatorMethod.PROSAC);
+        assertEquals(((PROSACRobustRssiPositionEstimator2D)estimator.mRssiEstimator).getThreshold(),
+            value, 0.0);
     }
 
     @Test

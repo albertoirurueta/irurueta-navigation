@@ -1,6 +1,7 @@
 package com.irurueta.navigation.indoor.position;
 
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.indoor.Fingerprint;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RadioSourceLocated;
@@ -354,5 +355,63 @@ public class SequentialRobustMixedPositionEstimator3D extends
     @Override
     protected void buildRssiEstimator() {
         mRssiEstimator = RobustRssiPositionEstimator3D.create(mRssiRobustMethod);
+    }
+
+    /**
+     * Setup ranging internal estimator.
+     *
+     * @throws LockedException if estimator is locked.
+     */
+    @Override
+    protected void setupRangingEstimator() throws LockedException {
+        super.setupRangingEstimator();
+        if (mRangingThreshold != null) {
+            switch (mRangingRobustMethod) {
+                case RANSAC:
+                    ((RANSACRobustRangingPositionEstimator3D) mRangingEstimator).setThreshold(mRangingThreshold);
+                    break;
+                case LMedS:
+                    ((LMedSRobustRangingPositionEstimator3D) mRangingEstimator).setStopThreshold(mRangingThreshold);
+                    break;
+                case MSAC:
+                    ((MSACRobustRangingPositionEstimator3D) mRangingEstimator).setThreshold(mRangingThreshold);
+                    break;
+                case PROSAC:
+                    ((PROSACRobustRangingPositionEstimator3D) mRangingEstimator).setThreshold(mRangingThreshold);
+                    break;
+                case PROMedS:
+                    ((PROMedSRobustRangingPositionEstimator3D) mRangingEstimator).setStopThreshold(mRangingThreshold);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Setup RSSI internal estimator.
+     *
+     * @throws LockedException if estimator is locked.
+     */
+    @Override
+    protected void setupRssiEstimator() throws LockedException {
+        super.setupRssiEstimator();
+        if (mRssiThreshold != null) {
+            switch (mRssiRobustMethod) {
+                case RANSAC:
+                    ((RANSACRobustRssiPositionEstimator3D) mRssiEstimator).setThreshold(mRssiThreshold);
+                    break;
+                case LMedS:
+                    ((LMedSRobustRssiPositionEstimator3D) mRssiEstimator).setStopThreshold(mRssiThreshold);
+                    break;
+                case MSAC:
+                    ((MSACRobustRssiPositionEstimator3D) mRssiEstimator).setThreshold(mRssiThreshold);
+                    break;
+                case PROSAC:
+                    ((PROSACRobustRssiPositionEstimator3D) mRssiEstimator).setThreshold(mRssiThreshold);
+                    break;
+                case PROMedS:
+                    ((PROMedSRobustRssiPositionEstimator3D) mRssiEstimator).setStopThreshold(mRssiThreshold);
+                    break;
+            }
+        }
     }
 }

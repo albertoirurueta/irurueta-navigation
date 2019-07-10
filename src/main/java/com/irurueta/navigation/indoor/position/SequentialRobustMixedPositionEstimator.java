@@ -213,6 +213,20 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     protected int mRssiPreliminarySubsetSize;
 
     /**
+     * Threshold to determine when samples are inliers or not used during ranging
+     * position estimation.
+     * If not defined, default threshold will be used.
+     */
+    protected Double mRangingThreshold;
+
+    /**
+     * Threshold to determine when samples are inliers or not used during RSSI
+     * position estimation.
+     * If not defined, default threshold will be used.
+     */
+    protected Double mRssiThreshold;
+
+    /**
      * Indicates whether located radio source position covariance is taken into account
      * (if available) to determine distance standard deviation for ranging measurements.
      */
@@ -341,20 +355,6 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
      */
     private boolean mRefineRssiPreliminarySolutions =
             DEFAULT_REFINE_RSSI_PRELIMINARY_SOLUTIONS;
-
-    /**
-     * Threshold to determine when samples are inliers or not used during ranging
-     * position estimation.
-     * If not defined, default threshold will be used.
-     */
-    private Double mRangingThreshold;
-
-    /**
-     * Threshold to determine when samples are inliers or not used during RSSI
-     * position estimation.
-     * If not defined, default threshold will be used.
-     */
-    private Double mRssiThreshold;
 
     /**
      * Listener in charge of handling events.
@@ -1801,11 +1801,11 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     protected abstract void buildRssiEstimator();
 
     /**
-     * Setups ranging internal estimator.
+     * Setup ranging internal estimator.
      *
      * @throws LockedException if estimator is locked.
      */
-    private void setupRangingEstimator() throws LockedException {
+    protected void setupRangingEstimator() throws LockedException {
         if (mFingerprint != null) {
             //builds separated ranging readings
             List<? extends Reading<? extends RadioSource>> readings =
@@ -1899,11 +1899,11 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
     }
 
     /**
-     * Setups RSSI internal estimator.
+     * Setup RSSI internal estimator.
      *
      * @throws LockedException if estimator is locked.
      */
-    private void setupRssiEstimator() throws LockedException {
+    protected void setupRssiEstimator() throws LockedException {
         if (mFingerprint != null) {
             //builds separated RSSI readings
             List<? extends Reading<? extends RadioSource>> readings =

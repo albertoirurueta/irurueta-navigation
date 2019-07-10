@@ -1046,7 +1046,7 @@ public class MSACRobustRssiPositionEstimator3DTest implements
         double positionStdConfidence = 0.0;
         double positionAccuracy = 0.0;
         double positionAccuracyConfidence = 0.0;
-        for (int t = 0; t < TIMES; t++) {
+        for (int t = 0; t < 2 * TIMES; t++) {
             int numSources = randomizer.nextInt(MIN_SOURCES, MAX_SOURCES);
 
             InhomogeneousPoint3D position = new InhomogeneousPoint3D(
