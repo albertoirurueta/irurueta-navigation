@@ -29,11 +29,17 @@ public class Constants {
     /**
      * The flattening of WGS84 ellipsoid (1 / 298.257223563).
      */
-    public static final double EARTH_FLATTENING_WGS84 = 1/298.257223563;
+    public static final double EARTH_FLATTENING_WGS84 = 1 / 298.257223563;
+
+    /**
+     * Earth eccentricity as defined on the WGS84 ellipsoid.
+     */
+    public static final double EARTH_ECCENTRICITY = 0.0818191908425;
 
     /**
      * Constructor.
      * Prevents instantiation.
      */
-    Constants() { }
+    Constants() {
+    }
 }

@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.irurueta:irurueta-geometry:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-20190502.100742-32.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-20190502.100742-32-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/irurueta/irurueta-geometry/1.0-SNAPSHOT/irurueta-geometry-1.0-20190502.100742-32-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
