@@ -35,8 +35,8 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
      * @return a new destination frame instance.
      */
     @Override
-    public ECEFFrame convertAndReturnNew(NEDFrame source) {
-        ECEFFrame result = new ECEFFrame();
+    public ECEFFrame convertAndReturnNew(final NEDFrame source) {
+        final ECEFFrame result = new ECEFFrame();
         convert(source, result);
         return result;
     }
@@ -47,7 +47,48 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
      * @param destination destination frame instance to convert to.
      */
     @Override
-    public void convert(NEDFrame source, ECEFFrame destination) {
+    public void convert(final NEDFrame source, final ECEFFrame destination) {
+        convertNEDtoECEF(source, destination);
+    }
+
+    /**
+     * Gets source frame type.
+     *
+     * @return source frame type.
+     */
+    @Override
+    public FrameType getSourceType() {
+        return FrameType.LOCAL_NAVIGATION_FRAME;
+    }
+
+    /**
+     * Gets destination frame type.
+     *
+     * @return destination frame type.
+     */
+    @Override
+    public FrameType getDestinationType() {
+        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;
+    }
+
+    /**
+     * Converts source NED frame to a new ECEF frame instance.
+     *
+     * @param source source frame to convert from.
+     * @return a new destination frame instance.
+     */
+    public static ECEFFrame convertNEDtoECEFAndReturnNew(final NEDFrame source) {
+        final ECEFFrame result = new ECEFFrame();
+        convertNEDtoECEF(source, result);
+        return result;
+    }
+
+    /**
+     * Converts source NED frame to destination ECEF frame.
+     * @param source      source frame to convert from.
+     * @param destination destination frame instance to convert to.
+     */
+    public static void convertNEDtoECEF(final NEDFrame source, final ECEFFrame destination) {
         try {
             final double latitude = source.getLatitude();
             final double longitude = source.getLongitude();
@@ -108,25 +149,5 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
                 InvalidSourceAndDestinationFrameTypeException ignore) {
             // never happens
         }
-    }
-
-    /**
-     * Gets source frame type.
-     *
-     * @return source frame type.
-     */
-    @Override
-    public FrameType getSourceType() {
-        return FrameType.LOCAL_NAVIGATION_FRAME;
-    }
-
-    /**
-     * Gets destination frame type.
-     *
-     * @return destination frame type.
-     */
-    @Override
-    public FrameType getDestinationType() {
-        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;
     }
 }

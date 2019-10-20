@@ -42,6 +42,16 @@ public class NEDtoECEFFrameConverterTest {
     }
 
     @Test
+    public void testConstructor() {
+        final NEDtoECEFFrameConverter converter = new NEDtoECEFFrameConverter();
+
+        // check
+        assertEquals(converter.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(converter.getDestinationType(),
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+    }
+
+    @Test
     public void testConvertAndReturnNew() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, RotationException {
 
@@ -202,4 +212,159 @@ public class NEDtoECEFFrameConverterTest {
 
         assertTrue(numValid > 0);
     }
+
+    @Test
+    public void testConvertNEDtoECEFAndReturnNew() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, RotationException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+            final double roll = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+            final Matrix m = q.asInhomogeneousMatrix();
+            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+                    m, FrameType.BODY_FRAME,
+                    FrameType.LOCAL_NAVIGATION_FRAME);
+
+            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+
+            final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame1);
+
+            // convert back to NED
+            final NEDFrame nedFrame2 = ECEFtoNEDFrameConverter.convertECEFtoNEDAndReturnNew(ecefFrame);
+
+            // check
+            if (Math.abs(nedFrame1.getLatitude() - nedFrame2.getLatitude()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getLongitude(), nedFrame2.getLongitude(), ABSOLUTE_ERROR);
+
+            if (Math.abs(nedFrame1.getVn() - nedFrame2.getVn()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(nedFrame1.getVn(), nedFrame2.getVn(), ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
+
+            if (Math.abs(nedFrame1.getVd() - nedFrame2.getVd()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
+
+            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
+                    nedFrame2.getCoordinateTransformationMatrix().getSourceType());
+            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getDestinationType(),
+                    nedFrame2.getCoordinateTransformationMatrix().getDestinationType());
+
+            final Quaternion q1 = new Quaternion();
+            nedFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+
+            final Quaternion q2 = new Quaternion();
+            nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
+    @Test
+    public void testConvertNEDtoECEF() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, RotationException {
+
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+            final double roll = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+            final Matrix m = q.asInhomogeneousMatrix();
+            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+                    m, FrameType.BODY_FRAME,
+                    FrameType.LOCAL_NAVIGATION_FRAME);
+
+            final NEDFrame nedFrame1 = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
+
+            final ECEFFrame ecefFrame = new ECEFFrame();
+            NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame1, ecefFrame);
+
+            // convert back to NED
+            final NEDFrame nedFrame2 = new NEDFrame();
+            ECEFtoNEDFrameConverter.convertECEFtoNED(ecefFrame, nedFrame2);
+
+            // check
+            if (Math.abs(nedFrame1.getLatitude() - nedFrame2.getLatitude()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getLongitude(), nedFrame2.getLongitude(), ABSOLUTE_ERROR);
+
+            if (Math.abs(nedFrame1.getVn() - nedFrame2.getVn()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(nedFrame1.getVn(), nedFrame2.getVn(), ABSOLUTE_ERROR);
+            assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
+
+            if (Math.abs(nedFrame1.getVd() - nedFrame2.getVd()) > ABSOLUTE_ERROR) {
+                continue;
+            }
+
+            assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
+
+            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
+                    nedFrame2.getCoordinateTransformationMatrix().getSourceType());
+            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getDestinationType(),
+                    nedFrame2.getCoordinateTransformationMatrix().getDestinationType());
+
+            final Quaternion q1 = new Quaternion();
+            nedFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+
+            final Quaternion q2 = new Quaternion();
+            nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
+    }
+
 }

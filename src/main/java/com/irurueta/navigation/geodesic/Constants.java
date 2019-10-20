@@ -37,6 +37,21 @@ public class Constants {
     public static final double EARTH_ECCENTRICITY = 0.0818191908425;
 
     /**
+     * WGS84 Earth gravitational constant expressed in m^3 * s^-2
+     */
+    public static final double EARTH_GRAVITATIONAL_CONSTANT = 3.986004418E14;
+
+    /**
+     * WGS84 Earth's second gravitational constant.
+     */
+    public static final double EARTH_SECOND_GRAVITATIONAL_CONSTANT = 1.082627E-3;
+
+    /**
+     * Earth rotation rate expressed in radians per second (rad/s).
+     */
+    public static final double EARTH_ROTATION_RATE = 7.292115E-5;
+
+    /**
      * Constructor.
      * Prevents instantiation.
      */

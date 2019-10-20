@@ -409,7 +409,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
             return false;
         }
 
-        NEDFrame other = (NEDFrame) obj;
+        final NEDFrame other = (NEDFrame) obj;
         return equals(other);
     }
 
@@ -436,13 +436,13 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mLatitude - other.mLatitude) <= threshold &&
-                Math.abs(mLongitude - other.mLongitude) <= threshold &&
-                Math.abs(mHeight - other.mHeight) <= threshold &&
-                Math.abs(mVn - other.mVn) <= threshold &&
-                Math.abs(mVe - other.mVe) <= threshold &&
-                Math.abs(mVd - other.mVd) <= threshold &&
-                mC.equals(other.mC, threshold);
+        return Math.abs(mLatitude - other.mLatitude) <= threshold
+                && Math.abs(mLongitude - other.mLongitude) <= threshold
+                && Math.abs(mHeight - other.mHeight) <= threshold
+                && Math.abs(mVn - other.mVn) <= threshold
+                && Math.abs(mVe - other.mVe) <= threshold
+                && Math.abs(mVd - other.mVd) <= threshold
+                && mC.equals(other.mC, threshold);
     }
 
     /**

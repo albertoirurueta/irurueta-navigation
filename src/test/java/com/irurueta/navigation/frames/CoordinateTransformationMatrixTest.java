@@ -20,8 +20,10 @@ public class CoordinateTransformationMatrixTest {
     private static final double THRESHOLD = 1e-6;
     private static final double MIN_ANGLE_DEGREES = -45.0;
     private static final double MAX_ANGLE_DEGREES = 45.0;
-    private static final double LATITUDE = 41.3825;
-    private static final double LONGITUDE = 2.176944;
+    private static final double LATITUDE_DEGREES = 41.3825;
+    private static final double LONGITUDE_DEGREES = 2.176944;
+
+    private static final double ABSOLUTE_ERROR = 1e-6;
 
     @Test
     public void testConstants() {
@@ -191,6 +193,18 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(c.getSourceType(), c2.getSourceType());
         assertEquals(c.getDestinationType(), c2.getDestinationType());
         assertEquals(c.getMatrix(), c2.getMatrix());
+
+
+        // test constructor from euler angles
+        c = new CoordinateTransformationMatrix(roll, pitch, yaw,
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        // check
+        assertEquals(c.getRollEulerAngle(), roll, ABSOLUTE_ERROR);
+        assertEquals(c.getPitchEulerAngle(), pitch, ABSOLUTE_ERROR);
+        assertEquals(c.getYawEulerAngle(), yaw, ABSOLUTE_ERROR);
+        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
     }
 
     @Test
@@ -388,6 +402,31 @@ public class CoordinateTransformationMatrixTest {
     }
 
     @Test
+    public void testGetSetEulerAngles() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll1 = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch1 = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw1 = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+
+        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+                FrameType.LOCAL_NAVIGATION_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        c.setEulerAngles(roll1, pitch1, yaw1);
+
+        final double roll2 = c.getRollEulerAngle();
+        final double pitch2 = c.getPitchEulerAngle();
+        final double yaw2 = c.getYawEulerAngle();
+
+        assertEquals(roll1, roll2, ABSOLUTE_ERROR);
+        assertEquals(pitch1, pitch2, ABSOLUTE_ERROR);
+        assertEquals(yaw1, yaw2, ABSOLUTE_ERROR);
+    }
+
+    @Test
     public void testGetSetSourceType() {
 
         final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
@@ -571,6 +610,8 @@ public class CoordinateTransformationMatrixTest {
         assertTrue(c1.equals(c1));
         assertTrue(c1.equals(c2));
         assertFalse(c1.equals(c3));
+        //noinspection ConstantConditions,SimplifiableJUnitAssertion
+        assertFalse(c1.equals((Object)null));
         assertFalse(c1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(c1.equals(new Object()));
@@ -678,10 +719,10 @@ public class CoordinateTransformationMatrixTest {
 
     @Test
     public void testEcefToNedMatrix() throws WrongSizeException {
-        final double cosLat = Math.cos(LATITUDE);
-        final double sinLat = Math.sin(LATITUDE);
-        final double cosLong = Math.cos(LONGITUDE);
-        final double sinLong = Math.sin(LONGITUDE);
+        final double cosLat = Math.cos(Math.toRadians(LATITUDE_DEGREES));
+        final double sinLat = Math.sin(Math.toRadians(LATITUDE_DEGREES));
+        final double cosLong = Math.cos(Math.toRadians(LONGITUDE_DEGREES));
+        final double sinLong = Math.sin(Math.toRadians(LONGITUDE_DEGREES));
 
         final Matrix cen = new Matrix(3, 3);
         cen.setElementAt(0, 0, -sinLat * cosLong);
@@ -699,9 +740,12 @@ public class CoordinateTransformationMatrixTest {
 
         final Matrix cen1 = new Matrix(1, 1);
         final Matrix cen2 = new Matrix(3, 3);
-        CoordinateTransformationMatrix.ecefToNedMatrix(LATITUDE, LONGITUDE, cen1);
-        CoordinateTransformationMatrix.ecefToNedMatrix(LATITUDE, LONGITUDE, cen2);
-        final Matrix cen3 = CoordinateTransformationMatrix.ecefToNedMatrix(LATITUDE, LONGITUDE);
+        CoordinateTransformationMatrix.ecefToNedMatrix(Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), cen1);
+        CoordinateTransformationMatrix.ecefToNedMatrix(Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), cen2);
+        final Matrix cen3 = CoordinateTransformationMatrix.ecefToNedMatrix(
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES));
 
         assertEquals(cen1, cen2);
         assertEquals(cen1, cen3);
@@ -714,11 +758,14 @@ public class CoordinateTransformationMatrixTest {
         final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         CoordinateTransformationMatrix.ecefToNedCoordinateTransformationMatrix(
-                LATITUDE, LONGITUDE, c1);
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES), c1);
         final CoordinateTransformationMatrix c2 = CoordinateTransformationMatrix
-                .ecefToNedCoordinateTransformationMatrix(LATITUDE, LONGITUDE);
+                .ecefToNedCoordinateTransformationMatrix(Math.toRadians(LATITUDE_DEGREES),
+                        Math.toRadians(LONGITUDE_DEGREES));
 
-        final Matrix cen = CoordinateTransformationMatrix.ecefToNedMatrix(LATITUDE, LONGITUDE);
+        final Matrix cen = CoordinateTransformationMatrix.ecefToNedMatrix(
+                Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES));
 
         assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         assertEquals(c1.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
@@ -731,14 +778,22 @@ public class CoordinateTransformationMatrixTest {
 
     @Test
     public void testNedToEcefMatrix() throws WrongSizeException {
-        final Matrix cen = CoordinateTransformationMatrix.ecefToNedMatrix(LATITUDE, LONGITUDE);
+        final Matrix cen = CoordinateTransformationMatrix.ecefToNedMatrix(
+                Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES));
         final Matrix cne = cen.transposeAndReturnNew();
 
         final Matrix cne1 = new Matrix(1, 1);
         final Matrix cne2 = new Matrix(3, 3);
-        CoordinateTransformationMatrix.nedToEcefMatrix(LATITUDE, LONGITUDE, cne1);
-        CoordinateTransformationMatrix.nedToEcefMatrix(LATITUDE, LONGITUDE, cne2);
-        final Matrix cne3 = CoordinateTransformationMatrix.nedToEcefMatrix(LATITUDE, LONGITUDE);
+        CoordinateTransformationMatrix.nedToEcefMatrix(
+                Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), cne1);
+        CoordinateTransformationMatrix.nedToEcefMatrix(
+                Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), cne2);
+        final Matrix cne3 = CoordinateTransformationMatrix.nedToEcefMatrix(
+                Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES));
 
         assertEquals(cne1, cne2);
         assertEquals(cne1, cne3);
@@ -750,11 +805,15 @@ public class CoordinateTransformationMatrixTest {
         final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         CoordinateTransformationMatrix.nedToEcefCoordinateTransformationMatrix(
-                LATITUDE, LONGITUDE, c1);
+                Math.toRadians(LATITUDE_DEGREES), Math.toRadians(LONGITUDE_DEGREES), c1);
         final CoordinateTransformationMatrix c2 = CoordinateTransformationMatrix
-                .nedToEcefCoordinateTransformationMatrix(LATITUDE, LONGITUDE);
+                .nedToEcefCoordinateTransformationMatrix(
+                        Math.toRadians(LATITUDE_DEGREES),
+                        Math.toRadians(LONGITUDE_DEGREES));
 
-        final Matrix cne = CoordinateTransformationMatrix.nedToEcefMatrix(LATITUDE, LONGITUDE);
+        final Matrix cne = CoordinateTransformationMatrix.nedToEcefMatrix(
+                Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES));
 
         assertEquals(c1.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);

@@ -450,7 +450,7 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
             return false;
         }
 
-        ECEFFrame other = (ECEFFrame) obj;
+        final ECEFFrame other = (ECEFFrame) obj;
         return equals(other);
     }
 
@@ -477,13 +477,13 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
             return false;
         }
 
-        return Math.abs(mX - other.mX) <= threshold &&
-                Math.abs(mY - other.mY) <= threshold &&
-                Math.abs(mZ - other.mZ) <= threshold &&
-                Math.abs(mVx - other.mVx) <= threshold &&
-                Math.abs(mVy - other.mVy) <= threshold &&
-                Math.abs(mVz - other.mVz) <= threshold &&
-                mC.equals(other.mC, threshold);
+        return Math.abs(mX - other.mX) <= threshold
+                && Math.abs(mY - other.mY) <= threshold
+                && Math.abs(mZ - other.mZ) <= threshold
+                && Math.abs(mVx - other.mVx) <= threshold
+                && Math.abs(mVy - other.mVy) <= threshold
+                && Math.abs(mVz - other.mVz) <= threshold
+                && mC.equals(other.mC, threshold);
     }
 
     /**

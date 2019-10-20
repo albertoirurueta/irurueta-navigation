@@ -15,6 +15,7 @@ import com.irurueta.navigation.geodesic.Constants;
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition".
  */
+@SuppressWarnings("WeakerAccess")
 public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFrame> {
 
     /**
@@ -35,7 +36,7 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
      */
     @Override
     public NEDFrame convertAndReturnNew(final ECEFFrame source) {
-        NEDFrame result = new NEDFrame();
+        final NEDFrame result = new NEDFrame();
         convert(source, result);
         return result;
     }
@@ -48,6 +49,48 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
      */
     @Override
     public void convert(final ECEFFrame source, final NEDFrame destination) {
+        convertECEFtoNED(source, destination);
+    }
+
+    /**
+     * Gets source frame type.
+     *
+     * @return source frame type.
+     */
+    @Override
+    public FrameType getSourceType() {
+        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;
+    }
+
+    /**
+     * Gets destination frame type.
+     *
+     * @return destination frame type.
+     */
+    @Override
+    public FrameType getDestinationType() {
+        return FrameType.LOCAL_NAVIGATION_FRAME;
+    }
+
+    /**
+     * Converts source ECEF frame to a new NED frame instance.
+     *
+     * @param source source frame to convert from.
+     * @return a new destination frame instance.
+     */
+    public static NEDFrame convertECEFtoNEDAndReturnNew(final ECEFFrame source) {
+        final NEDFrame result = new NEDFrame();
+        convertECEFtoNED(source, result);
+        return result;
+    }
+
+    /**
+     * Converts source ECEF frame to destination NED frame.
+     *
+     * @param source      source frame to convert from.
+     * @param destination destination frame instance to convert to.
+     */
+    public static void convertECEFtoNED(final ECEFFrame source, final NEDFrame destination) {
         final double x = source.getX();
         final double y = source.getY();
         final double z = source.getZ();
@@ -141,25 +184,5 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
                 | InvalidSourceAndDestinationFrameTypeException ignore) {
             // never happens
         }
-    }
-
-    /**
-     * Gets source frame type.
-     *
-     * @return source frame type.
-     */
-    @Override
-    public FrameType getSourceType() {
-        return FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME;
-    }
-
-    /**
-     * Gets destination frame type.
-     *
-     * @return destination frame type.
-     */
-    @Override
-    public FrameType getDestinationType() {
-        return FrameType.LOCAL_NAVIGATION_FRAME;
     }
 }

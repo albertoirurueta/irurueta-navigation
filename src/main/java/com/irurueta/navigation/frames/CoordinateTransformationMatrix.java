@@ -103,6 +103,23 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     }
 
     /**
+     * Constructor with Euler angles.
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll            roll Euler angle (around x-axis) expressed in radians.
+     * @param pitch           pitch Euler angle (around y-axis) expressed in radians.
+     * @param yaw             yaw Euler angle (around z-axis) expressed in radians.
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     */
+    public CoordinateTransformationMatrix(final double roll, final double pitch, final double yaw,
+                                          final FrameType sourceType, final FrameType destinationType) {
+        this(sourceType, destinationType);
+        setEulerAngles(roll, pitch, yaw);
+    }
+
+    /**
      * Constructor.
      *
      * @param input other coordinate transformation matrix to copy data from.
@@ -201,6 +218,70 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      */
     public static boolean isValidMatrix(final Matrix matrix) {
         return isValidMatrix(matrix, DEFAULT_THRESHOLD);
+    }
+
+    /**
+     * Gets roll Euler angle (around x-axis) expressed in radians.
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return roll Euler angle.
+     */
+    public double getRollEulerAngle() {
+        return Math.atan2(mMatrix.getElementAt(1, 2), mMatrix.getElementAt(2, 2));
+    }
+
+    /**
+     * Gets pitch Euler angle (around y-axis) expressed in radians.
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return pitch Euler angle.
+     */
+    public double getPitchEulerAngle() {
+        return -Math.asin(mMatrix.getElementAt(0, 2));
+    }
+
+    /**
+     * Gets yaw Euler angle (around z-axis) expressed in radians.
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return yaw Euler angle.
+     */
+    public double getYawEulerAngle() {
+        return Math.atan2(mMatrix.getElementAt(0, 1), mMatrix.getElementAt(0, 0));
+    }
+
+    /**
+     * Sets euler angles (roll, pitch and yaw) expressed in radians.
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll  roll Euler angle (around x-axis) expressed in radians.
+     * @param pitch pitch Euler angle (around y-axis) expressed in radians.
+     * @param yaw   yaw Euler angle (around z-axis) expressed in radians.
+     */
+    public void setEulerAngles(final double roll, final double pitch, final double yaw) {
+        final double sinPhi = Math.sin(roll);
+        final double cosPhi = Math.cos(roll);
+        final double sinTheta = Math.sin(pitch);
+        final double cosTheta = Math.cos(pitch);
+        final double sinPsi = Math.sin(yaw);
+        final double cosPsi = Math.cos(yaw);
+
+        // Calculate coordinate transformation matrix using (2.22)
+        mMatrix.setElementAt(0, 0, cosTheta * cosPsi);
+        mMatrix.setElementAt(0, 1, cosTheta * sinPsi);
+        mMatrix.setElementAt(0, 2, -sinTheta);
+
+        mMatrix.setElementAt(1, 0, -cosPhi * sinPsi + sinPhi * sinTheta * cosPsi);
+        mMatrix.setElementAt(1, 1, cosPhi * cosPsi + sinPhi * sinTheta * sinPsi);
+        mMatrix.setElementAt(1, 2, sinPhi * cosTheta);
+
+        mMatrix.setElementAt(2, 0, sinPhi * sinPsi + cosPhi * sinTheta * cosPsi);
+        mMatrix.setElementAt(2, 1, -sinPhi * cosPsi + cosPhi * sinTheta * sinPsi);
+        mMatrix.setElementAt(2, 2, cosPhi * cosTheta);
     }
 
     /**
