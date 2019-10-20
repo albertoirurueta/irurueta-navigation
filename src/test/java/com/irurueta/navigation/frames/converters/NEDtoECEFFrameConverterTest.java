@@ -115,6 +115,7 @@ public class NEDtoECEFFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             numValid++;
+            break;
         }
 
         assertTrue(numValid > 0);
@@ -196,6 +197,7 @@ public class NEDtoECEFFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             numValid++;
+            break;
         }
 
         assertTrue(numValid > 0);

@@ -114,6 +114,7 @@ public class ECEFToNEDFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             numValid++;
+            break;
         }
 
         assertTrue(numValid > 0);
@@ -188,6 +189,7 @@ public class ECEFToNEDFrameConverterTest {
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             numValid++;
+            break;
         }
 
         assertTrue(numValid > 0);
