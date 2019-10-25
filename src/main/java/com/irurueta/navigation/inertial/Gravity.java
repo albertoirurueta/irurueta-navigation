@@ -1,5 +1,11 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.units.Acceleration;
+import com.irurueta.units.AccelerationConverter;
+import com.irurueta.units.AccelerationUnit;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -8,6 +14,11 @@ import java.util.Objects;
  */
 @SuppressWarnings("WeakerAccess")
 public class Gravity implements Serializable, Cloneable {
+
+    /**
+     * Number of components.
+     */
+    public static final int COMPONENTS = 3;
 
     /**
      * Acceleration due to gravity through ECEF x-axis expressed in meters per squared second (m/s^2).
@@ -38,6 +49,18 @@ public class Gravity implements Serializable, Cloneable {
      */
     public Gravity(final double gx, final double gy, final double gz) {
         setCoordinates(gx, gy, gz);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param gx acceleration due to gravity through ECEF x-axis to be set.
+     * @param gy acceleration due to gravity through ECEF y-axis to be set.
+     * @param gz acceleration due to gravity through ECEF z-axis to be set.
+     */
+    public Gravity(final Acceleration gx, final Acceleration gy,
+                   final Acceleration gz) {
+        setGravityCoordinates(gx, gy, gz);
     }
 
     /**
@@ -117,6 +140,111 @@ public class Gravity implements Serializable, Cloneable {
     }
 
     /**
+     * Gets acceleration due to gravity through ECEF x-axis.
+     *
+     * @param result instance where acceleration due to gravity through ECEF x-axis will be stored.
+     */
+    public void getGravityX(final Acceleration result) {
+        result.setValue(mGx);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets acceleration due to gravity through ECEF x-axis.
+     *
+     * @return acceleration due to gravity through ECEF x-axis.
+     */
+    public Acceleration getGravityX() {
+        return new Acceleration(mGx, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets acceleration due to gravity through ECEF x-axis.
+     *
+     * @param gravityX acceleration due to gravity through ECEF x-axis to be set.
+     */
+    public void setGravityX(final Acceleration gravityX) {
+        mGx = AccelerationConverter.convert(gravityX.getValue().doubleValue(),
+                gravityX.getUnit(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets acceleration due to gravity through ECEF y-axis.
+     *
+     * @param result instance where acceleration due to gravity through ECEF y-axis will be stored.
+     */
+    public void getGravityY(final Acceleration result) {
+        result.setValue(mGy);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets acceleration due to gravity through ECEF y-axis.
+     *
+     * @return acceleration due to gravity through ECEF y-axis.
+     */
+    public Acceleration getGravityY() {
+        return new Acceleration(mGy, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets acceleration due to gravity through ECEF y-axis.
+     *
+     * @param gravityY acceleration due to gravity through ECEF y-axis to be set.
+     */
+    public void setGravityY(final Acceleration gravityY) {
+        mGy = AccelerationConverter.convert(gravityY.getValue().doubleValue(),
+                gravityY.getUnit(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets acceleration due to gravity through ECEF z-axis.
+     *
+     * @param result instance where acceleration due to gravity through ECEF z-axis will be stored.
+     */
+    public void getGravityZ(final Acceleration result) {
+        result.setValue(mGz);
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets acceleration due to gravity through ECEF z-axis.
+     *
+     * @return acceleration due to gravity through ECEF z-axis.
+     */
+    public Acceleration getGravityZ() {
+        return new Acceleration(mGz, AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets acceleration due to gravity through ECEF z-axis.
+     *
+     * @param gravityZ acceleration due to gravity through ECEF z-axis to be set.
+     */
+    public void setGravityZ(final Acceleration gravityZ) {
+        mGz = AccelerationConverter.convert(gravityZ.getValue().doubleValue(),
+                gravityZ.getUnit(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Sets gravity coordinates.
+     *
+     * @param gravityX acceleration due to gravity through ECEF x-axis to be set.
+     * @param gravityY acceleration due to gravity through ECEF y-axis to be set.
+     * @param gravityZ acceleration due to gravity through ECEF z-axis to be set.
+     */
+    public void setGravityCoordinates(final Acceleration gravityX,
+                                      final Acceleration gravityY,
+                                      final Acceleration gravityZ) {
+        setGravityX(gravityX);
+        setGravityY(gravityY);
+        setGravityZ(gravityZ);
+    }
+
+    /**
      * Copies this instance data into provided instance.
      *
      * @param output destination instance where data will be copied to.
@@ -139,6 +267,72 @@ public class Gravity implements Serializable, Cloneable {
     }
 
     /**
+     * Gets gravity coordinates as an array.
+     *
+     * @param result array instance where gravity coordinates will be stored in
+     *               x,y,z order.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public void asArray(final double[] result) {
+        if (result.length != COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        result[0] = mGx;
+        result[1] = mGy;
+        result[2] = mGz;
+    }
+
+    /**
+     * Gets gravity coordinates as an array.
+     *
+     * @return array containing gravity coordinates in x,y,z order.
+     */
+    public double[] asArray() {
+        final double[] result = new double[COMPONENTS];
+        asArray(result);
+        return result;
+    }
+
+    /**
+     * Gets gravity coordinates as a column matrix.
+     * If provided matrix does not have size 3x1, it will be resized.
+     *
+     * @param result matrix instance where gravity coordinates will be stored in
+     *               x,y,z order.
+     */
+    public void asMatrix(final Matrix result) {
+        if (result.getColumns() != COMPONENTS || result.getRows() != 1) {
+            try {
+                result.resize(COMPONENTS, 1);
+            } catch (final WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        result.setElementAtIndex(0, mGx);
+        result.setElementAtIndex(1, mGy);
+        result.setElementAtIndex(2, mGz);
+    }
+
+    /**
+     * Gets gravity coordinates as a column matrix.
+     *
+     * @return a matrix containing gravity coordinates stored in x,y,z order.
+     */
+    public Matrix asMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(COMPONENTS, 1);
+            asMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
+    }
+
+    /**
      * Computes and returns hash code for this instance. Hash codes are almost unique
      * values that are useful for fast classification and storage of objects in collections.
      *
@@ -157,7 +351,7 @@ public class Gravity implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

@@ -1,6 +1,10 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.statistics.UniformRandomizer;
+import com.irurueta.units.Acceleration;
+import com.irurueta.units.AccelerationUnit;
 import org.junit.Test;
 
 import java.util.Random;
@@ -23,6 +27,9 @@ public class GravityTest {
         assertEquals(gravity.getGx(), 0.0, 0.0);
         assertEquals(gravity.getGy(), 0.0, 0.0);
         assertEquals(gravity.getGz(), 0.0, 0.0);
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
 
 
         // test constructor with gravity coordinates
@@ -37,6 +44,22 @@ public class GravityTest {
         assertEquals(gravity.getGx(), gx, 0.0);
         assertEquals(gravity.getGy(), gy, 0.0);
         assertEquals(gravity.getGz(), gz, 0.0);
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+
+
+        // test constructor with acceleration coordinates
+        final Acceleration gravityX = new Acceleration(gx,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration gravityY = new Acceleration(gy,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration gravityZ = new Acceleration(gz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        gravity = new Gravity(gravityX, gravityY, gravityZ);
+
+        // check default values
 
 
         // test constructor from another gravity
@@ -123,6 +146,107 @@ public class GravityTest {
     }
 
     @Test
+    public void testGetSetGravityX() {
+        final Gravity gravity = new Gravity();
+
+        // check default value
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final Acceleration gravityX1 = new Acceleration(gx,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        gravity.setGravityX(gravityX1);
+
+        // check
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
+
+        final Acceleration gravityX2 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        gravity.getGravityX(gravityX2);
+        assertEquals(gravityX2.getValue().doubleValue(), gx, 0.0);
+    }
+
+    @Test
+    public void testGetSetGravityY() {
+        final Gravity gravity = new Gravity();
+
+        // check default value
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final Acceleration gravityY1 = new Acceleration(gy,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        gravity.setGravityY(gravityY1);
+
+        // check
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
+
+        final Acceleration gravityY2 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        gravity.getGravityY(gravityY2);
+        assertEquals(gravityY2.getValue().doubleValue(), gy, 0.0);
+    }
+
+    @Test
+    public void testGetSetGravityZ() {
+        final Gravity gravity = new Gravity();
+
+        // check default value
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final Acceleration gravityZ1 = new Acceleration(gz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        gravity.setGravityZ(gravityZ1);
+
+        // check
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+
+        final Acceleration gravityZ2 = new Acceleration(0.0,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        gravity.getGravityZ(gravityZ2);
+        assertEquals(gravityZ2.getValue().doubleValue(), gz, 0.0);
+    }
+
+    @Test
+    public void testSetGravityCoordinates() {
+        final Gravity gravity = new Gravity();
+
+        // check default values
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final Acceleration gravityX1 = new Acceleration(gx,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration gravityY1 = new Acceleration(gy,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration gravityZ1 = new Acceleration(gz,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        gravity.setGravityCoordinates(gravityX1, gravityY1, gravityZ1);
+
+        // check
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+    }
+
+    @Test
     public void testCopyTo() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -156,6 +280,55 @@ public class GravityTest {
         assertEquals(gravity1.getGx(), gravity2.getGx(), 0.0);
         assertEquals(gravity1.getGy(), gravity2.getGy(), 0.0);
         assertEquals(gravity1.getGz(), gravity2.getGz(), 0.0);
+    }
+
+    @Test
+    public void testAsArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final Gravity gravity = new Gravity(gx, gy, gz);
+
+        final double[] array1 = gravity.asArray();
+        final double[] array2 = new double[Gravity.COMPONENTS];
+        gravity.asArray(array2);
+
+        // check
+        assertEquals(array1[0], gx, 0.0);
+        assertEquals(array1[1], gy, 0.0);
+        assertEquals(array1[2], gz, 0.0);
+        assertArrayEquals(array1, array2, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            gravity.asArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testAsMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final Gravity gravity = new Gravity(gx, gy, gz);
+
+        final Matrix matrix1 = gravity.asMatrix();
+        final Matrix matrix2 = new Matrix(1, 1);
+        gravity.asMatrix(matrix2);
+        final Matrix matrix3 = new Matrix(Gravity.COMPONENTS, 1);
+        gravity.asMatrix(matrix3);
+
+        // check
+        assertEquals(matrix1.getElementAtIndex(0), gx, 0.0);
+        assertEquals(matrix1.getElementAtIndex(1), gy, 0.0);
+        assertEquals(matrix1.getElementAtIndex(2), gz, 0.0);
+        assertEquals(matrix1, matrix2);
+        assertEquals(matrix1, matrix3);
     }
 
     @Test

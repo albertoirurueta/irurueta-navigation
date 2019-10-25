@@ -7,7 +7,8 @@ import com.irurueta.navigation.inertial.Gravity;
 /**
  * Calculates acceleration due to gravity resolved about ECEF frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
- * Integrated Navigation Systems, Second Edition".
+ * Integrated Navigation Systems, Second Edition" and on the companion software available at:
+ * https://github.com/ymjdz/InertialDemoECEF
  */
 @SuppressWarnings("WeakerAccess")
 public class GravityEstimator {

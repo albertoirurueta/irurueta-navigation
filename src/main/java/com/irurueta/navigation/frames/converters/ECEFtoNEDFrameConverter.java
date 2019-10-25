@@ -13,7 +13,8 @@ import com.irurueta.navigation.geodesic.Constants;
 /**
  * Converts from ECEF frame to NED frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
- * Integrated Navigation Systems, Second Edition".
+ * Integrated Navigation Systems, Second Edition" and on the companion software available at:
+ * https://github.com/ymjdz/InertialDemoECEF
  */
 @SuppressWarnings("WeakerAccess")
 public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFrame> {

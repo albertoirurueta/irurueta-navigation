@@ -5,6 +5,7 @@ import com.irurueta.navigation.NavigationException;
 /**
  * Exception related to frames.
  */
+@SuppressWarnings("WeakerAccess")
 public class FrameException extends NavigationException {
 
     /**
