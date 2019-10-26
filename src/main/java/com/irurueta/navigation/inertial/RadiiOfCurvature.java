@@ -1,5 +1,9 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -50,6 +54,16 @@ public class RadiiOfCurvature implements Serializable, Cloneable {
      */
     public RadiiOfCurvature(final double rn, final double re) {
         setValues(rn, re);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param rnDistance meridian radius of curvature.
+     * @param reDistance transverse radius of curvature.
+     */
+    public RadiiOfCurvature(final Distance rnDistance, final Distance reDistance) {
+        setValues(rnDistance, reDistance);
     }
 
     /**
@@ -140,6 +154,126 @@ public class RadiiOfCurvature implements Serializable, Cloneable {
     public void setValues(final double rn, final double re) {
         mRn = rn;
         mRe = re;
+    }
+
+    /**
+     * Gets meridian radius of curvature.
+     * This is the radius of curvature for north-south motion.
+     * It is the radius of curvature of a meridian, a cross-section of the ellipsoid
+     * surface in the north-down plane, at the point of interest (a given latitude).
+     * This is the same as the radius of the best-fitting circle to the meridian
+     * ellipse at the point of interest.
+     * The meridian radius of curvature varies with latitude and is smallest at the
+     * equator, where the geocentric radius is largest, and largest at the poles.
+     *
+     * @param result instance where meridian radius of curvature will be stored.
+     */
+    public void getRnDistance(final Distance result) {
+        result.setValue(mRn);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets meridian radius of curvature.
+     * This is the radius of curvature for north-south motion.
+     * It is the radius of curvature of a meridian, a cross-section of the ellipsoid
+     * surface in the north-down plane, at the point of interest (a given latitude).
+     * This is the same as the radius of the best-fitting circle to the meridian
+     * ellipse at the point of interest.
+     * The meridian radius of curvature varies with latitude and is smallest at the
+     * equator, where the geocentric radius is largest, and largest at the poles.
+     *
+     * @return meridian radius of curvature.
+     */
+    public Distance getRnDistance() {
+        return new Distance(mRn, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets meridian radius of curvature.
+     * This is the radius of curvature for north-south motion.
+     * It is the radius of curvature of a meridian, a cross-section of the ellipsoid
+     * surface in the north-down plane, at the point of interest (a given latitude).
+     * This is the same as the radius of the best-fitting circle to the meridian
+     * ellipse at the point of interest.
+     * The meridian radius of curvature varies with latitude and is smallest at the
+     * equator, where the geocentric radius is largest, and largest at the poles.
+     *
+     * @param rnDistance meridian radius of curvature to be set.
+     */
+    public void setRnDistance(final Distance rnDistance) {
+        mRn = DistanceConverter.convert(rnDistance.getValue().doubleValue(),
+                rnDistance.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Gets transverse radius or curvature.
+     * This is the radius of curvature for east-wet motion.
+     * This is also known as the normal radius of curvature or prime vertical radius
+     * of curvature.
+     * It is the radius of curvature of a cross-section of the ellipsoid surface in
+     * the east-down plane at the point of interest.
+     * This is the vertical plane perpendicular to the meridian plane and is not
+     * the plane of constant latitude.
+     * The transverse radius of curvature varies with latitude and is smallest at the
+     * equator. It is also equal to the length of the normal from a point on the
+     * surface to the polar axis.
+     *
+     * @param result instance where transverse radius of curvature will be stored.
+     */
+    public void getReDistance(final Distance result) {
+        result.setValue(mRe);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets transverse radius of curvature.
+     * This is the radius of curvature for east-wet motion.
+     * This is also known as the normal radius of curvature or prime vertical radius
+     * of curvature.
+     * It is the radius of curvature of a cross-section of the ellipsoid surface in
+     * the east-down plane at the point of interest.
+     * This is the vertical plane perpendicular to the meridian plane and is not
+     * the plane of constant latitude.
+     * The transverse radius of curvature varies with latitude and is smallest at the
+     * equator. It is also equal to the length of the normal from a point on the
+     * surface to the polar axis.
+     *
+     * @return transverse radius of curvature.
+     */
+    public Distance getReDistance() {
+        return new Distance(mRe, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets transverse radius of curvature.
+     * This is the radius of curvature for east-wet motion.
+     * This is also known as the normal radius of curvature or prime vertical radius
+     * of curvature.
+     * It is the radius of curvature of a cross-section of the ellipsoid surface in
+     * the east-down plane at the point of interest.
+     * This is the vertical plane perpendicular to the meridian plane and is not
+     * the plane of constant latitude.
+     * The transverse radius of curvature varies with latitude and is smallest at the
+     * equator. It is also equal to the length of the normal from a point on the
+     * surface to the polar axis.
+     *
+     * @param reDistance transverse radius of curvature to be set.
+     */
+    public void setReDistance(final Distance reDistance) {
+        mRe = DistanceConverter.convert(reDistance.getValue().doubleValue(),
+                reDistance.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Sets radii of curvature.
+     *
+     * @param rnDistance meridian radius of curvature.
+     * @param reDistance transverse radius of curvature.
+     */
+    public void setValues(final Distance rnDistance, final Distance reDistance) {
+        setRnDistance(rnDistance);
+        setReDistance(reDistance);
     }
 
     /**

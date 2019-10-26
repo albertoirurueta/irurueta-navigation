@@ -607,6 +607,8 @@ public class CoordinateTransformationMatrixTest {
         final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
 
+        //noinspection ConstantConditions,SimplifiableJUnitAssertion
+        assertTrue(c1.equals((Object)c1));
         assertTrue(c1.equals(c1));
         assertTrue(c1.equals(c2));
         assertFalse(c1.equals(c3));

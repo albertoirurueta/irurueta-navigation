@@ -646,6 +646,8 @@ public class KinematicsTest {
                 angularRateX, angularRateY, angularRateZ);
         final Kinematics k3 = new Kinematics();
 
+        //noinspection ConstantConditions,SimplifiableJUnitAssertion
+        assertTrue(k1.equals((Object)k1));
         assertTrue(k1.equals(k1));
         assertTrue(k1.equals(k2));
         assertFalse(k1.equals(k3));

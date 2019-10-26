@@ -2,6 +2,8 @@ package com.irurueta.navigation.inertial;
 
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceUnit;
 import org.junit.Test;
 
 import java.util.Random;
@@ -23,6 +25,9 @@ public class RadiiOfCurvatureTest {
         assertEquals(radii.getRn(), 0.0, 0.0);
         assertEquals(radii.getRe(), 0.0, 0.0);
 
+        assertEquals(radii.getRnDistance().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(radii.getReDistance().getValue().doubleValue(), 0.0, 0.0);
+
 
         // test constructor with values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -35,6 +40,22 @@ public class RadiiOfCurvatureTest {
         assertEquals(radii.getRn(), rn, 0.0);
         assertEquals(radii.getRe(), re, 0.0);
 
+        assertEquals(radii.getRnDistance().getValue().doubleValue(), rn, 0.0);
+        assertEquals(radii.getReDistance().getValue().doubleValue(), re, 0.0);
+
+
+        // test constructor with distance values
+        final Distance rnDistance = new Distance(rn, DistanceUnit.METER);
+        final Distance reDistance = new Distance(re, DistanceUnit.METER);
+
+        radii = new RadiiOfCurvature(rnDistance, reDistance);
+
+        // check default values
+        assertEquals(radii.getRn(), rn, 0.0);
+        assertEquals(radii.getRe(), re, 0.0);
+
+        assertEquals(radii.getRnDistance().getValue().doubleValue(), rn, 0.0);
+        assertEquals(radii.getReDistance().getValue().doubleValue(), re, 0.0);
 
         // test constructor from another instance
         final RadiiOfCurvature radii2 = new RadiiOfCurvature(radii);
@@ -79,7 +100,7 @@ public class RadiiOfCurvatureTest {
     }
 
     @Test
-    public void testSetRadii() {
+    public void testSetRadii1() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double rn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double re = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
@@ -92,6 +113,74 @@ public class RadiiOfCurvatureTest {
 
         // set values
         radii.setValues(rn, re);
+
+        // check
+        assertEquals(radii.getRn(), rn, 0.0);
+        assertEquals(radii.getRe(), re, 0.0);
+    }
+
+    @Test
+    public void testGetSetRnDistance() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double rn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final RadiiOfCurvature radii = new RadiiOfCurvature();
+
+        // check default value
+        assertEquals(radii.getRnDistance().getValue().doubleValue(), 0.0, 0.0);
+
+        // set new value
+        final Distance rnDistance1 = new Distance(rn, DistanceUnit.METER);
+        radii.setRnDistance(rnDistance1);
+
+        // check
+        final Distance rnDistance2 = new Distance(0.0, DistanceUnit.KILOMETER);
+        radii.getRnDistance(rnDistance2);
+        final Distance rnDistance3 = radii.getRnDistance();
+
+        assertEquals(rnDistance1, rnDistance2);
+        assertEquals(rnDistance1, rnDistance3);
+    }
+
+    @Test
+    public void testGetSetReDistance() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double re = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final RadiiOfCurvature radii = new RadiiOfCurvature();
+
+        // check default value
+        assertEquals(radii.getReDistance().getValue().doubleValue(), 0.0, 0.0);
+
+        // set new value
+        final Distance reDistance1 = new Distance(re, DistanceUnit.METER);
+        radii.setReDistance(reDistance1);
+
+        // check
+        final Distance reDistance2 = new Distance(0.0, DistanceUnit.KILOMETER);
+        radii.getReDistance(reDistance2);
+        final Distance reDistance3 = radii.getReDistance();
+
+        assertEquals(reDistance1, reDistance2);
+        assertEquals(reDistance1, reDistance3);
+    }
+
+    @Test
+    public void testSetRadii2() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double rn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double re = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final RadiiOfCurvature radii = new RadiiOfCurvature();
+
+        // check default values
+        assertEquals(radii.getRnDistance().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(radii.getReDistance().getValue().doubleValue(), 0.0, 0.0);
+
+        // set values
+        final Distance rnDistance = new Distance(rn, DistanceUnit.METER);
+        final Distance reDistance = new Distance(re, DistanceUnit.METER);
+        radii.setValues(rnDistance, reDistance);
 
         // check
         assertEquals(radii.getRn(), rn, 0.0);
@@ -154,6 +243,8 @@ public class RadiiOfCurvatureTest {
         final RadiiOfCurvature radii2 = new RadiiOfCurvature(rn, re);
         final RadiiOfCurvature radii3 = new RadiiOfCurvature();
 
+        //noinspection ConstantConditions,SimplifiableJUnitAssertion
+        assertTrue(radii1.equals((Object)radii1));
         assertTrue(radii1.equals(radii1));
         assertTrue(radii1.equals(radii2));
         assertFalse(radii1.equals(radii3));

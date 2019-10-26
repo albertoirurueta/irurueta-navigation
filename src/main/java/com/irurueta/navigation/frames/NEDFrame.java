@@ -1,5 +1,15 @@
 package com.irurueta.navigation.frames;
 
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleConverter;
+import com.irurueta.units.AngleUnit;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -89,6 +99,42 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param latitude  latitude expressed in radians to be set.
+     * @param longitude longitude expressed in radians to be set.
+     * @param height    height to be set.
+     */
+    public NEDFrame(final double latitude, final double longitude, final Distance height) {
+        this();
+        setPosition(latitude, longitude, height);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final double height) {
+        this();
+        setPosition(latitude, longitude, height);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final Distance height) {
+        this();
+        setPosition(latitude, longitude, height);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param height    height expressed in meters.
@@ -108,6 +154,127 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param latitude  latitude expressed in radians to be set.
+     * @param longitude longitude expressed in radians to be set.
+     * @param height    height to be set.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along Down axis.
+     */
+    public NEDFrame(final double latitude, final double longitude, final Distance height,
+                    final double vn, final double ve, final double vd) {
+        this(latitude, longitude, height);
+        setVelocityCoordinates(vn, ve, vd);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along Down axis.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final double height,
+                    final double vn, final double ve, final double vd) {
+        this(latitude, longitude, height);
+        setVelocityCoordinates(vn, ve, vd);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF
+     *                  frame and resolved along Down axis.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
+                    final double vn, final double ve, final double vd) {
+        this(latitude, longitude, height);
+        setVelocityCoordinates(vn, ve, vd);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param height    height expressed in meters.
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     */
+    public NEDFrame(final double latitude, final double longitude, final double height,
+                    final Speed speedN, final Speed speedE, final Speed speedD) {
+        this(latitude, longitude, height);
+        setSpeedCoordinates(speedN, speedE, speedD);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param height    height to be set.
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     */
+    public NEDFrame(final double latitude, final double longitude, final Distance height,
+                    final Speed speedN, final Speed speedE, final Speed speedD) {
+        this(latitude, longitude, height);
+        setSpeedCoordinates(speedN, speedE, speedD);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final double height,
+                    final Speed speedN, final Speed speedE, final Speed speedD) {
+        this(latitude, longitude, height);
+        setSpeedCoordinates(speedN, speedE, speedD);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
+                    final Speed speedN, final Speed speedE, final Speed speedD) {
+        this(latitude, longitude, height);
+        setSpeedCoordinates(speedN, speedE, speedD);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param height    height expressed in meters.
@@ -115,6 +282,36 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final double height,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height);
         setCoordinateTransformationMatrix(c);
@@ -145,6 +342,148 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param latitude  latitude expressed in radians to be set.
+     * @param longitude longitude expressed in radians to be set.
+     * @param height    height to be set.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final double latitude, final double longitude, final Distance height,
+                    final double vn, final double ve, final double vd,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, vn, ve, vd);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final double height,
+                    final double vn, final double ve, final double vd,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, vn, ve, vd);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     * @param vn        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along North axis.
+     * @param ve        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along East axis.
+     * @param vd        coordinate of velocity of body frame expressed in meters per second (m/s) with respect ECEF frame
+     *                  and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
+                    final double vn, final double ve, final double vd,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, vn, ve, vd);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param height    height expressed in meters.
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final double latitude, final double longitude, final double height,
+                    final Speed speedN, final Speed speedE, final Speed speedD,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, speedN, speedE, speedD);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude expressed in radians.
+     * @param longitude longitude expressed in radians.
+     * @param height    height to be set.
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final double latitude, final double longitude, final Distance height,
+                    final Speed speedN, final Speed speedE, final Speed speedD,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, speedN, speedE, speedD);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final double height,
+                    final Speed speedN, final Speed speedE, final Speed speedD,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, speedN, speedE, speedD);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     * @param speedN    coordinate of velocity of body frame with respect ECEF frame and resolved along North axis.
+     * @param speedE    coordinate of velocity of body frame with respect ECEF frame and resolved along East axis.
+     * @param speedD    coordinate of velocity of body frame with respect ECEF frame and resolved along Down axis.
+     * @param c         Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
+                    final Speed speedN, final Speed speedE, final Speed speedD,
+                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(latitude, longitude, height, speedN, speedE, speedD);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param input NED frame to copy data from.
      */
     public NEDFrame(final NEDFrame input) {
@@ -164,7 +503,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Sets latitude expressed in radians.
      *
-     * @param latitude latitude expressed in radians.
+     * @param latitude latitude expressed in radians to be set.
      */
     public void setLatitude(final double latitude) {
         mLatitude = latitude;
@@ -182,7 +521,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Sets longitude expressed in radians.
      *
-     * @param longitude longitude expressed in radians.
+     * @param longitude longitude expressed in radians to be set.
      */
     public void setLongitude(final double longitude) {
         mLongitude = longitude;
@@ -200,7 +539,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Sets height expressed in meters.
      *
-     * @param height height expressed in meters.
+     * @param height height expressed in meters to be set.
      */
     public void setHeight(double height) {
         mHeight = height;
@@ -209,14 +548,140 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Sets body position.
      *
-     * @param latitude  latitude expressed in radians.
-     * @param longitude longitude expressed in radians.
-     * @param height    height expressed in meters.
+     * @param latitude  latitude expressed in radians to be set.
+     * @param longitude longitude expressed in radians to be set.
+     * @param height    height expressed in meters to be set.
      */
     public void setPosition(final double latitude, final double longitude, final double height) {
         mLatitude = latitude;
         mLongitude = longitude;
         mHeight = height;
+    }
+
+    /**
+     * Gets latitude.
+     *
+     * @param result instance where latitude will be stored.
+     */
+    public void getLatitudeAngle(final Angle result) {
+        result.setValue(mLatitude);
+        result.setUnit(AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets latitude.
+     *
+     * @return latitude.
+     */
+    public Angle getLatitudeAngle() {
+        return new Angle(mLatitude, AngleUnit.RADIANS);
+    }
+
+    /**
+     * Sets latitude.
+     *
+     * @param latitudeAngle latitude to be set.
+     */
+    public void setLatitudeAngle(final Angle latitudeAngle) {
+        mLatitude = AngleConverter.convert(latitudeAngle.getValue().doubleValue(),
+                latitudeAngle.getUnit(), AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets longitude.
+     *
+     * @param result instance where longitude will be stored.
+     */
+    public void getLongitudeAngle(final Angle result) {
+        result.setValue(mLongitude);
+        result.setUnit(AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets longitude.
+     *
+     * @return longitude.
+     */
+    public Angle getLongitudeAngle() {
+        return new Angle(mLongitude, AngleUnit.RADIANS);
+    }
+
+    /**
+     * Sets longitude.
+     *
+     * @param longitudeAngle longitude to be set.
+     */
+    public void setLongitudeAngle(final Angle longitudeAngle) {
+        mLongitude = AngleConverter.convert(longitudeAngle.getValue().doubleValue(),
+                longitudeAngle.getUnit(), AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets height.
+     *
+     * @param result instance where height will be stored.
+     */
+    public void getHeightDistance(final Distance result) {
+        result.setValue(mHeight);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets height.
+     *
+     * @return height.
+     */
+    public Distance getHeightDistance() {
+        return new Distance(mHeight, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets height.
+     *
+     * @param heightDistance height to be set.
+     */
+    public void setHeightDistance(final Distance heightDistance) {
+        mHeight = DistanceConverter.convert(heightDistance.getValue().doubleValue(),
+                heightDistance.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Sets body position.
+     *
+     * @param latitude  latitude expressed in radians to be set.
+     * @param longitude longitude expressed in radians to be set.
+     * @param height    height to be set.
+     */
+    public void setPosition(final double latitude, final double longitude, final Distance height) {
+        mLatitude = latitude;
+        mLongitude = longitude;
+        setHeightDistance(height);
+    }
+
+    /**
+     * Sets body position.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height expressed in meters to be set.
+     */
+    public void setPosition(final Angle latitude, final Angle longitude, final double height) {
+        setLatitudeAngle(latitude);
+        setLongitudeAngle(longitude);
+        mHeight = height;
+    }
+
+    /**
+     * Sets body position.
+     *
+     * @param latitude  latitude to be set.
+     * @param longitude longitude to be set.
+     * @param height    height to be set.
+     */
+    public void setPosition(final Angle latitude, final Angle longitude, final Distance height) {
+        setLatitudeAngle(latitude);
+        setLongitudeAngle(longitude);
+        setHeightDistance(height);
     }
 
     /**
@@ -291,6 +756,117 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
         mVn = vn;
         mVe = ve;
         mVd = vd;
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @param result instance where North velocity coordinate will be stored.
+     */
+    public void getSpeedN(final Speed result) {
+        result.setValue(mVn);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @return North velocity coordinate.
+     */
+    public Speed getSpeedN() {
+        return new Speed(mVn, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along North axis.
+     *
+     * @param speedN North velocity coordinate to be set.
+     */
+    public void setSpeedN(final Speed speedN) {
+        mVn = SpeedConverter.convert(speedN.getValue().doubleValue(),
+                speedN.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @param result instance where East velocity coordinate will be stored.
+     */
+    public void getSpeedE(final Speed result) {
+        result.setValue(mVe);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @return East velocity coordinate.
+     */
+    public Speed getSpeedE() {
+        return new Speed(mVe, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along East axis.
+     *
+     * @param speedE East velocity coordinate to be set.
+     */
+    public void setSpeedE(final Speed speedE) {
+        mVe = SpeedConverter.convert(speedE.getValue().doubleValue(),
+                speedE.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @param result instance where Down velocity coordinate will be stored.
+     */
+    public void getSpeedD(final Speed result) {
+        result.setValue(mVd);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @return Down velocity coordinate.
+     */
+    public Speed getSpeedD() {
+        return new Speed(mVd, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets coordinate of velocity of body frame with respect ECEF frame and
+     * resolved along Down axis.
+     *
+     * @param speedD Down velocity coordinate to be set.
+     */
+    public void setSpeedD(final Speed speedD) {
+        mVd = SpeedConverter.convert(speedD.getValue().doubleValue(),
+                speedD.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets velocity coordinates of body frame resolved along North, East, Down
+     * axes.
+     *
+     * @param speedN North velocity coordinate.
+     * @param speedE East velocity coordinate.
+     * @param speedD Down velocity coordinate.
+     */
+    public void setSpeedCoordinates(final Speed speedN, final Speed speedE,
+                                    final Speed speedD) {
+        setSpeedN(speedN);
+        setSpeedE(speedE);
+        setSpeedD(speedD);
     }
 
     /**

@@ -2,6 +2,12 @@ package com.irurueta.navigation.frames;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -102,6 +108,29 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     */
+    public ECEFFrame(final Point3D position) {
+        this();
+        setPosition(position);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ) {
+        this();
+        setPositionCoordinates(positionX, positionY, positionZ);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param x  cartesian x coordinate of body position expressed in meters (m) and resolved along ECEF-frame axes.
      * @param y  cartesian y coordinate of body position expressed in meters (m) and resolved along ECEF-frame axes.
      * @param z  cartesian z coordinate of body position expressed in meters (m) and resolved along ECEF-frame axes.
@@ -116,6 +145,93 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
                      final double vx, final double vy, final double vz) {
         this(x, y, z);
         setVelocityCoordinates(vx, vy, vz);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expresed in meters (m) and resolved along ECEF-frame axes.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     */
+    public ECEFFrame(final Point3D position,
+                     final double vx, final double vy, final double vz) {
+        this(position);
+        setVelocityCoordinates(vx, vy, vz);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param speedX   x coordinate of velocity to be set.
+     * @param speedY   y coordinate of velocity to be set.
+     * @param speedZ   z coordinate of velocity to be set.
+     */
+    public ECEFFrame(final Point3D position,
+                     final Speed speedX, final Speed speedY, final Speed speedZ) {
+        this(position);
+        setSpeedCoordinates(speedX, speedY, speedZ);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param x      cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *               ECEF-frame axes.
+     * @param y      cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *               ECEF-frame axes.
+     * @param z      cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *               ECEF-frame axes.
+     * @param speedX x coordinate of velocity to be set.
+     * @param speedY y coordinate of velocity to be set.
+     * @param speedZ z coordinate of velocity to be set.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final Speed speedX, final Speed speedY, final Speed speedZ) {
+        this(x, y, z);
+        setSpeedCoordinates(speedX, speedY, speedZ);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     * @param vx        x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vy        y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final double vx,
+                     final double vy, final double vz) {
+        this(positionX, positionY, positionZ);
+        setVelocityCoordinates(vx, vy, vz);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     * @param speedX    x coordinate of velocity to be set.
+     * @param speedY    y coordinate of velocity to be set.
+     * @param speedZ    z coordinate of velocity to be set.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final Speed speedX,
+                     final Speed speedY, final Speed speedZ) {
+        this(positionX, positionY, positionZ);
+        setSpeedCoordinates(speedX, speedY, speedZ);
     }
 
     /**
@@ -139,6 +255,39 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+
+        this(position);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+
+        this(positionX, positionY, positionZ);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param x  cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
      *           ECEF-frame axes.
      * @param y  cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
@@ -155,9 +304,117 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public ECEFFrame(final double x, final double y, final double z,
-                     final double vx, final double vy, final double vz, final CoordinateTransformationMatrix c)
+                     final double vx, final double vy, final double vz,
+                     final CoordinateTransformationMatrix c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(x, y, z, vx, vy, vz);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expresed in meters (m) and resolved along ECEF-frame axes.
+     * @param vx       x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vy       y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param vz       z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                 ECEF-frame axes.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final double vx, final double vy, final double vz,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(position, vx, vy, vz);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position body position expressed in meters (m) and resolved along ECEF-frame axes.
+     * @param speedX   x coordinate of velocity to be set.
+     * @param speedY   y coordinate of velocity to be set.
+     * @param speedZ   z coordinate of velocity to be set.
+     * @param c        Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Point3D position,
+                     final Speed speedX, final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(position, speedX, speedY, speedZ);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param x      cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *               ECEF-frame axes.
+     * @param y      cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *               ECEF-frame axes.
+     * @param z      cartesian z coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
+     *               ECEF-frame axes.
+     * @param speedX x coordinate of velocity to be set.
+     * @param speedY y coordinate of velocity to be set.
+     * @param speedZ z coordinate of velocity to be set.
+     * @param c      Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final double x, final double y, final double z,
+                     final Speed speedX, final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(x, y, z, speedX, speedY, speedZ);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     * @param vx        x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vy        y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param vz        z coordinate of velocity of body frame expressed in meters per second (m/s) and resolved along
+     *                  ECEF-frame axes.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final double vx,
+                     final double vy, final double vz,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(positionX, positionY, positionZ, vx, vy, vz);
+        setCoordinateTransformationMatrix(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     * @param speedX    x coordinate of velocity to be set.
+     * @param speedY    y coordinate of velocity to be set.
+     * @param speedZ    z coordinate of velocity to be set.
+     * @param c         Body to ECEF coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final Distance positionX, final Distance positionY,
+                     final Distance positionZ, final Speed speedX,
+                     final Speed speedY, final Speed speedZ,
+                     final CoordinateTransformationMatrix c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(positionX, positionY, positionZ, speedX, speedY, speedZ);
         setCoordinateTransformationMatrix(c);
     }
 
@@ -268,6 +525,108 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
     }
 
     /**
+     * Gets cartesian x coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @param result instance where cartesian x coordinate of body position will be stored.
+     */
+    public void getPositionX(final Distance result) {
+        result.setValue(mX);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets cartesian x coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @return x coordinate of body position resolved along ECEF-frame axes.
+     */
+    public Distance getPositionX() {
+        return new Distance(mX, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets cartesian x coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     */
+    public void setPositionX(final Distance positionX) {
+        mX = DistanceConverter.convert(positionX.getValue().doubleValue(),
+                positionX.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Gets cartesian y coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @param result instance where cartesian x coordinate of body position will be stored.
+     */
+    public void getPositionY(final Distance result) {
+        result.setValue(mY);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets cartesian y coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @return y coordinate of body position resolved along ECEF-frame axes.
+     */
+    public Distance getPositionY() {
+        return new Distance(mY, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets cartesian y coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @param positionY cartesian y coordinate of body position to be set.
+     */
+    public void setPositionY(final Distance positionY) {
+        mY = DistanceConverter.convert(positionY.getValue().doubleValue(),
+                positionY.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Gets cartesian z coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @param result instance where cartesian z coordinate of body position will be stored.
+     */
+    public void getPositionZ(final Distance result) {
+        result.setValue(mZ);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets cartesian z coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @return z coordinate of body position resolved along ECEF-frame axes.
+     */
+    public Distance getPositionZ() {
+        return new Distance(mZ, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets cartesian z coordinate of body position resolved along ECEF-frame axes.
+     *
+     * @param positionZ cartesian z coordinate of body position to be set.
+     */
+    public void setPositionZ(final Distance positionZ) {
+        mZ = DistanceConverter.convert(positionZ.getValue().doubleValue(),
+                positionZ.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Sets cartesian coordinates of body position resolved along ECEF-frame axes.
+     *
+     * @param positionX cartesian x coordinate of body position to be set.
+     * @param positionY cartesian y coordinate of body position to be set.
+     * @param positionZ cartesian z coordinate of body position to be set.
+     */
+    public void setPositionCoordinates(final Distance positionX,
+                                       final Distance positionY,
+                                       final Distance positionZ) {
+        setPositionX(positionX);
+        setPositionY(positionY);
+        setPositionZ(positionZ);
+    }
+
+    /**
      * Gets x coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECEF-frame axes.
      *
      * @return x coordinate of velocity.
@@ -332,6 +691,111 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
         mVx = vx;
         mVy = vy;
         mVz = vz;
+    }
+
+    /**
+     * Gets x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param result instance where x coordinate of velocity will be stored.
+     */
+    public void getSpeedX(final Speed result) {
+        result.setValue(mVx);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @return x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     */
+    public Speed getSpeedX() {
+        return new Speed(mVx, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets x coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param speedX x coordinate of velocity of body frame resolved along ECEF-frame
+     *               axes to be set.
+     */
+    public void setSpeedX(final Speed speedX) {
+        mVx = SpeedConverter.convert(speedX.getValue().doubleValue(),
+                speedX.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param result instance where y coordinate of velocity will be stored.
+     */
+    public void getSpeedY(final Speed result) {
+        result.setValue(mVy);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @return y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     */
+    public Speed getSpeedY() {
+        return new Speed(mVy, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets y coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param speedY y coordinate of velocity of body frame resolved along ECEF-frame
+     *               axes to be set.
+     */
+    public void setSpeedY(final Speed speedY) {
+        mVy = SpeedConverter.convert(speedY.getValue().doubleValue(),
+                speedY.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param result instance where z coordinate of velocity will be stored.
+     */
+    public void getSpeedZ(final Speed result) {
+        result.setValue(mVz);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @return z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     */
+    public Speed getSpeedZ() {
+        return new Speed(mVz, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets z coordinate of velocity of body frame resolved along ECEF-frame axes.
+     *
+     * @param speedZ z coordinate of velocity of body frame resolved along ECEF-frame
+     *               axes to be set.
+     */
+    public void setSpeedZ(final Speed speedZ) {
+        mVz = SpeedConverter.convert(speedZ.getValue().doubleValue(),
+                speedZ.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets velocity coordinates of body frame resolved along ECEF-frame axes.
+     *
+     * @param speedX x coordinate of velocity to be set.
+     * @param speedY y coordinate of velocity to be set.
+     * @param speedZ z coordinate of velocity to be set.
+     */
+    public void setSpeedCoordinates(final Speed speedX,
+                                    final Speed speedY,
+                                    final Speed speedZ) {
+        setSpeedX(speedX);
+        setSpeedY(speedY);
+        setSpeedZ(speedZ);
     }
 
     /**

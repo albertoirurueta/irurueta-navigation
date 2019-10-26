@@ -357,6 +357,8 @@ public class GravityTest {
         final Gravity gravity2 = new Gravity(gx, gy, gz);
         final Gravity gravity3 = new Gravity();
 
+        //noinspection ConstantConditions,SimplifiableJUnitAssertion
+        assertTrue(gravity1.equals((Object)gravity1));
         assertTrue(gravity1.equals(gravity1));
         assertTrue(gravity1.equals(gravity2));
         assertFalse(gravity1.equals(gravity3));

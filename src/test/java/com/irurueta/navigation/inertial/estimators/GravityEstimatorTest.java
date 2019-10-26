@@ -1,5 +1,7 @@
 package com.irurueta.navigation.inertial.estimators;
 
+import com.irurueta.geometry.InhomogeneousPoint3D;
+import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
@@ -113,6 +115,49 @@ public class GravityEstimatorTest {
     }
 
     @Test
+    public void testEstimateWithPosition() {
+        final NEDFrame nedFrame = new NEDFrame(Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
+        final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
+        final double x = ecefFrame.getX();
+        final double y = ecefFrame.getY();
+        final double z = ecefFrame.getZ();
+
+        final Point3D position = new InhomogeneousPoint3D(x, y, z);
+
+        final GravityEstimator estimator = new GravityEstimator();
+        final Gravity gravity = new Gravity();
+        estimator.estimate(position, gravity);
+
+        final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
+                + Math.pow(gravity.getGy(), 2.0)
+                + Math.pow(gravity.getGz(), 2.0));
+
+        assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testEstimateAndReturnNewWithPosition() {
+        final NEDFrame nedFrame = new NEDFrame(Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
+        final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
+        final double x = ecefFrame.getX();
+        final double y = ecefFrame.getY();
+        final double z = ecefFrame.getZ();
+
+        final Point3D position = new InhomogeneousPoint3D(x, y, z);
+
+        final GravityEstimator estimator = new GravityEstimator();
+        final Gravity gravity = estimator.estimateAndReturnNew(position);
+
+        final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
+                + Math.pow(gravity.getGy(), 2.0)
+                + Math.pow(gravity.getGz(), 2.0));
+
+        assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
+    }
+
+    @Test
     public void testEstimateForAGivenLatitudeAndLongitude() {
         final NEDFrame nedFrame = new NEDFrame(Math.toRadians(LATITUDE_DEGREES),
                 Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
@@ -147,5 +192,16 @@ public class GravityEstimatorTest {
 
             assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
         }
+    }
+
+    @Test
+    public void testEstimateAtCenterOfEarth() {
+        final GravityEstimator estimator = new GravityEstimator();
+        final Gravity gravity = estimator.estimateAndReturnNew(0.0, 0.0, 0.0);
+
+        // check
+        assertEquals(gravity.getGx(), 0.0, 0.0);
+        assertEquals(gravity.getGy(), 0.0, 0.0);
+        assertEquals(gravity.getGz(), 0.0, 0.0);
     }
 }
