@@ -759,6 +759,35 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     }
 
     /**
+     * Gets norm of velocity expressed in meters per second (m/s), which represents
+     * the speed of the body.
+     *
+     * @return norm of velocity expressed in meters per second (m/s).
+     */
+    public double getVelocityNorm() {
+        return Math.sqrt(mVn * mVn + mVe * mVe + mVd * mVd);
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @param result velocity norm.
+     */
+    public void getVelocityNormAsSpeed(final Speed result) {
+        result.setValue(getVelocityNorm());
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @return velocity norm.
+     */
+    public Speed getVelocityNormAsSpeed() {
+        return new Speed(getVelocityNorm(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
      * Gets coordinate of velocity of body frame with respect ECEF frame and
      * resolved along North axis.
      *

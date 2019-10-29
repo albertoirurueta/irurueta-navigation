@@ -2,6 +2,9 @@ package com.irurueta.navigation.inertial.estimators;
 
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.RadiiOfCurvature;
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleConverter;
+import com.irurueta.units.AngleUnit;
 
 /**
  * Calculates radii of curvature at a given latitude.
@@ -48,6 +51,29 @@ public class RadiiOfCurvatureEstimator {
      * Estimates radii of curvature (meridian and transverse radii of curvature) at
      * provided geodetic latitude.
      *
+     * @param latitude geodetic latitude.
+     * @param result instance where estimated radii of curvature will be stored.
+     */
+    public void estimate(final Angle latitude, final RadiiOfCurvature result) {
+        estimateRadiiOfCurvature(latitude, result);
+    }
+
+    /**
+     * Estimates radii of curvature (meridian and transverse radii of curvature) at
+     * provided geodetic latitude.
+     *
+     * @param latitude geodetic latitude.
+     * @return a new radii of curvature instance containing meridian and transverse
+     * radii of curvature.
+     */
+    public RadiiOfCurvature estimateAndReturnNew(final Angle latitude) {
+        return estimateRadiiOfCurvatureAndReturnNew(latitude);
+    }
+
+    /**
+     * Estimates radii of curvature (meridian and transverse radii of curvature) at
+     * provided geodetic latitude.
+     *
      * @param latitude geodetic latitude expressed in radians (rad).
      * @param result instance where estimated radii of curvature will be stored.
      */
@@ -74,6 +100,34 @@ public class RadiiOfCurvatureEstimator {
      * radii of curvature.
      */
     public static RadiiOfCurvature estimateRadiiOfCurvatureAndReturnNew(final double latitude) {
+        final RadiiOfCurvature result = new RadiiOfCurvature();
+        estimateRadiiOfCurvature(latitude, result);
+        return result;
+    }
+
+    /**
+     * Estimates radii of curvature (meridian and transverse radii of curvature) at
+     * provided geodetic latitude.
+     *
+     * @param latitude geodetic latitude.
+     * @param result instance where estimated radii of curvature will be stored.
+     */
+    public static void estimateRadiiOfCurvature(final Angle latitude,
+                                                final RadiiOfCurvature result) {
+        estimateRadiiOfCurvature(AngleConverter.convert(
+                latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                result);
+    }
+
+    /**
+     * Estimates radii of curvature (meridian and transverse radii of curvature) at
+     * provided geodetic latitude.
+     *
+     * @param latitude geodetic latitude.
+     * @return a new radii of curvature instance containing meridian and transverse
+     * radii of curvature.
+     */
+    public static RadiiOfCurvature estimateRadiiOfCurvatureAndReturnNew(final Angle latitude) {
         final RadiiOfCurvature result = new RadiiOfCurvature();
         estimateRadiiOfCurvature(latitude, result);
         return result;

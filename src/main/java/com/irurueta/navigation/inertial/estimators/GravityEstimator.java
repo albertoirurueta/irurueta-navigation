@@ -4,6 +4,9 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.Gravity;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
 
 /**
  * Calculates acceleration due to gravity resolved about ECEF frame.
@@ -109,6 +112,30 @@ public class GravityEstimator {
     /**
      * Estimates acceleration due to gravity resolved about ECEF for a given position expressed in ECEF coordinates.
      *
+     * @param x cartesian x coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param y cartesian y coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param z cartesian z coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param result instance where estimated acceleration due to gravity will be stored.
+     */
+    public void estimate(final Distance x, final Distance y, final Distance z, final Gravity result) {
+        estimateGravity(x, y, z, result);
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about ECEF for a given position expressed in ECEF coordinates.
+     *
+     * @param x cartesian x coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param y cartesian y coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param z cartesian z coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @return a new gravity instance containing estimated acceleration due to gravity.
+     */
+    public Gravity estimateAndReturnNew(final Distance x, final Distance y, final Distance z) {
+        return estimateGravityAndReturnNew(x, y, z);
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about ECEF for a given position expressed in ECEF coordinates.
+     *
      * @param x cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
      *          ECEF-frame axes.
      * @param y cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
@@ -202,5 +229,38 @@ public class GravityEstimator {
      */
     public static Gravity estimateGravityAndReturnNew(final Point3D position) {
         return estimateGravityAndReturnNew(position.getInhomX(), position.getInhomY(), position.getInhomZ());
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about ECEF for a given position expressed in ECEF coordinates.
+     *
+     * @param x cartesian x coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param y cartesian y coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param z cartesian z coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param result instance where estimated acceleration due to gravity will be stored.
+     */
+    public static void estimateGravity(final Distance x, final Distance y,
+                                       final Distance z, final Gravity result) {
+        estimateGravity(
+                DistanceConverter.convert(x.getValue().doubleValue(), x.getUnit(), DistanceUnit.METER),
+                DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(), DistanceUnit.METER),
+                DistanceConverter.convert(z.getValue().doubleValue(), z.getUnit(), DistanceUnit.METER),
+                result);
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about ECEF for a given position expressed in ECEF coordinates.
+     *
+     * @param x cartesian x coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param y cartesian y coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @param z cartesian z coordinate of body position with respect ECEF frame, resolved along ECEF-frame axes.
+     * @return a new gravity instance containing estimated acceleration due to gravity.
+     */
+    public static Gravity estimateGravityAndReturnNew(final Distance x,
+                                                      final Distance y,
+                                                      final Distance z) {
+        final Gravity result = new Gravity();
+        estimateGravity(x, y, z, result);
+        return result;
     }
 }

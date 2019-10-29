@@ -33,6 +33,8 @@ public class ECEFFrameTest {
     private static final double MIN_VELOCITY_VALUE = -2.0;
     private static final double MAX_VELOCITY_VALUE = 2.0;
 
+    private static final double ABSOLUTE_ERROR = 1e-8;
+
     @Test
     public void testConstants() {
 
@@ -912,6 +914,28 @@ public class ECEFFrameTest {
     }
 
     @Test
+    public void testGetPositionNorm() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)
+                + Math.pow(z, 2.0));
+
+        final ECEFFrame frame = new ECEFFrame(x, y, z);
+
+        assertEquals(frame.getPositionNorm(), norm, ABSOLUTE_ERROR);
+
+        final Distance normDistance1 = new Distance(0.0, DistanceUnit.KILOMETER);
+        frame.getPositionNormAsDistance(normDistance1);
+        final Distance normDistance2 = frame.getPositionNormAsDistance();
+
+        assertEquals(normDistance1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
+        assertEquals(normDistance1.getUnit(), DistanceUnit.METER);
+        assertEquals(normDistance1, normDistance2);
+    }
+
+    @Test
     public void testGetSetVx() {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -987,6 +1011,30 @@ public class ECEFFrameTest {
         assertEquals(frame.getVx(), vx, 0.0);
         assertEquals(frame.getVy(), vy, 0.0);
         assertEquals(frame.getVz(), vz, 0.0);
+    }
+
+    @Test
+    public void testGetVelocityNorm() {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0)
+                + Math.pow(vz, 2.0));
+
+        final ECEFFrame frame = new ECEFFrame();
+        frame.setVelocityCoordinates(vx, vy, vz);
+
+        assertEquals(frame.getVelocityNorm(), norm, ABSOLUTE_ERROR);
+
+        final Speed normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        frame.getVelocityNormAsSpeed(normSpeed1);
+        final Speed normSpeed2 = frame.getVelocityNormAsSpeed();
+
+        assertEquals(normSpeed1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
+        assertEquals(normSpeed1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(normSpeed1, normSpeed2);
     }
 
     @Test

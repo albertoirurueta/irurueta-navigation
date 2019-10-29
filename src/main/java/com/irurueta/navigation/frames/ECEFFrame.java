@@ -627,6 +627,35 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
     }
 
     /**
+     * Gets norm of position expressed in meters (m), which represents the distance to
+     * Earth's center of mass.
+     *
+     * @return position norm expressed in meters (m).
+     */
+    public double getPositionNorm() {
+        return Math.sqrt(mX * mX + mY * mY + mZ * mZ);
+    }
+
+    /**
+     * Gets norm of position, which represents the distance to Earth's center of mass.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getPositionNormAsDistance(final Distance result) {
+        result.setValue(getPositionNorm());
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets norm of position, which represents the distance to Earth's center of mass.
+     *
+     * @return position norm.
+     */
+    public Distance getPositionNormAsDistance() {
+        return new Distance(getPositionNorm(), DistanceUnit.METER);
+    }
+
+    /**
      * Gets x coordinate of velocity of body frame expressed in meters per second (m/s) resolved along ECEF-frame axes.
      *
      * @return x coordinate of velocity.
@@ -691,6 +720,35 @@ public class ECEFFrame implements Frame, Serializable, Cloneable {
         mVx = vx;
         mVy = vy;
         mVz = vz;
+    }
+
+    /**
+     * Gets norm of velocity expressed in meters per second (m/s), which represents
+     * the speed of the body.
+     *
+     * @return norm of velocity expressed in meters per second (m/s).
+     */
+    public double getVelocityNorm() {
+        return Math.sqrt(mVx * mVx + mVy * mVy + mVz * mVz);
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @param result velocity norm.
+     */
+    public void getVelocityNormAsSpeed(final Speed result) {
+        result.setValue(getVelocityNorm());
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets norm of velocity, which represents the speed of the body.
+     *
+     * @return velocity norm.
+     */
+    public Speed getVelocityNormAsSpeed() {
+        return new Speed(getVelocityNorm(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**

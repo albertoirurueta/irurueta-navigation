@@ -30,6 +30,8 @@ public class NEDFrameTest {
     private static final double MIN_VELOCITY_VALUE = -2.0;
     private static final double MAX_VELOCITY_VALUE = 2.0;
 
+    private static final double ABSOLUTE_ERROR = 1e-8;
+
     @Test
     public void testConstants() {
 
@@ -1184,6 +1186,30 @@ public class NEDFrameTest {
         assertEquals(frame.getVn(), vn, 0.0);
         assertEquals(frame.getVe(), ve, 0.0);
         assertEquals(frame.getVd(), vd, 0.0);
+    }
+
+    @Test
+    public void testGetVelocityNorm() {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double norm = Math.sqrt(Math.pow(vn, 2.0) + Math.pow(ve, 2.0)
+                + Math.pow(vd, 2.0));
+
+        final NEDFrame frame = new NEDFrame();
+        frame.setVelocityCoordinates(vn, ve, vd);
+
+        assertEquals(frame.getVelocityNorm(), norm, ABSOLUTE_ERROR);
+
+        final Speed normSpeed1 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        frame.getVelocityNormAsSpeed(normSpeed1);
+        final Speed normSpeed2 = frame.getVelocityNormAsSpeed();
+
+        assertEquals(normSpeed1.getValue().doubleValue(), norm, ABSOLUTE_ERROR);
+        assertEquals(normSpeed1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+        assertEquals(normSpeed1, normSpeed2);
     }
 
     @Test

@@ -20,7 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 public class ECEFToNEDFrameConverterTest {
 
-    private static final double ABSOLUTE_ERROR = 1e-2;
+    private static final double LARGE_ABSOLUTE_ERROR = 1e-4;
+    private static final double ABSOLUTE_ERROR = 1e-8;
 
     private static final double MIN_ANGLE_DEGREES = -45.0;
     private static final double MAX_ANGLE_DEGREES = 45.0;
@@ -98,18 +99,13 @@ public class ECEFToNEDFrameConverterTest {
             final ECEFFrame ecefFrame2 = converter2.convertAndReturnNew(nedFrame);
 
             // check
-            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), LARGE_ABSOLUTE_ERROR);
 
-            if (Math.abs(ecefFrame1.getZ() - ecefFrame2.getZ()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
-            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), ABSOLUTE_ERROR);
-
-            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
                     ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
@@ -121,13 +117,16 @@ public class ECEFToNEDFrameConverterTest {
 
             final Quaternion q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
-            assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
+            assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
+
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(ecefFrame1.getVelocityNorm(), nedFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
 
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
     @Test
@@ -173,18 +172,13 @@ public class ECEFToNEDFrameConverterTest {
             converter2.convert(nedFrame, ecefFrame2);
 
             // check
-            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), LARGE_ABSOLUTE_ERROR);
 
-            if (Math.abs(ecefFrame1.getZ() - ecefFrame2.getZ()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
-            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), ABSOLUTE_ERROR);
-
-            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
                     ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
@@ -196,13 +190,16 @@ public class ECEFToNEDFrameConverterTest {
 
             final Quaternion q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
-            assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
+            assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
+
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(ecefFrame1.getVelocityNorm(), nedFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
 
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
     @Test
@@ -242,18 +239,13 @@ public class ECEFToNEDFrameConverterTest {
             final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
 
             // check
-            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), LARGE_ABSOLUTE_ERROR);
 
-            if (Math.abs(ecefFrame1.getZ() - ecefFrame2.getZ()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
-            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), ABSOLUTE_ERROR);
-
-            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
                     ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
@@ -265,13 +257,16 @@ public class ECEFToNEDFrameConverterTest {
 
             final Quaternion q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
-            assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
+            assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
+
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(ecefFrame1.getVelocityNorm(), nedFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
 
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
     @Test
@@ -313,18 +308,13 @@ public class ECEFToNEDFrameConverterTest {
             NEDtoECEFFrameConverter.convertNEDtoECEF(nedFrame, ecefFrame2);
 
             // check
-            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getX(), ecefFrame2.getX(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getY(), ecefFrame2.getY(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), LARGE_ABSOLUTE_ERROR);
 
-            if (Math.abs(ecefFrame1.getZ() - ecefFrame2.getZ()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
-            assertEquals(ecefFrame1.getZ(), ecefFrame2.getZ(), ABSOLUTE_ERROR);
-
-            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), ABSOLUTE_ERROR);
-            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVx(), ecefFrame2.getVx(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
             assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
                     ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
@@ -336,13 +326,16 @@ public class ECEFToNEDFrameConverterTest {
 
             final Quaternion q2 = new Quaternion();
             ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
-            assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
+            assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
+
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(ecefFrame1.getVelocityNorm(), nedFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
 
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
 }

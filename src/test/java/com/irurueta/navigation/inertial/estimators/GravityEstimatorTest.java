@@ -8,6 +8,8 @@ import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.Gravity;
 import com.irurueta.statistics.UniformRandomizer;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceUnit;
 import org.junit.Test;
 
 import java.util.Random;
@@ -149,6 +151,53 @@ public class GravityEstimatorTest {
 
         final GravityEstimator estimator = new GravityEstimator();
         final Gravity gravity = estimator.estimateAndReturnNew(position);
+
+        final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
+                + Math.pow(gravity.getGy(), 2.0)
+                + Math.pow(gravity.getGz(), 2.0));
+
+        assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testEstimateWithDistances() {
+        final NEDFrame nedFrame = new NEDFrame(Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
+        final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
+        final double x = ecefFrame.getX();
+        final double y = ecefFrame.getY();
+        final double z = ecefFrame.getZ();
+
+        final Distance distanceX = new Distance(x, DistanceUnit.METER);
+        final Distance distanceY = new Distance(y, DistanceUnit.METER);
+        final Distance distanceZ = new Distance(z, DistanceUnit.METER);
+
+        final GravityEstimator estimator = new GravityEstimator();
+        final Gravity gravity = new Gravity();
+        estimator.estimate(distanceX, distanceY, distanceZ, gravity);
+
+        final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
+                + Math.pow(gravity.getGy(), 2.0)
+                + Math.pow(gravity.getGz(), 2.0));
+
+        assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testEstimateAndReturnNewWithDistances() {
+        final NEDFrame nedFrame = new NEDFrame(Math.toRadians(LATITUDE_DEGREES),
+                Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
+        final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
+        final double x = ecefFrame.getX();
+        final double y = ecefFrame.getY();
+        final double z = ecefFrame.getZ();
+
+        final Distance distanceX = new Distance(x, DistanceUnit.METER);
+        final Distance distanceY = new Distance(y, DistanceUnit.METER);
+        final Distance distanceZ = new Distance(z, DistanceUnit.METER);
+
+        final GravityEstimator estimator = new GravityEstimator();
+        final Gravity gravity = estimator.estimateAndReturnNew(distanceX, distanceY, distanceZ);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                 + Math.pow(gravity.getGy(), 2.0)

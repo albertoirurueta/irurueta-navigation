@@ -245,6 +245,34 @@ public class Gravity implements Serializable, Cloneable {
     }
 
     /**
+     * Gets gravity norm.
+     * @return gravity norm.
+     */
+    public double getNorm() {
+        return Math.sqrt(mGx * mGx + mGy * mGy + mGz * mGz);
+    }
+
+    /**
+     * Gets gravity norm as an acceleration.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getNormAsAcceleration(final Acceleration result) {
+        result.setValue(getNorm());
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets gravity norm as an acceleration.
+     *
+     * @return an acceleration containing gravity norm.
+     */
+    public Acceleration getNormAsAcceleration() {
+        return new Acceleration(getNorm(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
      * Copies this instance data into provided instance.
      *
      * @param output destination instance where data will be copied to.

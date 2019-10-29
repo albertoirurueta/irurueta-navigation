@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 public class NEDtoECEFFrameConverterTest {
 
-    private static final double ABSOLUTE_ERROR = 1e-2;
+    private static final double ABSOLUTE_ERROR = 1e-8;
 
     private static final double MIN_ANGLE_DEGREES = -45.0;
     private static final double MAX_ANGLE_DEGREES = 45.0;
@@ -92,24 +92,12 @@ public class NEDtoECEFFrameConverterTest {
             final NEDFrame nedFrame2 = converter2.convertAndReturnNew(ecefFrame);
 
             // check
-            if (Math.abs(nedFrame1.getLatitude() - nedFrame2.getLatitude()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getLongitude(), nedFrame2.getLongitude(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVn() - nedFrame2.getVn()) > ABSOLUTE_ERROR) {
-                continue;
-            }
+            assertEquals(nedFrame1.getHeight(), nedFrame2.getHeight(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getVn(), nedFrame2.getVn(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVd() - nedFrame2.getVd()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
@@ -124,11 +112,14 @@ public class NEDtoECEFFrameConverterTest {
             nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
+
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
     @Test
@@ -174,24 +165,12 @@ public class NEDtoECEFFrameConverterTest {
             converter2.convert(ecefFrame, nedFrame2);
 
             // check
-            if (Math.abs(nedFrame1.getLatitude() - nedFrame2.getLatitude()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getLongitude(), nedFrame2.getLongitude(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVn() - nedFrame2.getVn()) > ABSOLUTE_ERROR) {
-                continue;
-            }
+            assertEquals(nedFrame1.getHeight(), nedFrame2.getHeight(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getVn(), nedFrame2.getVn(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVd() - nedFrame2.getVd()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
@@ -206,11 +185,14 @@ public class NEDtoECEFFrameConverterTest {
             nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
+
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
     @Test
@@ -250,24 +232,12 @@ public class NEDtoECEFFrameConverterTest {
             final NEDFrame nedFrame2 = ECEFtoNEDFrameConverter.convertECEFtoNEDAndReturnNew(ecefFrame);
 
             // check
-            if (Math.abs(nedFrame1.getLatitude() - nedFrame2.getLatitude()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getLongitude(), nedFrame2.getLongitude(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVn() - nedFrame2.getVn()) > ABSOLUTE_ERROR) {
-                continue;
-            }
+            assertEquals(nedFrame1.getHeight(), nedFrame2.getHeight(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getVn(), nedFrame2.getVn(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVd() - nedFrame2.getVd()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
@@ -282,11 +252,14 @@ public class NEDtoECEFFrameConverterTest {
             nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
+
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
     @Test
@@ -328,24 +301,12 @@ public class NEDtoECEFFrameConverterTest {
             ECEFtoNEDFrameConverter.convertECEFtoNED(ecefFrame, nedFrame2);
 
             // check
-            if (Math.abs(nedFrame1.getLatitude() - nedFrame2.getLatitude()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getLatitude(), nedFrame2.getLatitude(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getLongitude(), nedFrame2.getLongitude(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVn() - nedFrame2.getVn()) > ABSOLUTE_ERROR) {
-                continue;
-            }
+            assertEquals(nedFrame1.getHeight(), nedFrame2.getHeight(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getVn(), nedFrame2.getVn(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
-
-            if (Math.abs(nedFrame1.getVd() - nedFrame2.getVd()) > ABSOLUTE_ERROR) {
-                continue;
-            }
-
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
             assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
@@ -360,11 +321,14 @@ public class NEDtoECEFFrameConverterTest {
             nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
+            // velocity norm is the same either on ECEF or NED frame
+            assertEquals(nedFrame1.getVelocityNorm(), ecefFrame.getVelocityNorm(),
+                    ABSOLUTE_ERROR);
+
             numValid++;
-            break;
         }
 
-        assertTrue(numValid > 0);
+        assertEquals(numValid, TIMES);
     }
 
 }

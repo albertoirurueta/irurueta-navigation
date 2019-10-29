@@ -30,6 +30,8 @@ public class GravityTest {
         assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getNorm(), 0.0, 0.0);
+        assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
 
 
         // test constructor with gravity coordinates
@@ -37,6 +39,7 @@ public class GravityTest {
         final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
         gravity = new Gravity(gx, gy, gz);
 
@@ -47,6 +50,8 @@ public class GravityTest {
         assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
         assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
         assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getNorm(), g, 0.0);
+        assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), g, 0.0);
 
 
         // test constructor with acceleration coordinates
@@ -60,6 +65,14 @@ public class GravityTest {
         gravity = new Gravity(gravityX, gravityY, gravityZ);
 
         // check default values
+        assertEquals(gravity.getGx(), gx, 0.0);
+        assertEquals(gravity.getGy(), gy, 0.0);
+        assertEquals(gravity.getGz(), gz, 0.0);
+        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getNorm(), g, 0.0);
+        assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), g, 0.0);
 
 
         // test constructor from another gravity
@@ -244,6 +257,27 @@ public class GravityTest {
         assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
         assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
         assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+    }
+
+    @Test
+    public void testGetNorm() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
+
+        final Gravity gravity = new Gravity(gx, gy, gz);
+
+        assertEquals(gravity.getNorm(), g, 0.0);
+
+        Acceleration norm1 = new Acceleration(0.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        gravity.getNormAsAcceleration(norm1);
+        Acceleration norm2 = gravity.getNormAsAcceleration();
+
+        assertEquals(norm1.getValue().doubleValue(), g, 0.0);
+        assertEquals(norm1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(norm1, norm2);
     }
 
     @Test

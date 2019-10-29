@@ -1,6 +1,10 @@
 package com.irurueta.navigation.inertial.estimators;
 
+import com.irurueta.algebra.DecomposerException;
 import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.RankDeficientMatrixException;
+import com.irurueta.algebra.Utils;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
@@ -11,6 +15,8 @@ import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
+import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.navigation.inertial.Gravity;
 import com.irurueta.navigation.inertial.Kinematics;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
@@ -21,7 +27,9 @@ import org.junit.Test;
 
 import java.util.Random;
 
+import static com.irurueta.navigation.frames.CoordinateTransformationMatrix.ROWS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class KinematicsEstimatorTest {
 
@@ -48,6 +56,11 @@ public class KinematicsEstimatorTest {
 
     private static final double MIN_VELOCITY_VARIATION = -0.1;
     private static final double MAX_VELOCITY_VARIATION = 0.1;
+
+    private static final double SCALING_THRESHOLD = 2e-5;
+    private static final double ALPHA_THRESHOLD = 1e-8;
+
+    private static final double ABSOLUTE_ERROR = 1e-5;
 
     @Test
     public void testEstimate()
@@ -272,7 +285,8 @@ public class KinematicsEstimatorTest {
     @Test
     public void testEstimateKinematics()
             throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+            InvalidRotationMatrixException, WrongSizeException,
+            RankDeficientMatrixException, DecomposerException {
 
         final NEDFrame oldNedFrame = createOldNedFrame();
         final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
@@ -379,12 +393,18 @@ public class KinematicsEstimatorTest {
         assertEquals(k1, k12);
         assertEquals(k1, k13);
         assertEquals(k1, k14);
+
+        final Kinematics k = estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+                vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
+
+        assertTrue(k1.equals(k, ABSOLUTE_ERROR));
     }
 
     @Test
     public void testEstimateKinematicsAndReturnNew()
             throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+            InvalidRotationMatrixException, WrongSizeException,
+            RankDeficientMatrixException, DecomposerException {
 
         final NEDFrame oldNedFrame = createOldNedFrame();
         final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
@@ -491,6 +511,11 @@ public class KinematicsEstimatorTest {
         assertEquals(k1, k12);
         assertEquals(k1, k13);
         assertEquals(k1, k14);
+
+        final Kinematics k = estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+                vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
+
+        assertTrue(k1.equals(k, ABSOLUTE_ERROR));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -603,7 +628,7 @@ public class KinematicsEstimatorTest {
     @Test
     public void testEstimateKinematicsWhenZeroTimeIntervalReturnsZeroValues()
             throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+            InvalidRotationMatrixException, WrongSizeException, RankDeficientMatrixException, DecomposerException {
 
         final NEDFrame oldNedFrame = createOldNedFrame();
         final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
@@ -633,7 +658,7 @@ public class KinematicsEstimatorTest {
 
         final Kinematics k = KinematicsEstimator
                 .estimateKinematicsAndReturnNew(0.0, c, oldC,
-                vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
+                        vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         assertEquals(k.getFx(), 0.0, 0.0);
         assertEquals(k.getFy(), 0.0, 0.0);
@@ -642,6 +667,12 @@ public class KinematicsEstimatorTest {
         assertEquals(k.getAngularRateX(), 0.0, 0.0);
         assertEquals(k.getAngularRateY(), 0.0, 0.0);
         assertEquals(k.getAngularRateZ(), 0.0, 0.0);
+
+        final Kinematics k2 = estimateKinematics(0.0, c, oldC,
+                vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
+
+        assertTrue(k2.equals(k, 0.0));
+
     }
 
     private NEDFrame createOldNedFrame()
@@ -737,4 +768,99 @@ public class KinematicsEstimatorTest {
 
         return new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
     }
+
+    private static Kinematics estimateKinematics(final double timeInterval,
+                                                final CoordinateTransformationMatrix c,
+                                                final CoordinateTransformationMatrix oldC,
+                                                final double vx, final double vy, final double vz,
+                                                final double oldVx, final double oldVy, final double oldVz,
+                                                final double x, final double y, final double z)
+            throws WrongSizeException, RankDeficientMatrixException, DecomposerException {
+
+        if (timeInterval > 0.0) {
+            // From (2.145) determine the Earth rotation over the update interval
+            final double omegaIe = Constants.EARTH_ROTATION_RATE;
+            final double alphaIe = omegaIe * timeInterval;
+            final Matrix cEarth = CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(alphaIe);
+            final Matrix cBe = c.getMatrix();
+            final Matrix oldCbe = oldC.getMatrix();
+            final Matrix cOldNew = cBe.multiplyAndReturnNew(cEarth.multiplyAndReturnNew(oldCbe));
+
+            // Calculate the approximate angular rate with respect an inertial frame
+            final Matrix alphaIbb = new Matrix(ROWS, 1);
+            alphaIbb.setElementAtIndex(0,
+                    0.5 * (cOldNew.getElementAt(1, 2) - cOldNew.getElementAt(2, 1)));
+            alphaIbb.setElementAtIndex(1,
+                    0.5 * (cOldNew.getElementAt(2, 0) - cOldNew.getElementAt(0, 2)));
+            alphaIbb.setElementAtIndex(2,
+                    0.5 * (cOldNew.getElementAt(0, 1) - cOldNew.getElementAt(1, 0)));
+
+            // Calculate and apply the scaling factor
+            final double temp = Math.acos(0.5 * (cOldNew.getElementAt(0, 0) +
+                    cOldNew.getElementAt(1, 1) + cOldNew.getElementAt(2, 2) - 1.0));
+            if (temp > SCALING_THRESHOLD) {
+                // scaling is 1 if temp is less than this
+                alphaIbb.multiplyByScalar(temp / Math.sin(temp));
+            }
+
+            // Calculate the angular rate
+            final Matrix omegaIbb = alphaIbb.multiplyByScalarAndReturnNew(1.0 / timeInterval);
+
+            // Calculate the specific force resolved about ECEF-frame axes
+            // Frame (5.36)
+            final Matrix vEbe = new Matrix(ROWS, 1);
+            vEbe.setElementAtIndex(0, vx);
+            vEbe.setElementAtIndex(1, vy);
+            vEbe.setElementAtIndex(2, vz);
+
+            final Matrix oldVebe = new Matrix(ROWS, 1);
+            oldVebe.setElementAtIndex(0, oldVx);
+            oldVebe.setElementAtIndex(1, oldVy);
+            oldVebe.setElementAtIndex(2, oldVz);
+
+            final Gravity gravity = GravityEstimator
+                    .estimateGravityAndReturnNew(x, y, z);
+            final Matrix g = gravity.asMatrix();
+
+            final Matrix fIbe = (vEbe.subtractAndReturnNew(oldVebe).multiplyByScalarAndReturnNew(1.0 / timeInterval)
+                    .subtractAndReturnNew(g).addAndReturnNew(Utils.skewMatrix(new double[]{0.0, 0.0, omegaIe})
+                            .multiplyByScalarAndReturnNew(2.0).multiplyAndReturnNew(oldVebe)));
+
+            // Calculate the average body-to-ECEF-frame coordinate transformation
+            // matrix over the update interval using (5,84) and (5.85)
+            final double magAlpha = Utils.normF(alphaIbb);
+            final Matrix AlphaIbb = Utils.skewMatrix(alphaIbb);
+            final Matrix aveCbe;
+            if (magAlpha > ALPHA_THRESHOLD) {
+                aveCbe = oldCbe.multiplyAndReturnNew(Matrix.identity(ROWS, ROWS).addAndReturnNew(
+                        AlphaIbb.multiplyByScalarAndReturnNew((1.0 - Math.cos(magAlpha)) / Math.pow(magAlpha, 2.0)))
+                        .addAndReturnNew(AlphaIbb.multiplyAndReturnNew(AlphaIbb).multiplyByScalarAndReturnNew(
+                                (1.0 - Math.sin(magAlpha) / magAlpha) / Math.pow(magAlpha, 2.0))))
+                        .subtractAndReturnNew(Utils.skewMatrix(new double[]{0.0, 0.0, alphaIe})
+                                .multiplyByScalarAndReturnNew(0.5).multiplyAndReturnNew(oldCbe));
+            } else {
+                aveCbe = oldCbe.subtractAndReturnNew(Utils.skewMatrix(new double[]{0.0, 0.0, alphaIe})
+                        .multiplyByScalarAndReturnNew(0.5).multiplyAndReturnNew(oldCbe));
+            }
+
+            // Transform specific force to body-frame resolving axes using (5.81)
+            final Matrix fIbb = Utils.inverse(aveCbe).multiplyAndReturnNew(fIbe);
+
+            final double specificForceX = fIbb.getElementAtIndex(0);
+            final double specificForceY = fIbb.getElementAtIndex(1);
+            final double specificForceZ = fIbb.getElementAtIndex(2);
+
+            final double angularRateX = omegaIbb.getElementAtIndex(0);
+            final double angularRateY = omegaIbb.getElementAtIndex(1);
+            final double angularRateZ = omegaIbb.getElementAtIndex(2);
+
+            // save result data
+            return new Kinematics(specificForceX, specificForceY, specificForceZ,
+                    angularRateX, angularRateY, angularRateZ);
+        } else {
+            // If time interval is zero, set angular rate and specific force to zero
+            return new Kinematics();
+        }
+    }
+
 }

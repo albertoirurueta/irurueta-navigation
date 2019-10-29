@@ -7,6 +7,13 @@ import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.MatrixRotation3D;
 import com.irurueta.geometry.Rotation3D;
+import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleConverter;
+import com.irurueta.units.AngleUnit;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -34,6 +41,11 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * Default threshold to consider a matrix valid.
      */
     public static final double DEFAULT_THRESHOLD = Rotation3D.DEFAULT_VALID_THRESHOLD;
+
+    /**
+     * Earth rotation rate expressed in radians per second (rad/s).
+     */
+    public static final double EARTH_ROTATION_RATE = Constants.EARTH_ROTATION_RATE;
 
     /**
      * 3x3 matrix containing a rotation.
@@ -114,6 +126,23 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param destinationType destination frame type.
      */
     public CoordinateTransformationMatrix(final double roll, final double pitch, final double yaw,
+                                          final FrameType sourceType, final FrameType destinationType) {
+        this(sourceType, destinationType);
+        setEulerAngles(roll, pitch, yaw);
+    }
+
+    /**
+     * Constructor with Euler angles.
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll            roll Euler angle (around x-axis).
+     * @param pitch           pitch Euler angle (around y-axis).
+     * @param yaw             yaw Euler angle (around z-axis).
+     * @param sourceType      source frame type.
+     * @param destinationType destination frame type.
+     */
+    public CoordinateTransformationMatrix(final Angle roll, final Angle pitch, final Angle yaw,
                                           final FrameType sourceType, final FrameType destinationType) {
         this(sourceType, destinationType);
         setEulerAngles(roll, pitch, yaw);
@@ -232,6 +261,31 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     }
 
     /**
+     * Gets roll Euler angle (around x-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param result instance where roll Euler angle will be stored.
+     */
+    public void getRollEulerAngleMeasurement(final Angle result) {
+        result.setValue(getRollEulerAngle());
+        result.setUnit(AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets roll Euler angle (around x-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return roll Euler angle.
+     */
+    public Angle getRollEulerAngleMeasurement() {
+        final Angle result = new Angle(0.0, AngleUnit.RADIANS);
+        getRollEulerAngleMeasurement(result);
+        return result;
+    }
+
+    /**
      * Gets pitch Euler angle (around y-axis) expressed in radians.
      * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
      * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
@@ -243,6 +297,31 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     }
 
     /**
+     * Gets pitch Euler angle (around y-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param result instance where pitch Euler angle will be stored.
+     */
+    public void getPitchEulerAngleMeasurement(final Angle result) {
+        result.setValue(getPitchEulerAngle());
+        result.setUnit(AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets pitch Euler angle (around y-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return pitch Euler angle.
+     */
+    public Angle getPitchEulerAngleMeasurement() {
+        final Angle result = new Angle(0.0, AngleUnit.RADIANS);
+        getPitchEulerAngleMeasurement(result);
+        return result;
+    }
+
+    /**
      * Gets yaw Euler angle (around z-axis) expressed in radians.
      * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
      * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
@@ -251,6 +330,31 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      */
     public double getYawEulerAngle() {
         return Math.atan2(mMatrix.getElementAt(0, 1), mMatrix.getElementAt(0, 0));
+    }
+
+    /**
+     * Gets yaw Euler angle (around z-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param result instance where yaw Euler angle will be stored.
+     */
+    public void getYawEulerAngleMeasurement(final Angle result) {
+        result.setValue(getYawEulerAngle());
+        result.setUnit(AngleUnit.RADIANS);
+    }
+
+    /**
+     * Gets yaw Euler angle (around z-axis).
+     * Notice that this angle does not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @return yaw Euler angle.
+     */
+    public Angle getYawEulerAngleMeasurement() {
+        final Angle result = new Angle(0.0, AngleUnit.RADIANS);
+        getYawEulerAngleMeasurement(result);
+        return result;
     }
 
     /**
@@ -282,6 +386,21 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
         mMatrix.setElementAt(2, 0, sinPhi * sinPsi + cosPhi * sinTheta * cosPsi);
         mMatrix.setElementAt(2, 1, -sinPhi * cosPsi + cosPhi * sinTheta * sinPsi);
         mMatrix.setElementAt(2, 2, cosPhi * cosTheta);
+    }
+
+    /**
+     * Sets euler angles (roll, pitch and yaw).
+     * Notice that these angles do not match angles obtained from {@link com.irurueta.geometry.Rotation3D} or
+     * {@link com.irurueta.geometry.Quaternion} because they are referred to different axes.
+     *
+     * @param roll  roll Euler angle (around x-axis).
+     * @param pitch pitch Euler angle (around y-axis).
+     * @param yaw   yaw Euler angle (around z-axis).
+     */
+    public void setEulerAngles(final Angle roll, final Angle pitch, final Angle yaw) {
+        setEulerAngles(AngleConverter.convert(roll.getValue().doubleValue(), roll.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(pitch.getValue().doubleValue(), pitch.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(yaw.getValue().doubleValue(), yaw.getUnit(), AngleUnit.RADIANS));
     }
 
     /**
@@ -477,6 +596,33 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     /**
      * Computes matrix to convert ECEF to NED coordinates.
      *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where computed matrix will be stored.
+     */
+    public static void ecefToNedMatrix(final Angle latitude, final Angle longitude, final Matrix result) {
+        ecefToNedMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),
+                result);
+    }
+
+    /**
+     * Computes matrix to convert ECEF to NED coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new matrix to convert ECEF to NED coordinates.
+     */
+    public static Matrix ecefToNedMatrix(final Angle latitude, final Angle longitude) {
+        return ecefToNedMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));
+    }
+
+    /**
+     * Computes matrix to convert ECEF to NED coordinates.
+     *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param result    instance where computed matrix will be stored.
@@ -529,6 +675,35 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     /**
      * Computes ECEF to NED coordinate transformation matrix.
      *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where result will be stored.
+     */
+    public static void ecefToNedCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
+                                                               final CoordinateTransformationMatrix result) {
+        ecefToNedCoordinateTransformationMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),
+                result);
+    }
+
+    /**
+     * Computes ECEF to NED coordinate transformation matrix.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new ECEF to NED coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix ecefToNedCoordinateTransformationMatrix(
+            final Angle latitude, final Angle longitude) {
+        return ecefToNedCoordinateTransformationMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));
+    }
+
+    /**
+     * Computes ECEF to NED coordinate transformation matrix.
+     *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param result    instance where result will be stored.
@@ -557,6 +732,33 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
         ecefToNedCoordinateTransformationMatrix(latitude, longitude, result);
         return result;
+    }
+
+    /**
+     * Computes matrix to convert NED to ECEF coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where computed matrix will be stored.
+     */
+    public static void nedToEcefMatrix(final Angle latitude, final Angle longitude, final Matrix result) {
+        nedToEcefMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),
+                result);
+    }
+
+    /**
+     * Computes matrix to convert NED to ECEF coordinates.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new matrix to convert NED to ECEF coordinates.
+     */
+    public static Matrix nedToEcefMatrix(final Angle latitude, final Angle longitude) {
+        return nedToEcefMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));
     }
 
     /**
@@ -596,6 +798,35 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     /**
      * Computes NED to ECEF coordinate transformation matrix.
      *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @param result    instance where result will be stored.
+     */
+    public static void nedToEcefCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
+                                                               final CoordinateTransformationMatrix result) {
+        nedToEcefCoordinateTransformationMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),
+                result);
+    }
+
+    /**
+     * Computes NED to ECEF coordinate transformation matrix.
+     *
+     * @param latitude  latitude angle.
+     * @param longitude longitude angle.
+     * @return a new NED to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix nedToEcefCoordinateTransformationMatrix(
+            final Angle latitude, final Angle longitude) {
+        return nedToEcefCoordinateTransformationMatrix(
+                AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
+                AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS));
+    }
+
+    /**
+     * Computes NED to ECEF coordinate transformation matrix.
+     *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param result    instance where result will be stored.
@@ -616,13 +847,486 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
-     * @return instance where computed matrix will be stored.
+     * @return a new NED to ECEF coordinate transformation matrix.
      */
     public static CoordinateTransformationMatrix nedToEcefCoordinateTransformationMatrix(final double latitude,
                                                                                          final double longitude) {
         final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         nedToEcefCoordinateTransformationMatrix(latitude, longitude, result);
+        return result;
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromTimeInterval(final Time timeInterval, final Matrix result) {
+        ecefToEciMatrixFromTimeInterval(TimeConverter.convert(
+                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),
+                TimeUnit.SECOND), result);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromTimeInterval(final double timeInterval, final Matrix result) {
+        ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromAngle(final Angle angle, final Matrix result) {
+        ecefToEciMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),
+                angle.getUnit(), AngleUnit.RADIANS), result);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciMatrixFromAngle(final double angle, final Matrix result) {
+        if (result.getRows() != ROWS || result.getColumns() != COLS) {
+            try {
+                result.resize(ROWS, COLS);
+            } catch (final WrongSizeException ignore) {
+            }
+        }
+
+        final double sinAngle = Math.sin(angle);
+        final double cosAngle = Math.cos(angle);
+
+        result.setElementAt(0, 0, cosAngle);
+        result.setElementAt(1, 0, -sinAngle);
+        result.setElementAt(2, 0, 0.0);
+
+        result.setElementAt(0, 1, sinAngle);
+        result.setElementAt(1, 1, cosAngle);
+        result.setElementAt(2, 1, 0.0);
+
+        result.setElementAt(0, 2, 0.0);
+        result.setElementAt(1, 2, 0.0);
+        result.setElementAt(2, 2, 1.0);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromTimeInterval(final Time timeInterval) {
+        return ecefToEciMatrixFromTimeInterval(TimeConverter.convert(
+                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),
+                TimeUnit.SECOND));
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromTimeInterval(final double timeInterval) {
+        return ecefToEciMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromAngle(final Angle angle) {
+        return ecefToEciMatrixFromAngle(AngleConverter.convert(
+                angle.getValue().doubleValue(),
+                angle.getUnit(), AngleUnit.RADIANS));
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated expressed in radians.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static Matrix ecefToEciMatrixFromAngle(final double angle) {
+        Matrix result;
+        try {
+            result = new Matrix(CoordinateTransformationMatrix.ROWS, CoordinateTransformationMatrix.COLS);
+            ecefToEciMatrixFromAngle(angle, result);
+        } catch (WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval, final CoordinateTransformationMatrix result) {
+        ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                TimeConverter.convert(timeInterval.getValue().doubleValue(),
+                        timeInterval.getUnit(), TimeUnit.SECOND), result);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final double timeInterval, final CoordinateTransformationMatrix result) {
+        ecefToEciCoordinateTransformationMatrixFromAngle(
+                EARTH_ROTATION_RATE * timeInterval, result);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromAngle(
+            final Angle angle, final CoordinateTransformationMatrix result) {
+        ecefToEciCoordinateTransformationMatrixFromAngle(
+                AngleConverter.convert(angle.getValue().doubleValue(),
+                        angle.getUnit(), AngleUnit.RADIANS), result);
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void ecefToEciCoordinateTransformationMatrixFromAngle(
+            final double angle, final CoordinateTransformationMatrix result) {
+        try {
+            result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            result.setDestinationType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+            result.setMatrix(ecefToEciMatrixFromAngle(angle));
+        } catch (InvalidRotationMatrixException ignore) {
+            // never happens
+        }
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
+        return result;
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+            final double timeInterval) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
+        return result;
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromAngle(
+            final Angle angle) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);
+        return result;
+    }
+
+    /**
+     * Computes ECEF to ECI coordinate transformation matrix for provided Earth rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated expressed in radians.
+     * @return a new ECEF to ECI coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromAngle(
+            final double angle) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);
+        return result;
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromTimeInterval(final Time timeInterval,
+                                                       final Matrix result) {
+        eciToEcefMatrixFromTimeInterval(TimeConverter.convert(
+                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),
+                TimeUnit.SECOND), result);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromTimeInterval(final double timeInterval,
+                                                       final Matrix result) {
+        eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval, result);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromAngle(final Angle angle, final Matrix result) {
+        eciToEcefMatrixFromAngle(AngleConverter.convert(angle.getValue().doubleValue(),
+                angle.getUnit(), AngleUnit.RADIANS), result);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefMatrixFromAngle(final double angle, final Matrix result) {
+        ecefToEciMatrixFromAngle(angle, result);
+        result.transpose();
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromTimeInterval(final Time timeInterval) {
+        return eciToEcefMatrixFromTimeInterval(TimeConverter.convert(
+                timeInterval.getValue().doubleValue(), timeInterval.getUnit(),
+                TimeUnit.SECOND));
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromTimeInterval(final double timeInterval) {
+        return eciToEcefMatrixFromAngle(EARTH_ROTATION_RATE * timeInterval);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromAngle(final Angle angle) {
+        return eciToEcefMatrixFromAngle(AngleConverter.convert(
+                angle.getValue().doubleValue(),
+                angle.getUnit(), AngleUnit.RADIANS));
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static Matrix eciToEcefMatrixFromAngle(final double angle) {
+        Matrix result;
+        try {
+            result = new Matrix(CoordinateTransformationMatrix.ROWS, CoordinateTransformationMatrix.COLS);
+            eciToEcefMatrixFromAngle(angle, result);
+        } catch (WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval, final CoordinateTransformationMatrix result) {
+        eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+                TimeConverter.convert(timeInterval.getValue().doubleValue(),
+                        timeInterval.getUnit(), TimeUnit.SECOND), result);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @param result       instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+            final double timeInterval, final CoordinateTransformationMatrix result) {
+        eciToEcefCoordinateTransformationMatrixFromAngle(
+                EARTH_ROTATION_RATE * timeInterval, result);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromAngle(
+            final Angle angle, final CoordinateTransformationMatrix result) {
+        eciToEcefCoordinateTransformationMatrixFromAngle(
+                AngleConverter.convert(angle.getValue().doubleValue(),
+                        angle.getUnit(), AngleUnit.RADIANS), result);
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle  angle amount the Earth has rotated expressed in radians.
+     * @param result instance where result will be stored.
+     */
+    public static void eciToEcefCoordinateTransformationMatrixFromAngle(
+            final double angle, final CoordinateTransformationMatrix result) {
+        try {
+            result.setSourceType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+            result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+            result.setMatrix(eciToEcefMatrixFromAngle(angle));
+        } catch (InvalidRotationMatrixException ignore) {
+            // never happens
+        }
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+            final Time timeInterval) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
+        return result;
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix taking into account Earth
+     * rotation during provided time interval.
+     *
+     * @param timeInterval a time interval expressed in seconds (s).
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromInterval(
+            final double timeInterval) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
+        return result;
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromAngle(
+            final Angle angle) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);
+        return result;
+    }
+
+    /**
+     * Computes ECI to ECEF coordinate transformation matrix for provided Earth
+     * rotation angle.
+     *
+     * @param angle angle amount the Earth has rotated expressed in radians.
+     * @return a new ECI to ECEF coordinate transformation matrix.
+     */
+    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromAngle(
+            final double angle) {
+        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);
         return result;
     }
 

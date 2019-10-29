@@ -952,21 +952,7 @@ public class KinematicsEstimator {
             try {
                 // From (2.145) determine the Earth rotation over the update interval
                 final double alpha = EARTH_ROTATION_RATE * timeInterval;
-                final double sinAlpha = Math.sin(alpha);
-                final double cosAlpha = Math.cos(alpha);
-
-                final Matrix cEarth = new Matrix(ROWS, ROWS);
-                cEarth.setElementAt(0, 0, cosAlpha);
-                cEarth.setElementAt(1, 0, -sinAlpha);
-                cEarth.setElementAt(2, 0, 0.0);
-
-                cEarth.setElementAt(0, 1, sinAlpha);
-                cEarth.setElementAt(1, 1, cosAlpha);
-                cEarth.setElementAt(2, 1, 0.0);
-
-                cEarth.setElementAt(0, 2, 0.0);
-                cEarth.setElementAt(1, 2, 0.0);
-                cEarth.setElementAt(2, 2, 1.0);
+                final Matrix cEarth = CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(alpha);
 
                 final Matrix cBe = c.getMatrix();
                 final Matrix oldCbe = oldC.getMatrix();
@@ -976,12 +962,12 @@ public class KinematicsEstimator {
                 cBe.multiply(cEarth); // here cBe is cOldNew
 
                 // Calculate the approximate angular rate with respect an intertial frame
-                double alphaX = 0.5 * cBe.getElementAt(1, 2)
-                        - cBe.getElementAt(2, 1);
-                double alphaY = 0.5 * cBe.getElementAt(2, 0)
-                        - cBe.getElementAt(0, 2);
-                double alphaZ = 0.5 * cBe.getElementAt(0, 1)
-                        - cBe.getElementAt(1, 0);
+                double alphaX = 0.5 * (cBe.getElementAt(1, 2)
+                        - cBe.getElementAt(2, 1));
+                double alphaY = 0.5 * (cBe.getElementAt(2, 0)
+                        - cBe.getElementAt(0, 2));
+                double alphaZ = 0.5 * (cBe.getElementAt(0, 1)
+                        - cBe.getElementAt(1, 0));
 
                 // Calculate and apply the scaling factor
                 final double temp = Math.acos(0.5 * (cBe.getElementAt(0, 0)

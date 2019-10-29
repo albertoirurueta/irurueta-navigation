@@ -8,7 +8,12 @@ import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.Rotation3D;
+import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleUnit;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeUnit;
 import org.junit.Test;
 
 import java.util.Random;
@@ -22,6 +27,7 @@ public class CoordinateTransformationMatrixTest {
     private static final double MAX_ANGLE_DEGREES = 45.0;
     private static final double LATITUDE_DEGREES = 41.3825;
     private static final double LONGITUDE_DEGREES = 2.176944;
+    private static final double TIME_INTERVAL_SECONDS = 0.02;
 
     private static final double ABSOLUTE_ERROR = 1e-6;
 
@@ -31,6 +37,8 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(CoordinateTransformationMatrix.COLS, 3);
         assertEquals(CoordinateTransformationMatrix.DEFAULT_THRESHOLD,
                 Rotation3D.DEFAULT_VALID_THRESHOLD, 0.0);
+        assertEquals(CoordinateTransformationMatrix.EARTH_ROTATION_RATE,
+                Constants.EARTH_ROTATION_RATE, 0.0);
     }
 
     @Test
@@ -182,6 +190,36 @@ public class CoordinateTransformationMatrixTest {
         }
         assertNull(c);
 
+        // test constructor from euler angles
+        c = new CoordinateTransformationMatrix(roll, pitch, yaw,
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        // check
+        assertEquals(c.getRollEulerAngle(), roll, ABSOLUTE_ERROR);
+        assertEquals(c.getPitchEulerAngle(), pitch, ABSOLUTE_ERROR);
+        assertEquals(c.getYawEulerAngle(), yaw, ABSOLUTE_ERROR);
+        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+
+        // test constructor from euler angles
+        final Angle rollAngle = new Angle(roll, AngleUnit.RADIANS);
+        final Angle pitchAngle = new Angle(pitch, AngleUnit.RADIANS);
+        final Angle yawAngle = new Angle(yaw, AngleUnit.RADIANS);
+
+        c = new CoordinateTransformationMatrix(rollAngle, pitchAngle, yawAngle,
+                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        // check
+        assertEquals(c.getRollEulerAngle(), roll, ABSOLUTE_ERROR);
+        assertEquals(c.getPitchEulerAngle(), pitch, ABSOLUTE_ERROR);
+        assertEquals(c.getYawEulerAngle(), yaw, ABSOLUTE_ERROR);
+        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertTrue(c.getRollEulerAngleMeasurement().equals(rollAngle, THRESHOLD));
+        assertTrue(c.getPitchEulerAngleMeasurement().equals(pitchAngle, THRESHOLD));
+        assertTrue(c.getYawEulerAngleMeasurement().equals(yawAngle, THRESHOLD));
+
 
         // test constructor from another value
         c = new CoordinateTransformationMatrix(m, FrameType.LOCAL_NAVIGATION_FRAME,
@@ -193,18 +231,6 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(c.getSourceType(), c2.getSourceType());
         assertEquals(c.getDestinationType(), c2.getDestinationType());
         assertEquals(c.getMatrix(), c2.getMatrix());
-
-
-        // test constructor from euler angles
-        c = new CoordinateTransformationMatrix(roll, pitch, yaw,
-                FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
-
-        // check
-        assertEquals(c.getRollEulerAngle(), roll, ABSOLUTE_ERROR);
-        assertEquals(c.getPitchEulerAngle(), pitch, ABSOLUTE_ERROR);
-        assertEquals(c.getYawEulerAngle(), yaw, ABSOLUTE_ERROR);
-        assertEquals(c.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
     }
 
     @Test
@@ -424,6 +450,48 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(roll1, roll2, ABSOLUTE_ERROR);
         assertEquals(pitch1, pitch2, ABSOLUTE_ERROR);
         assertEquals(yaw1, yaw2, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testGetSetEulerAnglesMeasurements() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+
+        final Angle rollAngle1 = new Angle(roll, AngleUnit.RADIANS);
+        final Angle pitchAngle1 = new Angle(pitch, AngleUnit.RADIANS);
+        final Angle yawAngle1 = new Angle(yaw, AngleUnit.RADIANS);
+
+        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+                FrameType.LOCAL_NAVIGATION_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        c.setEulerAngles(rollAngle1, pitchAngle1, yawAngle1);
+
+        final Angle rollAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        c.getRollEulerAngleMeasurement(rollAngle2);
+        final Angle rollAngle3 = c.getRollEulerAngleMeasurement();
+
+        final Angle pitchAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        c.getPitchEulerAngleMeasurement(pitchAngle2);
+        final Angle pitchAngle3 = c.getPitchEulerAngleMeasurement();
+
+        final Angle yawAngle2 = new Angle(0.0, AngleUnit.DEGREES);
+        c.getYawEulerAngleMeasurement(yawAngle2);
+        final Angle yawAngle3 = c.getYawEulerAngleMeasurement();
+
+        assertTrue(rollAngle1.equals(rollAngle2, THRESHOLD));
+        assertTrue(rollAngle1.equals(rollAngle3, THRESHOLD));
+
+        assertTrue(pitchAngle1.equals(pitchAngle2, THRESHOLD));
+        assertTrue(pitchAngle1.equals(pitchAngle3, THRESHOLD));
+
+        assertTrue(yawAngle1.equals(yawAngle2, THRESHOLD));
+        assertTrue(yawAngle1.equals(yawAngle3, THRESHOLD));
     }
 
     @Test
@@ -752,6 +820,17 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(cen1, cen2);
         assertEquals(cen1, cen3);
         assertEquals(cen1, cen);
+
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final Angle longitude = new Angle(LONGITUDE_DEGREES, AngleUnit.DEGREES);
+
+        final Matrix cen4 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.ecefToNedMatrix(latitude, longitude, cen4);
+        final Matrix cen5 = CoordinateTransformationMatrix.ecefToNedMatrix(
+                latitude, longitude);
+
+        assertEquals(cen1, cen4);
+        assertEquals(cen1, cen5);
     }
 
     @Test
@@ -776,6 +855,24 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         assertEquals(c2.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c2.getMatrix(), cen);
+
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final Angle longitude = new Angle(LONGITUDE_DEGREES, AngleUnit.DEGREES);
+
+        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix.ecefToNedCoordinateTransformationMatrix(
+                latitude, longitude, c3);
+        final CoordinateTransformationMatrix c4 = CoordinateTransformationMatrix
+                .ecefToNedCoordinateTransformationMatrix(latitude, longitude);
+
+        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c3.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c3.getMatrix(), cen);
+
+        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c4.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c4.getMatrix(), cen);
     }
 
     @Test
@@ -800,6 +897,17 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(cne1, cne2);
         assertEquals(cne1, cne3);
         assertEquals(cne1, cne);
+
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final Angle longitude = new Angle(LONGITUDE_DEGREES, AngleUnit.DEGREES);
+
+        final Matrix cne4 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.nedToEcefMatrix(latitude, longitude, cne4);
+        final Matrix cne5 = CoordinateTransformationMatrix.nedToEcefMatrix(
+                latitude, longitude);
+
+        assertEquals(cne1, cne4);
+        assertEquals(cne1, cne5);
     }
 
     @Test
@@ -824,6 +932,299 @@ public class CoordinateTransformationMatrixTest {
         assertEquals(c2.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         assertEquals(c2.getMatrix(), cne);
+
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final Angle longitude = new Angle(LONGITUDE_DEGREES, AngleUnit.DEGREES);
+
+        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix.nedToEcefCoordinateTransformationMatrix(
+                latitude, longitude, c3);
+        final CoordinateTransformationMatrix c4 = CoordinateTransformationMatrix
+                .nedToEcefCoordinateTransformationMatrix(latitude, longitude);
+
+        assertEquals(c3.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c3.getMatrix(), cne);
+
+        assertEquals(c4.getSourceType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c4.getMatrix(), cne);
+    }
+
+    @Test
+    public void testEcefToEciMatrixFromTimeInterval() throws WrongSizeException {
+        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final Matrix cei1 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.ecefToEciMatrixFromTimeInterval(
+                timeInterval, cei1);
+        final Matrix cei2 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromTimeInterval(timeInterval);
+        final Matrix cei3 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.ecefToEciMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS, cei3);
+        final Matrix cei4 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertEquals(cei1, cei2);
+        assertEquals(cei1, cei3);
+        assertEquals(cei1, cei4);
+
+        // test when zero time interval is equal to the identity
+        final Matrix cei5 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromTimeInterval(0.0);
+        assertEquals(cei5, Matrix.identity(3, 3));
+    }
+
+    @Test
+    public void testEcefToEciMatrixFromAngle() throws WrongSizeException {
+        final double alpha = CoordinateTransformationMatrix.EARTH_ROTATION_RATE
+                * TIME_INTERVAL_SECONDS;
+        final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
+        final Matrix cei1 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(angle, cei1);
+        final Matrix cei2 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromAngle(angle);
+        final Matrix cei3 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(alpha, cei3);
+        final Matrix cei4 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromAngle(alpha);
+
+        assertEquals(cei1, cei2);
+        assertEquals(cei1, cei3);
+        assertEquals(cei1, cei4);
+
+        final Matrix cei5 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertEquals(cei1, cei5);
+
+        // test when zero angle is equal to the identity
+        final Matrix cei6 = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromAngle(0.0);
+        assertEquals(cei6, Matrix.identity(3, 3));
+    }
+
+    @Test
+    public void testEcefToEciCoordinateTransformationMatrixFromTimeInterval() {
+        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                        timeInterval, c1);
+        final CoordinateTransformationMatrix c2 =
+                CoordinateTransformationMatrix
+                        .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                                timeInterval);
+        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                        TIME_INTERVAL_SECONDS, c3);
+        final CoordinateTransformationMatrix c4 =
+                CoordinateTransformationMatrix
+                        .ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+                                TIME_INTERVAL_SECONDS);
+
+        final Matrix cei = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c1.getMatrix(), cei);
+
+        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c2.getMatrix(), cei);
+
+        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c3.getMatrix(), cei);
+
+        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c4.getMatrix(), cei);
+    }
+
+    @Test
+    public void testEcefToEciCoordinateTransformationMatrixFromAngle() {
+        final double alpha = CoordinateTransformationMatrix.EARTH_ROTATION_RATE
+                * TIME_INTERVAL_SECONDS;
+        final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
+
+        final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .ecefToEciCoordinateTransformationMatrixFromAngle(angle, c1);
+        final CoordinateTransformationMatrix c2 = CoordinateTransformationMatrix
+                .ecefToEciCoordinateTransformationMatrixFromAngle(angle);
+        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .ecefToEciCoordinateTransformationMatrixFromAngle(alpha, c3);
+        final CoordinateTransformationMatrix c4 = CoordinateTransformationMatrix
+                .ecefToEciCoordinateTransformationMatrixFromAngle(alpha);
+
+        final Matrix cei = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromAngle(alpha);
+
+        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c1.getMatrix(), cei);
+
+        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c2.getMatrix(), cei);
+
+        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c3.getMatrix(), cei);
+
+        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c4.getMatrix(), cei);
+    }
+
+    @Test
+    public void testEciToEcefMatrixFromTimeInterval() throws WrongSizeException,
+            RankDeficientMatrixException, DecomposerException {
+
+        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final Matrix cie1 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.eciToEcefMatrixFromTimeInterval(
+                timeInterval, cie1);
+        final Matrix cie2 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromTimeInterval(timeInterval);
+        final Matrix cie3 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.eciToEcefMatrixFromTimeInterval(
+                TIME_INTERVAL_SECONDS, cie3);
+        final Matrix cie4 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertEquals(cie1, cie2);
+        assertEquals(cie1, cie3);
+        assertEquals(cie1, cie4);
+
+        final Matrix cei = CoordinateTransformationMatrix
+                .ecefToEciMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertTrue(cie1.equals(Utils.inverse(cei), THRESHOLD));
+
+        // test when zero time interval is equal to the identity
+        final Matrix cie5 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromTimeInterval(0.0);
+        assertEquals(cie5, Matrix.identity(3, 3));
+    }
+
+    @Test
+    public void testEciToEcefMatrixFromAngle() throws WrongSizeException {
+        final double alpha = CoordinateTransformationMatrix.EARTH_ROTATION_RATE
+                * TIME_INTERVAL_SECONDS;
+        final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
+        final Matrix cie1 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.eciToEcefMatrixFromAngle(angle, cie1);
+        final Matrix cie2 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromAngle(angle);
+        final Matrix cie3 = new Matrix(3, 3);
+        CoordinateTransformationMatrix.eciToEcefMatrixFromAngle(alpha, cie3);
+        final Matrix cie4 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromAngle(alpha);
+
+        assertEquals(cie1, cie2);
+        assertEquals(cie1, cie3);
+        assertEquals(cie1, cie4);
+
+        final Matrix cie5 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertEquals(cie1, cie5);
+
+        // test when zero angle is equal to the identity
+        final Matrix cie6 = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromAngle(0.0);
+        assertEquals(cie6, Matrix.identity(3, 3));
+    }
+
+    @Test
+    public void testEciToEcefCoordinateTransformationMatrixFromTimeInterval() {
+        final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+        final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+                        timeInterval, c1);
+        final CoordinateTransformationMatrix c2 =
+                CoordinateTransformationMatrix
+                        .eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+                                timeInterval);
+        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+                        TIME_INTERVAL_SECONDS, c3);
+        final CoordinateTransformationMatrix c4 =
+                CoordinateTransformationMatrix
+                        .eciToEcefCoordinateTransformationMatrixFromInterval(
+                                TIME_INTERVAL_SECONDS);
+
+        final Matrix cie = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromTimeInterval(TIME_INTERVAL_SECONDS);
+
+        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c1.getMatrix(), cie);
+
+        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c2.getMatrix(), cie);
+
+        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c3.getMatrix(), cie);
+
+        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c4.getMatrix(), cie);
+    }
+
+    @Test
+    public void testEciToEcefCoordinateTransformationMatrixFromAngle() {
+        final double alpha = CoordinateTransformationMatrix.EARTH_ROTATION_RATE
+                * TIME_INTERVAL_SECONDS;
+        final Angle angle = new Angle(alpha, AngleUnit.RADIANS);
+
+        final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .eciToEcefCoordinateTransformationMatrixFromAngle(angle, c1);
+        final CoordinateTransformationMatrix c2 = CoordinateTransformationMatrix
+                .eciToEcefCoordinateTransformationMatrixFromAngle(angle);
+        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+                FrameType.BODY_FRAME, FrameType.BODY_FRAME);
+        CoordinateTransformationMatrix
+                .eciToEcefCoordinateTransformationMatrixFromAngle(alpha, c3);
+        final CoordinateTransformationMatrix c4 = CoordinateTransformationMatrix
+                .eciToEcefCoordinateTransformationMatrixFromAngle(alpha);
+
+        final Matrix cie = CoordinateTransformationMatrix
+                .eciToEcefMatrixFromAngle(alpha);
+
+        assertEquals(c1.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c1.getMatrix(), cie);
+
+        assertEquals(c2.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c2.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c2.getMatrix(), cie);
+
+        assertEquals(c3.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c3.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c3.getMatrix(), cie);
+
+        assertEquals(c4.getSourceType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+        assertEquals(c4.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c4.getMatrix(), cie);
     }
 
     @Test

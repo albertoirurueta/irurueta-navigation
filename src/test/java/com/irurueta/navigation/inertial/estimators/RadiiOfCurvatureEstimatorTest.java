@@ -2,6 +2,8 @@ package com.irurueta.navigation.inertial.estimators;
 
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.RadiiOfCurvature;
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleUnit;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -56,13 +58,14 @@ public class RadiiOfCurvatureEstimatorTest {
     public void testEstimateAndReturnNew() {
         final RadiiOfCurvatureEstimator estimator = new RadiiOfCurvatureEstimator();
 
-        final RadiiOfCurvature radii = estimator.estimateAndReturnNew(LATITUDE_DEGREES);
+        final RadiiOfCurvature radii = estimator.estimateAndReturnNew(
+                Math.toRadians(LATITUDE_DEGREES));
         final RadiiOfCurvature northPoleRadii = estimator.estimateAndReturnNew(
-                MAX_LATITUDE_DEGREES);
+                Math.toRadians(MAX_LATITUDE_DEGREES));
         final RadiiOfCurvature southPoleRadii = estimator.estimateAndReturnNew(
-                MIN_LATITUDE_DEGREES);
+                Math.toRadians(MIN_LATITUDE_DEGREES));
         final RadiiOfCurvature equatorRadii = estimator.estimateAndReturnNew(
-                EQUATOR_LATITUDE_DEGREES);
+                Math.toRadians(EQUATOR_LATITUDE_DEGREES));
 
         assertTrue(radii.getRn() > equatorRadii.getRn());
         assertTrue(radii.getRn() < northPoleRadii.getRn());
@@ -79,8 +82,8 @@ public class RadiiOfCurvatureEstimatorTest {
     @Test
     public void testEstimateRadiiOfCurvature() {
         final RadiiOfCurvature radii = new RadiiOfCurvature();
-        RadiiOfCurvatureEstimator.estimateRadiiOfCurvature
-                (Math.toRadians(LATITUDE_DEGREES), radii);
+        RadiiOfCurvatureEstimator.estimateRadiiOfCurvature(
+                Math.toRadians(LATITUDE_DEGREES), radii);
 
         final RadiiOfCurvature northPoleRadii = new RadiiOfCurvature();
         RadiiOfCurvatureEstimator.estimateRadiiOfCurvature(
@@ -109,13 +112,144 @@ public class RadiiOfCurvatureEstimatorTest {
     @Test
     public void testEstimateRadiiOfCurvatureAndAndReturnNew() {
         final RadiiOfCurvature radii = RadiiOfCurvatureEstimator
-                .estimateRadiiOfCurvatureAndReturnNew(LATITUDE_DEGREES);
+                .estimateRadiiOfCurvatureAndReturnNew(
+                        Math.toRadians(LATITUDE_DEGREES));
         final RadiiOfCurvature northPoleRadii = RadiiOfCurvatureEstimator
-                .estimateRadiiOfCurvatureAndReturnNew(MAX_LATITUDE_DEGREES);
+                .estimateRadiiOfCurvatureAndReturnNew(
+                        Math.toRadians(MAX_LATITUDE_DEGREES));
         final RadiiOfCurvature southPoleRadii = RadiiOfCurvatureEstimator
-                .estimateRadiiOfCurvatureAndReturnNew(MIN_LATITUDE_DEGREES);
+                .estimateRadiiOfCurvatureAndReturnNew(
+                        Math.toRadians(MIN_LATITUDE_DEGREES));
         final RadiiOfCurvature equatorRadii = RadiiOfCurvatureEstimator
-                .estimateRadiiOfCurvatureAndReturnNew(EQUATOR_LATITUDE_DEGREES);
+                .estimateRadiiOfCurvatureAndReturnNew(
+                        Math.toRadians(EQUATOR_LATITUDE_DEGREES));
+
+        assertTrue(radii.getRn() > equatorRadii.getRn());
+        assertTrue(radii.getRn() < northPoleRadii.getRn());
+        assertTrue(radii.getRn() < southPoleRadii.getRn());
+        assertEquals(northPoleRadii.getRn(), southPoleRadii.getRn(), ABSOLUTE_ERROR);
+
+        assertTrue(radii.getRe() > equatorRadii.getRe());
+        assertTrue(radii.getRe() < northPoleRadii.getRe());
+        assertTrue(radii.getRe() < southPoleRadii.getRe());
+        assertEquals(northPoleRadii.getRe(), southPoleRadii.getRe(), ABSOLUTE_ERROR);
+        assertEquals(equatorRadii.getRe(), RadiiOfCurvatureEstimator.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
+    }
+
+    @Test
+    public void testEstimateWithAngle() {
+        final RadiiOfCurvatureEstimator estimator = new RadiiOfCurvatureEstimator();
+
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature radii = new RadiiOfCurvature();
+        estimator.estimate(latitude, radii);
+
+        final Angle maxLatitude = new Angle(MAX_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature northPoleRadii = new RadiiOfCurvature();
+        estimator.estimate(maxLatitude, northPoleRadii);
+
+        final Angle minLatitude = new Angle(MIN_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature southPoleRadii = new RadiiOfCurvature();
+        estimator.estimate(minLatitude, southPoleRadii);
+
+        final Angle equatorLatitude = new Angle(EQUATOR_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature equatorRadii = new RadiiOfCurvature();
+        estimator.estimate(equatorLatitude, equatorRadii);
+
+        assertTrue(radii.getRn() > equatorRadii.getRn());
+        assertTrue(radii.getRn() < northPoleRadii.getRn());
+        assertTrue(radii.getRn() < southPoleRadii.getRn());
+        assertEquals(northPoleRadii.getRn(), southPoleRadii.getRn(), ABSOLUTE_ERROR);
+
+        assertTrue(radii.getRe() > equatorRadii.getRe());
+        assertTrue(radii.getRe() < northPoleRadii.getRe());
+        assertTrue(radii.getRe() < southPoleRadii.getRe());
+        assertEquals(northPoleRadii.getRe(), southPoleRadii.getRe(), ABSOLUTE_ERROR);
+        assertEquals(equatorRadii.getRe(), RadiiOfCurvatureEstimator.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
+    }
+
+    @Test
+    public void testEstimateAndReturnNewWithAngle() {
+        final RadiiOfCurvatureEstimator estimator = new RadiiOfCurvatureEstimator();
+
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature radii = estimator.estimateAndReturnNew(latitude);
+
+        final Angle maxLatitude = new Angle(MAX_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature northPoleRadii = estimator.estimateAndReturnNew(
+                maxLatitude);
+
+        final Angle minLatitude = new Angle(MIN_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature southPoleRadii = estimator.estimateAndReturnNew(
+                minLatitude);
+
+        final Angle equatorLatitude = new Angle(EQUATOR_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature equatorRadii = estimator.estimateAndReturnNew(
+                equatorLatitude);
+
+        assertTrue(radii.getRn() > equatorRadii.getRn());
+        assertTrue(radii.getRn() < northPoleRadii.getRn());
+        assertTrue(radii.getRn() < southPoleRadii.getRn());
+        assertEquals(northPoleRadii.getRn(), southPoleRadii.getRn(), ABSOLUTE_ERROR);
+
+        assertTrue(radii.getRe() > equatorRadii.getRe());
+        assertTrue(radii.getRe() < northPoleRadii.getRe());
+        assertTrue(radii.getRe() < southPoleRadii.getRe());
+        assertEquals(northPoleRadii.getRe(), southPoleRadii.getRe(), ABSOLUTE_ERROR);
+        assertEquals(equatorRadii.getRe(), RadiiOfCurvatureEstimator.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
+    }
+
+    @Test
+    public void testEstimateRadiiOfCurvatureWithAngle() {
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature radii = new RadiiOfCurvature();
+        RadiiOfCurvatureEstimator.estimateRadiiOfCurvature(
+                latitude, radii);
+
+        final Angle maxLatitude = new Angle(MAX_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature northPoleRadii = new RadiiOfCurvature();
+        RadiiOfCurvatureEstimator.estimateRadiiOfCurvature(
+                maxLatitude, northPoleRadii);
+
+        final Angle minLatitude = new Angle(MIN_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature southPoleRadii = new RadiiOfCurvature();
+        RadiiOfCurvatureEstimator.estimateRadiiOfCurvature(
+                minLatitude, southPoleRadii);
+
+        final Angle equatorLatitude = new Angle(EQUATOR_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature equatorRadii = new RadiiOfCurvature();
+        RadiiOfCurvatureEstimator.estimateRadiiOfCurvature(
+                equatorLatitude, equatorRadii);
+
+        assertTrue(radii.getRn() > equatorRadii.getRn());
+        assertTrue(radii.getRn() < northPoleRadii.getRn());
+        assertTrue(radii.getRn() < southPoleRadii.getRn());
+        assertEquals(northPoleRadii.getRn(), southPoleRadii.getRn(), ABSOLUTE_ERROR);
+
+        assertTrue(radii.getRe() > equatorRadii.getRe());
+        assertTrue(radii.getRe() < northPoleRadii.getRe());
+        assertTrue(radii.getRe() < southPoleRadii.getRe());
+        assertEquals(northPoleRadii.getRe(), southPoleRadii.getRe(), ABSOLUTE_ERROR);
+        assertEquals(equatorRadii.getRe(), RadiiOfCurvatureEstimator.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
+    }
+
+    @Test
+    public void testEstimateRadiiOfCurvatureAndAndReturnNewWithAngle() {
+        final Angle latitude = new Angle(LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature radii = RadiiOfCurvatureEstimator
+                .estimateRadiiOfCurvatureAndReturnNew(latitude);
+
+        final Angle maxLatitude = new Angle(MAX_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature northPoleRadii = RadiiOfCurvatureEstimator
+                .estimateRadiiOfCurvatureAndReturnNew(maxLatitude);
+
+        final Angle minLatitude = new Angle(MIN_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature southPoleRadii = RadiiOfCurvatureEstimator
+                .estimateRadiiOfCurvatureAndReturnNew(minLatitude);
+
+        final Angle equatorLatitude = new Angle(EQUATOR_LATITUDE_DEGREES, AngleUnit.DEGREES);
+        final RadiiOfCurvature equatorRadii = RadiiOfCurvatureEstimator
+                .estimateRadiiOfCurvatureAndReturnNew(equatorLatitude);
 
         assertTrue(radii.getRn() > equatorRadii.getRn());
         assertTrue(radii.getRn() < northPoleRadii.getRn());

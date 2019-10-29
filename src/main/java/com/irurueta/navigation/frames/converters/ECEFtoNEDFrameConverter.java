@@ -138,11 +138,11 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
 
         // From (C.37)
         final double t2 = t * t;
-        final double latitude = Math.signum(z) * Math.atan((1.0 - t2) / (2.0 * t * Math.sqrt(1.0 - e2)));
+        final double latitude = Math.signum(z) * Math.atan((1.0 - t2) / (2.0 * t * Math.sqrt(1.0 - ecc2)));
 
         // From (C.38)
         final double height = (beta - EARTH_EQUATORIAL_RADIUS_WGS84 * t) * Math.cos(latitude)
-                + (z - Math.signum(z) * EARTH_EQUATORIAL_RADIUS_WGS84 * Math.sqrt(1.0 - e2))
+                + (z - Math.signum(z) * EARTH_EQUATORIAL_RADIUS_WGS84 * Math.sqrt(1.0 - ecc2))
                 * Math.sin(latitude);
 
         try {
