@@ -4,7 +4,7 @@ import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.Gravity;
@@ -78,8 +78,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final double timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final double vx, final double vy, final double vz,
                          final double oldVx, final double oldVy, final double oldVz,
                          final double x, final double y, final double z,
@@ -121,8 +121,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final Time timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final double vx, final double vy, final double vz,
                          final double oldVx, final double oldVy, final double oldVz,
                          final double x, final double y, final double z,
@@ -151,7 +151,7 @@ public class KinematicsEstimator {
      */
     public void estimate(final double timeInterval,
                          final ECEFFrame frame,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx, final double oldVy, final double oldVz,
                          final Kinematics result) {
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz,
@@ -178,7 +178,7 @@ public class KinematicsEstimator {
      */
     public void estimate(final Time timeInterval,
                          final ECEFFrame frame,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx, final double oldVy, final double oldVz,
                          final Kinematics result) {
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz,
@@ -246,8 +246,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final double timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final Speed vx, final Speed vy, final Speed vz,
                          final Speed oldVx, final Speed oldVy, final Speed oldVz,
                          final double x, final double y, final double z,
@@ -283,8 +283,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final Time timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final Speed vx, final Speed vy, final Speed vz,
                          final Speed oldVx, final Speed oldVy, final Speed oldVz,
                          final double x, final double y, final double z,
@@ -310,7 +310,7 @@ public class KinematicsEstimator {
      */
     public void estimate(final double timeInterval,
                          final ECEFFrame frame,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldVx, final Speed oldVy, final Speed oldVz,
                          final Kinematics result) {
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
@@ -333,7 +333,7 @@ public class KinematicsEstimator {
      */
     public void estimate(final Time timeInterval,
                          final ECEFFrame frame,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldVx, final Speed oldVy, final Speed oldVz,
                          final Kinematics result) {
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
@@ -368,8 +368,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final double timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final double vx, final double vy, final double vz,
                          final double oldVx, final double oldVy, final double oldVz,
                          final Point3D position, final Kinematics result) {
@@ -406,8 +406,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final Time timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final double vx, final double vy, final double vz,
                          final double oldVx, final double oldVy, final double oldVz,
                          final Point3D position, final Kinematics result) {
@@ -438,8 +438,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final double timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final Speed vx, final Speed vy, final Speed vz,
                          final Speed oldVx, final Speed oldVy, final Speed oldVz,
                          final Point3D position, final Kinematics result) {
@@ -470,8 +470,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public void estimate(final Time timeInterval,
-                         final CoordinateTransformationMatrix c,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation c,
+                         final CoordinateTransformation oldC,
                          final Speed vx, final Speed vy, final Speed vz,
                          final Speed oldVx, final Speed oldVy, final Speed oldVz,
                          final Point3D position, final Kinematics result) {
@@ -512,8 +512,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final double timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final double vx, final double vy, final double vz,
                                            final double oldVx, final double oldVy, final double oldVz,
                                            final double x, final double y, final double z) {
@@ -554,8 +554,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final Time timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final double vx, final double vy, final double vz,
                                            final double oldVx, final double oldVy, final double oldVz,
                                            final double x, final double y, final double z) {
@@ -583,7 +583,7 @@ public class KinematicsEstimator {
      */
     public Kinematics estimateAndReturnNew(final double timeInterval,
                                            final ECEFFrame frame,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation oldC,
                                            final double oldVx, final double oldVy,
                                            final double oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy,
@@ -610,7 +610,7 @@ public class KinematicsEstimator {
      */
     public Kinematics estimateAndReturnNew(final Time timeInterval,
                                            final ECEFFrame frame,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation oldC,
                                            final double oldVx, final double oldVy,
                                            final double oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC,
@@ -678,8 +678,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final double timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final Speed vx, final Speed vy, final Speed vz,
                                            final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                            final double x, final double y, final double z) {
@@ -714,8 +714,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final Time timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final Speed vx, final Speed vy, final Speed vz,
                                            final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                            final double x, final double y, final double z) {
@@ -740,7 +740,7 @@ public class KinematicsEstimator {
      */
     public Kinematics estimateAndReturnNew(final double timeInterval,
                                            final ECEFFrame frame,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation oldC,
                                            final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy, oldVz);
     }
@@ -762,7 +762,7 @@ public class KinematicsEstimator {
      */
     public Kinematics estimateAndReturnNew(final Time timeInterval,
                                            final ECEFFrame frame,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation oldC,
                                            final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVx, oldVy, oldVz);
     }
@@ -796,8 +796,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final double timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final double vx, final double vy, final double vz,
                                            final double oldVx, final double oldVy, final double oldVz,
                                            final Point3D position) {
@@ -834,8 +834,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final Time timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final double vx, final double vy, final double vz,
                                            final double oldVx, final double oldVy, final double oldVz,
                                            final Point3D position) {
@@ -866,8 +866,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final double timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final Speed vx, final Speed vy, final Speed vz,
                                            final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                            final Point3D position) {
@@ -898,8 +898,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public Kinematics estimateAndReturnNew(final Time timeInterval,
-                                           final CoordinateTransformationMatrix c,
-                                           final CoordinateTransformationMatrix oldC,
+                                           final CoordinateTransformation c,
+                                           final CoordinateTransformation oldC,
                                            final Speed vx, final Speed vy, final Speed vz,
                                            final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                            final Point3D position) {
@@ -936,8 +936,8 @@ public class KinematicsEstimator {
      * are not ECEF frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final double vx, final double vy, final double vz,
                                           final double oldVx, final double oldVy, final double oldVz,
                                           final double x, final double y, final double z,
@@ -952,7 +952,7 @@ public class KinematicsEstimator {
             try {
                 // From (2.145) determine the Earth rotation over the update interval
                 final double alpha = EARTH_ROTATION_RATE * timeInterval;
-                final Matrix cEarth = CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(alpha);
+                final Matrix cEarth = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
 
                 final Matrix cBe = c.getMatrix();
                 final Matrix oldCbe = oldC.getMatrix();
@@ -1102,8 +1102,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final Time timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final double vx, final double vy, final double vz,
                                           final double oldVx, final double oldVy, final double oldVz,
                                           final double x, final double y, final double z,
@@ -1133,10 +1133,10 @@ public class KinematicsEstimator {
      */
     public static void estimateKinematics(final double timeInterval,
                                           final ECEFFrame frame,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx, final double oldVy, final double oldVz,
                                           final Kinematics result) {
-        estimateKinematics(timeInterval, frame.getCoordinateTransformationMatrix(),
+        estimateKinematics(timeInterval, frame.getCoordinateTransformation(),
                 oldC, frame.getVx(), frame.getVy(), frame.getVz(),
                 oldVx, oldVy, oldVz, frame.getX(), frame.getY(), frame.getZ(), result);
     }
@@ -1161,12 +1161,12 @@ public class KinematicsEstimator {
      */
     public static void estimateKinematics(final Time timeInterval,
                                           final ECEFFrame frame,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx, final double oldVy, final double oldVz,
                                           final Kinematics result) {
         estimateKinematics(TimeConverter.convert(timeInterval.getValue().doubleValue(),
                 timeInterval.getUnit(), TimeUnit.SECOND),
-                frame.getCoordinateTransformationMatrix(),
+                frame.getCoordinateTransformation(),
                 oldC, frame.getVx(), frame.getVy(), frame.getVz(),
                 oldVx, oldVy, oldVz, frame.getX(), frame.getY(), frame.getZ(), result);
     }
@@ -1186,7 +1186,7 @@ public class KinematicsEstimator {
                                           final ECEFFrame frame, final ECEFFrame oldFrame,
                                           final Kinematics result) {
         estimateKinematics(timeInterval, frame,
-                oldFrame.getCoordinateTransformationMatrix(),
+                oldFrame.getCoordinateTransformation(),
                 oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), result);
     }
 
@@ -1205,7 +1205,7 @@ public class KinematicsEstimator {
                                           final ECEFFrame frame, final ECEFFrame oldFrame,
                                           final Kinematics result) {
         estimateKinematics(timeInterval, frame,
-                oldFrame.getCoordinateTransformationMatrix(),
+                oldFrame.getCoordinateTransformation(),
                 oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), result);
     }
 
@@ -1236,8 +1236,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final double timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final Speed vx, final Speed vy, final Speed vz,
                                           final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                           final double x, final double y, final double z,
@@ -1279,8 +1279,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final Time timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final Speed vx, final Speed vy, final Speed vz,
                                           final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                           final double x, final double y, final double z,
@@ -1312,7 +1312,7 @@ public class KinematicsEstimator {
      */
     public static void estimateKinematics(final double timeInterval,
                                           final ECEFFrame frame,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                           final Kinematics result) {
         estimateKinematics(timeInterval, frame, oldC,
@@ -1339,7 +1339,7 @@ public class KinematicsEstimator {
      */
     public static void estimateKinematics(final Time timeInterval,
                                           final ECEFFrame frame,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                           final Kinematics result) {
         estimateKinematics(timeInterval, frame, oldC,
@@ -1378,8 +1378,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final double timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final double vx, final double vy, final double vz,
                                           final double oldVx, final double oldVy, final double oldVz,
                                           final Point3D position, final Kinematics result) {
@@ -1416,8 +1416,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final Time timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final double vx, final double vy, final double vz,
                                           final double oldVx, final double oldVy, final double oldVz,
                                           final Point3D position, final Kinematics result) {
@@ -1448,8 +1448,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final double timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final Speed vx, final Speed vy, final Speed vz,
                                           final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                           final Point3D position, final Kinematics result) {
@@ -1480,8 +1480,8 @@ public class KinematicsEstimator {
      * @param result       instance where body kinematics estimation will be stored.
      */
     public static void estimateKinematics(final Time timeInterval,
-                                          final CoordinateTransformationMatrix c,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation c,
+                                          final CoordinateTransformation oldC,
                                           final Speed vx, final Speed vy, final Speed vz,
                                           final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                           final Point3D position, final Kinematics result) {
@@ -1522,8 +1522,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final double vx, final double vy, final double vz,
                                                             final double oldVx, final double oldVy, final double oldVz,
                                                             final double x, final double y, final double z) {
@@ -1566,8 +1566,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final double vx, final double vy, final double vz,
                                                             final double oldVx, final double oldVy, final double oldVz,
                                                             final double x, final double y, final double z) {
@@ -1597,7 +1597,7 @@ public class KinematicsEstimator {
      */
     public static Kinematics estimateKinematicsAndReturnNew(final double timeInterval,
                                                             final ECEFFrame frame,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation oldC,
                                                             final double oldVx, final double oldVy,
                                                             final double oldVz) {
         final Kinematics result = new Kinematics();
@@ -1625,7 +1625,7 @@ public class KinematicsEstimator {
      */
     public static Kinematics estimateKinematicsAndReturnNew(final Time timeInterval,
                                                             final ECEFFrame frame,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation oldC,
                                                             final double oldVx, final double oldVy,
                                                             final double oldVz) {
         final Kinematics result = new Kinematics();
@@ -1696,8 +1696,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final Speed vx, final Speed vy, final Speed vz,
                                                             final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                                             final double x, final double y, final double z) {
@@ -1734,8 +1734,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final Speed vx, final Speed vy, final Speed vz,
                                                             final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                                             final double x, final double y, final double z) {
@@ -1762,7 +1762,7 @@ public class KinematicsEstimator {
      */
     public static Kinematics estimateKinematicsAndReturnNew(final double timeInterval,
                                                             final ECEFFrame frame,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation oldC,
                                                             final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         final Kinematics result = new Kinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
@@ -1786,7 +1786,7 @@ public class KinematicsEstimator {
      */
     public static Kinematics estimateKinematicsAndReturnNew(final Time timeInterval,
                                                             final ECEFFrame frame,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation oldC,
                                                             final Speed oldVx, final Speed oldVy, final Speed oldVz) {
         final Kinematics result = new Kinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVx, oldVy, oldVz, result);
@@ -1822,8 +1822,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final double vx, final double vy, final double vz,
                                                             final double oldVx, final double oldVy, final double oldVz,
                                                             final Point3D position) {
@@ -1861,8 +1861,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final double vx, final double vy, final double vz,
                                                             final double oldVx, final double oldVy, final double oldVz,
                                                             final Point3D position) {
@@ -1893,8 +1893,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final Speed vx, final Speed vy, final Speed vz,
                                                             final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                                             final Point3D position) {
@@ -1925,8 +1925,8 @@ public class KinematicsEstimator {
      * @return a new body kinematics instance.
      */
     public static Kinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                            final CoordinateTransformationMatrix c,
-                                                            final CoordinateTransformationMatrix oldC,
+                                                            final CoordinateTransformation c,
+                                                            final CoordinateTransformation oldC,
                                                             final Speed vx, final Speed vy, final Speed vz,
                                                             final Speed oldVx, final Speed oldVy, final Speed oldVz,
                                                             final Point3D position) {

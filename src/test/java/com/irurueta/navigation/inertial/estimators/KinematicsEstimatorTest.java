@@ -9,7 +9,7 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import java.util.Random;
 
-import static com.irurueta.navigation.frames.CoordinateTransformationMatrix.ROWS;
+import static com.irurueta.navigation.frames.CoordinateTransformation.ROWS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -76,10 +76,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -190,10 +190,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -297,10 +297,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -415,10 +415,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -532,10 +532,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -567,10 +567,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -603,10 +603,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -639,10 +639,10 @@ public class KinematicsEstimatorTest {
                 .convertNEDtoECEFAndReturnNew(newNedFrame);
 
 
-        final CoordinateTransformationMatrix c = newEcefFrame
-                .getCoordinateTransformationMatrix();
-        final CoordinateTransformationMatrix oldC = oldEcefFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation c = newEcefFrame
+                .getCoordinateTransformation();
+        final CoordinateTransformation oldC = oldEcefFrame
+                .getCoordinateTransformation();
 
         final double vx = newEcefFrame.getVx();
         final double vy = newEcefFrame.getVy();
@@ -694,7 +694,7 @@ public class KinematicsEstimatorTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -715,8 +715,8 @@ public class KinematicsEstimatorTest {
         final double oldVe = oldFrame.getVe();
         final double oldVd = oldFrame.getVd();
 
-        final CoordinateTransformationMatrix oldC = oldFrame
-                .getCoordinateTransformationMatrix();
+        final CoordinateTransformation oldC = oldFrame
+                .getCoordinateTransformation();
 
         final double oldRoll = oldC.getRollEulerAngle();
         final double oldPitch = oldC.getPitchEulerAngle();
@@ -762,7 +762,7 @@ public class KinematicsEstimatorTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -770,8 +770,8 @@ public class KinematicsEstimatorTest {
     }
 
     private static Kinematics estimateKinematics(final double timeInterval,
-                                                final CoordinateTransformationMatrix c,
-                                                final CoordinateTransformationMatrix oldC,
+                                                final CoordinateTransformation c,
+                                                final CoordinateTransformation oldC,
                                                 final double vx, final double vy, final double vz,
                                                 final double oldVx, final double oldVy, final double oldVz,
                                                 final double x, final double y, final double z)
@@ -781,7 +781,7 @@ public class KinematicsEstimatorTest {
             // From (2.145) determine the Earth rotation over the update interval
             final double omegaIe = Constants.EARTH_ROTATION_RATE;
             final double alphaIe = omegaIe * timeInterval;
-            final Matrix cEarth = CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(alphaIe);
+            final Matrix cEarth = CoordinateTransformation.ecefToEciMatrixFromAngle(alphaIe);
             final Matrix cBe = c.getMatrix();
             final Matrix oldCbe = oldC.getMatrix();
             final Matrix cOldNew = cBe.multiplyAndReturnNew(cEarth.multiplyAndReturnNew(oldCbe));

@@ -5,7 +5,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameException;
 import com.irurueta.navigation.frames.FrameType;
@@ -48,7 +48,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -83,7 +83,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -109,7 +109,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -144,7 +144,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -170,7 +170,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -189,7 +189,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -210,7 +210,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -229,7 +229,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -246,7 +246,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -279,7 +279,7 @@ public class InertialECEFNavigator {
      */
     public void navigate(final double timeInterval,
                          final Point3D oldPosition,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -301,7 +301,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -334,7 +334,7 @@ public class InertialECEFNavigator {
      */
     public void navigate(final Time timeInterval,
                          final Point3D oldPosition,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -356,7 +356,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -373,7 +373,7 @@ public class InertialECEFNavigator {
      */
     public void navigate(final double timeInterval,
                          final Point3D oldPosition,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -390,7 +390,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -407,7 +407,7 @@ public class InertialECEFNavigator {
      */
     public void navigate(final Time timeInterval,
                          final Point3D oldPosition,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -428,7 +428,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -463,7 +463,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -489,7 +489,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -524,7 +524,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -550,7 +550,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -569,7 +569,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -590,7 +590,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -609,7 +609,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -630,7 +630,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -665,7 +665,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -692,7 +692,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -727,7 +727,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -754,7 +754,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -773,7 +773,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -794,7 +794,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -813,7 +813,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -834,7 +834,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -866,7 +866,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -892,7 +892,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -924,7 +924,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -950,7 +950,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -982,7 +982,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -1008,7 +1008,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1040,7 +1040,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -1066,7 +1066,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1101,7 +1101,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -1128,7 +1128,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1163,7 +1163,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -1190,7 +1190,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1219,7 +1219,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -1246,7 +1246,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1275,7 +1275,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -1302,7 +1302,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1331,7 +1331,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -1357,7 +1357,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1386,7 +1386,7 @@ public class InertialECEFNavigator {
                          final double oldX,
                          final double oldY,
                          final double oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
@@ -1412,7 +1412,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1431,7 +1431,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -1452,7 +1452,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1471,7 +1471,7 @@ public class InertialECEFNavigator {
                          final Distance oldX,
                          final Distance oldY,
                          final Distance oldZ,
-                         final CoordinateTransformationMatrix oldC,
+                         final CoordinateTransformation oldC,
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
@@ -1834,7 +1834,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1869,7 +1869,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -1894,7 +1894,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1929,7 +1929,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -1954,7 +1954,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -1973,7 +1973,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -1993,7 +1993,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2012,7 +2012,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2028,7 +2028,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2061,7 +2061,7 @@ public class InertialECEFNavigator {
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Point3D oldPosition,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2082,7 +2082,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2115,7 +2115,7 @@ public class InertialECEFNavigator {
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Point3D oldPosition,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2136,7 +2136,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2153,7 +2153,7 @@ public class InertialECEFNavigator {
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Point3D oldPosition,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2169,7 +2169,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2186,7 +2186,7 @@ public class InertialECEFNavigator {
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Point3D oldPosition,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2206,7 +2206,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2241,7 +2241,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2267,7 +2267,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2302,7 +2302,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2327,7 +2327,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2346,7 +2346,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2366,7 +2366,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2385,7 +2385,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2405,7 +2405,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2440,7 +2440,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -2466,7 +2466,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2501,7 +2501,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -2527,7 +2527,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2546,7 +2546,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -2566,7 +2566,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2585,7 +2585,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -2605,7 +2605,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2637,7 +2637,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2663,7 +2663,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2695,7 +2695,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2720,7 +2720,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2752,7 +2752,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2777,7 +2777,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2809,7 +2809,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -2835,7 +2835,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2870,7 +2870,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -2896,7 +2896,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2931,7 +2931,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -2957,7 +2957,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2986,7 +2986,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -3012,7 +3012,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3041,7 +3041,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -3067,7 +3067,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3096,7 +3096,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -3121,7 +3121,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3150,7 +3150,7 @@ public class InertialECEFNavigator {
                                           final double oldX,
                                           final double oldY,
                                           final double oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
@@ -3176,7 +3176,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3195,7 +3195,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -3215,7 +3215,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3234,7 +3234,7 @@ public class InertialECEFNavigator {
                                           final Distance oldX,
                                           final Distance oldY,
                                           final Distance oldZ,
-                                          final CoordinateTransformationMatrix oldC,
+                                          final CoordinateTransformation oldC,
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
@@ -3596,7 +3596,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3631,7 +3631,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -3652,7 +3652,7 @@ public class InertialECEFNavigator {
             // Attitude update
             // From (2.145) determine the Earth rotation over the update interval
             final double alpha = EARTH_ROTATION_RATE * timeInterval;
-            final Matrix cEarth = CoordinateTransformationMatrix.ecefToEciMatrixFromAngle(alpha);
+            final Matrix cEarth = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
 
             // Calculate attidue increment, magnitude, and skew-symmetric matrix
             final double alphaX = angularRateX * timeInterval;
@@ -3755,12 +3755,12 @@ public class InertialECEFNavigator {
             final double newY = oldY + (newVy + oldVy) * 0.5 * timeInterval;
             final double newZ = oldZ + (newVz + oldVz) * 0.5 * timeInterval;
 
-            final CoordinateTransformationMatrix newC =
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+            final CoordinateTransformation newC =
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             newC.setMatrix(cEarth); //cEarth contains cBe
 
-            result.setCoordinateTransformationMatrix(newC);
+            result.setCoordinateTransformation(newC);
             result.setVelocityCoordinates(newVx, newVy, newVz);
             result.setCoordinates(newX, newY, newZ);
 
@@ -3779,7 +3779,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3814,7 +3814,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -3841,7 +3841,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3860,7 +3860,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -3883,7 +3883,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3902,7 +3902,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -3919,7 +3919,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -3952,7 +3952,7 @@ public class InertialECEFNavigator {
      */
     public static void navigateECEF(final double timeInterval,
                                     final Point3D oldPosition,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -3974,7 +3974,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4007,7 +4007,7 @@ public class InertialECEFNavigator {
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Point3D oldPosition,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4029,7 +4029,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4046,7 +4046,7 @@ public class InertialECEFNavigator {
      */
     public static void navigateECEF(final double timeInterval,
                                     final Point3D oldPosition,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4065,7 +4065,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4082,7 +4082,7 @@ public class InertialECEFNavigator {
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Point3D oldPosition,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4103,7 +4103,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4138,7 +4138,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4166,7 +4166,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4201,7 +4201,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4228,7 +4228,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4247,7 +4247,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4270,7 +4270,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4289,7 +4289,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4312,7 +4312,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4347,7 +4347,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4375,7 +4375,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4410,7 +4410,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4437,7 +4437,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4456,7 +4456,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4479,7 +4479,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4498,7 +4498,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4519,7 +4519,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4551,7 +4551,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4579,7 +4579,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4611,7 +4611,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4639,7 +4639,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4671,7 +4671,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4699,7 +4699,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4731,7 +4731,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -4758,7 +4758,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4793,7 +4793,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4822,7 +4822,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4857,7 +4857,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4884,7 +4884,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4913,7 +4913,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -4946,7 +4946,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4975,7 +4975,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -5002,7 +5002,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5031,7 +5031,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -5061,7 +5061,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5090,7 +5090,7 @@ public class InertialECEFNavigator {
                                     final double oldX,
                                     final double oldY,
                                     final double oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
@@ -5117,7 +5117,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5136,7 +5136,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -5159,7 +5159,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5178,7 +5178,7 @@ public class InertialECEFNavigator {
                                     final Distance oldX,
                                     final Distance oldY,
                                     final Distance oldZ,
-                                    final CoordinateTransformationMatrix oldC,
+                                    final CoordinateTransformation oldC,
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
@@ -5229,7 +5229,7 @@ public class InertialECEFNavigator {
             throws InertialNavigatorException {
         try {
             navigateECEF(timeInterval, oldFrame.getX(), oldFrame.getY(), oldFrame.getZ(),
-                    oldFrame.getCoordinateTransformationMatrix(),
+                    oldFrame.getCoordinateTransformation(),
                     oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ, result);
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -5298,7 +5298,7 @@ public class InertialECEFNavigator {
             throws InertialNavigatorException {
         try {
             navigateECEF(timeInterval, oldFrame.getX(), oldFrame.getY(), oldFrame.getZ(),
-                    oldFrame.getCoordinateTransformationMatrix(),
+                    oldFrame.getCoordinateTransformation(),
                     oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), kinematics,
                     result);
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -5363,7 +5363,7 @@ public class InertialECEFNavigator {
             throws InertialNavigatorException {
         try {
             navigateECEF(timeInterval, oldFrame.getX(), oldFrame.getY(), oldFrame.getZ(),
-                    oldFrame.getCoordinateTransformationMatrix(),
+                    oldFrame.getCoordinateTransformation(),
                     oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ, result);
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -5447,7 +5447,7 @@ public class InertialECEFNavigator {
             throws InertialNavigatorException {
         try {
             navigateECEF(timeInterval, oldFrame.getX(), oldFrame.getY(), oldFrame.getZ(),
-                    oldFrame.getCoordinateTransformationMatrix(),
+                    oldFrame.getCoordinateTransformation(),
                     oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ, result);
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -5528,7 +5528,7 @@ public class InertialECEFNavigator {
             throws InertialNavigatorException {
         try {
             navigateECEF(timeInterval, oldFrame.getX(), oldFrame.getY(), oldFrame.getZ(),
-                    oldFrame.getCoordinateTransformationMatrix(),
+                    oldFrame.getCoordinateTransformation(),
                     oldFrame.getVx(), oldFrame.getVy(), oldFrame.getVz(), fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ, result);
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -5582,7 +5582,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5617,7 +5617,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5644,7 +5644,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5679,7 +5679,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5706,7 +5706,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5725,7 +5725,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5747,7 +5747,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5766,7 +5766,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5784,7 +5784,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5817,7 +5817,7 @@ public class InertialECEFNavigator {
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Point3D oldPosition,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5840,7 +5840,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5873,7 +5873,7 @@ public class InertialECEFNavigator {
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Point3D oldPosition,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5896,7 +5896,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5913,7 +5913,7 @@ public class InertialECEFNavigator {
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Point3D oldPosition,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5931,7 +5931,7 @@ public class InertialECEFNavigator {
      * @param timeInterval time interval between epochs.
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5948,7 +5948,7 @@ public class InertialECEFNavigator {
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Point3D oldPosition,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -5970,7 +5970,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6005,7 +6005,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6032,7 +6032,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6067,7 +6067,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6094,7 +6094,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6113,7 +6113,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6135,7 +6135,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6154,7 +6154,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6176,7 +6176,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6211,7 +6211,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6238,7 +6238,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6273,7 +6273,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6300,7 +6300,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6319,7 +6319,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6341,7 +6341,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6360,7 +6360,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6382,7 +6382,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6414,7 +6414,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6441,7 +6441,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6473,7 +6473,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6500,7 +6500,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6532,7 +6532,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6559,7 +6559,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6591,7 +6591,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6618,7 +6618,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6653,7 +6653,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6681,7 +6681,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6716,7 +6716,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6744,7 +6744,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6773,7 +6773,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6801,7 +6801,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6830,7 +6830,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -6858,7 +6858,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6887,7 +6887,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6914,7 +6914,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6943,7 +6943,7 @@ public class InertialECEFNavigator {
                                                      final double oldX,
                                                      final double oldY,
                                                      final double oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
@@ -6970,7 +6970,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6989,7 +6989,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -7011,7 +7011,7 @@ public class InertialECEFNavigator {
      *                     frame, resolved along ECEF-frame axes.
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
-     * @param oldC         previous body-to-ECEF-frame coordinate transformation matrix.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes.
      * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -7030,7 +7030,7 @@ public class InertialECEFNavigator {
                                                      final Distance oldX,
                                                      final Distance oldY,
                                                      final Distance oldZ,
-                                                     final CoordinateTransformationMatrix oldC,
+                                                     final CoordinateTransformation oldC,
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
@@ -7411,7 +7411,7 @@ public class InertialECEFNavigator {
      * @param c coordinate transformation matrix to be checked.
      * @return true if provided value is valid, false otherwise.
      */
-    public static boolean isValidBodyToEcefCoordinateTransformationMatrix(final CoordinateTransformationMatrix c) {
+    public static boolean isValidBodyToEcefCoordinateTransformationMatrix(final CoordinateTransformation c) {
         return ECEFFrame.isValidCoordinateTransformationMatrix(c);
     }
 

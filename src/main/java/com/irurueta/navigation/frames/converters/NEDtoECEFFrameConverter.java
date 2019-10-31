@@ -3,7 +3,7 @@ package com.irurueta.navigation.frames.converters;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
@@ -112,7 +112,7 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
             final double z = ((1.0 - e2) * re + height) * sinLat;
 
             // Calculate NED to ECEF coordinate transformation matrix
-            final Matrix cne = CoordinateTransformationMatrix.nedToEcefMatrix(latitude, longitude);
+            final Matrix cne = CoordinateTransformation.nedToEcefMatrix(latitude, longitude);
 
             // Transform velocity using (2.73)
             final double vn = source.getVn();
@@ -129,10 +129,10 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
             final double vz = vEbe.getElementAtIndex(2);
 
             // Transform attitude using (2.15)
-            final Matrix cbn = source.getCoordinateTransformationMatrix().getMatrix();
+            final Matrix cbn = source.getCoordinateTransformation().getMatrix();
             cne.multiply(cbn); // cne is now cbe
 
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(cne, FrameType.BODY_FRAME,
+            final CoordinateTransformation c = new CoordinateTransformation(cne, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             // set result
@@ -144,7 +144,7 @@ public class NEDtoECEFFrameConverter implements FrameConverter<NEDFrame, ECEFFra
             destination.setVy(vy);
             destination.setVz(vz);
 
-            destination.setCoordinateTransformationMatrix(c);
+            destination.setCoordinateTransformation(c);
 
         } catch (WrongSizeException | InvalidRotationMatrixException |
                 InvalidSourceAndDestinationFrameTypeException ignore) {

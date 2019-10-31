@@ -6,7 +6,7 @@ import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
@@ -55,7 +55,7 @@ public class InertialECEFNavigatorTest {
     @Test(expected = InvalidSourceAndDestinationFrameTypeException.class)
     public void testNavigateEcefWhenInvalidCoordinateTransformationMatrix()
             throws InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         final ECEFFrame result = new ECEFFrame();
         InertialECEFNavigator.navigateECEF(0.0,
@@ -88,7 +88,7 @@ public class InertialECEFNavigatorTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -98,7 +98,7 @@ public class InertialECEFNavigatorTest {
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
         final double oldZ = oldFrame.getZ();
-        final CoordinateTransformationMatrix oldC = oldFrame.getCoordinateTransformationMatrix();
+        final CoordinateTransformation oldC = oldFrame.getCoordinateTransformation();
         final double oldVx = oldFrame.getVx();
         final double oldVy = oldFrame.getVy();
         final double oldVz = oldFrame.getVz();
@@ -411,7 +411,7 @@ public class InertialECEFNavigatorTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -421,7 +421,7 @@ public class InertialECEFNavigatorTest {
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
         final double oldZ = oldFrame.getZ();
-        final CoordinateTransformationMatrix oldC = oldFrame.getCoordinateTransformationMatrix();
+        final CoordinateTransformation oldC = oldFrame.getCoordinateTransformation();
         final double oldVx = oldFrame.getVx();
         final double oldVy = oldFrame.getVy();
         final double oldVz = oldFrame.getVz();
@@ -726,7 +726,7 @@ public class InertialECEFNavigatorTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -736,7 +736,7 @@ public class InertialECEFNavigatorTest {
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
         final double oldZ = oldFrame.getZ();
-        final CoordinateTransformationMatrix oldC = oldFrame.getCoordinateTransformationMatrix();
+        final CoordinateTransformation oldC = oldFrame.getCoordinateTransformation();
         final double oldVx = oldFrame.getVx();
         final double oldVy = oldFrame.getVy();
         final double oldVz = oldFrame.getVz();
@@ -1047,7 +1047,7 @@ public class InertialECEFNavigatorTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1057,7 +1057,7 @@ public class InertialECEFNavigatorTest {
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
         final double oldZ = oldFrame.getZ();
-        final CoordinateTransformationMatrix oldC = oldFrame.getCoordinateTransformationMatrix();
+        final CoordinateTransformation oldC = oldFrame.getCoordinateTransformation();
         final double oldVx = oldFrame.getVx();
         final double oldVy = oldFrame.getVy();
         final double oldVz = oldFrame.getVz();
@@ -1371,7 +1371,7 @@ public class InertialECEFNavigatorTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1379,7 +1379,7 @@ public class InertialECEFNavigatorTest {
             final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
             final Gravity gravity = GravityEstimator.estimateGravityAndReturnNew(oldFrame);
             final Matrix g = gravity.asMatrix();
-            final Matrix cbe = oldFrame.getCoordinateTransformationMatrix().getMatrix();
+            final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);
 
             final double fx = f.getElementAtIndex(0);
@@ -1466,7 +1466,7 @@ public class InertialECEFNavigatorTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1474,7 +1474,7 @@ public class InertialECEFNavigatorTest {
             final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
             final Gravity gravity = GravityEstimator.estimateGravityAndReturnNew(oldFrame);
             final Matrix g = gravity.asMatrix();
-            final Matrix cbe = oldFrame.getCoordinateTransformationMatrix().getMatrix();
+            final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);
 
             final double fx = f.getElementAtIndex(0);
@@ -1559,7 +1559,7 @@ public class InertialECEFNavigatorTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1655,7 +1655,7 @@ public class InertialECEFNavigatorTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 

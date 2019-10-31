@@ -4,7 +4,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.RotationException;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
@@ -83,7 +83,7 @@ public class ECEFToNEDFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
@@ -107,16 +107,16 @@ public class ECEFToNEDFrameConverterTest {
             assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
             assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getSourceType(),
+                    ecefFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
+                    ecefFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            ecefFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
@@ -154,7 +154,7 @@ public class ECEFToNEDFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
@@ -180,16 +180,16 @@ public class ECEFToNEDFrameConverterTest {
             assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
             assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getSourceType(),
+                    ecefFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
+                    ecefFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            ecefFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
@@ -227,7 +227,7 @@ public class ECEFToNEDFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
@@ -247,16 +247,16 @@ public class ECEFToNEDFrameConverterTest {
             assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
             assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getSourceType(),
+                    ecefFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
+                    ecefFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            ecefFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
@@ -294,7 +294,7 @@ public class ECEFToNEDFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
@@ -316,16 +316,16 @@ public class ECEFToNEDFrameConverterTest {
             assertEquals(ecefFrame1.getVy(), ecefFrame2.getVy(), LARGE_ABSOLUTE_ERROR);
             assertEquals(ecefFrame1.getVz(), ecefFrame2.getVz(), LARGE_ABSOLUTE_ERROR);
 
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(ecefFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    ecefFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getSourceType(),
+                    ecefFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(ecefFrame1.getCoordinateTransformation().getDestinationType(),
+                    ecefFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            ecefFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            ecefFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            ecefFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            ecefFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, LARGE_ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame

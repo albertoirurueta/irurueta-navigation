@@ -25,7 +25,7 @@ import java.util.Objects;
  * and destination frame.
  */
 @SuppressWarnings("WeakerAccess")
-public class CoordinateTransformationMatrix implements Serializable, Cloneable {
+public class CoordinateTransformation implements Serializable, Cloneable {
 
     /**
      * Number of rows of a coordinate transformation matrix.
@@ -50,7 +50,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     /**
      * 3x3 matrix containing a rotation.
      */
-    private Matrix mMatrix;
+    Matrix mMatrix;
 
     /**
      * Source frame type.
@@ -70,7 +70,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param destinationType destination frame type.
      * @throws NullPointerException if either source or destination frame types are null.
      */
-    public CoordinateTransformationMatrix(final FrameType sourceType, final FrameType destinationType) {
+    public CoordinateTransformation(final FrameType sourceType, final FrameType destinationType) {
         try {
             mMatrix = Matrix.identity(ROWS, COLS);
         } catch (final WrongSizeException ignore) {
@@ -92,9 +92,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @throws NullPointerException           if either source or destination frame types are null.
      * @throws IllegalArgumentException       if provided threshold is negative.
      */
-    public CoordinateTransformationMatrix(final Matrix matrix, final FrameType sourceType,
-                                          final FrameType destinationType,
-                                          final double threshold) throws InvalidRotationMatrixException {
+    public CoordinateTransformation(final Matrix matrix, final FrameType sourceType,
+                                    final FrameType destinationType,
+                                    final double threshold) throws InvalidRotationMatrixException {
         setMatrix(matrix, threshold);
         setSourceType(sourceType);
         setDestinationType(destinationType);
@@ -109,8 +109,8 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
      * @throws NullPointerException           if either source or destination frame types are null.
      */
-    public CoordinateTransformationMatrix(final Matrix matrix, final FrameType sourceType,
-                                          final FrameType destinationType) throws InvalidRotationMatrixException {
+    public CoordinateTransformation(final Matrix matrix, final FrameType sourceType,
+                                    final FrameType destinationType) throws InvalidRotationMatrixException {
         this(matrix, sourceType, destinationType, DEFAULT_THRESHOLD);
     }
 
@@ -125,8 +125,8 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param sourceType      source frame type.
      * @param destinationType destination frame type.
      */
-    public CoordinateTransformationMatrix(final double roll, final double pitch, final double yaw,
-                                          final FrameType sourceType, final FrameType destinationType) {
+    public CoordinateTransformation(final double roll, final double pitch, final double yaw,
+                                    final FrameType sourceType, final FrameType destinationType) {
         this(sourceType, destinationType);
         setEulerAngles(roll, pitch, yaw);
     }
@@ -142,8 +142,8 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param sourceType      source frame type.
      * @param destinationType destination frame type.
      */
-    public CoordinateTransformationMatrix(final Angle roll, final Angle pitch, final Angle yaw,
-                                          final FrameType sourceType, final FrameType destinationType) {
+    public CoordinateTransformation(final Angle roll, final Angle pitch, final Angle yaw,
+                                    final FrameType sourceType, final FrameType destinationType) {
         this(sourceType, destinationType);
         setEulerAngles(roll, pitch, yaw);
     }
@@ -153,7 +153,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      *
      * @param input other coordinate transformation matrix to copy data from.
      */
-    public CoordinateTransformationMatrix(final CoordinateTransformationMatrix input) {
+    public CoordinateTransformation(final CoordinateTransformation input) {
         this(input.mSourceType, input.mDestinationType);
         copyFrom(input);
     }
@@ -474,7 +474,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(final CoordinateTransformationMatrix output) {
+    public void copyTo(final CoordinateTransformation output) {
         output.mSourceType = mSourceType;
         output.mDestinationType = mDestinationType;
         mMatrix.copyTo(output.mMatrix);
@@ -485,7 +485,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(final CoordinateTransformationMatrix input) {
+    public void copyFrom(final CoordinateTransformation input) {
         mSourceType = input.mSourceType;
         mDestinationType = input.mDestinationType;
         mMatrix.copyFrom(input.mMatrix);
@@ -517,11 +517,11 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof CoordinateTransformationMatrix)) {
+        if (!(obj instanceof CoordinateTransformation)) {
             return false;
         }
 
-        final CoordinateTransformationMatrix other = (CoordinateTransformationMatrix) obj;
+        final CoordinateTransformation other = (CoordinateTransformation) obj;
         return equals(other);
     }
 
@@ -531,7 +531,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(final CoordinateTransformationMatrix other) {
+    public boolean equals(final CoordinateTransformation other) {
         return equals(other, 0.0);
     }
 
@@ -544,7 +544,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(final CoordinateTransformationMatrix other, final double threshold) {
+    public boolean equals(final CoordinateTransformation other, final double threshold) {
         if (other == null) {
             return false;
         }
@@ -557,7 +557,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      *
      * @param result instance where inverse will be stored.
      */
-    public void inverse(final CoordinateTransformationMatrix result) {
+    public void inverse(final CoordinateTransformation result) {
         try {
             final FrameType source = mSourceType;
             final FrameType destination = mDestinationType;
@@ -587,8 +587,8 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      *
      * @return the inverse of this coordinate transformation matrix.
      */
-    public CoordinateTransformationMatrix inverseAndReturnNew() {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(mDestinationType, mSourceType);
+    public CoordinateTransformation inverseAndReturnNew() {
+        final CoordinateTransformation result = new CoordinateTransformation(mDestinationType, mSourceType);
         inverse(result);
         return result;
     }
@@ -663,7 +663,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     public static Matrix ecefToNedMatrix(final double latitude, final double longitude) {
         Matrix result;
         try {
-            result = new Matrix(CoordinateTransformationMatrix.ROWS, CoordinateTransformationMatrix.COLS);
+            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             ecefToNedMatrix(latitude, longitude, result);
         } catch (WrongSizeException ignore) {
             // never happens
@@ -680,7 +680,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result    instance where result will be stored.
      */
     public static void ecefToNedCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
-                                                               final CoordinateTransformationMatrix result) {
+                                                               final CoordinateTransformation result) {
         ecefToNedCoordinateTransformationMatrix(
                 AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
                 AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),
@@ -694,7 +694,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param longitude longitude angle.
      * @return a new ECEF to NED coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix ecefToNedCoordinateTransformationMatrix(
+    public static CoordinateTransformation ecefToNedCoordinateTransformationMatrix(
             final Angle latitude, final Angle longitude) {
         return ecefToNedCoordinateTransformationMatrix(
                 AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
@@ -709,7 +709,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result    instance where result will be stored.
      */
     public static void ecefToNedCoordinateTransformationMatrix(final double latitude, final double longitude,
-                                                               final CoordinateTransformationMatrix result) {
+                                                               final CoordinateTransformation result) {
         try {
             result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             result.setDestinationType(FrameType.LOCAL_NAVIGATION_FRAME);
@@ -726,9 +726,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param longitude longitude expressed in radians.
      * @return a new ECEF to NED coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix ecefToNedCoordinateTransformationMatrix(final double latitude,
-                                                                                         final double longitude) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+    public static CoordinateTransformation ecefToNedCoordinateTransformationMatrix(final double latitude,
+                                                                                   final double longitude) {
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
         ecefToNedCoordinateTransformationMatrix(latitude, longitude, result);
         return result;
@@ -785,7 +785,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     public static Matrix nedToEcefMatrix(final double latitude, final double longitude) {
         Matrix result;
         try {
-            result = new Matrix(CoordinateTransformationMatrix.ROWS, CoordinateTransformationMatrix.COLS);
+            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             nedToEcefMatrix(latitude, longitude, result);
         } catch (WrongSizeException ignore) {
             // never happens
@@ -803,7 +803,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result    instance where result will be stored.
      */
     public static void nedToEcefCoordinateTransformationMatrix(final Angle latitude, final Angle longitude,
-                                                               final CoordinateTransformationMatrix result) {
+                                                               final CoordinateTransformation result) {
         nedToEcefCoordinateTransformationMatrix(
                 AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
                 AngleConverter.convert(longitude.getValue().doubleValue(), longitude.getUnit(), AngleUnit.RADIANS),
@@ -817,7 +817,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param longitude longitude angle.
      * @return a new NED to ECEF coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix nedToEcefCoordinateTransformationMatrix(
+    public static CoordinateTransformation nedToEcefCoordinateTransformationMatrix(
             final Angle latitude, final Angle longitude) {
         return nedToEcefCoordinateTransformationMatrix(
                 AngleConverter.convert(latitude.getValue().doubleValue(), latitude.getUnit(), AngleUnit.RADIANS),
@@ -832,7 +832,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result    instance where result will be stored.
      */
     public static void nedToEcefCoordinateTransformationMatrix(final double latitude, final double longitude,
-                                                               final CoordinateTransformationMatrix result) {
+                                                               final CoordinateTransformation result) {
         try {
             result.setSourceType(FrameType.LOCAL_NAVIGATION_FRAME);
             result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
@@ -849,9 +849,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param longitude longitude expressed in radians.
      * @return a new NED to ECEF coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix nedToEcefCoordinateTransformationMatrix(final double latitude,
-                                                                                         final double longitude) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+    public static CoordinateTransformation nedToEcefCoordinateTransformationMatrix(final double latitude,
+                                                                                   final double longitude) {
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         nedToEcefCoordinateTransformationMatrix(latitude, longitude, result);
         return result;
@@ -971,7 +971,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     public static Matrix ecefToEciMatrixFromAngle(final double angle) {
         Matrix result;
         try {
-            result = new Matrix(CoordinateTransformationMatrix.ROWS, CoordinateTransformationMatrix.COLS);
+            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             ecefToEciMatrixFromAngle(angle, result);
         } catch (WrongSizeException ignore) {
             // never happens
@@ -988,7 +988,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result       instance where result will be stored.
      */
     public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
-            final Time timeInterval, final CoordinateTransformationMatrix result) {
+            final Time timeInterval, final CoordinateTransformation result) {
         ecefToEciCoordinateTransformationMatrixFromTimeInterval(
                 TimeConverter.convert(timeInterval.getValue().doubleValue(),
                         timeInterval.getUnit(), TimeUnit.SECOND), result);
@@ -1002,7 +1002,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result       instance where result will be stored.
      */
     public static void ecefToEciCoordinateTransformationMatrixFromTimeInterval(
-            final double timeInterval, final CoordinateTransformationMatrix result) {
+            final double timeInterval, final CoordinateTransformation result) {
         ecefToEciCoordinateTransformationMatrixFromAngle(
                 EARTH_ROTATION_RATE * timeInterval, result);
     }
@@ -1015,7 +1015,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void ecefToEciCoordinateTransformationMatrixFromAngle(
-            final Angle angle, final CoordinateTransformationMatrix result) {
+            final Angle angle, final CoordinateTransformation result) {
         ecefToEciCoordinateTransformationMatrixFromAngle(
                 AngleConverter.convert(angle.getValue().doubleValue(),
                         angle.getUnit(), AngleUnit.RADIANS), result);
@@ -1029,7 +1029,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void ecefToEciCoordinateTransformationMatrixFromAngle(
-            final double angle, final CoordinateTransformationMatrix result) {
+            final double angle, final CoordinateTransformation result) {
         try {
             result.setSourceType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
             result.setDestinationType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);
@@ -1046,9 +1046,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param timeInterval a time interval.
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromTimeInterval(
             final Time timeInterval) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
@@ -1062,9 +1062,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param timeInterval a time interval expressed in seconds (s).
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromTimeInterval(
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromTimeInterval(
             final double timeInterval) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         ecefToEciCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
@@ -1077,9 +1077,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param angle angle amount the Earth has rotated.
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromAngle(
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromAngle(
             final Angle angle) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);
@@ -1092,9 +1092,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param angle angle amount the Earth has rotated expressed in radians.
      * @return a new ECEF to ECI coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix ecefToEciCoordinateTransformationMatrixFromAngle(
+    public static CoordinateTransformation ecefToEciCoordinateTransformationMatrixFromAngle(
             final double angle) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         ecefToEciCoordinateTransformationMatrixFromAngle(angle, result);
@@ -1198,7 +1198,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     public static Matrix eciToEcefMatrixFromAngle(final double angle) {
         Matrix result;
         try {
-            result = new Matrix(CoordinateTransformationMatrix.ROWS, CoordinateTransformationMatrix.COLS);
+            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
             eciToEcefMatrixFromAngle(angle, result);
         } catch (WrongSizeException ignore) {
             // never happens
@@ -1215,7 +1215,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result       instance where result will be stored.
      */
     public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
-            final Time timeInterval, final CoordinateTransformationMatrix result) {
+            final Time timeInterval, final CoordinateTransformation result) {
         eciToEcefCoordinateTransformationMatrixFromTimeInterval(
                 TimeConverter.convert(timeInterval.getValue().doubleValue(),
                         timeInterval.getUnit(), TimeUnit.SECOND), result);
@@ -1229,7 +1229,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result       instance where result will be stored.
      */
     public static void eciToEcefCoordinateTransformationMatrixFromTimeInterval(
-            final double timeInterval, final CoordinateTransformationMatrix result) {
+            final double timeInterval, final CoordinateTransformation result) {
         eciToEcefCoordinateTransformationMatrixFromAngle(
                 EARTH_ROTATION_RATE * timeInterval, result);
     }
@@ -1242,7 +1242,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void eciToEcefCoordinateTransformationMatrixFromAngle(
-            final Angle angle, final CoordinateTransformationMatrix result) {
+            final Angle angle, final CoordinateTransformation result) {
         eciToEcefCoordinateTransformationMatrixFromAngle(
                 AngleConverter.convert(angle.getValue().doubleValue(),
                         angle.getUnit(), AngleUnit.RADIANS), result);
@@ -1256,7 +1256,7 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param result instance where result will be stored.
      */
     public static void eciToEcefCoordinateTransformationMatrixFromAngle(
-            final double angle, final CoordinateTransformationMatrix result) {
+            final double angle, final CoordinateTransformation result) {
         try {
             result.setSourceType(FrameType.EARTH_CENTERED_INERTIAL_FRAME);
             result.setDestinationType(FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
@@ -1273,9 +1273,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param timeInterval a time interval.
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromTimeInterval(
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromTimeInterval(
             final Time timeInterval) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
@@ -1289,9 +1289,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param timeInterval a time interval expressed in seconds (s).
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromInterval(
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromInterval(
             final double timeInterval) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         eciToEcefCoordinateTransformationMatrixFromTimeInterval(timeInterval, result);
@@ -1305,9 +1305,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param angle angle amount the Earth has rotated.
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromAngle(
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromAngle(
             final Angle angle) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);
@@ -1321,9 +1321,9 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
      * @param angle angle amount the Earth has rotated expressed in radians.
      * @return a new ECI to ECEF coordinate transformation matrix.
      */
-    public static CoordinateTransformationMatrix eciToEcefCoordinateTransformationMatrixFromAngle(
+    public static CoordinateTransformation eciToEcefCoordinateTransformationMatrixFromAngle(
             final double angle) {
-        final CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(
+        final CoordinateTransformation result = new CoordinateTransformation(
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
         eciToEcefCoordinateTransformationMatrixFromAngle(angle, result);
@@ -1338,6 +1338,6 @@ public class CoordinateTransformationMatrix implements Serializable, Cloneable {
     @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
     protected Object clone() {
-        return new CoordinateTransformationMatrix(this);
+        return new CoordinateTransformation(this);
     }
 }

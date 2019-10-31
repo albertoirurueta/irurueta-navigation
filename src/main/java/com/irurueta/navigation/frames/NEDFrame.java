@@ -1,5 +1,7 @@
 package com.irurueta.navigation.frames;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleConverter;
 import com.irurueta.units.AngleUnit;
@@ -63,7 +65,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Body to NED coordinate transformation matrix.
      */
-    private CoordinateTransformationMatrix mC;
+    private CoordinateTransformation mC;
 
     /**
      * Constructor.
@@ -71,7 +73,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * identity.
      */
     public NEDFrame() {
-        mC = new CoordinateTransformationMatrix(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+        mC = new CoordinateTransformation(FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
     }
 
     /**
@@ -80,8 +82,8 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param c Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
-    public NEDFrame(final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
-        setCoordinateTransformationMatrix(c);
+    public NEDFrame(final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -282,9 +284,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -297,9 +299,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -312,9 +314,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -334,9 +336,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final double vn, final double ve, final double vd,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, vn, ve, vd);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -356,9 +358,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final double vn, final double ve, final double vd,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, vn, ve, vd);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -378,9 +380,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final double vn, final double ve, final double vd,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, vn, ve, vd);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -400,9 +402,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final double vn, final double ve, final double vd,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, vn, ve, vd);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -419,9 +421,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final double height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, speedN, speedE, speedD);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -438,9 +440,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final double latitude, final double longitude, final Distance height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, speedN, speedE, speedD);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -457,9 +459,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final double height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, speedN, speedE, speedD);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -476,9 +478,9 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      */
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final Speed speedN, final Speed speedE, final Speed speedD,
-                    final CoordinateTransformationMatrix c) throws InvalidSourceAndDestinationFrameTypeException {
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, speedN, speedE, speedD);
-        setCoordinateTransformationMatrix(c);
+        setCoordinateTransformation(c);
     }
 
     /**
@@ -904,10 +906,10 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @return coordinate transformation matrix.
      */
     @Override
-    public CoordinateTransformationMatrix getCoordinateTransformationMatrix() {
-        CoordinateTransformationMatrix result = new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+    public CoordinateTransformation getCoordinateTransformation() {
+        CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
-        getCoordinateTransformationMatrix(result);
+        getCoordinateTransformation(result);
         return result;
     }
 
@@ -917,8 +919,38 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param result instance where coordinate transformation matrix will be copied to.
      */
     @Override
-    public void getCoordinateTransformationMatrix(final CoordinateTransformationMatrix result) {
+    public void getCoordinateTransformation(final CoordinateTransformation result) {
         mC.copyTo(result);
+    }
+
+    /**
+     * Gets coordinate transformation matrix.
+     * This is equivalent to calling {@link #getCoordinateTransformation().getMatrix()}, but more efficient
+     *
+     * @return coordinate transformation matrix.
+     */
+    @Override
+    public Matrix getCoordinateTransformationMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+            getCoordinateTransformationMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Gets coordinate transformation matrix.
+     * This is equivalent to calling {@link #getCoordinateTransformation().getMatrix()}, but more efficient
+     *
+     * @param result instance where coordinate transformation matrix will be copied to.
+     */
+    @Override
+    public void getCoordinateTransformationMatrix(final Matrix result) {
+        mC.mMatrix.copyTo(result);
     }
 
     /**
@@ -929,7 +961,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
      */
     @Override
-    public void setCoordinateTransformationMatrix(final CoordinateTransformationMatrix c)
+    public void setCoordinateTransformation(final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         if (!isValidCoordinateTransformationMatrix(c)) {
             throw new InvalidSourceAndDestinationFrameTypeException();
@@ -945,7 +977,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param c coordinate transformation matrix to be checked.
      * @return true if provided value is valid, false otherwise.
      */
-    public static boolean isValidCoordinateTransformationMatrix(final CoordinateTransformationMatrix c) {
+    public static boolean isValidCoordinateTransformationMatrix(final CoordinateTransformation c) {
         return c.getSourceType() == FrameType.BODY_FRAME &&
                 c.getDestinationType() == FrameType.LOCAL_NAVIGATION_FRAME;
     }

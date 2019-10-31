@@ -18,7 +18,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class ECEFFrameTest {
+public class ECIFrameTest {
 
     private static final double THRESHOLD = 1e-6;
 
@@ -38,8 +38,8 @@ public class ECEFFrameTest {
     @Test
     public void testConstants() {
 
-        assertEquals(ECEFFrame.NUM_POSITION_COORDINATES, 3);
-        assertEquals(ECEFFrame.NUM_VELOCITY_COORDINATES, 3);
+        assertEquals(ECIFrame.NUM_POSITION_COORDINATES, 3);
+        assertEquals(ECIFrame.NUM_VELOCITY_COORDINATES, 3);
     }
 
     @Test
@@ -47,8 +47,7 @@ public class ECEFFrameTest {
             InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
 
-        // test empty constructor
-        ECEFFrame frame = new ECEFFrame();
+        ECIFrame frame = new ECIFrame();
 
         // check
         assertEquals(frame.getX(), 0.0, 0.0);
@@ -71,9 +70,8 @@ public class ECEFFrameTest {
 
         CoordinateTransformation c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
-
 
         // test constructor with coordinate transformation matrix
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -88,9 +86,9 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        frame = new ECEFFrame(c1);
+        frame = new ECIFrame(c1);
 
         // check
         assertEquals(frame.getX(), 0.0, 0.0);
@@ -115,7 +113,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(new CoordinateTransformation(
+            frame = new ECIFrame(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -127,7 +125,7 @@ public class ECEFFrameTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        frame = new ECEFFrame(x, y, z);
+        frame = new ECIFrame(x, y, z);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -150,14 +148,14 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
         // test constructor with position
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
 
-        frame = new ECEFFrame(position);
+        frame = new ECIFrame(position);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -180,7 +178,7 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
@@ -189,7 +187,7 @@ public class ECEFFrameTest {
         final Distance positionY = new Distance(y, DistanceUnit.METER);
         final Distance positionZ = new Distance(z, DistanceUnit.METER);
 
-        frame = new ECEFFrame(positionX, positionY, positionZ);
+        frame = new ECIFrame(positionX, positionY, positionZ);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -197,7 +195,7 @@ public class ECEFFrameTest {
         assertEquals(frame.getZ(), z, 0.0);
 
         assertEquals(frame.getVx(), 0.0, 0.0);
-        assertEquals(frame.getVy(), 0.0, 0.0);
+        assertEquals(frame.getVx(), 0.0, 0.0);
         assertEquals(frame.getVz(), 0.0, 0.0);
 
         assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
@@ -212,7 +210,7 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
@@ -221,7 +219,7 @@ public class ECEFFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        frame = new ECEFFrame(x, y, z, vx, vy, vz);
+        frame = new ECIFrame(x, y, z, vx, vy, vz);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -244,12 +242,11 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
-
         // test constructor with position and velocity coordinates
-        frame = new ECEFFrame(position, vx, vy, vz);
+        frame = new ECIFrame(position, vx, vy, vz);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -272,7 +269,7 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
@@ -281,7 +278,7 @@ public class ECEFFrameTest {
         final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        frame = new ECEFFrame(position, speedX, speedY, speedZ);
+        frame = new ECIFrame(position, speedX, speedY, speedZ);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -304,12 +301,12 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
         // test constructor with cartesian position coordinates and speed coordinates
-        frame = new ECEFFrame(x, y, z, speedX, speedY, speedZ);
+        frame = new ECIFrame(x, y, z, speedX, speedY, speedZ);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -332,12 +329,12 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
         // test constructor with position and velocity coordinates
-        frame = new ECEFFrame(positionX, positionY, positionZ, vx, vy, vz);
+        frame = new ECIFrame(positionX, positionY, positionZ, vx, vy, vz);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -360,12 +357,12 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
         // test constructor with position and speed coordinates
-        frame = new ECEFFrame(positionX, positionY, positionZ, speedX, speedY, speedZ);
+        frame = new ECIFrame(positionX, positionY, positionZ, speedX, speedY, speedZ);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -388,12 +385,11 @@ public class ECEFFrameTest {
 
         c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
-
         // test constructor with cartesian position coordinates and coordinate transformation matrix
-        frame = new ECEFFrame(x, y, z, c1);
+        frame = new ECIFrame(x, y, z, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -418,7 +414,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(x, y, z, new CoordinateTransformation(
+            frame = new ECIFrame(x, y, z, new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -426,7 +422,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position and coordinate transformation matrix
-        frame = new ECEFFrame(position, c1);
+        frame = new ECIFrame(position, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -451,7 +447,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(position, new CoordinateTransformation(
+            frame = new ECIFrame(position, new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -459,7 +455,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position coordinates and coordinate transformation matrix
-        frame = new ECEFFrame(positionX, positionY, positionZ, c1);
+        frame = new ECIFrame(positionX, positionY, positionZ, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -484,16 +480,16 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(positionX, positionY, positionZ,
+            frame = new ECIFrame(positionX, positionY, positionZ,
                     new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
         assertNull(frame);
 
 
         // test constructor with cartesian position and velocity coordinates, and with coordinate transformation matrix
-        frame = new ECEFFrame(x, y, z, vx, vy, vz, c1);
+        frame = new ECIFrame(x, y, z, vx, vy, vz, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -518,16 +514,16 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(x, y, z, vx, vy, vz,
+            frame = new ECIFrame(x, y, z, vx, vy, vz,
                     new CoordinateTransformation(
-                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
         assertNull(frame);
 
 
         // test constructor with position, velocity coordinates, and coordinate transformation matrix
-        frame = new ECEFFrame(position, vx, vy, vz, c1);
+        frame = new ECIFrame(position, vx, vy, vz, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -552,7 +548,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(position, vx, vy, vz,
+            frame = new ECIFrame(position, vx, vy, vz,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -561,7 +557,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position, speed coordinates and coordinate transformation matrix
-        frame = new ECEFFrame(position, speedX, speedY, speedZ, c1);
+        frame = new ECIFrame(position, speedX, speedY, speedZ, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -586,7 +582,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(position, speedX, speedY, speedZ,
+            frame = new ECIFrame(position, speedX, speedY, speedZ,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -595,7 +591,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with cartesian coordinates, speed coordinates and coordinate transformation matrix
-        frame = new ECEFFrame(x, y, z, speedX, speedY, speedZ, c1);
+        frame = new ECIFrame(x, y, z, speedX, speedY, speedZ, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -620,16 +616,15 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(x, y, z, speedX, speedY, speedZ,
+            frame = new ECIFrame(x, y, z, speedX, speedY, speedZ,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
         assertNull(frame);
 
-
         // test constructor with position coordinates, velocity coordinates and coordinates transformation matrix
-        frame = new ECEFFrame(positionX, positionY, positionZ, vx, vy, vz, c1);
+        frame = new ECIFrame(positionX, positionY, positionZ, vx, vy, vz, c1);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -654,7 +649,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(positionX, positionY, positionZ,
+            frame = new ECIFrame(positionX, positionY, positionZ,
                     vx, vy, vz,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
@@ -664,7 +659,7 @@ public class ECEFFrameTest {
 
 
         // test constructor with position coordinates, speed coordinates and coordinate transformation matrix
-        frame = new ECEFFrame(positionX, positionY, positionZ, speedX, speedY, speedZ,
+        frame = new ECIFrame(positionX, positionY, positionZ, speedX, speedY, speedZ,
                 c1);
 
         // check
@@ -690,7 +685,7 @@ public class ECEFFrameTest {
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new ECEFFrame(positionX, positionY, positionZ,
+            frame = new ECIFrame(positionX, positionY, positionZ,
                     speedX, speedY, speedZ,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
@@ -700,8 +695,8 @@ public class ECEFFrameTest {
 
 
         // test constructor with another ECEF frame
-        frame = new ECEFFrame(x, y, z, vx, vy, vz, c1);
-        final ECEFFrame frame2 = new ECEFFrame(frame);
+        frame = new ECIFrame(x, y, z, vx, vy, vz, c1);
+        final ECIFrame frame2 = new ECIFrame(frame);
 
         // check
         assertEquals(frame.getX(), frame2.getX(), 0.0);
@@ -722,7 +717,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getX(), 0.0, 0.0);
@@ -740,7 +735,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getY(), 0.0, 0.0);
@@ -758,7 +753,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getZ(), 0.0, 0.0);
@@ -778,7 +773,7 @@ public class ECEFFrameTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial values
         assertEquals(frame.getX(), 0.0, 0.0);
@@ -802,7 +797,7 @@ public class ECEFFrameTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getPosition(), Point3D.create());
@@ -825,7 +820,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getPositionX().getValue().doubleValue(), 0.0, 0.0);
@@ -849,7 +844,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getPositionY().getValue().doubleValue(), 0.0, 0.0);
@@ -873,7 +868,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getPositionZ().getValue().doubleValue(), 0.0, 0.0);
@@ -903,7 +898,7 @@ public class ECEFFrameTest {
         final Distance positionY = new Distance(y, DistanceUnit.METER);
         final Distance positionZ = new Distance(z, DistanceUnit.METER);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         frame.setPositionCoordinates(positionX, positionY, positionZ);
 
@@ -923,7 +918,7 @@ public class ECEFFrameTest {
         final double norm = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0)
                 + Math.pow(z, 2.0));
 
-        final ECEFFrame frame = new ECEFFrame(x, y, z);
+        final ECIFrame frame = new ECIFrame(x, y, z);
 
         assertEquals(frame.getPositionNorm(), norm, ABSOLUTE_ERROR);
 
@@ -942,7 +937,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getVx(), 0.0, 0.0);
@@ -960,7 +955,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getVy(), 0.0, 0.0);
@@ -978,7 +973,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getVz(), 0.0, 0.0);
@@ -998,7 +993,7 @@ public class ECEFFrameTest {
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getVx(), 0.0, 0.0);
@@ -1024,7 +1019,7 @@ public class ECEFFrameTest {
         final double norm = Math.sqrt(Math.pow(vx, 2.0) + Math.pow(vy, 2.0)
                 + Math.pow(vz, 2.0));
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
         frame.setVelocityCoordinates(vx, vy, vz);
 
         assertEquals(frame.getVelocityNorm(), norm, ABSOLUTE_ERROR);
@@ -1044,7 +1039,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
@@ -1068,7 +1063,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
@@ -1092,7 +1087,7 @@ public class ECEFFrameTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
@@ -1122,7 +1117,7 @@ public class ECEFFrameTest {
         final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // set new values
         frame.setSpeedCoordinates(speedX, speedY, speedZ);
@@ -1134,15 +1129,15 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException, InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
+            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
-        final ECEFFrame frame = new ECEFFrame();
+        final ECIFrame frame = new ECIFrame();
 
         // check initial value
         final CoordinateTransformation c1 = frame.getCoordinateTransformation();
         assertEquals(c1.getSourceType(), FrameType.BODY_FRAME);
-        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c1.getDestinationType(), FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         assertEquals(c1.getMatrix(), Matrix.identity(3, 3));
 
         // set new value
@@ -1158,7 +1153,7 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c2 = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
         frame.setCoordinateTransformation(c2);
 
@@ -1181,15 +1176,15 @@ public class ECEFFrameTest {
     public void testIsValidCoordinateTransformationMatrix() {
 
         final CoordinateTransformation c1 = new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         final CoordinateTransformation c2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        assertTrue(ECEFFrame.isValidCoordinateTransformationMatrix(c1));
-        assertFalse(ECEFFrame.isValidCoordinateTransformationMatrix(c2));
-        assertFalse(ECEFFrame.isValidCoordinateTransformationMatrix(c3));
+        assertTrue(ECIFrame.isValidCoordinateTransformationMatrix(c1));
+        assertFalse(ECIFrame.isValidCoordinateTransformationMatrix(c2));
+        assertFalse(ECIFrame.isValidCoordinateTransformationMatrix(c3));
     }
 
     @Test
@@ -1216,10 +1211,10 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame();
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame2 = new ECIFrame();
         frame1.copyTo(frame2);
 
         // check
@@ -1234,8 +1229,7 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testCopyFrom() throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+    public void testCopyFrom() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1258,10 +1252,10 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame();
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame2 = new ECIFrame();
         frame2.copyFrom(frame1);
 
         // check
@@ -1276,8 +1270,8 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testHashCode() throws InvalidSourceAndDestinationFrameTypeException,
-            InvalidRotationMatrixException {
+    public void testHashCode() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1300,11 +1294,11 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame3 = new ECEFFrame();
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame2 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame3 = new ECIFrame();
 
         assertEquals(frame1.hashCode(), frame2.hashCode());
         assertNotEquals(frame1.hashCode(), frame3.hashCode());
@@ -1334,11 +1328,11 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame3 = new ECEFFrame();
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame2 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame3 = new ECIFrame();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(frame1.equals((Object)frame1));
@@ -1353,8 +1347,7 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testEqualsWithThreshold() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    public void testEqualsWithThreshold() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1376,12 +1369,11 @@ public class ECEFFrameTest {
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame2 = new ECEFFrame(x, y, z, vx, vy, vz, c);
-        final ECEFFrame frame3 = new ECEFFrame();
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame2 = new ECIFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame3 = new ECIFrame();
 
         assertTrue(frame1.equals(frame1, THRESHOLD));
         assertTrue(frame1.equals(frame2, THRESHOLD));
@@ -1390,8 +1382,7 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testClone() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+    public void testClone() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1414,9 +1405,9 @@ public class ECEFFrameTest {
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
-                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
 
-        final ECEFFrame frame1 = new ECEFFrame(x, y, z, vx, vy, vz, c);
+        final ECIFrame frame1 = new ECIFrame(x, y, z, vx, vy, vz, c);
 
         final Object frame2 = frame1.clone();
 

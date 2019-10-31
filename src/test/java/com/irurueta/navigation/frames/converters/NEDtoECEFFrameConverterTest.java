@@ -4,7 +4,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.geometry.RotationException;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
@@ -76,7 +76,7 @@ public class NEDtoECEFFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -100,16 +100,16 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getSourceType(),
+                    nedFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
+                    nedFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            nedFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            nedFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
@@ -147,7 +147,7 @@ public class NEDtoECEFFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -173,16 +173,16 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getSourceType(),
+                    nedFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
+                    nedFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            nedFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            nedFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
@@ -220,7 +220,7 @@ public class NEDtoECEFFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -240,16 +240,16 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getSourceType(),
+                    nedFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
+                    nedFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            nedFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            nedFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame
@@ -287,7 +287,7 @@ public class NEDtoECEFFrameConverterTest {
             final Quaternion q = new Quaternion(roll, pitch, yaw);
 
             final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+            final CoordinateTransformation c = new CoordinateTransformation(
                     m, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -309,16 +309,16 @@ public class NEDtoECEFFrameConverterTest {
             assertEquals(nedFrame1.getVe(), nedFrame2.getVe(), ABSOLUTE_ERROR);
             assertEquals(nedFrame1.getVd(), nedFrame2.getVd(), ABSOLUTE_ERROR);
 
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getSourceType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getSourceType());
-            assertEquals(nedFrame1.getCoordinateTransformationMatrix().getDestinationType(),
-                    nedFrame2.getCoordinateTransformationMatrix().getDestinationType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getSourceType(),
+                    nedFrame2.getCoordinateTransformation().getSourceType());
+            assertEquals(nedFrame1.getCoordinateTransformation().getDestinationType(),
+                    nedFrame2.getCoordinateTransformation().getDestinationType());
 
             final Quaternion q1 = new Quaternion();
-            nedFrame1.getCoordinateTransformationMatrix().asRotation(q1);
+            nedFrame1.getCoordinateTransformation().asRotation(q1);
 
             final Quaternion q2 = new Quaternion();
-            nedFrame2.getCoordinateTransformationMatrix().asRotation(q2);
+            nedFrame2.getCoordinateTransformation().asRotation(q2);
             assertTrue(q1.equals(q2, ABSOLUTE_ERROR));
 
             // velocity norm is the same either on ECEF or NED frame

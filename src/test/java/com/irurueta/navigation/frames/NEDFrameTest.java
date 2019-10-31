@@ -62,9 +62,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        CoordinateTransformationMatrix c = frame.getCoordinateTransformationMatrix();
+        CoordinateTransformation c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -81,7 +81,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c1 = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
         frame = new NEDFrame(c1);
@@ -103,13 +103,13 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        CoordinateTransformationMatrix c2 = frame.getCoordinateTransformationMatrix();
+        CoordinateTransformation c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
-            frame = new NEDFrame(new CoordinateTransformationMatrix(
+            frame = new NEDFrame(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -140,9 +140,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -170,9 +170,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -201,9 +201,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -229,9 +229,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -261,9 +261,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -289,9 +289,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -317,9 +317,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -345,9 +345,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -377,9 +377,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -405,9 +405,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -434,9 +434,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -463,9 +463,9 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        assertNotNull(frame.getCoordinateTransformationMatrix());
+        assertNotNull(frame.getCoordinateTransformation());
 
-        c = frame.getCoordinateTransformationMatrix();
+        c = frame.getCoordinateTransformation();
         assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
@@ -491,14 +491,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitude, longitude, height,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -525,14 +525,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, height,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -559,14 +559,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -593,14 +593,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitude, longitude, height, vn, ve, vd,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -627,14 +627,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitude, longitude, heightDistance, vn, ve, vd,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -661,14 +661,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, height, vn, ve, vd,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -695,7 +695,7 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
@@ -703,7 +703,7 @@ public class NEDFrameTest {
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance,
                     vn, ve, vd,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -730,14 +730,14 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         frame = null;
         try {
             frame = new NEDFrame(latitude, longitude, height, speedN, speedE, speedD,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -765,7 +765,7 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
@@ -773,7 +773,7 @@ public class NEDFrameTest {
         try {
             frame = new NEDFrame(latitude, longitude, heightDistance,
                     speedN, speedE, speedD,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -801,7 +801,7 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
@@ -809,7 +809,7 @@ public class NEDFrameTest {
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, height,
                     speedN, speedE, speedD,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -837,7 +837,7 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
         assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
 
-        c2 = frame.getCoordinateTransformationMatrix();
+        c2 = frame.getCoordinateTransformation();
         assertEquals(c1, c2);
 
         // Force InvalidSourceAndDestinationFrameTypeException
@@ -845,7 +845,7 @@ public class NEDFrameTest {
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, height,
                     speedN, speedE, speedD,
-                    new CoordinateTransformationMatrix(FrameType.BODY_FRAME,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -865,8 +865,8 @@ public class NEDFrameTest {
         assertEquals(frame.getVe(), frame2.getVe(), 0.0);
         assertEquals(frame.getVd(), frame2.getVd(), 0.0);
 
-        assertEquals(frame.getCoordinateTransformationMatrix(),
-                frame2.getCoordinateTransformationMatrix());
+        assertEquals(frame.getCoordinateTransformation(),
+                frame2.getCoordinateTransformation());
     }
 
     @Test
@@ -1319,7 +1319,7 @@ public class NEDFrameTest {
         final NEDFrame frame = new NEDFrame();
 
         // check initial value
-        CoordinateTransformationMatrix c1 = frame.getCoordinateTransformationMatrix();
+        CoordinateTransformation c1 = frame.getCoordinateTransformation();
         assertEquals(c1.getSourceType(), FrameType.BODY_FRAME);
         assertEquals(c1.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
         assertEquals(c1.getMatrix(), Matrix.identity(3, 3));
@@ -1335,22 +1335,22 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c2 = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c2 = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
-        frame.setCoordinateTransformationMatrix(c2);
+        frame.setCoordinateTransformation(c2);
 
         // check
-        assertEquals(frame.getCoordinateTransformationMatrix(), c2);
-        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+        assertEquals(frame.getCoordinateTransformation(), c2);
+        final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        frame.getCoordinateTransformationMatrix(c3);
+        frame.getCoordinateTransformation(c3);
         assertEquals(c2, c3);
 
         // Force InvalidSourceAndDestinationFrameTypeException
         try {
-            frame.setCoordinateTransformationMatrix(new CoordinateTransformationMatrix(
+            frame.setCoordinateTransformation(new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -1358,11 +1358,11 @@ public class NEDFrameTest {
 
     @Test
     public void testIsValidCoordinateTransformationMatrix() {
-        final CoordinateTransformationMatrix c1 = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
-        final CoordinateTransformationMatrix c2 = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c2 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        final CoordinateTransformationMatrix c3 = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
         assertTrue(NEDFrame.isValidCoordinateTransformationMatrix(c1));
@@ -1393,7 +1393,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1408,8 +1408,8 @@ public class NEDFrameTest {
         assertEquals(frame1.getVn(), frame2.getVn(), 0.0);
         assertEquals(frame1.getVe(), frame2.getVe(), 0.0);
         assertEquals(frame1.getVd(), frame2.getVd(), 0.0);
-        assertEquals(frame1.getCoordinateTransformationMatrix(),
-                frame2.getCoordinateTransformationMatrix());
+        assertEquals(frame1.getCoordinateTransformation(),
+                frame2.getCoordinateTransformation());
     }
 
     @Test
@@ -1435,7 +1435,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1450,8 +1450,8 @@ public class NEDFrameTest {
         assertEquals(frame1.getVn(), frame2.getVn(), 0.0);
         assertEquals(frame1.getVe(), frame2.getVe(), 0.0);
         assertEquals(frame1.getVd(), frame2.getVd(), 0.0);
-        assertEquals(frame1.getCoordinateTransformationMatrix(),
-                frame2.getCoordinateTransformationMatrix());
+        assertEquals(frame1.getCoordinateTransformation(),
+                frame2.getCoordinateTransformation());
     }
 
     @Test
@@ -1477,7 +1477,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1512,7 +1512,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1554,7 +1554,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
@@ -1590,7 +1590,7 @@ public class NEDFrameTest {
         final Quaternion q = new Quaternion(roll, pitch, yaw);
 
         final Matrix m = q.asInhomogeneousMatrix();
-        final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(
+        final CoordinateTransformation c = new CoordinateTransformation(
                 m, FrameType.BODY_FRAME,
                 FrameType.LOCAL_NAVIGATION_FRAME);
 

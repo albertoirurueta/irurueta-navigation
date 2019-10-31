@@ -3,7 +3,7 @@ package com.irurueta.navigation.frames.converters;
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
-import com.irurueta.navigation.frames.CoordinateTransformationMatrix;
+import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
@@ -147,7 +147,7 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
 
         try {
             // Calculate ECEF to NED coordinate transformation matrix
-            final Matrix cen = CoordinateTransformationMatrix.ecefToNedMatrix(latitude, longitude);
+            final Matrix cen = CoordinateTransformation.ecefToNedMatrix(latitude, longitude);
 
             // Transform velocity using (2.73)
             final double vx = source.getVx();
@@ -164,10 +164,10 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
             final double vd = vEbn.getElementAtIndex(2);
 
             // Transform attitude using (2.15)
-            final Matrix cbe = source.getCoordinateTransformationMatrix().getMatrix();
+            final Matrix cbe = source.getCoordinateTransformation().getMatrix();
             cen.multiply(cbe); // cen is now cbn
 
-            final CoordinateTransformationMatrix c = new CoordinateTransformationMatrix(cen, FrameType.BODY_FRAME,
+            final CoordinateTransformation c = new CoordinateTransformation(cen, FrameType.BODY_FRAME,
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
             // Set result
@@ -179,7 +179,7 @@ public class ECEFtoNEDFrameConverter implements FrameConverter<ECEFFrame, NEDFra
             destination.setVe(ve);
             destination.setVd(vd);
 
-            destination.setCoordinateTransformationMatrix(c);
+            destination.setCoordinateTransformation(c);
 
         } catch (WrongSizeException | InvalidRotationMatrixException
                 | InvalidSourceAndDestinationFrameTypeException ignore) {
