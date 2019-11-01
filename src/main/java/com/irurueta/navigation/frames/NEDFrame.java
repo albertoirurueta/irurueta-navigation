@@ -925,7 +925,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
 
     /**
      * Gets coordinate transformation matrix.
-     * This is equivalent to calling {@link #getCoordinateTransformation().getMatrix()}, but more efficient
+     * This is equivalent to calling getCoordinateTransformation().getMatrix(), but more efficient
      *
      * @return coordinate transformation matrix.
      */
@@ -944,7 +944,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
 
     /**
      * Gets coordinate transformation matrix.
-     * This is equivalent to calling {@link #getCoordinateTransformation().getMatrix()}, but more efficient
+     * This is equivalent to calling getCoordinateTransformation().getMatrix(), but more efficient
      *
      * @param result instance where coordinate transformation matrix will be copied to.
      */
