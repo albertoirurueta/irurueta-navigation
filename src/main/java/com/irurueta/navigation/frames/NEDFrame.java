@@ -963,7 +963,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     @Override
     public void setCoordinateTransformation(final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-        if (!isValidCoordinateTransformationMatrix(c)) {
+        if (!isValidCoordinateTransformation(c)) {
             throw new InvalidSourceAndDestinationFrameTypeException();
         }
 
@@ -977,7 +977,7 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * @param c coordinate transformation matrix to be checked.
      * @return true if provided value is valid, false otherwise.
      */
-    public static boolean isValidCoordinateTransformationMatrix(final CoordinateTransformation c) {
+    public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
         return c.getSourceType() == FrameType.BODY_FRAME &&
                 c.getDestinationType() == FrameType.LOCAL_NAVIGATION_FRAME;
     }

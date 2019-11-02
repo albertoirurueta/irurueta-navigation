@@ -943,8 +943,8 @@ public class KinematicsEstimator {
                                           final double x, final double y, final double z,
                                           final Kinematics result) {
         if (timeInterval < 0.0
-                || !ECEFFrame.isValidCoordinateTransformationMatrix(c)
-                || !ECEFFrame.isValidCoordinateTransformationMatrix(oldC)) {
+                || !ECEFFrame.isValidCoordinateTransformation(c)
+                || !ECEFFrame.isValidCoordinateTransformation(oldC)) {
             throw new IllegalArgumentException();
         }
 
@@ -952,7 +952,7 @@ public class KinematicsEstimator {
             try {
                 // From (2.145) determine the Earth rotation over the update interval
                 final double alpha = EARTH_ROTATION_RATE * timeInterval;
-                final Matrix cEarth = CoordinateTransformation.ecefToEciMatrixFromAngle(alpha);
+                final Matrix cEarth = CoordinateTransformation.eciToEcefMatrixFromAngle(alpha);
 
                 final Matrix cBe = c.getMatrix();
                 final Matrix oldCbe = oldC.getMatrix();

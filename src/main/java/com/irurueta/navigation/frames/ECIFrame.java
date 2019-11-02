@@ -4,8 +4,6 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.units.Distance;
 import com.irurueta.units.Speed;
 
-import java.util.Objects;
-
 /**
  * Contains position, velocity and coordinates transformation matrix expressed in ECI frame.
  * Position and velocity of this frame is expressed along ECI axes as described here:
@@ -378,7 +376,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> {
      */
     @Override
     public CoordinateTransformation getCoordinateTransformation() {
-        CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
+        final CoordinateTransformation result = new CoordinateTransformation(FrameType.BODY_FRAME,
                 FrameType.EARTH_CENTERED_INERTIAL_FRAME);
         getCoordinateTransformation(result);
         return result;
@@ -404,7 +402,7 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> {
     @Override
     public void setCoordinateTransformation(final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
-        if (!isValidCoordinateTransformationMatrix(c)) {
+        if (!isValidCoordinateTransformation(c)) {
             throw new InvalidSourceAndDestinationFrameTypeException();
         }
 
@@ -412,25 +410,15 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> {
     }
 
     /**
-     * Checks whether provided coordinate transformation matrix is valid or not.
+     * Checks whether provided coordinate transformation is valid or not.
      * Only body to ECI transformation matrices are considered to be valid.
      *
      * @param c coordinate transformation matrix to be checked.
      * @return true if provided value is valid, false otherwise.
      */
-    public static boolean isValidCoordinateTransformationMatrix(final CoordinateTransformation c) {
+    public static boolean isValidCoordinateTransformation(final CoordinateTransformation c) {
         return c.getSourceType() == FrameType.BODY_FRAME &&
                 c.getDestinationType() == FrameType.EARTH_CENTERED_INERTIAL_FRAME;
-    }
-
-    /**
-     * Computes and returns hash code for this instance. Hash codes are almost unique
-     * values that are useful for fast classification and storage of objects in collections.
-     *
-     * @return Hash code.
-     */
-    public int hashCode() {
-        return Objects.hash(mX, mY, mZ, mVx, mVy, mVz, mC);
     }
 
     /**

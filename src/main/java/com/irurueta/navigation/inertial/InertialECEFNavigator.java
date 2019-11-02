@@ -7412,7 +7412,7 @@ public class InertialECEFNavigator {
      * @return true if provided value is valid, false otherwise.
      */
     public static boolean isValidBodyToEcefCoordinateTransformationMatrix(final CoordinateTransformation c) {
-        return ECEFFrame.isValidCoordinateTransformationMatrix(c);
+        return ECEFFrame.isValidCoordinateTransformation(c);
     }
 
     /**

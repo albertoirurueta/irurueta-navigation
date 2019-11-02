@@ -12,6 +12,7 @@ import com.irurueta.units.SpeedConverter;
 import com.irurueta.units.SpeedUnit;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Base class for ECI or ECEF frames containing common logic and data for such frames.
@@ -582,6 +583,16 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame> implements Frame,
         mVz = input.mVz;
 
         mC.copyFrom(input.mC);
+    }
+
+    /**
+     * Computes and returns hash code for this instance. Hash codes are almost unique
+     * values that are useful for fast classification and storage of objects in collections.
+     *
+     * @return Hash code.
+     */
+    public int hashCode() {
+        return Objects.hash(mX, mY, mZ, mVx, mVy, mVz, mC);
     }
 
     /**

@@ -1532,9 +1532,9 @@ public class InertialECEFNavigatorTest {
         assertEquals(numValid, TIMES);
     }
 
-    //TODO: test with velocity and no specific force during time interval body moves expected distance
     @Test
-    public void testNavigateWithInitialVelocityAndNoSpecificForce() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
+    public void testNavigateWithInitialVelocityAndNoSpecificForce() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {

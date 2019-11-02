@@ -1134,7 +1134,7 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException, InvalidRotationMatrixException,
+    public void testGetSetCoordinateTransformation() throws WrongSizeException, InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException {
 
         final ECEFFrame frame = new ECEFFrame();
@@ -1178,7 +1178,34 @@ public class ECEFFrameTest {
     }
 
     @Test
-    public void testIsValidCoordinateTransformationMatrix() {
+    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException, InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m1 = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                m1, FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+        final ECEFFrame frame = new ECEFFrame(c);
+
+        // check
+        assertEquals(frame.getCoordinateTransformationMatrix(), m1);
+        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m2, m1);
+    }
+
+    @Test
+    public void testIsValidCoordinateTransformation() {
 
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
@@ -1187,9 +1214,9 @@ public class ECEFFrameTest {
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        assertTrue(ECEFFrame.isValidCoordinateTransformationMatrix(c1));
-        assertFalse(ECEFFrame.isValidCoordinateTransformationMatrix(c2));
-        assertFalse(ECEFFrame.isValidCoordinateTransformationMatrix(c3));
+        assertTrue(ECEFFrame.isValidCoordinateTransformation(c1));
+        assertFalse(ECEFFrame.isValidCoordinateTransformation(c2));
+        assertFalse(ECEFFrame.isValidCoordinateTransformation(c3));
     }
 
     @Test

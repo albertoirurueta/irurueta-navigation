@@ -781,7 +781,7 @@ public class KinematicsEstimatorTest {
             // From (2.145) determine the Earth rotation over the update interval
             final double omegaIe = Constants.EARTH_ROTATION_RATE;
             final double alphaIe = omegaIe * timeInterval;
-            final Matrix cEarth = CoordinateTransformation.ecefToEciMatrixFromAngle(alphaIe);
+            final Matrix cEarth = CoordinateTransformation.eciToEcefMatrixFromAngle(alphaIe);
             final Matrix cBe = c.getMatrix();
             final Matrix oldCbe = oldC.getMatrix();
             final Matrix cOldNew = cBe.multiplyAndReturnNew(cEarth.multiplyAndReturnNew(oldCbe));

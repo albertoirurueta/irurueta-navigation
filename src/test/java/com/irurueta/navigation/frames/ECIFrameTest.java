@@ -1129,7 +1129,7 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
+    public void testGetSetCoordinateTransformation() throws WrongSizeException,
             InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
         final ECIFrame frame = new ECIFrame();
@@ -1173,7 +1173,34 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testIsValidCoordinateTransformationMatrix() {
+    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
+            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m1 = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                m1, FrameType.BODY_FRAME,
+                FrameType.EARTH_CENTERED_INERTIAL_FRAME);
+
+        final ECIFrame frame = new ECIFrame(c);
+
+        // check
+        assertEquals(frame.getCoordinateTransformationMatrix(), m1);
+        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m2, m1);
+    }
+
+    @Test
+    public void testIsValidCoordinateTransformation() {
 
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.EARTH_CENTERED_INERTIAL_FRAME);
@@ -1182,9 +1209,9 @@ public class ECIFrameTest {
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        assertTrue(ECIFrame.isValidCoordinateTransformationMatrix(c1));
-        assertFalse(ECIFrame.isValidCoordinateTransformationMatrix(c2));
-        assertFalse(ECIFrame.isValidCoordinateTransformationMatrix(c3));
+        assertTrue(ECIFrame.isValidCoordinateTransformation(c1));
+        assertFalse(ECIFrame.isValidCoordinateTransformation(c2));
+        assertFalse(ECIFrame.isValidCoordinateTransformation(c3));
     }
 
     @Test

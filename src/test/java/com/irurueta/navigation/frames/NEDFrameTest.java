@@ -1313,7 +1313,7 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
+    public void testGetSetCoordinateTransformation() throws WrongSizeException,
             InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
 
         final NEDFrame frame = new NEDFrame();
@@ -1357,7 +1357,34 @@ public class NEDFrameTest {
     }
 
     @Test
-    public void testIsValidCoordinateTransformationMatrix() {
+    public void testGetSetCoordinateTransformationMatrix() throws WrongSizeException,
+            InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double roll = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double pitch = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final double yaw = Math.toRadians(
+                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+        final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+        final Matrix m1 = q.asInhomogeneousMatrix();
+        final CoordinateTransformation c = new CoordinateTransformation(
+                m1, FrameType.BODY_FRAME,
+                FrameType.LOCAL_NAVIGATION_FRAME);
+
+        final NEDFrame frame = new NEDFrame(c);
+
+        // check
+        assertEquals(frame.getCoordinateTransformationMatrix(), m1);
+        final Matrix m2 = new Matrix(CoordinateTransformation.ROWS, CoordinateTransformation.COLS);
+        frame.getCoordinateTransformationMatrix(m2);
+        assertEquals(m2, m1);
+    }
+
+    @Test
+    public void testIsValidCoordinateTransformation() {
         final CoordinateTransformation c1 = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
         final CoordinateTransformation c2 = new CoordinateTransformation(
@@ -1365,9 +1392,9 @@ public class NEDFrameTest {
         final CoordinateTransformation c3 = new CoordinateTransformation(
                 FrameType.LOCAL_NAVIGATION_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        assertTrue(NEDFrame.isValidCoordinateTransformationMatrix(c1));
-        assertFalse(NEDFrame.isValidCoordinateTransformationMatrix(c2));
-        assertFalse(NEDFrame.isValidCoordinateTransformationMatrix(c3));
+        assertTrue(NEDFrame.isValidCoordinateTransformation(c1));
+        assertFalse(NEDFrame.isValidCoordinateTransformation(c2));
+        assertFalse(NEDFrame.isValidCoordinateTransformation(c3));
     }
 
     @Test
