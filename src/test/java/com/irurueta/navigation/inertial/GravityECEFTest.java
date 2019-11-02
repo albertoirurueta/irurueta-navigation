@@ -11,7 +11,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class GravityTest {
+public class GravityECEFTest {
 
     private static final double MIN_VALUE = 9.80;
     private static final double MAX_VALUE = 9.82;
@@ -21,15 +21,15 @@ public class GravityTest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        Gravity gravity = new Gravity();
+        GravityECEF gravity = new GravityECEF();
 
         // check default values
         assertEquals(gravity.getGx(), 0.0, 0.0);
         assertEquals(gravity.getGy(), 0.0, 0.0);
         assertEquals(gravity.getGz(), 0.0, 0.0);
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
         assertEquals(gravity.getNorm(), 0.0, 0.0);
         assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
 
@@ -41,15 +41,15 @@ public class GravityTest {
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
-        gravity = new Gravity(gx, gy, gz);
+        gravity = new GravityECEF(gx, gy, gz);
 
         // check default values
         assertEquals(gravity.getGx(), gx, 0.0);
         assertEquals(gravity.getGy(), gy, 0.0);
         assertEquals(gravity.getGz(), gz, 0.0);
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), gz, 0.0);
         assertEquals(gravity.getNorm(), g, 0.0);
         assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), g, 0.0);
 
@@ -62,31 +62,36 @@ public class GravityTest {
         final Acceleration gravityZ = new Acceleration(gz,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity = new Gravity(gravityX, gravityY, gravityZ);
+        gravity = new GravityECEF(gravityX, gravityY, gravityZ);
 
         // check default values
         assertEquals(gravity.getGx(), gx, 0.0);
         assertEquals(gravity.getGy(), gy, 0.0);
         assertEquals(gravity.getGz(), gz, 0.0);
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), gz, 0.0);
         assertEquals(gravity.getNorm(), g, 0.0);
         assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), g, 0.0);
 
 
         // test constructor from another gravity
-        final Gravity gravity2 = new Gravity(gravity);
+        final GravityECEF gravity2 = new GravityECEF(gravity);
 
         // check default values
         assertEquals(gravity2.getGx(), gx, 0.0);
         assertEquals(gravity2.getGy(), gy, 0.0);
         assertEquals(gravity2.getGz(), gz, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getNorm(), g, 0.0);
+        assertEquals(gravity.getNormAsAcceleration().getValue().doubleValue(), g, 0.0);
     }
 
     @Test
     public void testGetSetGx() {
-        final Gravity gravity = new Gravity();
+        final GravityECEF gravity = new GravityECEF();
 
         // check default value
         assertEquals(gravity.getGx(), 0.0, 0.0);
@@ -103,7 +108,7 @@ public class GravityTest {
 
     @Test
     public void testGetSetGy() {
-        final Gravity gravity = new Gravity();
+        final GravityECEF gravity = new GravityECEF();
 
         // check default value
         assertEquals(gravity.getGy(), 0.0, 0.0);
@@ -120,7 +125,7 @@ public class GravityTest {
 
     @Test
     public void testGetSetGz() {
-        final Gravity gravity = new Gravity();
+        final GravityECEF gravity = new GravityECEF();
 
         // check default value
         assertEquals(gravity.getGz(), 0.0, 0.0);
@@ -137,7 +142,7 @@ public class GravityTest {
 
     @Test
     public void testSetCoordinates() {
-        final Gravity gravity = new Gravity();
+        final GravityECEF gravity = new GravityECEF();
 
         // check default values
         assertEquals(gravity.getGx(), 0.0, 0.0);
@@ -159,11 +164,11 @@ public class GravityTest {
     }
 
     @Test
-    public void testGetSetGravityX() {
-        final Gravity gravity = new Gravity();
+    public void testGetSetGxAsAcceleration() {
+        final GravityECEF gravity = new GravityECEF();
 
         // check default value
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -171,23 +176,27 @@ public class GravityTest {
         final Acceleration gravityX1 = new Acceleration(gx,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity.setGravityX(gravityX1);
+        gravity.setGx(gravityX1);
 
         // check
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), gx, 0.0);
 
         final Acceleration gravityX2 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        gravity.getGravityX(gravityX2);
+        gravity.getGxAsAcceleration(gravityX2);
+        final Acceleration gravityX3 = gravity.getGxAsAcceleration();
         assertEquals(gravityX2.getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravityX2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(gravityX1, gravityX2);
+        assertEquals(gravityX1, gravityX3);
     }
 
     @Test
-    public void testGetSetGravityY() {
-        final Gravity gravity = new Gravity();
+    public void testGetSetGyAsAcceleration() {
+        final GravityECEF gravity = new GravityECEF();
 
         // check default value
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -195,23 +204,27 @@ public class GravityTest {
         final Acceleration gravityY1 = new Acceleration(gy,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity.setGravityY(gravityY1);
+        gravity.setGy(gravityY1);
 
         // check
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), gy, 0.0);
 
         final Acceleration gravityY2 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        gravity.getGravityY(gravityY2);
+        gravity.getGyAsAcceleration(gravityY2);
+        final Acceleration gravityY3 = gravity.getGyAsAcceleration();
         assertEquals(gravityY2.getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravityY2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(gravityY1, gravityY2);
+        assertEquals(gravityY1, gravityY3);
     }
 
     @Test
-    public void testGetSetGravityZ() {
-        final Gravity gravity = new Gravity();
+    public void testGetSetGzAsAcceleration() {
+        final GravityECEF gravity = new GravityECEF();
 
         // check default value
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -219,25 +232,29 @@ public class GravityTest {
         final Acceleration gravityZ1 = new Acceleration(gz,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity.setGravityZ(gravityZ1);
+        gravity.setGz(gravityZ1);
 
         // check
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), gz, 0.0);
 
         final Acceleration gravityZ2 = new Acceleration(0.0,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        gravity.getGravityZ(gravityZ2);
+        gravity.getGzAsAcceleration(gravityZ2);
+        final Acceleration gravityZ3 = gravity.getGzAsAcceleration();
         assertEquals(gravityZ2.getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravityZ2.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(gravityZ1, gravityZ2);
+        assertEquals(gravityZ1, gravityZ3);
     }
 
     @Test
-    public void testSetGravityCoordinates() {
-        final Gravity gravity = new Gravity();
+    public void testSetCoordinatesFromAccelerations() {
+        final GravityECEF gravity = new GravityECEF();
 
         // check default values
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), 0.0, 0.0);
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -251,12 +268,12 @@ public class GravityTest {
         final Acceleration gravityZ1 = new Acceleration(gz,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity.setGravityCoordinates(gravityX1, gravityY1, gravityZ1);
+        gravity.setCoordinates(gravityX1, gravityY1, gravityZ1);
 
         // check
-        assertEquals(gravity.getGravityX().getValue().doubleValue(), gx, 0.0);
-        assertEquals(gravity.getGravityY().getValue().doubleValue(), gy, 0.0);
-        assertEquals(gravity.getGravityZ().getValue().doubleValue(), gz, 0.0);
+        assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), gx, 0.0);
+        assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), gy, 0.0);
+        assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), gz, 0.0);
     }
 
     @Test
@@ -267,13 +284,13 @@ public class GravityTest {
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
-        final Gravity gravity = new Gravity(gx, gy, gz);
+        final GravityECEF gravity = new GravityECEF(gx, gy, gz);
 
         assertEquals(gravity.getNorm(), g, 0.0);
 
-        Acceleration norm1 = new Acceleration(0.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        final Acceleration norm1 = new Acceleration(0.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
         gravity.getNormAsAcceleration(norm1);
-        Acceleration norm2 = gravity.getNormAsAcceleration();
+        final Acceleration norm2 = gravity.getNormAsAcceleration();
 
         assertEquals(norm1.getValue().doubleValue(), g, 0.0);
         assertEquals(norm1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
@@ -287,8 +304,8 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity1 = new Gravity(gx, gy, gz);
-        final Gravity gravity2 = new Gravity();
+        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity2 = new GravityECEF();
 
         gravity1.copyTo(gravity2);
 
@@ -305,8 +322,8 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity1 = new Gravity(gx, gy, gz);
-        final Gravity gravity2 = new Gravity();
+        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity2 = new GravityECEF();
 
         gravity2.copyFrom(gravity1);
 
@@ -323,10 +340,10 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity = new Gravity(gx, gy, gz);
+        final GravityECEF gravity = new GravityECEF(gx, gy, gz);
 
         final double[] array1 = gravity.asArray();
-        final double[] array2 = new double[Gravity.COMPONENTS];
+        final double[] array2 = new double[GravityECEF.COMPONENTS];
         gravity.asArray(array2);
 
         // check
@@ -349,12 +366,12 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity = new Gravity(gx, gy, gz);
+        final GravityECEF gravity = new GravityECEF(gx, gy, gz);
 
         final Matrix matrix1 = gravity.asMatrix();
         final Matrix matrix2 = new Matrix(1, 1);
         gravity.asMatrix(matrix2);
-        final Matrix matrix3 = new Matrix(Gravity.COMPONENTS, 1);
+        final Matrix matrix3 = new Matrix(GravityECEF.COMPONENTS, 1);
         gravity.asMatrix(matrix3);
 
         // check
@@ -372,9 +389,9 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity1 = new Gravity(gx, gy, gz);
-        final Gravity gravity2 = new Gravity(gx, gy, gz);
-        final Gravity gravity3 = new Gravity();
+        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity2 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity3 = new GravityECEF();
 
         assertEquals(gravity1.hashCode(), gravity2.hashCode());
         assertNotEquals(gravity1.hashCode(), gravity3.hashCode());
@@ -387,9 +404,9 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity1 = new Gravity(gx, gy, gz);
-        final Gravity gravity2 = new Gravity(gx, gy, gz);
-        final Gravity gravity3 = new Gravity();
+        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity2 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity3 = new GravityECEF();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(gravity1.equals((Object)gravity1));
@@ -410,9 +427,9 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity1 = new Gravity(gx, gy, gz);
-        final Gravity gravity2 = new Gravity(gx, gy, gz);
-        final Gravity gravity3 = new Gravity();
+        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity2 = new GravityECEF(gx, gy, gz);
+        final GravityECEF gravity3 = new GravityECEF();
 
         assertTrue(gravity1.equals(gravity1, THRESHOLD));
         assertTrue(gravity1.equals(gravity2, THRESHOLD));
@@ -427,7 +444,7 @@ public class GravityTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Gravity gravity1 = new Gravity(gx, gy, gz);
+        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
 
         final Object gravity2 = gravity1.clone();
 

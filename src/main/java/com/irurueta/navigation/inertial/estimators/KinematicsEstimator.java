@@ -7,7 +7,7 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.Gravity;
+import com.irurueta.navigation.inertial.GravityECEF;
 import com.irurueta.navigation.inertial.Kinematics;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedConverter;
@@ -998,7 +998,7 @@ public class KinematicsEstimator {
                 oldVebe.setElementAtIndex(1, oldVy);
                 oldVebe.setElementAtIndex(2, oldVz);
 
-                final Gravity gravity = GravityEstimator
+                final GravityECEF gravity = GravityECEFEstimator
                         .estimateGravityAndReturnNew(x, y, z);
                 final Matrix g = gravity.asMatrix();
 

@@ -16,7 +16,7 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.Gravity;
+import com.irurueta.navigation.inertial.GravityECEF;
 import com.irurueta.navigation.inertial.Kinematics;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
@@ -818,7 +818,7 @@ public class KinematicsEstimatorTest {
             oldVebe.setElementAtIndex(1, oldVy);
             oldVebe.setElementAtIndex(2, oldVz);
 
-            final Gravity gravity = GravityEstimator
+            final GravityECEF gravity = GravityECEFEstimator
                     .estimateGravityAndReturnNew(x, y, z);
             final Matrix g = gravity.asMatrix();
 

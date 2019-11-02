@@ -13,7 +13,7 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
-import com.irurueta.navigation.inertial.estimators.GravityEstimator;
+import com.irurueta.navigation.inertial.estimators.GravityECEFEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.*;
 import org.junit.Test;
@@ -1377,7 +1377,7 @@ public class InertialECEFNavigatorTest {
 
             final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
             final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-            final Gravity gravity = GravityEstimator.estimateGravityAndReturnNew(oldFrame);
+            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(oldFrame);
             final Matrix g = gravity.asMatrix();
             final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);
@@ -1472,7 +1472,7 @@ public class InertialECEFNavigatorTest {
 
             final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
             final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-            final Gravity gravity = GravityEstimator.estimateGravityAndReturnNew(oldFrame);
+            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(oldFrame);
             final Matrix g = gravity.asMatrix();
             final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);

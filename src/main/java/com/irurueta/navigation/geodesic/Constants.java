@@ -27,6 +27,11 @@ public class Constants {
     public static final double EARTH_EQUATORIAL_RADIUS_WGS84 = 6378137;
 
     /**
+     * The polar radius of WGS84 ellipsoid (6356752.31425 m) defining Earth's shape.
+     */
+    public static final double EARTH_POLAR_RADIUS_WGS84 = 6356752.31425;
+
+    /**
      * The flattening of WGS84 ellipsoid (1 / 298.257223563).
      */
     public static final double EARTH_FLATTENING_WGS84 = 1 / 298.257223563;

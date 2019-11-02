@@ -11,7 +11,7 @@ import com.irurueta.navigation.frames.FrameException;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.estimators.GravityEstimator;
+import com.irurueta.navigation.inertial.estimators.GravityECEFEstimator;
 import com.irurueta.units.*;
 
 /**
@@ -3725,7 +3725,7 @@ public class InertialECEFNavigator {
 
             // Update velocity
             // From (5.36)
-            final Gravity gravity = GravityEstimator.estimateGravityAndReturnNew(oldX, oldY, oldZ);
+            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(oldX, oldY, oldZ);
             final Matrix g = gravity.asMatrix();
 
             final Matrix oldVebe = new Matrix(ROWS, 1);
