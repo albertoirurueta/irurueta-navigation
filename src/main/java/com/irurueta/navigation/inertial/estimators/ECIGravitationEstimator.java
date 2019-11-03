@@ -3,7 +3,7 @@ package com.irurueta.navigation.inertial.estimators;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.frames.ECIFrame;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.GravitationECI;
+import com.irurueta.navigation.inertial.ECIGravitation;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceConverter;
 import com.irurueta.units.DistanceUnit;
@@ -15,7 +15,7 @@ import com.irurueta.units.DistanceUnit;
  * https://github.com/ymjdz/MATLAB-Codes
  */
 @SuppressWarnings("WeakerAccess")
-public class GravitationECIEstimator {
+public class ECIGravitationEstimator {
 
     /**
      * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
@@ -46,7 +46,7 @@ public class GravitationECIEstimator {
      *               along ECI-frame axes.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public void estimate(final double x, final double y, final double z, final GravitationECI result) {
+    public void estimate(final double x, final double y, final double z, final ECIGravitation result) {
         estimateGravitation(x, y, z, result);
     }
 
@@ -61,7 +61,7 @@ public class GravitationECIEstimator {
      *          ECI-frame axes.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public GravitationECI estimateAndReturnNew(final double x, final double y, final double z) {
+    public ECIGravitation estimateAndReturnNew(final double x, final double y, final double z) {
         return estimateGravitationAndReturnNew(x, y, z);
     }
 
@@ -71,8 +71,8 @@ public class GravitationECIEstimator {
      * @param frame  an ECI frame containing a given position.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public void estimate(final ECIFrame frame, final GravitationECI result) {
-        estimateGravitation(frame.getX(), frame.getY(), frame.getZ(), result);
+    public void estimate(final ECIFrame frame, final ECIGravitation result) {
+        estimateGravitation(frame, result);
     }
 
     /**
@@ -81,7 +81,7 @@ public class GravitationECIEstimator {
      * @param frame an ECI frame containing a given position.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public GravitationECI estimateAndReturnNew(final ECIFrame frame) {
+    public ECIGravitation estimateAndReturnNew(final ECIFrame frame) {
         return estimateGravitationAndReturnNew(frame);
     }
 
@@ -93,9 +93,8 @@ public class GravitationECIEstimator {
      *                 ECI-frame axes.
      * @param result   instance where estimated acceleration due to gravity will be stored.
      */
-    public void estimate(final Point3D position, final GravitationECI result) {
-        estimateGravitation(position.getInhomX(), position.getInhomY(), position.getInhomZ(),
-                result);
+    public void estimate(final Point3D position, final ECIGravitation result) {
+        estimateGravitation(position, result);
     }
 
     /**
@@ -106,7 +105,7 @@ public class GravitationECIEstimator {
      *                 ECI-frame axes.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public GravitationECI estimateAndReturnNew(final Point3D position) {
+    public ECIGravitation estimateAndReturnNew(final Point3D position) {
         return estimateGravitationAndReturnNew(position);
     }
 
@@ -123,7 +122,7 @@ public class GravitationECIEstimator {
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
     public void estimate(final Distance x, final Distance y, final Distance z,
-                         final GravitationECI result) {
+                         final ECIGravitation result) {
         estimateGravitation(x, y, z, result);
     }
 
@@ -139,7 +138,7 @@ public class GravitationECIEstimator {
      *          ECI-frame axes.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public GravitationECI estimateAndReturnNew(final Distance x, final Distance y, final Distance z) {
+    public ECIGravitation estimateAndReturnNew(final Distance x, final Distance y, final Distance z) {
         return estimateGravitationAndReturnNew(x, y, z);
     }
 
@@ -154,7 +153,7 @@ public class GravitationECIEstimator {
      *               along ECI-frame axes.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravitation(final double x, final double y, final double z, final GravitationECI result) {
+    public static void estimateGravitation(final double x, final double y, final double z, final ECIGravitation result) {
 
         // Calculate distance from center of the Earth
         final double magR = Math.sqrt(x * x + y * y + z * z);
@@ -186,8 +185,8 @@ public class GravitationECIEstimator {
      *          ECI-frame axes.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public static GravitationECI estimateGravitationAndReturnNew(final double x, final double y, final double z) {
-        final GravitationECI result = new GravitationECI();
+    public static ECIGravitation estimateGravitationAndReturnNew(final double x, final double y, final double z) {
+        final ECIGravitation result = new ECIGravitation();
         estimateGravitation(x, y, z, result);
         return result;
     }
@@ -198,7 +197,7 @@ public class GravitationECIEstimator {
      * @param frame  an ECI frame containing a given position.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravitation(final ECIFrame frame, final GravitationECI result) {
+    public static void estimateGravitation(final ECIFrame frame, final ECIGravitation result) {
         estimateGravitation(frame.getX(), frame.getY(), frame.getZ(), result);
     }
 
@@ -208,7 +207,7 @@ public class GravitationECIEstimator {
      * @param frame an ECI frame containing a given position.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public static GravitationECI estimateGravitationAndReturnNew(final ECIFrame frame) {
+    public static ECIGravitation estimateGravitationAndReturnNew(final ECIFrame frame) {
         return estimateGravitationAndReturnNew(frame.getX(), frame.getY(), frame.getZ());
     }
 
@@ -220,7 +219,7 @@ public class GravitationECIEstimator {
      *                 ECI-frame axes.
      * @param result   instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravitation(final Point3D position, final GravitationECI result) {
+    public static void estimateGravitation(final Point3D position, final ECIGravitation result) {
         estimateGravitation(position.getInhomX(), position.getInhomY(), position.getInhomZ(), result);
     }
 
@@ -232,7 +231,7 @@ public class GravitationECIEstimator {
      *                 ECI-frame axes.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public static GravitationECI estimateGravitationAndReturnNew(final Point3D position) {
+    public static ECIGravitation estimateGravitationAndReturnNew(final Point3D position) {
         return estimateGravitationAndReturnNew(position.getInhomX(), position.getInhomY(), position.getInhomZ());
     }
 
@@ -249,7 +248,7 @@ public class GravitationECIEstimator {
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
     public static void estimateGravitation(final Distance x, final Distance y,
-                                           final Distance z, final GravitationECI result) {
+                                           final Distance z, final ECIGravitation result) {
         estimateGravitation(convertToMeters(x), convertToMeters(y), convertToMeters(z),
                 result);
     }
@@ -266,10 +265,10 @@ public class GravitationECIEstimator {
      *          ECI-frame axes.
      * @return a new gravitation instance containing estimated acceleration due to gravity.
      */
-    public static GravitationECI estimateGravitationAndReturnNew(final Distance x,
+    public static ECIGravitation estimateGravitationAndReturnNew(final Distance x,
                                                                  final Distance y,
                                                                  final Distance z) {
-        final GravitationECI result = new GravitationECI();
+        final ECIGravitation result = new ECIGravitation();
         estimateGravitation(x, y, z, result);
         return result;
     }

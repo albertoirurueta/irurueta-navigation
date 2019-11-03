@@ -11,7 +11,7 @@ import com.irurueta.navigation.frames.FrameException;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.estimators.GravityECEFEstimator;
+import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.units.*;
 
 /**
@@ -193,7 +193,7 @@ public class InertialECEFNavigator {
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -233,7 +233,7 @@ public class InertialECEFNavigator {
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -377,7 +377,7 @@ public class InertialECEFNavigator {
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
@@ -411,7 +411,7 @@ public class InertialECEFNavigator {
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
@@ -573,7 +573,7 @@ public class InertialECEFNavigator {
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -613,7 +613,7 @@ public class InertialECEFNavigator {
                          final double oldVx,
                          final double oldVy,
                          final double oldVz,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -777,7 +777,7 @@ public class InertialECEFNavigator {
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -817,7 +817,7 @@ public class InertialECEFNavigator {
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -1435,7 +1435,7 @@ public class InertialECEFNavigator {
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -1475,7 +1475,7 @@ public class InertialECEFNavigator {
                          final Speed oldSpeedX,
                          final Speed oldSpeedY,
                          final Speed oldSpeedZ,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -1578,7 +1578,7 @@ public class InertialECEFNavigator {
      */
     public void navigate(final double timeInterval,
                          final ECEFFrame oldFrame,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException {
         navigateECEF(timeInterval, oldFrame, kinematics, result);
     }
@@ -1597,7 +1597,7 @@ public class InertialECEFNavigator {
      */
     public void navigate(final Time timeInterval,
                          final ECEFFrame oldFrame,
-                         final Kinematics kinematics,
+                         final ECEFKinematics kinematics,
                          final ECEFFrame result) throws InertialNavigatorException {
         navigateECEF(timeInterval, oldFrame, kinematics, result);
     }
@@ -1977,7 +1977,7 @@ public class InertialECEFNavigator {
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC, oldVx,
                 oldVy, oldVz, kinematics);
@@ -2016,7 +2016,7 @@ public class InertialECEFNavigator {
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC, oldVx,
                 oldVy, oldVz, kinematics);
@@ -2157,7 +2157,7 @@ public class InertialECEFNavigator {
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
                 oldVx, oldVy, oldVz, kinematics);
@@ -2190,7 +2190,7 @@ public class InertialECEFNavigator {
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC, oldVx,
                 oldVy, oldVz, kinematics);
@@ -2350,7 +2350,7 @@ public class InertialECEFNavigator {
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldVx, oldVy, oldVz, kinematics);
@@ -2389,7 +2389,7 @@ public class InertialECEFNavigator {
                                           final double oldVx,
                                           final double oldVy,
                                           final double oldVz,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC, oldVx,
                 oldVy, oldVz, kinematics);
@@ -2550,7 +2550,7 @@ public class InertialECEFNavigator {
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
@@ -2589,7 +2589,7 @@ public class InertialECEFNavigator {
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
@@ -3199,7 +3199,7 @@ public class InertialECEFNavigator {
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
@@ -3238,7 +3238,7 @@ public class InertialECEFNavigator {
                                           final Speed oldSpeedX,
                                           final Speed oldSpeedY,
                                           final Speed oldSpeedZ,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
@@ -3340,7 +3340,7 @@ public class InertialECEFNavigator {
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final ECEFFrame oldFrame,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException {
         return navigateECEFAndReturnNew(timeInterval, oldFrame, kinematics);
     }
@@ -3359,7 +3359,7 @@ public class InertialECEFNavigator {
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final ECEFFrame oldFrame,
-                                          final Kinematics kinematics)
+                                          final ECEFKinematics kinematics)
             throws InertialNavigatorException {
         return navigateECEFAndReturnNew(timeInterval, oldFrame, kinematics);
     }
@@ -3725,7 +3725,7 @@ public class InertialECEFNavigator {
 
             // Update velocity
             // From (5.36)
-            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(oldX, oldY, oldZ);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(oldX, oldY, oldZ);
             final Matrix g = gravity.asMatrix();
 
             final Matrix oldVebe = new Matrix(ROWS, 1);
@@ -3864,7 +3864,7 @@ public class InertialECEFNavigator {
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -3906,7 +3906,7 @@ public class InertialECEFNavigator {
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
@@ -4050,7 +4050,7 @@ public class InertialECEFNavigator {
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
@@ -4086,7 +4086,7 @@ public class InertialECEFNavigator {
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldPosition, oldC,
@@ -4251,7 +4251,7 @@ public class InertialECEFNavigator {
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -4293,7 +4293,7 @@ public class InertialECEFNavigator {
                                     final double oldVx,
                                     final double oldVy,
                                     final double oldVz,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -4460,7 +4460,7 @@ public class InertialECEFNavigator {
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -4502,7 +4502,7 @@ public class InertialECEFNavigator {
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
@@ -5140,7 +5140,7 @@ public class InertialECEFNavigator {
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -5182,7 +5182,7 @@ public class InertialECEFNavigator {
                                     final Speed oldSpeedX,
                                     final Speed oldSpeedY,
                                     final Speed oldSpeedZ,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
@@ -5293,7 +5293,7 @@ public class InertialECEFNavigator {
      */
     public static void navigateECEF(final double timeInterval,
                                     final ECEFFrame oldFrame,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException {
         try {
@@ -5320,7 +5320,7 @@ public class InertialECEFNavigator {
      */
     public static void navigateECEF(final Time timeInterval,
                                     final ECEFFrame oldFrame,
-                                    final Kinematics kinematics,
+                                    final ECEFKinematics kinematics,
                                     final ECEFFrame result)
             throws InertialNavigatorException {
         navigateECEF(convertTimeToDouble(timeInterval), oldFrame, kinematics, result);
@@ -5729,7 +5729,7 @@ public class InertialECEFNavigator {
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -5770,7 +5770,7 @@ public class InertialECEFNavigator {
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -5917,7 +5917,7 @@ public class InertialECEFNavigator {
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
@@ -5952,7 +5952,7 @@ public class InertialECEFNavigator {
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz, kinematics,
@@ -6117,7 +6117,7 @@ public class InertialECEFNavigator {
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -6158,7 +6158,7 @@ public class InertialECEFNavigator {
                                                      final double oldVx,
                                                      final double oldVy,
                                                      final double oldVz,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
@@ -6323,7 +6323,7 @@ public class InertialECEFNavigator {
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -6364,7 +6364,7 @@ public class InertialECEFNavigator {
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -6993,7 +6993,7 @@ public class InertialECEFNavigator {
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -7034,7 +7034,7 @@ public class InertialECEFNavigator {
                                                      final Speed oldSpeedX,
                                                      final Speed oldSpeedY,
                                                      final Speed oldSpeedZ,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
@@ -7142,7 +7142,7 @@ public class InertialECEFNavigator {
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final ECEFFrame oldFrame,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldFrame, kinematics, result);
@@ -7163,7 +7163,7 @@ public class InertialECEFNavigator {
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final ECEFFrame oldFrame,
-                                                     final Kinematics kinematics)
+                                                     final ECEFKinematics kinematics)
             throws InertialNavigatorException {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldFrame, kinematics, result);

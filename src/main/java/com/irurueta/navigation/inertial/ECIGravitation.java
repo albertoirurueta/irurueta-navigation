@@ -6,12 +6,12 @@ import com.irurueta.units.Acceleration;
  * Contains acceleration due to gravity resolved about ECI frame.
  */
 @SuppressWarnings("WeakerAccess")
-public class GravitationECI extends GravityOrGravitation<GravitationECI> {
+public class ECIGravitation extends GravityOrGravitation<ECIGravitation> {
 
     /**
      * Constructor.
      */
-    public GravitationECI() {
+    public ECIGravitation() {
         super();
     }
 
@@ -22,7 +22,7 @@ public class GravitationECI extends GravityOrGravitation<GravitationECI> {
      * @param gy acceleration due to gravity through ECI y-axis expressed in meters per squared second (m/s^2).
      * @param gz acceleration due to gravity through ECI z-axis expressed in meters per squared second (m/s^2).
      */
-    public GravitationECI(final double gx, final double gy, final double gz) {
+    public ECIGravitation(final double gx, final double gy, final double gz) {
         super(gx, gy, gz);
     }
 
@@ -33,7 +33,7 @@ public class GravitationECI extends GravityOrGravitation<GravitationECI> {
      * @param gy acceleration due to gravity through ECI y-axis to be set.
      * @param gz acceleration due to gravity through ECI z-axis to be set.
      */
-    public GravitationECI(final Acceleration gx, final Acceleration gy,
+    public ECIGravitation(final Acceleration gx, final Acceleration gy,
                           final Acceleration gz) {
         super(gx, gy, gz);
     }
@@ -43,7 +43,7 @@ public class GravitationECI extends GravityOrGravitation<GravitationECI> {
      *
      * @param input instance to copy data from.
      */
-    public GravitationECI(final GravitationECI input) {
+    public ECIGravitation(final ECIGravitation input) {
         super(input);
     }
 
@@ -62,11 +62,11 @@ public class GravitationECI extends GravityOrGravitation<GravitationECI> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GravitationECI)) {
+        if (!(obj instanceof ECIGravitation)) {
             return false;
         }
 
-        final GravitationECI other = (GravitationECI) obj;
+        final ECIGravitation other = (ECIGravitation) obj;
         return equals(other);
     }
 
@@ -78,6 +78,6 @@ public class GravitationECI extends GravityOrGravitation<GravitationECI> {
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
     protected Object clone() {
-        return new GravitationECI(this);
+        return new ECIGravitation(this);
     }
 }

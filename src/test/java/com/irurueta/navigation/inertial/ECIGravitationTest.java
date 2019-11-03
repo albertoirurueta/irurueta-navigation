@@ -11,7 +11,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class GravitationECITest {
+public class ECIGravitationTest {
 
     private static final double MIN_VALUE = 9.80;
     private static final double MAX_VALUE = 9.82;
@@ -21,7 +21,7 @@ public class GravitationECITest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        GravitationECI gravitation = new GravitationECI();
+        ECIGravitation gravitation = new ECIGravitation();
 
         // check default values
         assertEquals(gravitation.getGx(), 0.0, 0.0);
@@ -41,7 +41,7 @@ public class GravitationECITest {
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
-        gravitation = new GravitationECI(gx, gy, gz);
+        gravitation = new ECIGravitation(gx, gy, gz);
 
         // check default values
         assertEquals(gravitation.getGx(), gx, 0.0);
@@ -62,7 +62,7 @@ public class GravitationECITest {
         final Acceleration gravitationZ = new Acceleration(gz,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravitation = new GravitationECI(gravitationX, gravitationY, gravitationZ);
+        gravitation = new ECIGravitation(gravitationX, gravitationY, gravitationZ);
 
         // check default values
         assertEquals(gravitation.getGx(), gx, 0.0);
@@ -76,7 +76,7 @@ public class GravitationECITest {
 
 
         // test constructor from another gravitation
-        final GravitationECI gravitation2 = new GravitationECI(gravitation);
+        final ECIGravitation gravitation2 = new ECIGravitation(gravitation);
 
         // check default values
         assertEquals(gravitation2.getGx(), gx, 0.0);
@@ -91,7 +91,7 @@ public class GravitationECITest {
 
     @Test
     public void testGetSetGx() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default value
         assertEquals(gravitation.getGx(), 0.0, 0.0);
@@ -108,7 +108,7 @@ public class GravitationECITest {
 
     @Test
     public void testGetSetGy() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default value
         assertEquals(gravitation.getGy(), 0.0, 0.0);
@@ -125,7 +125,7 @@ public class GravitationECITest {
 
     @Test
     public void testGetSetGz() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default value
         assertEquals(gravitation.getGz(), 0.0, 0.0);
@@ -142,7 +142,7 @@ public class GravitationECITest {
 
     @Test
     public void testSetCoordinates() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default values
         assertEquals(gravitation.getGx(), 0.0, 0.0);
@@ -165,7 +165,7 @@ public class GravitationECITest {
 
     @Test
     public void testGetSetGxAsAcceleration() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default value
         assertEquals(gravitation.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -193,7 +193,7 @@ public class GravitationECITest {
 
     @Test
     public void testGetSetGyAsAcceleration() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default value
         assertEquals(gravitation.getGyAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -222,7 +222,7 @@ public class GravitationECITest {
 
     @Test
     public void testGetSetGzAsAcceleration() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default value
         assertEquals(gravitation.getGzAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -250,7 +250,7 @@ public class GravitationECITest {
 
     @Test
     public void testSetCoordinatesFromAccelerations() {
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitation gravitation = new ECIGravitation();
 
         // check default values
         assertEquals(gravitation.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -285,7 +285,7 @@ public class GravitationECITest {
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
-        final GravitationECI gravitation = new GravitationECI(gx, gy, gz);
+        final ECIGravitation gravitation = new ECIGravitation(gx, gy, gz);
 
         assertEquals(gravitation.getNorm(), g, 0.0);
 
@@ -305,8 +305,8 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation1 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation2 = new GravitationECI();
+        final ECIGravitation gravitation1 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation2 = new ECIGravitation();
 
         gravitation1.copyTo(gravitation2);
 
@@ -323,8 +323,8 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation1 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation2 = new GravitationECI();
+        final ECIGravitation gravitation1 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation2 = new ECIGravitation();
 
         gravitation2.copyFrom(gravitation1);
 
@@ -341,10 +341,10 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation = new GravitationECI(gx, gy, gz);
+        final ECIGravitation gravitation = new ECIGravitation(gx, gy, gz);
 
         final double[] array1 = gravitation.asArray();
-        final double[] array2 = new double[GravitationECI.COMPONENTS];
+        final double[] array2 = new double[ECIGravitation.COMPONENTS];
         gravitation.asArray(array2);
 
         // check
@@ -367,12 +367,12 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation = new GravitationECI(gx, gy, gz);
+        final ECIGravitation gravitation = new ECIGravitation(gx, gy, gz);
 
         final Matrix matrix1 = gravitation.asMatrix();
         final Matrix matrix2 = new Matrix(1, 1);
         gravitation.asMatrix(matrix2);
-        final Matrix matrix3 = new Matrix(GravitationECI.COMPONENTS, 1);
+        final Matrix matrix3 = new Matrix(ECIGravitation.COMPONENTS, 1);
         gravitation.asMatrix(matrix3);
 
         // check
@@ -390,9 +390,9 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation1 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation2 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation3 = new GravitationECI();
+        final ECIGravitation gravitation1 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation2 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation3 = new ECIGravitation();
 
         assertEquals(gravitation1.hashCode(), gravitation2.hashCode());
         assertNotEquals(gravitation1.hashCode(), gravitation3.hashCode());
@@ -405,9 +405,9 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation1 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation2 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation3 = new GravitationECI();
+        final ECIGravitation gravitation1 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation2 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation3 = new ECIGravitation();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(gravitation1.equals((Object)gravitation1));
@@ -428,9 +428,9 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation1 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation2 = new GravitationECI(gx, gy, gz);
-        final GravitationECI gravitation3 = new GravitationECI();
+        final ECIGravitation gravitation1 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation2 = new ECIGravitation(gx, gy, gz);
+        final ECIGravitation gravitation3 = new ECIGravitation();
 
         assertTrue(gravitation1.equals(gravitation1, THRESHOLD));
         assertTrue(gravitation1.equals(gravitation2, THRESHOLD));
@@ -445,7 +445,7 @@ public class GravitationECITest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravitationECI gravitation1 = new GravitationECI(gx, gy, gz);
+        final ECIGravitation gravitation1 = new ECIGravitation(gx, gy, gz);
 
         final Object gravitation2 = gravitation1.clone();
 

@@ -13,7 +13,7 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
-import com.irurueta.navigation.inertial.estimators.GravityECEFEstimator;
+import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.*;
 import org.junit.Test;
@@ -135,7 +135,7 @@ public class InertialECEFNavigatorTest {
                 angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Kinematics kinematics = new Kinematics(fx, fy, fz,
+        final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final ECEFFrame result1 = new ECEFFrame();
@@ -458,7 +458,7 @@ public class InertialECEFNavigatorTest {
                 angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Kinematics kinematics = new Kinematics(fx, fy, fz,
+        final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final ECEFFrame result1 = navigator.navigateAndReturnNew(
@@ -773,7 +773,7 @@ public class InertialECEFNavigatorTest {
                 angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Kinematics kinematics = new Kinematics(fx, fy, fz,
+        final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final ECEFFrame result1 = new ECEFFrame();
@@ -1094,7 +1094,7 @@ public class InertialECEFNavigatorTest {
                 angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                 AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        final Kinematics kinematics = new Kinematics(fx, fy, fz,
+        final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final ECEFFrame result1 = InertialECEFNavigator
@@ -1377,7 +1377,7 @@ public class InertialECEFNavigatorTest {
 
             final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
             final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(oldFrame);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(oldFrame);
             final Matrix g = gravity.asMatrix();
             final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);
@@ -1413,7 +1413,7 @@ public class InertialECEFNavigatorTest {
                     angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                     AngularSpeedUnit.RADIANS_PER_SECOND);
 
-            final Kinematics kinematics = new Kinematics(fx, fy, fz,
+            final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ);
 
             final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
@@ -1472,7 +1472,7 @@ public class InertialECEFNavigatorTest {
 
             final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
             final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(oldFrame);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(oldFrame);
             final Matrix g = gravity.asMatrix();
             final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);
@@ -1508,7 +1508,7 @@ public class InertialECEFNavigatorTest {
                     angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                     AngularSpeedUnit.RADIANS_PER_SECOND);
 
-            final Kinematics kinematics = new Kinematics(fx, fy, fz,
+            final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ);
 
             final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
@@ -1597,7 +1597,7 @@ public class InertialECEFNavigatorTest {
                     angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                     AngularSpeedUnit.RADIANS_PER_SECOND);
 
-            final Kinematics kinematics = new Kinematics(fx, fy, fz,
+            final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ);
 
             final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
@@ -1693,7 +1693,7 @@ public class InertialECEFNavigatorTest {
                     angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
                     AngularSpeedUnit.RADIANS_PER_SECOND);
 
-            final Kinematics kinematics = new Kinematics(fx, fy, fz,
+            final ECEFKinematics kinematics = new ECEFKinematics(fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ);
 
             final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(

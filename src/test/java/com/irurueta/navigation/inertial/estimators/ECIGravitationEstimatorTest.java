@@ -8,7 +8,7 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.ECEFtoECIFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.GravitationECI;
+import com.irurueta.navigation.inertial.ECIGravitation;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -18,7 +18,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-public class GravitationECIEstimatorTest {
+public class ECIGravitationEstimatorTest {
     private static final double LATITUDE_DEGREES = 41.3825;
     private static final double LONGITUDE_DEGREES = 2.176944;
     private static final double HEIGHT = 0.0;
@@ -38,11 +38,11 @@ public class GravitationECIEstimatorTest {
 
     @Test
     public void testConstants() {
-        assertEquals(GravitationECIEstimator.EARTH_EQUATORIAL_RADIUS_WGS84,
+        assertEquals(ECIGravitationEstimator.EARTH_EQUATORIAL_RADIUS_WGS84,
                 Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
-        assertEquals(GravitationECIEstimator.EARTH_GRAVITATIONAL_CONSTANT,
+        assertEquals(ECIGravitationEstimator.EARTH_GRAVITATIONAL_CONSTANT,
                 Constants.EARTH_GRAVITATIONAL_CONSTANT, 0.0);
-        assertEquals(GravitationECIEstimator.EARTH_SECOND_GRAVITATIONAL_CONSTANT,
+        assertEquals(ECIGravitationEstimator.EARTH_SECOND_GRAVITATIONAL_CONSTANT,
                 Constants.EARTH_SECOND_GRAVITATIONAL_CONSTANT, 0.0);
     }
 
@@ -57,8 +57,8 @@ public class GravitationECIEstimatorTest {
         final double y = eciFrame.getY();
         final double z = eciFrame.getZ();
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = new ECIGravitation();
         estimator.estimate(x, y, z, gravitation);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -79,8 +79,8 @@ public class GravitationECIEstimatorTest {
         final double y = eciFrame.getY();
         final double z = eciFrame.getZ();
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = estimator.estimateAndReturnNew(x, y, z);
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = estimator.estimateAndReturnNew(x, y, z);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
                 Math.pow(gravitation.getGy(), 2.0) +
@@ -98,8 +98,8 @@ public class GravitationECIEstimatorTest {
         final ECIFrame eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
                 TIME_INTERVAL_SECONDS, ecefFrame);
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = new ECIGravitation();
         estimator.estimate(eciFrame, gravitation);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -118,8 +118,8 @@ public class GravitationECIEstimatorTest {
         final ECIFrame eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
                 TIME_INTERVAL_SECONDS, ecefFrame);
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = estimator.estimateAndReturnNew(eciFrame);
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = estimator.estimateAndReturnNew(eciFrame);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
                 Math.pow(gravitation.getGy(), 2.0) +
@@ -142,8 +142,8 @@ public class GravitationECIEstimatorTest {
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = new ECIGravitation();
         estimator.estimate(position, gravitation);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -167,8 +167,8 @@ public class GravitationECIEstimatorTest {
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = estimator.estimateAndReturnNew(position);
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = estimator.estimateAndReturnNew(position);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
                 Math.pow(gravitation.getGy(), 2.0) +
@@ -193,8 +193,8 @@ public class GravitationECIEstimatorTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = new GravitationECI();
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = new ECIGravitation();
         estimator.estimate(distanceX, distanceY, distanceZ, gravitation);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -220,8 +220,8 @@ public class GravitationECIEstimatorTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = estimator.estimateAndReturnNew(
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = estimator.estimateAndReturnNew(
                 distanceX, distanceY, distanceZ);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -240,7 +240,7 @@ public class GravitationECIEstimatorTest {
         final ECIFrame eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
                 TIME_INTERVAL_SECONDS, ecefFrame);
 
-        final GravitationECI gravitation = GravitationECIEstimator
+        final ECIGravitation gravitation = ECIGravitationEstimator
                 .estimateGravitationAndReturnNew(eciFrame);
 
         final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -265,7 +265,7 @@ public class GravitationECIEstimatorTest {
             final ECIFrame eciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
                     TIME_INTERVAL_SECONDS, ecefFrame);
 
-            final GravitationECI gravitation = GravitationECIEstimator
+            final ECIGravitation gravitation = ECIGravitationEstimator
                     .estimateGravitationAndReturnNew(eciFrame);
 
             final double g = Math.sqrt(Math.pow(gravitation.getGx(), 2.0) +
@@ -278,8 +278,8 @@ public class GravitationECIEstimatorTest {
 
     @Test
     public void testEstimateAtCenterOfEarth() {
-        final GravitationECIEstimator estimator = new GravitationECIEstimator();
-        final GravitationECI gravitation = estimator.estimateAndReturnNew(0.0, 0.0, 0.0);
+        final ECIGravitationEstimator estimator = new ECIGravitationEstimator();
+        final ECIGravitation gravitation = estimator.estimateAndReturnNew(0.0, 0.0, 0.0);
 
         // check
         assertEquals(gravitation.getGx(), 0.0, 0.0);

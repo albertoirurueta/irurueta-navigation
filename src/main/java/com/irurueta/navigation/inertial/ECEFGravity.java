@@ -5,13 +5,13 @@ import com.irurueta.units.Acceleration;
 /**
  * Contains acceleration due to gravity resolved about ECEF frame.
  */
-public class GravityECEF extends GravityOrGravitation<GravityECEF> {
+public class ECEFGravity extends GravityOrGravitation<ECEFGravity> {
 
 
     /**
      * Constructor.
      */
-    public GravityECEF() {
+    public ECEFGravity() {
         super();
     }
 
@@ -22,7 +22,7 @@ public class GravityECEF extends GravityOrGravitation<GravityECEF> {
      * @param gy acceleration due to gravity through ECEF y-axis expressed in meters per squared second (m/s^2).
      * @param gz acceleration due to gravity through ECEF z-axis expressed in meters per squared second (m/s^2).
      */
-    public GravityECEF(final double gx, final double gy, final double gz) {
+    public ECEFGravity(final double gx, final double gy, final double gz) {
         super(gx, gy, gz);
     }
 
@@ -33,7 +33,7 @@ public class GravityECEF extends GravityOrGravitation<GravityECEF> {
      * @param gy acceleration due to gravity through ECEF y-axis to be set.
      * @param gz acceleration due to gravity through ECEF z-axis to be set.
      */
-    public GravityECEF(final Acceleration gx, final Acceleration gy,
+    public ECEFGravity(final Acceleration gx, final Acceleration gy,
                        final Acceleration gz) {
         super(gx, gy, gz);
     }
@@ -43,7 +43,7 @@ public class GravityECEF extends GravityOrGravitation<GravityECEF> {
      *
      * @param input instance to copy data from.
      */
-    public GravityECEF(final GravityECEF input) {
+    public ECEFGravity(final ECEFGravity input) {
         super(input);
     }
 
@@ -62,11 +62,11 @@ public class GravityECEF extends GravityOrGravitation<GravityECEF> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GravityECEF)) {
+        if (!(obj instanceof ECEFGravity)) {
             return false;
         }
 
-        final GravityECEF other = (GravityECEF) obj;
+        final ECEFGravity other = (ECEFGravity) obj;
         return equals(other);
     }
 
@@ -78,6 +78,6 @@ public class GravityECEF extends GravityOrGravitation<GravityECEF> {
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
     protected Object clone() {
-        return new GravityECEF(this);
+        return new ECEFGravity(this);
     }
 }

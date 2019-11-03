@@ -12,7 +12,7 @@ import java.util.Objects;
  * Contains acceleration due to gravity resolved about NED frame.
  */
 @SuppressWarnings("WeakerAccess")
-public class GravityNED {
+public class NEDGravity {
 
     /**
      * Acceleration due to gravity through east-naxis of NED frame expressed in meters per squared second (m/s^2).
@@ -37,7 +37,7 @@ public class GravityNED {
     /**
      * Constructor.
      */
-    public GravityNED() {
+    public NEDGravity() {
     }
 
     /**
@@ -48,7 +48,7 @@ public class GravityNED {
      * @param gd acceleration due to gravity through down-axis of NED frame and expressed in meters per
      *           squared second (m/s^2).
      */
-    public GravityNED(final double gn, final double gd) {
+    public NEDGravity(final double gn, final double gd) {
         setCoordinates(gn, gd);
     }
 
@@ -58,7 +58,7 @@ public class GravityNED {
      * @param gn acceleration due to gravity through north-axis of NED frame.
      * @param gd acceleration due to gravity through down-axis of NED frame.
      */
-    public GravityNED(final Acceleration gn, final Acceleration gd) {
+    public NEDGravity(final Acceleration gn, final Acceleration gd) {
         setCoordinates(gn, gd);
     }
 
@@ -67,7 +67,7 @@ public class GravityNED {
      *
      * @param input instance to copy data from.
      */
-    public GravityNED(final GravityNED input) {
+    public NEDGravity(final NEDGravity input) {
         copyFrom(input);
     }
 
@@ -255,7 +255,7 @@ public class GravityNED {
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(final GravityNED output) {
+    public void copyTo(final NEDGravity output) {
         output.mGn = mGn;
         output.mGd = mGd;
     }
@@ -265,7 +265,7 @@ public class GravityNED {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(final GravityNED input) {
+    public void copyFrom(final NEDGravity input) {
         mGn = input.mGn;
         mGd = input.mGd;
     }
@@ -362,11 +362,11 @@ public class GravityNED {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GravityNED)) {
+        if (!(obj instanceof NEDGravity)) {
             return false;
         }
 
-        final GravityNED other = (GravityNED) obj;
+        final NEDGravity other = (NEDGravity) obj;
         return equals(other);
     }
 
@@ -376,7 +376,7 @@ public class GravityNED {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(final GravityNED other) {
+    public boolean equals(final NEDGravity other) {
         return equals(other, 0.0);
     }
 
@@ -389,7 +389,7 @@ public class GravityNED {
      * @return true if both instances are considered to be equal (up to provided
      * threshold), false otherwise.
      */
-    public boolean equals(final GravityNED other, final double threshold) {
+    public boolean equals(final NEDGravity other, final double threshold) {
         if (other == null) {
             return false;
         }
@@ -403,8 +403,9 @@ public class GravityNED {
      *
      * @return a copy of this instance.
      */
+    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
     protected Object clone() {
-        return new GravityNED(this);
+        return new NEDGravity(this);
     }
 }

@@ -11,7 +11,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class GravityNEDTest {
+public class NEDGravityTest {
 
     private static final double MIN_VALUE = 9.80;
     private static final double MAX_VALUE = 9.82;
@@ -21,7 +21,7 @@ public class GravityNEDTest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        GravityNED gravity = new GravityNED();
+        NEDGravity gravity = new NEDGravity();
 
         // check default values
         assertEquals(gravity.getGn(), 0.0, 0.0);
@@ -40,7 +40,7 @@ public class GravityNEDTest {
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gn * gn + gd * gd);
 
-        gravity = new GravityNED(gn, gd);
+        gravity = new NEDGravity(gn, gd);
 
         // check default values
         assertEquals(gravity.getGn(), gn, 0.0);
@@ -59,7 +59,7 @@ public class GravityNEDTest {
         final Acceleration gravityD = new Acceleration(gd,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity = new GravityNED(gravityN, gravityD);
+        gravity = new NEDGravity(gravityN, gravityD);
 
         // check default values
         assertEquals(gravity.getGn(), gn, 0.0);
@@ -73,7 +73,7 @@ public class GravityNEDTest {
 
 
         // test constructor from another gravity
-        final GravityNED gravity2 = new GravityNED(gravity);
+        final NEDGravity gravity2 = new NEDGravity(gravity);
 
         // check default values
         assertEquals(gravity2.getGn(), gn, 0.0);
@@ -88,7 +88,7 @@ public class GravityNEDTest {
 
     @Test
     public void testGetSetGn() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check default value
         assertEquals(gravity.getGn(), 0.0, 0.0);
@@ -105,7 +105,7 @@ public class GravityNEDTest {
 
     @Test
     public void testGetSetGd() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check default value
         assertEquals(gravity.getGd(), 0.0, 0.0);
@@ -122,7 +122,7 @@ public class GravityNEDTest {
 
     @Test
     public void testSetCoordinates() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check default values
         assertEquals(gravity.getGn(), 0.0, 0.0);
@@ -144,7 +144,7 @@ public class GravityNEDTest {
 
     @Test
     public void testGetSetGnAsAcceleration() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check default value
         assertEquals(gravity.getGnAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -172,7 +172,7 @@ public class GravityNEDTest {
 
     @Test
     public void testGetGeAsAcceleration() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check
         final Acceleration gravityE1 = new Acceleration(MIN_VALUE,
@@ -186,7 +186,7 @@ public class GravityNEDTest {
 
     @Test
     public void testGetSetGdAsAcceleration() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check default value
         assertEquals(gravity.getGdAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -214,7 +214,7 @@ public class GravityNEDTest {
 
     @Test
     public void testSetCoordinatesFromAccelerations() {
-        final GravityNED gravity = new GravityNED();
+        final NEDGravity gravity = new NEDGravity();
 
         // check default values
         assertEquals(gravity.getGnAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -245,7 +245,7 @@ public class GravityNEDTest {
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gn * gn + gd * gd);
 
-        final GravityNED gravity = new GravityNED(gn, gd);
+        final NEDGravity gravity = new NEDGravity(gn, gd);
 
         assertEquals(gravity.getNorm(), g, 0.0);
 
@@ -264,8 +264,8 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity1 = new GravityNED(gn, gd);
-        final GravityNED gravity2 = new GravityNED();
+        final NEDGravity gravity1 = new NEDGravity(gn, gd);
+        final NEDGravity gravity2 = new NEDGravity();
 
         gravity1.copyTo(gravity2);
 
@@ -281,8 +281,8 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity1 = new GravityNED(gn, gd);
-        final GravityNED gravity2 = new GravityNED();
+        final NEDGravity gravity1 = new NEDGravity(gn, gd);
+        final NEDGravity gravity2 = new NEDGravity();
 
         gravity2.copyFrom(gravity1);
 
@@ -298,10 +298,10 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity = new GravityNED(gn, gd);
+        final NEDGravity gravity = new NEDGravity(gn, gd);
 
         final double[] array1 = gravity.asArray();
-        final double[] array2 = new double[GravityNED.COMPONENTS];
+        final double[] array2 = new double[NEDGravity.COMPONENTS];
         gravity.asArray(array2);
 
         // check
@@ -323,12 +323,12 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity = new GravityNED(gn, gd);
+        final NEDGravity gravity = new NEDGravity(gn, gd);
 
         final Matrix matrix1 = gravity.asMatrix();
         final Matrix matrix2 = new Matrix(1, 1);
         gravity.asMatrix(matrix2);
-        final Matrix matrix3 = new Matrix(GravityNED.COMPONENTS, 1);
+        final Matrix matrix3 = new Matrix(NEDGravity.COMPONENTS, 1);
         gravity.asMatrix(matrix3);
 
         // check
@@ -345,9 +345,9 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity1 = new GravityNED(gn, gd);
-        final GravityNED gravity2 = new GravityNED(gn, gd);
-        final GravityNED gravity3 = new GravityNED();
+        final NEDGravity gravity1 = new NEDGravity(gn, gd);
+        final NEDGravity gravity2 = new NEDGravity(gn, gd);
+        final NEDGravity gravity3 = new NEDGravity();
 
         assertEquals(gravity1.hashCode(), gravity2.hashCode());
         assertNotEquals(gravity1.hashCode(), gravity3.hashCode());
@@ -359,9 +359,9 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity1 = new GravityNED(gn, gd);
-        final GravityNED gravity2 = new GravityNED(gn, gd);
-        final GravityNED gravity3 = new GravityNED();
+        final NEDGravity gravity1 = new NEDGravity(gn, gd);
+        final NEDGravity gravity2 = new NEDGravity(gn, gd);
+        final NEDGravity gravity3 = new NEDGravity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(gravity1.equals((Object)gravity1));
@@ -381,9 +381,9 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity1 = new GravityNED(gn, gd);
-        final GravityNED gravity2 = new GravityNED(gn, gd);
-        final GravityNED gravity3 = new GravityNED();
+        final NEDGravity gravity1 = new NEDGravity(gn, gd);
+        final NEDGravity gravity2 = new NEDGravity(gn, gd);
+        final NEDGravity gravity3 = new NEDGravity();
 
         assertTrue(gravity1.equals(gravity1, THRESHOLD));
         assertTrue(gravity1.equals(gravity2, THRESHOLD));
@@ -397,7 +397,7 @@ public class GravityNEDTest {
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityNED gravity1 = new GravityNED(gn, gd);
+        final NEDGravity gravity1 = new NEDGravity(gn, gd);
 
         final Object gravity2 = gravity1.clone();
 

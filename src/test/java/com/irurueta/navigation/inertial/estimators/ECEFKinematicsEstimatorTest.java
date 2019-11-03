@@ -16,8 +16,8 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.GravityECEF;
-import com.irurueta.navigation.inertial.Kinematics;
+import com.irurueta.navigation.inertial.ECEFGravity;
+import com.irurueta.navigation.inertial.ECEFKinematics;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
@@ -31,7 +31,7 @@ import static com.irurueta.navigation.frames.CoordinateTransformation.ROWS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class KinematicsEstimatorTest {
+public class ECEFKinematicsEstimatorTest {
 
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
@@ -93,30 +93,30 @@ public class KinematicsEstimatorTest {
         final double y = newEcefFrame.getY();
         final double z = newEcefFrame.getZ();
 
-        final KinematicsEstimator estimator = new KinematicsEstimator();
+        final ECEFKinematicsEstimator estimator = new ECEFKinematicsEstimator();
 
-        final Kinematics k1 = new Kinematics();
+        final ECEFKinematics k1 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z, k1);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final Kinematics k2 = new Kinematics();
+        final ECEFKinematics k2 = new ECEFKinematics();
         estimator.estimate(timeInterval, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z, k2);
 
-        final Kinematics k3 = new Kinematics();
+        final ECEFKinematics k3 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldC, oldVx, oldVy, oldVz, k3);
 
-        final Kinematics k4 = new Kinematics();
+        final ECEFKinematics k4 = new ECEFKinematics();
         estimator.estimate(timeInterval, newEcefFrame,
                 oldC, oldVx, oldVy, oldVz, k4);
 
-        final Kinematics k5 = new Kinematics();
+        final ECEFKinematics k5 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldEcefFrame, k5);
 
-        final Kinematics k6 = new Kinematics();
+        final ECEFKinematics k6 = new ECEFKinematics();
         estimator.estimate(timeInterval, newEcefFrame,
                 oldEcefFrame, k6);
 
@@ -128,36 +128,36 @@ public class KinematicsEstimatorTest {
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
 
-        final Kinematics k7 = new Kinematics();
+        final ECEFKinematics k7 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z, k7);
 
-        final Kinematics k8 = new Kinematics();
+        final ECEFKinematics k8 = new ECEFKinematics();
         estimator.estimate(timeInterval, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z, k8);
 
-        final Kinematics k9 = new Kinematics();
+        final ECEFKinematics k9 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldC, oldSpeedX, oldSpeedY, oldSpeedZ, k9);
 
-        final Kinematics k10 = new Kinematics();
+        final ECEFKinematics k10 = new ECEFKinematics();
         estimator.estimate(timeInterval, newEcefFrame,
                 oldC, oldSpeedX, oldSpeedY, oldSpeedZ, k10);
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        final Kinematics k11 = new Kinematics();
+        final ECEFKinematics k11 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, position, k11);
 
-        final Kinematics k12 = new Kinematics();
+        final ECEFKinematics k12 = new ECEFKinematics();
         estimator.estimate(timeInterval, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, position, k12);
 
-        final Kinematics k13 = new Kinematics();
+        final ECEFKinematics k13 = new ECEFKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position, k13);
 
-        final Kinematics k14 = new Kinematics();
+        final ECEFKinematics k14 = new ECEFKinematics();
         estimator.estimate(timeInterval, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position, k14);
 
@@ -207,26 +207,26 @@ public class KinematicsEstimatorTest {
         final double y = newEcefFrame.getY();
         final double z = newEcefFrame.getZ();
 
-        final KinematicsEstimator estimator = new KinematicsEstimator();
+        final ECEFKinematicsEstimator estimator = new ECEFKinematicsEstimator();
 
-        final Kinematics k1 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k1 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final Kinematics k2 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
+        final ECEFKinematics k2 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
-        final Kinematics k3 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k3 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, newEcefFrame, oldC, oldVx, oldVy, oldVz);
 
-        final Kinematics k4 = estimator.estimateAndReturnNew(timeInterval, newEcefFrame,
+        final ECEFKinematics k4 = estimator.estimateAndReturnNew(timeInterval, newEcefFrame,
                 oldC, oldVx, oldVy, oldVz);
 
-        final Kinematics k5 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k5 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, newEcefFrame, oldEcefFrame);
 
-        final Kinematics k6 = estimator.estimateAndReturnNew(timeInterval, newEcefFrame,
+        final ECEFKinematics k6 = estimator.estimateAndReturnNew(timeInterval, newEcefFrame,
                 oldEcefFrame);
 
         final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
@@ -237,34 +237,34 @@ public class KinematicsEstimatorTest {
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
 
-        final Kinematics k7 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k7 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z);
 
-        final Kinematics k8 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
+        final ECEFKinematics k8 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z);
 
-        final Kinematics k9 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k9 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldC, oldSpeedX, oldSpeedY, oldSpeedZ);
 
-        final Kinematics k10 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k10 = estimator.estimateAndReturnNew(
                 timeInterval, newEcefFrame,
                 oldC, oldSpeedX, oldSpeedY, oldSpeedZ);
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        final Kinematics k11 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k11 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, position);
 
-        final Kinematics k12 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
+        final ECEFKinematics k12 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, position);
 
-        final Kinematics k13 = estimator.estimateAndReturnNew(
+        final ECEFKinematics k13 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position);
 
-        final Kinematics k14 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
+        final ECEFKinematics k14 = estimator.estimateAndReturnNew(timeInterval, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position);
 
         assertEquals(k1, k2);
@@ -314,29 +314,29 @@ public class KinematicsEstimatorTest {
         final double y = newEcefFrame.getY();
         final double z = newEcefFrame.getZ();
 
-        final Kinematics k1 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+        final ECEFKinematics k1 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z, k1);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final Kinematics k2 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
+        final ECEFKinematics k2 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z, k2);
 
-        final Kinematics k3 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, newEcefFrame,
+        final ECEFKinematics k3 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldC, oldVx, oldVy, oldVz, k3);
 
-        final Kinematics k4 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, newEcefFrame,
+        final ECEFKinematics k4 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, newEcefFrame,
                 oldC, oldVx, oldVy, oldVz, k4);
 
-        final Kinematics k5 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, newEcefFrame,
+        final ECEFKinematics k5 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldEcefFrame, k5);
 
-        final Kinematics k6 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, newEcefFrame,
+        final ECEFKinematics k6 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, newEcefFrame,
                 oldEcefFrame, k6);
 
         final Speed speedX = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
@@ -347,37 +347,37 @@ public class KinematicsEstimatorTest {
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
 
-        final Kinematics k7 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+        final ECEFKinematics k7 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z, k7);
 
-        final Kinematics k8 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
+        final ECEFKinematics k8 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z, k8);
 
-        final Kinematics k9 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, newEcefFrame,
+        final ECEFKinematics k9 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, newEcefFrame,
                 oldC, oldSpeedX, oldSpeedY, oldSpeedZ, k9);
 
-        final Kinematics k10 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, newEcefFrame,
+        final ECEFKinematics k10 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, newEcefFrame,
                 oldC, oldSpeedX, oldSpeedY, oldSpeedZ, k10);
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        final Kinematics k11 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+        final ECEFKinematics k11 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, position, k11);
 
-        final Kinematics k12 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
+        final ECEFKinematics k12 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, position, k12);
 
-        final Kinematics k13 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+        final ECEFKinematics k13 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position, k13);
 
-        final Kinematics k14 = new Kinematics();
-        KinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
+        final ECEFKinematics k14 = new ECEFKinematics();
+        ECEFKinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
                 speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position, k14);
 
         assertEquals(k1, k2);
@@ -394,7 +394,7 @@ public class KinematicsEstimatorTest {
         assertEquals(k1, k13);
         assertEquals(k1, k14);
 
-        final Kinematics k = estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+        final ECEFKinematics k = estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         assertTrue(k1.equals(k, ABSOLUTE_ERROR));
@@ -432,28 +432,28 @@ public class KinematicsEstimatorTest {
         final double y = newEcefFrame.getY();
         final double z = newEcefFrame.getZ();
 
-        final Kinematics k1 = KinematicsEstimator
+        final ECEFKinematics k1 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
                         vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final Kinematics k2 = KinematicsEstimator
+        final ECEFKinematics k2 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, c, oldC,
                         vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
-        final Kinematics k3 = KinematicsEstimator
+        final ECEFKinematics k3 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, newEcefFrame,
                         oldC, oldVx, oldVy, oldVz);
 
-        final Kinematics k4 = KinematicsEstimator
+        final ECEFKinematics k4 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, newEcefFrame,
                         oldC, oldVx, oldVy, oldVz);
 
-        final Kinematics k5 = KinematicsEstimator
+        final ECEFKinematics k5 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, newEcefFrame,
                         oldEcefFrame);
 
-        final Kinematics k6 = KinematicsEstimator
+        final ECEFKinematics k6 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, newEcefFrame,
                         oldEcefFrame);
 
@@ -465,36 +465,36 @@ public class KinematicsEstimatorTest {
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
 
-        final Kinematics k7 = KinematicsEstimator
+        final ECEFKinematics k7 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
                         speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z);
 
-        final Kinematics k8 = KinematicsEstimator
+        final ECEFKinematics k8 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, c, oldC,
                         speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, x, y, z);
 
-        final Kinematics k9 = KinematicsEstimator
+        final ECEFKinematics k9 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, newEcefFrame,
                         oldC, oldSpeedX, oldSpeedY, oldSpeedZ);
 
-        final Kinematics k10 = KinematicsEstimator
+        final ECEFKinematics k10 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, newEcefFrame,
                         oldC, oldSpeedX, oldSpeedY, oldSpeedZ);
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        final Kinematics k11 = KinematicsEstimator
+        final ECEFKinematics k11 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
                         vx, vy, vz, oldVx, oldVy, oldVz, position);
 
-        final Kinematics k12 = KinematicsEstimator
+        final ECEFKinematics k12 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, c, oldC,
                         vx, vy, vz, oldVx, oldVy, oldVz, position);
 
-        final Kinematics k13 = KinematicsEstimator
+        final ECEFKinematics k13 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
                         speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position);
 
-        final Kinematics k14 = KinematicsEstimator
+        final ECEFKinematics k14 = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(timeInterval, c, oldC,
                         speedX, speedY, speedZ, oldSpeedX, oldSpeedY, oldSpeedZ, position);
 
@@ -512,7 +512,7 @@ public class KinematicsEstimatorTest {
         assertEquals(k1, k13);
         assertEquals(k1, k14);
 
-        final Kinematics k = estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
+        final ECEFKinematics k = estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         assertTrue(k1.equals(k, ABSOLUTE_ERROR));
@@ -549,12 +549,12 @@ public class KinematicsEstimatorTest {
         final double y = newEcefFrame.getY();
         final double z = newEcefFrame.getZ();
 
-        KinematicsEstimator.estimateKinematicsAndReturnNew(-1.0, c, oldC,
+        ECEFKinematicsEstimator.estimateKinematicsAndReturnNew(-1.0, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testEstimateKinematicsWhenInvalidCoordinateTransformationMatrixThrowsIllegalArgumentException()
+    public void testEstimateKinematicsWhenInvalidCoordinateTransformationThrowsIllegalArgumentException()
             throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException {
 
@@ -585,12 +585,12 @@ public class KinematicsEstimatorTest {
         final double z = newEcefFrame.getZ();
 
         c.setDestinationType(FrameType.BODY_FRAME);
-        KinematicsEstimator.estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
+        ECEFKinematicsEstimator.estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testEstimateKinematicsWhenInvalidOldCoordinateTransformationMatrixThrowsIllegalArgumentException()
+    public void testEstimateKinematicsWhenInvalidOldCoordinateTransformationThrowsIllegalArgumentException()
             throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException {
 
@@ -621,7 +621,7 @@ public class KinematicsEstimatorTest {
         final double z = newEcefFrame.getZ();
 
         oldC.setDestinationType(FrameType.BODY_FRAME);
-        KinematicsEstimator.estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
+        ECEFKinematicsEstimator.estimateKinematicsAndReturnNew(TIME_INTERVAL_SECONDS, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
     }
 
@@ -656,7 +656,7 @@ public class KinematicsEstimatorTest {
         final double y = newEcefFrame.getY();
         final double z = newEcefFrame.getZ();
 
-        final Kinematics k = KinematicsEstimator
+        final ECEFKinematics k = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(0.0, c, oldC,
                         vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
@@ -668,7 +668,7 @@ public class KinematicsEstimatorTest {
         assertEquals(k.getAngularRateY(), 0.0, 0.0);
         assertEquals(k.getAngularRateZ(), 0.0, 0.0);
 
-        final Kinematics k2 = estimateKinematics(0.0, c, oldC,
+        final ECEFKinematics k2 = estimateKinematics(0.0, c, oldC,
                 vx, vy, vz, oldVx, oldVy, oldVz, x, y, z);
 
         assertTrue(k2.equals(k, 0.0));
@@ -769,12 +769,12 @@ public class KinematicsEstimatorTest {
         return new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
     }
 
-    private static Kinematics estimateKinematics(final double timeInterval,
-                                                final CoordinateTransformation c,
-                                                final CoordinateTransformation oldC,
-                                                final double vx, final double vy, final double vz,
-                                                final double oldVx, final double oldVy, final double oldVz,
-                                                final double x, final double y, final double z)
+    private static ECEFKinematics estimateKinematics(final double timeInterval,
+                                                     final CoordinateTransformation c,
+                                                     final CoordinateTransformation oldC,
+                                                     final double vx, final double vy, final double vz,
+                                                     final double oldVx, final double oldVy, final double oldVz,
+                                                     final double x, final double y, final double z)
             throws WrongSizeException, RankDeficientMatrixException, DecomposerException {
 
         if (timeInterval > 0.0) {
@@ -818,7 +818,7 @@ public class KinematicsEstimatorTest {
             oldVebe.setElementAtIndex(1, oldVy);
             oldVebe.setElementAtIndex(2, oldVz);
 
-            final GravityECEF gravity = GravityECEFEstimator
+            final ECEFGravity gravity = ECEFGravityEstimator
                     .estimateGravityAndReturnNew(x, y, z);
             final Matrix g = gravity.asMatrix();
 
@@ -855,11 +855,11 @@ public class KinematicsEstimatorTest {
             final double angularRateZ = omegaIbb.getElementAtIndex(2);
 
             // save result data
-            return new Kinematics(specificForceX, specificForceY, specificForceZ,
+            return new ECEFKinematics(specificForceX, specificForceY, specificForceZ,
                     angularRateX, angularRateY, angularRateZ);
         } else {
             // If time interval is zero, set angular rate and specific force to zero
-            return new Kinematics();
+            return new ECEFKinematics();
         }
     }
 

@@ -2,7 +2,7 @@ package com.irurueta.navigation.inertial.estimators;
 
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.GravityNED;
+import com.irurueta.navigation.inertial.NEDGravity;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleConverter;
 import com.irurueta.units.AngleUnit;
@@ -18,7 +18,7 @@ import com.irurueta.units.DistanceUnit;
  * https://github.com/ymjdz/MATLAB-Codes
  */
 @SuppressWarnings("WeakerAccess")
-public class GravityNEDEstimator {
+public class NEDGravityEstimator {
 
     /**
      * The equatorial radius of WGS84 ellipsoid (6378137 m) defining Earth's shape.
@@ -59,7 +59,7 @@ public class GravityNEDEstimator {
      * @param height   height expressed in meters (m).
      * @param result   instance where estimated acceleration due to gravity will be stored.
      */
-    public void estimate(final double latitude, final double height, final GravityNED result) {
+    public void estimate(final double latitude, final double height, final NEDGravity result) {
         estimateGravity(latitude, height, result);
     }
 
@@ -70,7 +70,7 @@ public class GravityNEDEstimator {
      * @param height   height expressed in meters (m).
      * @return a new gravity instance containing estimated acceleration due to gravity.
      */
-    public GravityNED estimateAndReturnNew(final double latitude, final double height) {
+    public NEDGravity estimateAndReturnNew(final double latitude, final double height) {
         return estimateGravityAndReturnNew(latitude, height);
     }
 
@@ -80,7 +80,7 @@ public class GravityNEDEstimator {
      * @param frame  a NED frame containing a given position.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public void estimate(final NEDFrame frame, final GravityNED result) {
+    public void estimate(final NEDFrame frame, final NEDGravity result) {
         estimateGravity(frame, result);
     }
 
@@ -90,7 +90,7 @@ public class GravityNEDEstimator {
      * @param frame a NED frame containing a given position.
      * @return a new gravity instance containing estimated acceleration due to gravity.
      */
-    public GravityNED estimateAndReturnNew(final NEDFrame frame) {
+    public NEDGravity estimateAndReturnNew(final NEDFrame frame) {
         return estimateGravityAndReturnNew(frame);
     }
 
@@ -101,7 +101,7 @@ public class GravityNEDEstimator {
      * @param height   height.
      * @param result   instance where estimated acceleration due to gravity will be stored.
      */
-    public void estimate(final Angle latitude, final Distance height, final GravityNED result) {
+    public void estimate(final Angle latitude, final Distance height, final NEDGravity result) {
         estimateGravity(latitude, height, result);
     }
 
@@ -112,7 +112,7 @@ public class GravityNEDEstimator {
      * @param height   height.
      * @return a new gravity instance containing estimated acceleration due to gravity.
      */
-    public GravityNED estimateAndReturnNew(final Angle latitude, final Distance height) {
+    public NEDGravity estimateAndReturnNew(final Angle latitude, final Distance height) {
         return estimateGravityAndReturnNew(latitude, height);
     }
 
@@ -123,7 +123,7 @@ public class GravityNEDEstimator {
      * @param height   height expressed in meters (m).
      * @param result   instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravity(final double latitude, final double height, final GravityNED result) {
+    public static void estimateGravity(final double latitude, final double height, final NEDGravity result) {
         // Calculate surface gravity using the Somigliana model (2.134)
         final double sinsqL = Math.pow(Math.sin(latitude), 2.0);
         final double e2 = EARTH_ECCENTRICITY * EARTH_ECCENTRICITY;
@@ -151,8 +151,8 @@ public class GravityNEDEstimator {
      * @param height   height expressed in meters (m).
      * @return a new gravity instance containing estimated acceleration due to gravity.
      */
-    public static GravityNED estimateGravityAndReturnNew(final double latitude, final double height) {
-        final GravityNED result = new GravityNED();
+    public static NEDGravity estimateGravityAndReturnNew(final double latitude, final double height) {
+        final NEDGravity result = new NEDGravity();
         estimateGravity(latitude, height, result);
         return result;
     }
@@ -163,7 +163,7 @@ public class GravityNEDEstimator {
      * @param frame  a NED frame containing a given position.
      * @param result instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravity(final NEDFrame frame, final GravityNED result) {
+    public static void estimateGravity(final NEDFrame frame, final NEDGravity result) {
         estimateGravity(frame.getLatitude(), frame.getHeight(), result);
     }
 
@@ -173,7 +173,7 @@ public class GravityNEDEstimator {
      * @param frame a NED frame containing a given position.
      * @return a new gravity instance containing estimated acceleration due to gravity.
      */
-    public static GravityNED estimateGravityAndReturnNew(final NEDFrame frame) {
+    public static NEDGravity estimateGravityAndReturnNew(final NEDFrame frame) {
         return estimateGravityAndReturnNew(frame.getLatitude(), frame.getHeight());
     }
 
@@ -184,7 +184,7 @@ public class GravityNEDEstimator {
      * @param height   height.
      * @param result   instance where estimated acceleration due to gravity will be stored.
      */
-    public static void estimateGravity(final Angle latitude, final Distance height, final GravityNED result) {
+    public static void estimateGravity(final Angle latitude, final Distance height, final NEDGravity result) {
         estimateGravity(convertAngle(latitude), convertDistance(height), result);
     }
 
@@ -195,7 +195,7 @@ public class GravityNEDEstimator {
      * @param height   height.
      * @return a new gravity instance containing estimated acceleration due to gravity.
      */
-    public static GravityNED estimateGravityAndReturnNew(final Angle latitude, final Distance height) {
+    public static NEDGravity estimateGravityAndReturnNew(final Angle latitude, final Distance height) {
         return estimateGravityAndReturnNew(convertAngle(latitude), convertDistance(height));
     }
 

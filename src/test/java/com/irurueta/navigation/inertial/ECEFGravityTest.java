@@ -11,7 +11,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class GravityECEFTest {
+public class ECEFGravityTest {
 
     private static final double MIN_VALUE = 9.80;
     private static final double MAX_VALUE = 9.82;
@@ -21,7 +21,7 @@ public class GravityECEFTest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        GravityECEF gravity = new GravityECEF();
+        ECEFGravity gravity = new ECEFGravity();
 
         // check default values
         assertEquals(gravity.getGx(), 0.0, 0.0);
@@ -41,7 +41,7 @@ public class GravityECEFTest {
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
-        gravity = new GravityECEF(gx, gy, gz);
+        gravity = new ECEFGravity(gx, gy, gz);
 
         // check default values
         assertEquals(gravity.getGx(), gx, 0.0);
@@ -62,7 +62,7 @@ public class GravityECEFTest {
         final Acceleration gravityZ = new Acceleration(gz,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        gravity = new GravityECEF(gravityX, gravityY, gravityZ);
+        gravity = new ECEFGravity(gravityX, gravityY, gravityZ);
 
         // check default values
         assertEquals(gravity.getGx(), gx, 0.0);
@@ -76,7 +76,7 @@ public class GravityECEFTest {
 
 
         // test constructor from another gravity
-        final GravityECEF gravity2 = new GravityECEF(gravity);
+        final ECEFGravity gravity2 = new ECEFGravity(gravity);
 
         // check default values
         assertEquals(gravity2.getGx(), gx, 0.0);
@@ -91,7 +91,7 @@ public class GravityECEFTest {
 
     @Test
     public void testGetSetGx() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default value
         assertEquals(gravity.getGx(), 0.0, 0.0);
@@ -108,7 +108,7 @@ public class GravityECEFTest {
 
     @Test
     public void testGetSetGy() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default value
         assertEquals(gravity.getGy(), 0.0, 0.0);
@@ -125,7 +125,7 @@ public class GravityECEFTest {
 
     @Test
     public void testGetSetGz() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default value
         assertEquals(gravity.getGz(), 0.0, 0.0);
@@ -142,7 +142,7 @@ public class GravityECEFTest {
 
     @Test
     public void testSetCoordinates() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default values
         assertEquals(gravity.getGx(), 0.0, 0.0);
@@ -165,7 +165,7 @@ public class GravityECEFTest {
 
     @Test
     public void testGetSetGxAsAcceleration() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default value
         assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -193,7 +193,7 @@ public class GravityECEFTest {
 
     @Test
     public void testGetSetGyAsAcceleration() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default value
         assertEquals(gravity.getGyAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -221,7 +221,7 @@ public class GravityECEFTest {
 
     @Test
     public void testGetSetGzAsAcceleration() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default value
         assertEquals(gravity.getGzAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -249,7 +249,7 @@ public class GravityECEFTest {
 
     @Test
     public void testSetCoordinatesFromAccelerations() {
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravity gravity = new ECEFGravity();
 
         // check default values
         assertEquals(gravity.getGxAsAcceleration().getValue().doubleValue(), 0.0, 0.0);
@@ -284,7 +284,7 @@ public class GravityECEFTest {
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double g = Math.sqrt(gx * gx + gy * gy + gz * gz);
 
-        final GravityECEF gravity = new GravityECEF(gx, gy, gz);
+        final ECEFGravity gravity = new ECEFGravity(gx, gy, gz);
 
         assertEquals(gravity.getNorm(), g, 0.0);
 
@@ -304,8 +304,8 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity2 = new GravityECEF();
+        final ECEFGravity gravity1 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity2 = new ECEFGravity();
 
         gravity1.copyTo(gravity2);
 
@@ -322,8 +322,8 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity2 = new GravityECEF();
+        final ECEFGravity gravity1 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity2 = new ECEFGravity();
 
         gravity2.copyFrom(gravity1);
 
@@ -340,10 +340,10 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity = new GravityECEF(gx, gy, gz);
+        final ECEFGravity gravity = new ECEFGravity(gx, gy, gz);
 
         final double[] array1 = gravity.asArray();
-        final double[] array2 = new double[GravityECEF.COMPONENTS];
+        final double[] array2 = new double[ECEFGravity.COMPONENTS];
         gravity.asArray(array2);
 
         // check
@@ -366,12 +366,12 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity = new GravityECEF(gx, gy, gz);
+        final ECEFGravity gravity = new ECEFGravity(gx, gy, gz);
 
         final Matrix matrix1 = gravity.asMatrix();
         final Matrix matrix2 = new Matrix(1, 1);
         gravity.asMatrix(matrix2);
-        final Matrix matrix3 = new Matrix(GravityECEF.COMPONENTS, 1);
+        final Matrix matrix3 = new Matrix(ECEFGravity.COMPONENTS, 1);
         gravity.asMatrix(matrix3);
 
         // check
@@ -389,9 +389,9 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity2 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity3 = new GravityECEF();
+        final ECEFGravity gravity1 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity2 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity3 = new ECEFGravity();
 
         assertEquals(gravity1.hashCode(), gravity2.hashCode());
         assertNotEquals(gravity1.hashCode(), gravity3.hashCode());
@@ -404,9 +404,9 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity2 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity3 = new GravityECEF();
+        final ECEFGravity gravity1 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity2 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity3 = new ECEFGravity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(gravity1.equals((Object)gravity1));
@@ -427,9 +427,9 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity2 = new GravityECEF(gx, gy, gz);
-        final GravityECEF gravity3 = new GravityECEF();
+        final ECEFGravity gravity1 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity2 = new ECEFGravity(gx, gy, gz);
+        final ECEFGravity gravity3 = new ECEFGravity();
 
         assertTrue(gravity1.equals(gravity1, THRESHOLD));
         assertTrue(gravity1.equals(gravity2, THRESHOLD));
@@ -444,7 +444,7 @@ public class GravityECEFTest {
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final GravityECEF gravity1 = new GravityECEF(gx, gy, gz);
+        final ECEFGravity gravity1 = new ECEFGravity(gx, gy, gz);
 
         final Object gravity2 = gravity1.clone();
 

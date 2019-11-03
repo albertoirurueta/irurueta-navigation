@@ -6,7 +6,7 @@ import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.GravityECEF;
+import com.irurueta.navigation.inertial.ECEFGravity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -16,7 +16,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-public class GravityECEFEstimatorTest {
+public class ECEFGravityEstimatorTest {
     private static final double LATITUDE_DEGREES = 41.3825;
     private static final double LONGITUDE_DEGREES = 2.176944;
     private static final double HEIGHT = 0.0;
@@ -34,13 +34,13 @@ public class GravityECEFEstimatorTest {
 
     @Test
     public void testConstants() {
-        assertEquals(GravityECEFEstimator.EARTH_EQUATORIAL_RADIUS_WGS84,
+        assertEquals(ECEFGravityEstimator.EARTH_EQUATORIAL_RADIUS_WGS84,
                 Constants.EARTH_EQUATORIAL_RADIUS_WGS84, 0.0);
-        assertEquals(GravityECEFEstimator.EARTH_GRAVITATIONAL_CONSTANT,
+        assertEquals(ECEFGravityEstimator.EARTH_GRAVITATIONAL_CONSTANT,
                 Constants.EARTH_GRAVITATIONAL_CONSTANT, 0.0);
-        assertEquals(GravityECEFEstimator.EARTH_SECOND_GRAVITATIONAL_CONSTANT,
+        assertEquals(ECEFGravityEstimator.EARTH_SECOND_GRAVITATIONAL_CONSTANT,
                 Constants.EARTH_SECOND_GRAVITATIONAL_CONSTANT, 0.0);
-        assertEquals(GravityECEFEstimator.EARTH_ROTATION_RATE,
+        assertEquals(ECEFGravityEstimator.EARTH_ROTATION_RATE,
                 Constants.EARTH_ROTATION_RATE, 0.0);
     }
 
@@ -53,8 +53,8 @@ public class GravityECEFEstimatorTest {
         final double y = ecefFrame.getY();
         final double z = ecefFrame.getZ();
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = new ECEFGravity();
         estimator.estimate(x, y, z, gravity);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
@@ -73,8 +73,8 @@ public class GravityECEFEstimatorTest {
         final double y = ecefFrame.getY();
         final double z = ecefFrame.getZ();
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = estimator.estimateAndReturnNew(x, y, z);
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = estimator.estimateAndReturnNew(x, y, z);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                 + Math.pow(gravity.getGy(), 2.0)
@@ -89,8 +89,8 @@ public class GravityECEFEstimatorTest {
                 Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
         final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = new ECEFGravity();
         estimator.estimate(ecefFrame, gravity);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
@@ -106,8 +106,8 @@ public class GravityECEFEstimatorTest {
                 Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
         final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = estimator.estimateAndReturnNew(ecefFrame);
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = estimator.estimateAndReturnNew(ecefFrame);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                 + Math.pow(gravity.getGy(), 2.0)
@@ -127,8 +127,8 @@ public class GravityECEFEstimatorTest {
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = new ECEFGravity();
         estimator.estimate(position, gravity);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
@@ -149,8 +149,8 @@ public class GravityECEFEstimatorTest {
 
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = estimator.estimateAndReturnNew(position);
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = estimator.estimateAndReturnNew(position);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                 + Math.pow(gravity.getGy(), 2.0)
@@ -172,8 +172,8 @@ public class GravityECEFEstimatorTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = new GravityECEF();
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = new ECEFGravity();
         estimator.estimate(distanceX, distanceY, distanceZ, gravity);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
@@ -196,8 +196,8 @@ public class GravityECEFEstimatorTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = estimator.estimateAndReturnNew(distanceX, distanceY, distanceZ);
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = estimator.estimateAndReturnNew(distanceX, distanceY, distanceZ);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                 + Math.pow(gravity.getGy(), 2.0)
@@ -212,7 +212,7 @@ public class GravityECEFEstimatorTest {
                 Math.toRadians(LONGITUDE_DEGREES), HEIGHT);
         final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
 
-        final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(ecefFrame);
+        final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(ecefFrame);
 
         final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                 + Math.pow(gravity.getGy(), 2.0)
@@ -233,7 +233,7 @@ public class GravityECEFEstimatorTest {
             final NEDFrame nedFrame = new NEDFrame(latitude, longitude, HEIGHT);
             final ECEFFrame ecefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(nedFrame);
 
-            final GravityECEF gravity = GravityECEFEstimator.estimateGravityAndReturnNew(ecefFrame);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(ecefFrame);
 
             final double g = Math.sqrt(Math.pow(gravity.getGx(), 2.0)
                     + Math.pow(gravity.getGy(), 2.0)
@@ -245,8 +245,8 @@ public class GravityECEFEstimatorTest {
 
     @Test
     public void testEstimateAtCenterOfEarth() {
-        final GravityECEFEstimator estimator = new GravityECEFEstimator();
-        final GravityECEF gravity = estimator.estimateAndReturnNew(0.0, 0.0, 0.0);
+        final ECEFGravityEstimator estimator = new ECEFGravityEstimator();
+        final ECEFGravity gravity = estimator.estimateAndReturnNew(0.0, 0.0, 0.0);
 
         // check
         assertEquals(gravity.getGx(), 0.0, 0.0);
