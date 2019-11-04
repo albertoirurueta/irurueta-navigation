@@ -45,7 +45,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -65,7 +65,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final double timeInterval,
@@ -103,7 +103,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final Time timeInterval,
@@ -130,7 +130,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final double timeInterval,
@@ -155,7 +155,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final Time timeInterval,
@@ -207,7 +207,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -227,7 +227,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final double timeInterval,
@@ -245,7 +245,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -265,7 +265,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final Time timeInterval,
@@ -292,7 +292,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final double timeInterval,
@@ -317,7 +317,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final Time timeInterval,
@@ -333,7 +333,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -349,7 +349,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final double timeInterval,
@@ -366,7 +366,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -382,7 +382,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final Time timeInterval,
@@ -399,7 +399,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -415,7 +415,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final double timeInterval,
@@ -432,7 +432,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -448,7 +448,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public void estimate(final Time timeInterval,
@@ -465,7 +465,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -485,7 +485,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final double timeInterval,
@@ -522,7 +522,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final Time timeInterval,
@@ -548,7 +548,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final double timeInterval,
@@ -572,7 +572,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final Time timeInterval,
@@ -621,7 +621,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -641,7 +641,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final double timeInterval,
@@ -658,7 +658,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -678,7 +678,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final Time timeInterval,
@@ -704,7 +704,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final double timeInterval,
@@ -728,7 +728,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final Time timeInterval,
@@ -743,7 +743,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -759,7 +759,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final double timeInterval,
@@ -776,7 +776,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -792,7 +792,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final Time timeInterval,
@@ -809,7 +809,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -825,7 +825,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final double timeInterval,
@@ -842,7 +842,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -858,7 +858,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public ECIKinematics estimateAndReturnNew(final Time timeInterval,
@@ -871,11 +871,11 @@ public class ECIKinematicsEstimator {
     }
 
     /**
-     * Estimates body kinematics (specific force applied to a body and its angular rates)..
+     * Estimates body kinematics (specific force applied to a body and its angular rates).
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -895,7 +895,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
@@ -1041,7 +1041,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final Time timeInterval,
@@ -1070,7 +1070,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
@@ -1097,7 +1097,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final Time timeInterval,
@@ -1157,7 +1157,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1177,7 +1177,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
@@ -1202,7 +1202,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1222,7 +1222,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final Time timeInterval,
@@ -1256,7 +1256,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
@@ -1285,7 +1285,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final Time timeInterval,
@@ -1305,7 +1305,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -1321,7 +1321,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
@@ -1339,7 +1339,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -1355,7 +1355,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final Time timeInterval,
@@ -1373,7 +1373,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1389,7 +1389,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final double timeInterval,
@@ -1407,7 +1407,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1423,7 +1423,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @param result       instance where estimated body kinematics will be stored.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static void estimateKinematics(final Time timeInterval,
@@ -1441,7 +1441,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -1461,7 +1461,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final double timeInterval,
@@ -1501,7 +1501,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
@@ -1530,7 +1530,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final double timeInterval,
@@ -1556,7 +1556,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame expressed in meters per second (m/s) and
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
@@ -1611,7 +1611,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1631,7 +1631,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final double timeInterval,
@@ -1651,7 +1651,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1671,7 +1671,7 @@ public class ECIKinematicsEstimator {
      * @param z            cartesian z coordinate of body position expressed in meters (m) and resolved along
      *                     ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
@@ -1700,7 +1700,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final double timeInterval,
@@ -1726,7 +1726,7 @@ public class ECIKinematicsEstimator {
      * @param oldVz        z coordinate of previous velocity of body frame with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
@@ -1743,7 +1743,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -1759,7 +1759,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final double timeInterval,
@@ -1778,7 +1778,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame expressed in meters per second (m/s) and resolved
@@ -1794,7 +1794,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
@@ -1813,7 +1813,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1829,7 +1829,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final double timeInterval,
@@ -1848,7 +1848,7 @@ public class ECIKinematicsEstimator {
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-ECI-frame coordinate transformation.
-     * @param oldC         previoud body-to-ECI-frame coordinate transformation.
+     * @param oldC         previous body-to-ECI-frame coordinate transformation.
      * @param vx           x coordinate of velocity of body frame with respect ECI frame, resolved
      *                     along ECI-frame axes.
      * @param vy           y coordinate of velocity of body frame with respect ECI frame, resolved
@@ -1864,7 +1864,7 @@ public class ECIKinematicsEstimator {
      * @param position     body position expressed in meters (m) with respect ECI frame,
      *                     resolved along ECI-frame axes.
      * @return a new body kinematics instance.
-     * @throws IllegalArgumentException if provided time interval is negative or coordinated transformation matrices
+     * @throws IllegalArgumentException if provided time interval is negative or coordinates transformation matrices
      *                                  are not ECI frame valid.
      */
     public static ECIKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
