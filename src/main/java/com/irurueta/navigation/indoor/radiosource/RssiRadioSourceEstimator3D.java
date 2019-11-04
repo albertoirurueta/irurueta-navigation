@@ -52,7 +52,7 @@ import java.util.List;
  *
  * @param <S> a {@link RadioSource} type.
  */
-@SuppressWarnings("Duplicates")
+@SuppressWarnings({"Duplicates", "WeakerAccess"})
 public class RssiRadioSourceEstimator3D<S extends RadioSource> extends
         RssiRadioSourceEstimator<S, Point3D> {
 

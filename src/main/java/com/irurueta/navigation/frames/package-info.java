@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.indoor.position;
-
-import com.irurueta.geometry.Point;
 
 /**
- * Listener defining events of RangingAndRssiPositionEstimator.
- *
- * @param <P> a {@link Point} type.
+ * Contains frames to represent position, velocity and attitude
+ * within Earth.
+ * Available frames are defined by
+ * {@link com.irurueta.navigation.frames.FrameType}.
  */
-public interface RangingAndRssiPositionEstimatorListener<P extends Point> extends
-        PositionEstimatorListener<RangingAndRssiPositionEstimator<P>> { }
+package com.irurueta.navigation.frames;

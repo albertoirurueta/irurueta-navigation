@@ -23,6 +23,5 @@ import com.irurueta.geometry.Point;
  *
  * @param <P> a {@link Point} type.
  */
-@SuppressWarnings("WeakerAccess")
 public interface RobustMixedPositionEstimatorListener<P extends Point> extends
         RobustPositionEstimatorListener<RobustMixedPositionEstimator<P>> { }
