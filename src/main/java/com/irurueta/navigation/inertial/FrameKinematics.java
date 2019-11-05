@@ -25,42 +25,42 @@ import com.irurueta.units.AngularSpeedUnit;
 import java.util.Objects;
 
 /**
- * Base class for body kinematics resolved either along ECI or ECEF frames.
+ * Base class for body kinematics with respect and resolved either along ECI, ECEF or NED frames.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
+public abstract class FrameKinematics<T extends FrameKinematics> {
     /**
-     * Specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis, averaged
+     * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      */
     double mFx;
 
     /**
-     * Specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis, averaged
+     * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      */
     double mFy;
 
     /**
-     * Specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis, averaged
+     * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      */
     double mFz;
 
     /**
-     * Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame x-axis, averaged
+     * Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      */
     double mAngularRateX;
 
     /**
-     * Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      */
     double mAngularRateY;
 
     /**
-     * Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame z-axis, averaged
+     * Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame z-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      */
     double mAngularRateZ;
@@ -68,42 +68,48 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     /**
      * Constructor.
      */
-    public ECIorECEFKinematics() {
+    public FrameKinematics() {
     }
 
     /**
      * Constructor.
      *
-     * @param fx Specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis,
+     * @param fx Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fy Specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis,
+     * @param fy Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fz Specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis,
+     * @param fz Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
      */
-    public ECIorECEFKinematics(final double fx, final double fy, final double fz) {
+    public FrameKinematics(final double fx, final double fy, final double fz) {
         setSpecificForceCoordinates(fx, fy, fz);
     }
 
     /**
      * Constructor.
      *
-     * @param fx           Specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis,
-     *                     averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fy           Specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis,
-     *                     averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fz           Specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis,
-     *                     averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param angularRateX Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                     x-axis, averaged over time interval and expressed in radians per second (rad/s).
-     * @param angularRateY Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                     y-axis, averaged over time interval and expressed in radians per second (rad/s).
-     * @param angularRateZ Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                     z-axis, averaged over time interval and expressed in radians per second (rad/s).
+     * @param fx           Specific force of body frame with respect ECI, ECEF or NED frame resolved along
+     *                     body-frame x-axis, averaged over time interval and expressed in meters per
+     *                     squared second (m/s^2).
+     * @param fy           Specific force of body frame with respect ECI, ECEF or NED frame resolved along
+     *                     body-frame y-axis, averaged over time interval and expressed in meters per
+     *                     squared second (m/s^2).
+     * @param fz           Specific force of body frame with respect ECI, ECEF or NED frame resolved along
+     *                     body-frame z-axis, averaged over time interval and expressed in meters per
+     *                     squared second (m/s^2).
+     * @param angularRateX Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about
+     *                     body-frame x-axis, averaged over time interval and expressed in radians per
+     *                     second (rad/s).
+     * @param angularRateY Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about
+     *                     body-frame y-axis, averaged over time interval and expressed in radians per
+     *                     second (rad/s).
+     * @param angularRateZ Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about
+     *                     body-frame z-axis, averaged over time interval and expressed in radians per
+     *                     second (rad/s).
      */
-    public ECIorECEFKinematics(final double fx, final double fy, final double fz,
-                               final double angularRateX, final double angularRateY,
-                               final double angularRateZ) {
+    public FrameKinematics(final double fx, final double fy, final double fz,
+                           final double angularRateX, final double angularRateY,
+                           final double angularRateZ) {
         setSpecificForceCoordinates(fx, fy, fz);
         setAngularRateCoordinates(angularRateX, angularRateY, angularRateZ);
     }
@@ -111,57 +117,57 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     /**
      * Constructor.
      *
-     * @param specificForceX Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
-     *                       x-axis, averaged over time interval.
-     * @param specificForceY Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
-     *                       y-axis, averaged over time interval.
-     * @param specificForceZ Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
-     *                       z-axis, averaged over time interval.
+     * @param specificForceX Specific force of body frame with respect ECI, ECEF or NED frame resolved
+     *                       along body-frame x-axis, averaged over time interval.
+     * @param specificForceY Specific force of body frame with respect ECI, ECEF or NED frame resolved
+     *                       along body-frame y-axis, averaged over time interval.
+     * @param specificForceZ Specific force of body frame with respect ECI, ECEF or NED frame resolved
+     *                       along body-frame z-axis, averaged over time interval.
      */
-    public ECIorECEFKinematics(final Acceleration specificForceX,
-                               final Acceleration specificForceY,
-                               final Acceleration specificForceZ) {
+    public FrameKinematics(final Acceleration specificForceX,
+                           final Acceleration specificForceY,
+                           final Acceleration specificForceZ) {
         setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);
     }
 
     /**
      * Constructor.
      *
-     * @param angularSpeedX Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                      x-axis, averaged over time interval.
-     * @param angularSpeedY Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                      y-axis, averaged over time interval.
-     * @param angularSpeedZ Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                      z-axis, averaged over time interval.
+     * @param angularSpeedX Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                      about body-frame x-axis, averaged over time interval.
+     * @param angularSpeedY Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                      about body-frame y-axis, averaged over time interval.
+     * @param angularSpeedZ Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                      about body-frame z-axis, averaged over time interval.
      */
-    public ECIorECEFKinematics(final AngularSpeed angularSpeedX,
-                               final AngularSpeed angularSpeedY,
-                               final AngularSpeed angularSpeedZ) {
+    public FrameKinematics(final AngularSpeed angularSpeedX,
+                           final AngularSpeed angularSpeedY,
+                           final AngularSpeed angularSpeedZ) {
         setAngularSpeedCoordinates(angularSpeedX, angularSpeedY, angularSpeedZ);
     }
 
     /**
      * Constructor.
      *
-     * @param specificForceX Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
-     *                       x-axis, averaged over time interval.
-     * @param specificForceY Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
-     *                       y-axis, averaged over time interval.
-     * @param specificForceZ Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
-     *                       z-axis, averaged over time interval.
-     * @param angularSpeedX Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                      x-axis, averaged over time interval.
-     * @param angularSpeedY Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                      y-axis, averaged over time interval.
-     * @param angularSpeedZ Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
-     *                      z-axis, averaged over time interval.
+     * @param specificForceX Specific force of body frame with respect ECI, ECEF or NED frame resolved
+     *                       along body-frame x-axis, averaged over time interval.
+     * @param specificForceY Specific force of body frame with respect ECI, ECEF or NED frame resolved
+     *                       along body-frame y-axis, averaged over time interval.
+     * @param specificForceZ Specific force of body frame with respect ECI, ECEF or NED frame resolved
+     *                       along body-frame z-axis, averaged over time interval.
+     * @param angularSpeedX Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                      about body-frame x-axis, averaged over time interval.
+     * @param angularSpeedY Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                      about body-frame y-axis, averaged over time interval.
+     * @param angularSpeedZ Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
+     *                      about body-frame z-axis, averaged over time interval.
      */
-    public ECIorECEFKinematics(final Acceleration specificForceX,
-                          final Acceleration specificForceY,
-                          final Acceleration specificForceZ,
-                          final AngularSpeed angularSpeedX,
-                          final AngularSpeed angularSpeedY,
-                          final AngularSpeed angularSpeedZ) {
+    public FrameKinematics(final Acceleration specificForceX,
+                           final Acceleration specificForceY,
+                           final Acceleration specificForceZ,
+                           final AngularSpeed angularSpeedX,
+                           final AngularSpeed angularSpeedY,
+                           final AngularSpeed angularSpeedZ) {
         setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);
         setAngularSpeedCoordinates(angularSpeedX, angularSpeedY, angularSpeedZ);
     }
@@ -171,79 +177,79 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
      *
      * @param input instance to copy data from.
      */
-    public ECIorECEFKinematics(final T input) {
+    public FrameKinematics(final T input) {
         copyFrom(input);
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @return specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis.
+     * @return specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis.
      */
     public double getFx() {
         return mFx;
     }
 
     /**
-     * Sets specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis, averaged
+     * Sets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @param fx specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis.
+     * @param fx specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis.
      */
     public void setFx(final double fx) {
         mFx = fx;
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @return specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis.
+     * @return specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis.
      */
     public double getFy() {
         return mFy;
     }
 
     /**
-     * Sets specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis, averaged
+     * Sets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @param fy specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis.
+     * @param fy specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis.
      */
     public void setFy(final double fy) {
         mFy = fy;
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @return specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis.
+     * @return specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis.
      */
     public double getFz() {
         return mFz;
     }
 
     /**
-     * Sets specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis, averaged
+     * Sets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @param fz specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis.
+     * @param fz specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis.
      */
     public void setFz(final double fz) {
         mFz = fz;
     }
 
     /**
-     * Sets specific force coordinates of body frame with respect ECI or ECEF frame resolved along body-frame
+     * Sets specific force coordinates of body frame with respect ECI, ECEF or NED frame resolved along body-frame
      * axes, averaged over time interval and expressed in meters per squared second (m/s^2).
      *
-     * @param fx Specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis,
+     * @param fx Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fy Specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis,
+     * @param fy Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fz Specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis,
+     * @param fz Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
      */
     public void setSpecificForceCoordinates(final double fx, final double fy, final double fz) {
@@ -253,10 +259,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval.
      *
-     * @param result instance where specific force of body frame with respect ECI or ECEF frame resolved along
+     * @param result instance where specific force of body frame with respect ECI, ECEF or NED frame resolved along
      *               body-frame x-axis will be stored.
      */
     public void getSpecificForceX(final Acceleration result) {
@@ -265,10 +271,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval.
      *
-     * @return a new instance with specific force of body frame with respect ECI or ECEF frame resolved along
+     * @return a new instance with specific force of body frame with respect ECI, ECEF or NED frame resolved along
      * body-frame x-axis.
      */
     public Acceleration getSpecificForceX() {
@@ -276,10 +282,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets specific force of body frame with respect ECI or ECEF frame resolved along body-frame x-axis, averaged
+     * Sets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval.
      *
-     * @param specificForceX specific force of body frame with respect ECI or ECEF frame resolved along
+     * @param specificForceX specific force of body frame with respect ECI, ECEF or NED frame resolved along
      *                       body-frame x-axis that will be set.
      */
     public void setSpecificForceX(final Acceleration specificForceX) {
@@ -289,10 +295,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis, averaged
      * over time interval.
      *
-     * @param result instance where specific force of body frame with respect ECI or ECEF frame resolved along
+     * @param result instance where specific force of body frame with respect ECI, ECEF or NED frame resolved along
      *               body-frame y-axis will be stored.
      */
     public void getSpecificForceY(final Acceleration result) {
@@ -301,10 +307,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame y-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis, averaged
      * over time interval.
      *
-     * @return a new instance with specific force of body frame with respect ECI or ECEF frame resolved along
+     * @return a new instance with specific force of body frame with respect ECI, ECEF or NED frame resolved along
      * body-frame y-axis.
      */
     public Acceleration getSpecificForceY() {
@@ -312,10 +318,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets specific force of body frame with respect ECI or ECEF frame resolved along body frame y-axis, averaged
+     * Sets specific force of body frame with respect ECI, ECEF or NED frame resolved along body frame y-axis, averaged
      * over time interval.
      *
-     * @param specificForceY specific force of body frame with respect ECI or ECEF frame resolved along
+     * @param specificForceY specific force of body frame with respect ECI, ECEF or NED frame resolved along
      *                       body-frame y-axis that will be set.
      */
     public void setSpecificForceY(final Acceleration specificForceY) {
@@ -325,10 +331,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval.
      *
-     * @param result instance where specific force of body frame with respect ECI or ECEF frame resolved along
+     * @param result instance where specific force of body frame with respect ECI, ECEF or NED frame resolved along
      *               body-frame z-axis will be stored.
      */
     public void getSpecificForceZ(final Acceleration result) {
@@ -337,10 +343,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis, averaged
+     * Gets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval.
      *
-     * @return a new instance with specific force of body frame with respect ECI or ECEF frame resolved along
+     * @return a new instance with specific force of body frame with respect ECI, ECEF or NED frame resolved along
      * body-frame z-axis.
      */
     public Acceleration getSpecificForceZ() {
@@ -348,10 +354,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets specific force of body frame with respect ECI or ECEF frame resolved along body-frame z-axis, averaged
+     * Sets specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval.
      *
-     * @param specificForceZ specific force of body frame with respect ECI or ECEF frame resolved along
+     * @param specificForceZ specific force of body frame with respect ECI, ECEF or NED frame resolved along
      *                       body-frame z-axis that will be set.
      */
     public void setSpecificForceZ(final Acceleration specificForceZ) {
@@ -361,14 +367,14 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets specific force coordinates of body frame with respect ECI or ECEF frame resolved along body-frame axes,
+     * Sets specific force coordinates of body frame with respect ECI, ECEF or NED frame resolved along body-frame axes,
      * averaged over time interval.
      *
-     * @param specificForceX Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
+     * @param specificForceX Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame
      *                       x-axis, averaged over time interval.
-     * @param specificForceY Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
+     * @param specificForceY Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame
      *                       y-axis, averaged over time interval.
-     * @param specificForceZ Specific force of body frame with respect ECI or ECEF frame resolved along body-frame
+     * @param specificForceZ Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame
      *                       z-axis, averaged over time interval.
      */
     public void setSpecificForceCoordinates(final Acceleration specificForceX,
@@ -380,20 +386,20 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame x-axis, averaged
+     * Gets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      *
-     * @return angular rate of body frame with respect ECI or ECEF frame resolved about body-frame x-axis.
+     * @return angular rate of body frame with respect ECI, ECEF or NED frame resolved about body-frame x-axis.
      */
     public double getAngularRateX() {
         return mAngularRateX;
     }
 
     /**
-     * Sets angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame x-axis,
+     * Sets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis,
      * over time interval and expressed in radians per second (rad/s).
      *
-     * @param angularRateX angular rate of body frame with respect ECI or ECEF frame resolved
+     * @param angularRateX angular rate of body frame with respect ECI, ECEF or NED frame resolved
      *                     about body-frame x-axis.
      */
     public void setAngularRateX(final double angularRateX) {
@@ -401,20 +407,20 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Gets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      *
-     * @return angular rate of body frame with respect ECI or ECEF frame resolved about body-frame y-axis.
+     * @return angular rate of body frame with respect ECI, ECEF or NED frame resolved about body-frame y-axis.
      */
     public double getAngularRateY() {
         return mAngularRateY;
     }
 
     /**
-     * Sets angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Sets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      *
-     * @param angularRateY angular rate of body frame with respect ECI or ECEF frame resolved
+     * @param angularRateY angular rate of body frame with respect ECI, ECEF or NED frame resolved
      *                     about body-frame y-axis.
      */
     public void setAngularRateY(final double angularRateY) {
@@ -422,20 +428,20 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame z-axis, averaged
+     * Gets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame z-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      *
-     * @return angular rate of body frame with respect ECI or ECEF frame resolved about body-frame z-axis.
+     * @return angular rate of body frame with respect ECI, ECEF or NED frame resolved about body-frame z-axis.
      */
     public double getAngularRateZ() {
         return mAngularRateZ;
     }
 
     /**
-     * Sets angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame z-axis, averaged
+     * Sets angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame z-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      *
-     * @param angularRateZ angular rate of body frame with respect ECI or ECEF frame resolved
+     * @param angularRateZ angular rate of body frame with respect ECI, ECEF or NED frame resolved
      *                     about body-frame z-axis.
      */
     public void setAngularRateZ(final double angularRateZ) {
@@ -443,14 +449,14 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets angular rate coordinates of body frame with respect ECI or ECEF frame, resolved about body-frame axes,
+     * Sets angular rate coordinates of body frame with respect ECI, ECEF or NED frame, resolved about body-frame axes,
      * averaged over time interval and expressed in radians per second (rad/s).
      *
-     * @param angularRateX Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame
+     * @param angularRateX Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame
      *                     x-axis, averaged over time interval and expressed in radians per second (rad/s).
-     * @param angularRateY Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame
+     * @param angularRateY Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame
      *                     y-axis, averaged over time interval and expressed in radians per second (rad/s).
-     * @param angularRateZ Angular rate of body frame with respect ECI or ECEF frame, resolved about body-frame
+     * @param angularRateZ Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame
      *                     z-axis, averaged over time interval and expressed in radians per second (rad/s).
      */
     public void setAngularRateCoordinates(final double angularRateX,
@@ -461,10 +467,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame x-axis, averaged
+     * Gets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval.
      *
-     * @param result instance where angular speed of body frame with respect ECI or ECEF frame resolved about
+     * @param result instance where angular speed of body frame with respect ECI, ECEF or NED frame resolved about
      *               body-frame x-axis will be stored.
      */
     public void getAngularSpeedX(final AngularSpeed result) {
@@ -473,10 +479,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame x-axis, averaged
+     * Gets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval.
      *
-     * @return a new instance of angular speed of body frame with respect ECI or ECEF frame resolved about
+     * @return a new instance of angular speed of body frame with respect ECI, ECEF or NED frame resolved about
      * body-frame X-axis.
      */
     public AngularSpeed getAngularSpeedX() {
@@ -484,10 +490,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame x-axis, averaged
+     * Sets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval.
      *
-     * @param angularSpeedX angular speed of body frame with respect ECI or ECEF frame resolved about body-frame
+     * @param angularSpeedX angular speed of body frame with respect ECI, ECEF or NED frame resolved about body-frame
      *                      x-axis that will be set.
      */
     public void setAngularSpeedX(final AngularSpeed angularSpeedX) {
@@ -497,10 +503,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Gets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval.
      *
-     * @param result instance where angular speed of body frame with respect ECI or ECEF frame resolved about
+     * @param result instance where angular speed of body frame with respect ECI, ECEF or NED frame resolved about
      *               body-frame y-axis will be stored.
      */
     public void getAngularSpeedY(final AngularSpeed result) {
@@ -509,10 +515,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Gets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval.
      *
-     * @return a new instance of angular speed of body frame with respect ECI or ECEF frame resolved about
+     * @return a new instance of angular speed of body frame with respect ECI, ECEF or NED frame resolved about
      * body-frame y-axis.
      */
     public AngularSpeed getAngularSpeedY() {
@@ -520,10 +526,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Sets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval.
      *
-     * @param angularSpeedY angular speed of body frame with respect ECI or ECEF frame resolved about body-frame
+     * @param angularSpeedY angular speed of body frame with respect ECI, ECEF or NED frame resolved about body-frame
      *                      y-axis that will be set.
      */
     public void setAngularSpeedY(final AngularSpeed angularSpeedY) {
@@ -533,10 +539,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame z-axis, averaged
+     * Gets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame z-axis, averaged
      * over time interval.
      *
-     * @param result instance where angular speed of body frame with respect ECI or ECEF frame resolved about
+     * @param result instance where angular speed of body frame with respect ECI, ECEF or NED frame resolved about
      *               body-frame z-axis will be stored.
      */
     public void getAngularSpeedZ(final AngularSpeed result) {
@@ -545,10 +551,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Gets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame z-axis, averaged
+     * Gets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame z-axis, averaged
      * over time interval.
      *
-     * @return a new instance of angular speed of body frame with respect ECI or ECEF frame resolved about
+     * @return a new instance of angular speed of body frame with respect ECI, ECEF or NED frame resolved about
      * body-frame z-axis.
      */
     public AngularSpeed getAngularSpeedZ() {
@@ -556,10 +562,10 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame y-axis, averaged
+     * Sets angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval.
      *
-     * @param angularSpeedZ angular speed of body frame with respect ECI or ECEF frame resolved about body-frame
+     * @param angularSpeedZ angular speed of body frame with respect ECI, ECEF or NED frame resolved about body-frame
      *                      z-axis, that will be set.
      */
     public void setAngularSpeedZ(final AngularSpeed angularSpeedZ) {
@@ -569,14 +575,14 @@ public abstract class ECIorECEFKinematics<T extends ECIorECEFKinematics> {
     }
 
     /**
-     * Sets angular speed coordinates of body frame with respect ECI or ECEF frame, resolved about body-frame axes,
+     * Sets angular speed coordinates of body frame with respect ECI, ECEF or NED frame, resolved about body-frame axes,
      * averaged over time interval.
      *
-     * @param angularSpeedX Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
+     * @param angularSpeedX Angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame
      *                      x-axis, averaged over time interval.
-     * @param angularSpeedY Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
+     * @param angularSpeedY Angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame
      *                      y-axis, averaged over time interval.
-     * @param angularSpeedZ Angular speed of body frame with respect ECI or ECEF frame, resolved about body-frame
+     * @param angularSpeedZ Angular speed of body frame with respect ECI, ECEF or NED frame, resolved about body-frame
      *                      z-axis, averaged over time interval.
      */
     public void setAngularSpeedCoordinates(final AngularSpeed angularSpeedX,

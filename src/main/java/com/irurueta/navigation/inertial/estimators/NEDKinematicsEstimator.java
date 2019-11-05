@@ -21,8 +21,8 @@ import com.irurueta.algebra.Utils;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECEFKinematics;
 import com.irurueta.navigation.inertial.NEDGravity;
+import com.irurueta.navigation.inertial.NEDKinematics;
 import com.irurueta.navigation.inertial.RadiiOfCurvature;
 import com.irurueta.units.*;
 
@@ -33,7 +33,6 @@ import com.irurueta.units.*;
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes
  */
-@SuppressWarnings("WeakerAccess")
 public class NEDKinematicsEstimator {
 
     /**
@@ -58,22 +57,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -90,29 +89,29 @@ public class NEDKinematicsEstimator {
                          final double oldVn, final double oldVe, final double oldVd,
                          final double latitude, final double height,
                          final double oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -128,23 +127,23 @@ public class NEDKinematicsEstimator {
                          final double oldVn, final double oldVe, final double oldVd,
                          final double latitude, final double height,
                          final double oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -157,23 +156,23 @@ public class NEDKinematicsEstimator {
                          final CoordinateTransformation oldC,
                          final double oldVn, final double oldVe, final double oldVd,
                          final double oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -186,22 +185,22 @@ public class NEDKinematicsEstimator {
                          final CoordinateTransformation oldC,
                          final double oldVn, final double oldVe, final double oldVd,
                          final double oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -214,22 +213,22 @@ public class NEDKinematicsEstimator {
                          final CoordinateTransformation c,
                          final double vn, final double ve, final double vd,
                          final double latitude, final double height,
-                         final NEDFrame oldFrame, final ECEFKinematics result) {
+                         final NEDFrame oldFrame, final NEDKinematics result) {
         estimateKinematics(timeInterval, c, vn, ve, vd, latitude, height, oldFrame,
                 result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -242,14 +241,14 @@ public class NEDKinematicsEstimator {
                          final CoordinateTransformation c,
                          final double vn, final double ve, final double vd,
                          final double latitude, final double height,
-                         final NEDFrame oldFrame, final ECEFKinematics result) {
+                         final NEDFrame oldFrame, final NEDKinematics result) {
         estimateKinematics(timeInterval, c, vn, ve, vd, latitude, height, oldFrame,
                 result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -259,13 +258,13 @@ public class NEDKinematicsEstimator {
      */
     public void estimate(final double timeInterval,
                          final NEDFrame frame, final NEDFrame oldFrame,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, frame, oldFrame, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -275,28 +274,28 @@ public class NEDKinematicsEstimator {
      */
     public void estimate(final Time timeInterval,
                          final NEDFrame frame, final NEDFrame oldFrame,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, frame, oldFrame, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -313,29 +312,29 @@ public class NEDKinematicsEstimator {
                          final Speed oldVn, final Speed oldVe, final Speed oldVd,
                          final double latitude, final double height,
                          final double oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -352,29 +351,29 @@ public class NEDKinematicsEstimator {
                          final Speed oldVn, final Speed oldVe, final Speed oldVd,
                          final double latitude, final double height,
                          final double oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -391,29 +390,29 @@ public class NEDKinematicsEstimator {
                          final double oldVn, final double oldVe, final double oldVd,
                          final Angle latitude, final double height,
                          final Angle oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -430,29 +429,29 @@ public class NEDKinematicsEstimator {
                          final double oldVn, final double oldVe, final double oldVd,
                          final Angle latitude, final double height,
                          final Angle oldLatitude, final double oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -469,29 +468,29 @@ public class NEDKinematicsEstimator {
                          final double oldVn, final double oldVe, final double oldVd,
                          final double latitude, final Distance height,
                          final double oldLatitude, final Distance oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -508,29 +507,29 @@ public class NEDKinematicsEstimator {
                          final double oldVn, final double oldVe, final double oldVd,
                          final double latitude, final Distance height,
                          final double oldLatitude, final Distance oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -547,29 +546,29 @@ public class NEDKinematicsEstimator {
                          final Speed oldVn, final Speed oldVe, final Speed oldVd,
                          final Angle latitude, final Distance height,
                          final Angle oldLatitude, final Distance oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -586,29 +585,29 @@ public class NEDKinematicsEstimator {
                          final Speed oldVn, final Speed oldVe, final Speed oldVd,
                          final Angle latitude, final Distance height,
                          final Angle oldLatitude, final Distance oldHeight,
-                         final ECEFKinematics result) {
+                         final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -618,35 +617,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final double vn, final double ve, final double vd,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final double latitude, final double height,
-                                               final double oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vn, final double ve, final double vd,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final double latitude, final double height,
+                                              final double oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -656,29 +655,29 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final double vn, final double ve, final double vd,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final double latitude, final double height,
-                                               final double oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vn, final double ve, final double vd,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final double latitude, final double height,
+                                              final double oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -686,27 +685,27 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final NEDFrame frame,
-                                               final CoordinateTransformation oldC,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final double oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final NEDFrame frame,
+                                              final CoordinateTransformation oldC,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final double oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -714,26 +713,26 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final NEDFrame frame,
-                                               final CoordinateTransformation oldC,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final double oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final NEDFrame frame,
+                                              final CoordinateTransformation oldC,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final double oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -742,26 +741,26 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final CoordinateTransformation c,
-                                               final double vn, final double ve, final double vd,
-                                               final double latitude, final double height,
-                                               final NEDFrame oldFrame) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final CoordinateTransformation c,
+                                              final double vn, final double ve, final double vd,
+                                              final double latitude, final double height,
+                                              final NEDFrame oldFrame) {
         return estimateKinematicsAndReturnNew(timeInterval, c, vn, ve, vd, latitude, height,
                 oldFrame);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -770,18 +769,18 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final CoordinateTransformation c,
-                                               final double vn, final double ve, final double vd,
-                                               final double latitude, final double height,
-                                               final NEDFrame oldFrame) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final CoordinateTransformation c,
+                                              final double vn, final double ve, final double vd,
+                                              final double latitude, final double height,
+                                              final NEDFrame oldFrame) {
         return estimateKinematicsAndReturnNew(timeInterval, c, vn, ve, vd, latitude, height,
                 oldFrame);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -789,15 +788,15 @@ public class NEDKinematicsEstimator {
      * @return a new body kinematics instance.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final NEDFrame frame,
-                                               final NEDFrame oldFrame) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final NEDFrame frame,
+                                              final NEDFrame oldFrame) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldFrame);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -805,30 +804,30 @@ public class NEDKinematicsEstimator {
      * @return a new body kinematics instance.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final NEDFrame frame,
-                                               final NEDFrame oldFrame) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final NEDFrame frame,
+                                              final NEDFrame oldFrame) {
         return estimateKinematicsAndReturnNew(timeInterval, frame, oldFrame);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -838,35 +837,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final Speed vn, final Speed ve, final Speed vd,
-                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                               final double latitude, final double height,
-                                               final double oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final Speed vn, final Speed ve, final Speed vd,
+                                              final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                              final double latitude, final double height,
+                                              final double oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -876,35 +875,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final Speed vn, final Speed ve, final Speed vd,
-                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                               final double latitude, final double height,
-                                               final double oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final Speed vn, final Speed ve, final Speed vd,
+                                              final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                              final double latitude, final double height,
+                                              final double oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -914,35 +913,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final double vn, final double ve, final double vd,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final Angle latitude, final double height,
-                                               final Angle oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vn, final double ve, final double vd,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final Angle latitude, final double height,
+                                              final Angle oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -952,35 +951,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final double vn, final double ve, final double vd,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final Angle latitude, final double height,
-                                               final Angle oldLatitude, final double oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vn, final double ve, final double vd,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final Angle latitude, final double height,
+                                              final Angle oldLatitude, final double oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -990,35 +989,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final double vn, final double ve, final double vd,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final double latitude, final Distance height,
-                                               final double oldLatitude, final Distance oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vn, final double ve, final double vd,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final double latitude, final Distance height,
+                                              final double oldLatitude, final Distance oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -1028,35 +1027,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final double vn, final double ve, final double vd,
-                                               final double oldVn, final double oldVe, final double oldVd,
-                                               final double latitude, final Distance height,
-                                               final double oldLatitude, final Distance oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final double vn, final double ve, final double vd,
+                                              final double oldVn, final double oldVe, final double oldVd,
+                                              final double latitude, final Distance height,
+                                              final double oldLatitude, final Distance oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -1066,35 +1065,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final double timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final Speed vn, final Speed ve, final Speed vd,
-                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                               final Angle latitude, final Distance height,
-                                               final Angle oldLatitude, final Distance oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final double timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final Speed vn, final Speed ve, final Speed vd,
+                                              final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                              final Angle latitude, final Distance height,
+                                              final Angle oldLatitude, final Distance oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -1104,35 +1103,35 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public ECEFKinematics estimateAndReturnNew(final Time timeInterval,
-                                               final CoordinateTransformation c,
-                                               final CoordinateTransformation oldC,
-                                               final Speed vn, final Speed ve, final Speed vd,
-                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                               final Angle latitude, final Distance height,
-                                               final Angle oldLatitude, final Distance oldHeight) {
+    public NEDKinematics estimateAndReturnNew(final Time timeInterval,
+                                              final CoordinateTransformation c,
+                                              final CoordinateTransformation oldC,
+                                              final Speed vn, final Speed ve, final Speed vd,
+                                              final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                              final Angle latitude, final Distance height,
+                                              final Angle oldLatitude, final Distance oldHeight) {
         return estimateKinematicsAndReturnNew(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1149,7 +1148,7 @@ public class NEDKinematicsEstimator {
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final double latitude, final double height,
                                           final double oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
 
         if (timeInterval < 0.0
                 || !NEDFrame.isValidCoordinateTransformation(c)
@@ -1159,17 +1158,16 @@ public class NEDKinematicsEstimator {
 
         if (timeInterval > 0.0) {
             try {
-                // From (2.123), determine the angular rate of the ECEF frame
+                // From (2.123), determine the angular rate of the NED frame
                 // with respect the ECI frame, resolved about NED
                 final Matrix omegaIen = new Matrix(ROWS, 1);
                 omegaIen.setElementAtIndex(0,
                         EARTH_ROTATION_RATE * Math.cos(oldLatitude));
-                omegaIen.setElementAtIndex(1, 0.0);
                 omegaIen.setElementAtIndex(2,
                         -EARTH_ROTATION_RATE * Math.sin(oldLatitude));
 
                 // From (5.44), determine the angular rate of the NED frame
-                // with respect the ECEF frame, resolved about NED
+                // with respect the NED frame, resolved about NED
                 final RadiiOfCurvature oldRadiiOfCurvature = RadiiOfCurvatureEstimator
                         .estimateRadiiOfCurvatureAndReturnNew(oldLatitude);
                 final double oldRn = oldRadiiOfCurvature.getRn();
@@ -1235,7 +1233,7 @@ public class NEDKinematicsEstimator {
                 final double angularRateY = alphaIbb.getElementAtIndex(1) / timeInterval;
                 final double angularRateZ = alphaIbb.getElementAtIndex(2) / timeInterval;
 
-                // Calculate the specific force resolved about ECEF-frame axes
+                // Calculate the specific force resolved about NED-frame axes
                 // From (5.54)
                 final Matrix tmp2 = new Matrix(ROWS, 1);
                 tmp2.setElementAtIndex(0, (vn - oldVn) / timeInterval);
@@ -1257,7 +1255,7 @@ public class NEDKinematicsEstimator {
 
                 tmp2.subtract(g);
                 tmp2.add(skew2);
-                // tmp2 now contains specific force resolved about ECEF (fIbn)
+                // tmp2 now contains specific force resolved about NED (fIbn)
 
                 // Calculate the average body-to-NED coordinate transformation
                 // matrix over the update interval using (5.84) and (5.86)
@@ -1314,22 +1312,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1345,23 +1343,23 @@ public class NEDKinematicsEstimator {
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final double latitude, final double height,
                                           final double oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -1374,7 +1372,7 @@ public class NEDKinematicsEstimator {
                                           final CoordinateTransformation oldC,
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final double oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(timeInterval, frame.getCoordinateTransformation(), oldC,
                 frame.getVn(), frame.getVe(), frame.getVd(), oldVn, oldVe, oldVd,
                 frame.getLatitude(), frame.getHeight(), oldLatitude, oldHeight, result);
@@ -1382,16 +1380,16 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -1404,22 +1402,22 @@ public class NEDKinematicsEstimator {
                                           final CoordinateTransformation oldC,
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final double oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1432,7 +1430,7 @@ public class NEDKinematicsEstimator {
                                           final CoordinateTransformation c,
                                           final double vn, final double ve, final double vd,
                                           final double latitude, final double height,
-                                          final NEDFrame oldFrame, final ECEFKinematics result) {
+                                          final NEDFrame oldFrame, final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldFrame.getCoordinateTransformation(),
                 vn, ve, vd, oldFrame.getVn(), oldFrame.getVe(), oldFrame.getVd(),
                 latitude, height, oldFrame.getLatitude(), oldFrame.getHeight(), result);
@@ -1440,15 +1438,15 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1461,14 +1459,14 @@ public class NEDKinematicsEstimator {
                                           final CoordinateTransformation c,
                                           final double vn, final double ve, final double vd,
                                           final double latitude, final double height,
-                                          final NEDFrame oldFrame, final ECEFKinematics result) {
+                                          final NEDFrame oldFrame, final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), c, vn, ve, vd, latitude, height,
                 oldFrame, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -1478,7 +1476,7 @@ public class NEDKinematicsEstimator {
      */
     public static void estimateKinematics(final double timeInterval,
                                           final NEDFrame frame, final NEDFrame oldFrame,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(timeInterval, frame.getCoordinateTransformation(),
                 frame.getVn(), frame.getVe(), frame.getVd(),
                 frame.getLatitude(), frame.getHeight(), oldFrame, result);
@@ -1486,7 +1484,7 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -1496,28 +1494,28 @@ public class NEDKinematicsEstimator {
      */
     public static void estimateKinematics(final Time timeInterval,
                                           final NEDFrame frame, final NEDFrame oldFrame,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), frame, oldFrame, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1534,7 +1532,7 @@ public class NEDKinematicsEstimator {
                                           final Speed oldVn, final Speed oldVe, final Speed oldVd,
                                           final double latitude, final double height,
                                           final double oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, convertSpeed(vn), convertSpeed(ve),
                 convertSpeed(vd), convertSpeed(oldVn), convertSpeed(oldVe),
                 convertSpeed(oldVd), latitude, height, oldLatitude, oldHeight, result);
@@ -1542,22 +1540,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1574,29 +1572,29 @@ public class NEDKinematicsEstimator {
                                           final Speed oldVn, final Speed oldVe, final Speed oldVd,
                                           final double latitude, final double height,
                                           final double oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -1613,7 +1611,7 @@ public class NEDKinematicsEstimator {
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final Angle latitude, final double height,
                                           final Angle oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 convertAngle(latitude), height, convertAngle(oldLatitude), oldHeight,
                 result);
@@ -1621,22 +1619,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -1653,29 +1651,29 @@ public class NEDKinematicsEstimator {
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final Angle latitude, final double height,
                                           final Angle oldLatitude, final double oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -1692,7 +1690,7 @@ public class NEDKinematicsEstimator {
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final double latitude, final Distance height,
                                           final double oldLatitude, final Distance oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, convertDistance(height), oldLatitude,
                 convertDistance(oldHeight), result);
@@ -1700,22 +1698,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -1732,29 +1730,29 @@ public class NEDKinematicsEstimator {
                                           final double oldVn, final double oldVe, final double oldVd,
                                           final double latitude, final Distance height,
                                           final double oldLatitude, final Distance oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), c, oldC, vn, ve, vd, oldVn,
                 oldVe, oldVd, latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -1771,7 +1769,7 @@ public class NEDKinematicsEstimator {
                                           final Speed oldVn, final Speed oldVe, final Speed oldVd,
                                           final Angle latitude, final Distance height,
                                           final Angle oldLatitude, final Distance oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(timeInterval, c, oldC, convertSpeed(vn), convertSpeed(ve),
                 convertSpeed(vd), convertSpeed(oldVn), convertSpeed(oldVe),
                 convertSpeed(oldVd), convertAngle(latitude), convertDistance(height),
@@ -1780,22 +1778,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -1812,29 +1810,29 @@ public class NEDKinematicsEstimator {
                                           final Speed oldVn, final Speed oldVe, final Speed oldVd,
                                           final Angle latitude, final Distance height,
                                           final Angle oldLatitude, final Distance oldHeight,
-                                          final ECEFKinematics result) {
+                                          final NEDKinematics result) {
         estimateKinematics(convertTime(timeInterval), c, oldC, vn, ve, vd, oldVn, oldVe,
                 oldVd, latitude, height, oldLatitude, oldHeight, result);
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1844,14 +1842,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final double latitude, final double height,
-                                                                final double oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final double latitude, final double height,
+                                                               final double oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -1859,22 +1857,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1884,14 +1882,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final double latitude, final double height,
-                                                                final double oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final double latitude, final double height,
+                                                               final double oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -1899,16 +1897,16 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -1916,12 +1914,12 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final NEDFrame frame,
-                                                                final CoordinateTransformation oldC,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final double oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final NEDFrame frame,
+                                                               final CoordinateTransformation oldC,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final double oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, result);
         return result;
@@ -1929,16 +1927,16 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param oldLatitude  previous latitude expressed in radians (rad).
      * @param oldHeight    previous height expressed in meters (m).
@@ -1946,12 +1944,12 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final NEDFrame frame,
-                                                                final CoordinateTransformation oldC,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final double oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final NEDFrame frame,
+                                                               final CoordinateTransformation oldC,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final double oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, result);
         return result;
@@ -1959,15 +1957,15 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -1976,27 +1974,27 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double latitude, final double height,
-                                                                final NEDFrame oldFrame) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double latitude, final double height,
+                                                               final NEDFrame oldFrame) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, vn, ve, vd, latitude, height, oldFrame, result);
         return result;
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -2005,12 +2003,12 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double latitude, final double height,
-                                                                final NEDFrame oldFrame) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double latitude, final double height,
+                                                               final NEDFrame oldFrame) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, vn, ve, vd, latitude, height, oldFrame,
                 result);
         return result;
@@ -2018,7 +2016,7 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -2026,17 +2024,17 @@ public class NEDKinematicsEstimator {
      * @return a new body kinematics instance.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final NEDFrame frame,
-                                                                final NEDFrame oldFrame) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final NEDFrame frame,
+                                                               final NEDFrame oldFrame) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, frame, oldFrame, result);
         return result;
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param frame        NED frame containing current position, velocity and body-to-NED coordinate transformation.
@@ -2044,32 +2042,32 @@ public class NEDKinematicsEstimator {
      * @return a new body kinematics instance.
      * @throws IllegalArgumentException if provided time interval is negative.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final NEDFrame frame,
-                                                                final NEDFrame oldFrame) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final NEDFrame frame,
+                                                               final NEDFrame oldFrame) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, frame, oldFrame, result);
         return result;
     }
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -2079,14 +2077,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final Speed vn, final Speed ve, final Speed vd,
-                                                                final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                                                final double latitude, final double height,
-                                                                final double oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final Speed vn, final Speed ve, final Speed vd,
+                                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                                               final double latitude, final double height,
+                                                               final double oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2094,22 +2092,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height expressed in meters (m).
@@ -2119,14 +2117,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final Speed vn, final Speed ve, final Speed vd,
-                                                                final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                                                final double latitude, final double height,
-                                                                final double oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final Speed vn, final Speed ve, final Speed vd,
+                                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                                               final double latitude, final double height,
+                                                               final double oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2134,22 +2132,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -2159,14 +2157,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final Angle latitude, final double height,
-                                                                final Angle oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final Angle latitude, final double height,
+                                                               final Angle oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2174,22 +2172,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude.
      * @param height       current height expressed in meters (m).
@@ -2199,14 +2197,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final Angle latitude, final double height,
-                                                                final Angle oldLatitude, final double oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final Angle latitude, final double height,
+                                                               final Angle oldLatitude, final double oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2214,22 +2212,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -2239,14 +2237,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final double latitude, final Distance height,
-                                                                final double oldLatitude, final Distance oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final double latitude, final Distance height,
+                                                               final double oldLatitude, final Distance oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2254,22 +2252,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down and expressed in meters per second (m/s).
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down and expressed in meters per second (m/s).
      * @param latitude     current latitude expressed in radians (rad).
      * @param height       current height.
@@ -2279,14 +2277,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final double vn, final double ve, final double vd,
-                                                                final double oldVn, final double oldVe, final double oldVd,
-                                                                final double latitude, final Distance height,
-                                                                final double oldLatitude, final Distance oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final double vn, final double ve, final double vd,
+                                                               final double oldVn, final double oldVe, final double oldVd,
+                                                               final double latitude, final Distance height,
+                                                               final double oldLatitude, final Distance oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2294,22 +2292,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -2319,14 +2317,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final double timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final Speed vn, final Speed ve, final Speed vd,
-                                                                final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                                                final Angle latitude, final Distance height,
-                                                                final Angle oldLatitude, final Distance oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final double timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final Speed vn, final Speed ve, final Speed vd,
+                                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                                               final Angle latitude, final Distance height,
+                                                               final Angle oldLatitude, final Distance oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;
@@ -2334,22 +2332,22 @@ public class NEDKinematicsEstimator {
 
     /**
      * Estimates body kinematics (specific force applied to a body and its angular rates)
-     * with respect ECEF frame and resolved along body-frame axes, averaged over time interval.
+     * with respect NED frame and resolved along body-frame axes, averaged over time interval.
      *
      * @param timeInterval time interval between epochs.
      * @param c            body-to-NED coordinate transformation.
      * @param oldC         previous body-to-NED coordinate transformation.
-     * @param vn           north coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vn           north coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param ve           east coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param ve           east coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param vd           down coordinate of velocity of body frame with respect ECEF frame, resolved along
+     * @param vd           down coordinate of velocity of body frame with respect NED frame, resolved along
      *                     north, east, and down.
-     * @param oldVn        north coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVn        north coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVe        east coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVe        east coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
-     * @param oldVd        down coordinate of previous velocity of body frame with respect ECEF frame, resolved
+     * @param oldVd        down coordinate of previous velocity of body frame with respect NED frame, resolved
      *                     along north, east, and down.
      * @param latitude     current latitude.
      * @param height       current height.
@@ -2359,14 +2357,14 @@ public class NEDKinematicsEstimator {
      * @throws IllegalArgumentException if provided time interval is negative or coordinate transformation
      *                                  matrices are not NED frame valid.
      */
-    public static ECEFKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
-                                                                final CoordinateTransformation c,
-                                                                final CoordinateTransformation oldC,
-                                                                final Speed vn, final Speed ve, final Speed vd,
-                                                                final Speed oldVn, final Speed oldVe, final Speed oldVd,
-                                                                final Angle latitude, final Distance height,
-                                                                final Angle oldLatitude, final Distance oldHeight) {
-        final ECEFKinematics result = new ECEFKinematics();
+    public static NEDKinematics estimateKinematicsAndReturnNew(final Time timeInterval,
+                                                               final CoordinateTransformation c,
+                                                               final CoordinateTransformation oldC,
+                                                               final Speed vn, final Speed ve, final Speed vd,
+                                                               final Speed oldVn, final Speed oldVe, final Speed oldVd,
+                                                               final Angle latitude, final Distance height,
+                                                               final Angle oldLatitude, final Distance oldHeight) {
+        final NEDKinematics result = new NEDKinematics();
         estimateKinematics(timeInterval, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight, result);
         return result;

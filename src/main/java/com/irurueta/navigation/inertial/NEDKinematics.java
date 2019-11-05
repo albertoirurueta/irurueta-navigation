@@ -19,53 +19,53 @@ import com.irurueta.units.Acceleration;
 import com.irurueta.units.AngularSpeed;
 
 /**
- * Describes the motion of a body based on the specific forces (i.e. specific accelerations) and
- * angular rates applied to it with respect and resolved along the ECI frame.
+ * Describes the motion of a body based on the specific forces (i.e. specific acceleration) and
+ * angular rates applied to it with respect and resolved along the NED frame.
  * Body frame axes are typically defined so that x is the forward axis, pointing in the usual direction
  * of travel, z is the down axis, pointing in the usual direction of gravity, and y is the right axis,
  * completing the orthogonal set.
  */
 @SuppressWarnings("WeakerAccess")
-public class ECIKinematics extends FrameKinematics<ECIKinematics> {
+public class NEDKinematics extends FrameKinematics<NEDKinematics> {
 
     /**
      * Constructor.
      */
-    public ECIKinematics() {
+    public NEDKinematics() {
         super();
     }
 
     /**
      * Constructor.
      *
-     * @param fx Specific force of body frame with respect ECI frame resolved along body-frame x-axis,
+     * @param fx Specific force of body frame with respect NED frame resolved along body-frame x-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fy Specific force of body frame with respect ECI frame resolved along body-frame y-axis,
+     * @param fy Specific force of body frame with respect NED frame resolved along body-frame y-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fz Specific force of body frame with respect ECI frame resolved along body-frame z-axis,
+     * @param fz Specific force of body frame with respect NED frame resolved along body-frame z-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
      */
-    public ECIKinematics(final double fx, final double fy, final double fz) {
+    public NEDKinematics(final double fx, final double fy, final double fz) {
         super(fx, fy, fz);
     }
 
     /**
      * Constructor.
      *
-     * @param fx           Specific force of body frame with respect ECI frame resolved along body-frame x-axis,
+     * @param fx           Specific force of body frame with respect NED frame resolved along body-frame x-axis,
      *                     averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fy           Specific force of body frame with respect ECI frame resolved along body-frame y-axis,
+     * @param fy           Specific force of body frame with respect NED frame resolved along body-frame y-axis,
      *                     averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param fz           Specific force of body frame with respect ECI frame resolved along body-frame z-axis,
+     * @param fz           Specific force of body frame with respect NED frame resolved along body-frame z-axis,
      *                     averaged over time interval and expressed in meters per squared second (m/s^2).
-     * @param angularRateX Angular rate of body frame with respect ECI frame, resolved about body-frame
+     * @param angularRateX Angular rate of body frame with respect NED frame, resolved about body-frame
      *                     x-axis, averaged over time interval and expressed in radians per second (rad/s).
-     * @param angularRateY Angular rate of body frame with respect ECI frame, resolved about body-frame
+     * @param angularRateY Angular rate of body frame with respect NED frame, resolved about body-frame
      *                     y-axis, averaged over time interval and expressed in radians per second (rad/s).
-     * @param angularRateZ Angular rate of body frame with respect ECI frame, resolved about body-frame
+     * @param angularRateZ Angular rate of body frame with respect NED frame, resolved about body-frame
      *                     z-axis, averaged over time interval and expressed in radians per second (rad/s).
      */
-    public ECIKinematics(final double fx, final double fy, final double fz,
+    public NEDKinematics(final double fx, final double fy, final double fz,
                          final double angularRateX, final double angularRateY,
                          final double angularRateZ) {
         super(fx, fy, fz, angularRateX, angularRateY, angularRateZ);
@@ -74,14 +74,14 @@ public class ECIKinematics extends FrameKinematics<ECIKinematics> {
     /**
      * Constructor.
      *
-     * @param specificForceX Specific force of body frame with respect ECI frame resolved along body-frame x-axis,
+     * @param specificForceX Specific force of body frame with respect NED frame resolved along body-frame x-axis,
      *                       averaged over time interval.
-     * @param specificForceY Specific force of body frame with respect ECI frame resolved along body-frame y-axis,
+     * @param specificForceY Specific force of body frame with respect NED frame resolved along body-frame y-axis,
      *                       averaged over time interval.
-     * @param specificForceZ Specific force of body frame with respect ECI frame resolved along body-frame z-axis,
+     * @param specificForceZ Specific force of body frame with respect NED frame resolved along body-frame z-axis,
      *                       averaged over time interval.
      */
-    public ECIKinematics(final Acceleration specificForceX,
+    public NEDKinematics(final Acceleration specificForceX,
                          final Acceleration specificForceY,
                          final Acceleration specificForceZ) {
         super(specificForceX, specificForceY, specificForceZ);
@@ -90,14 +90,14 @@ public class ECIKinematics extends FrameKinematics<ECIKinematics> {
     /**
      * Constructor.
      *
-     * @param angularSpeedX Angular speed of body frame with respect ECI frame, resolved about body-frame
+     * @param angularSpeedX Angular speed of body frame with respect NED frame, resolved about body-frame
      *                      x-axis, averaged over time interval.
-     * @param angularSpeedY Angular speed of body frame with respect ECI frame, resolved about body-frame
+     * @param angularSpeedY Angular speed of body frame with respect NED frame, resolved about body-frame
      *                      y-axis, averaged over time interval.
-     * @param angularSpeedZ Angular speed of body frame with respect ECI frame, resolved about body-frame
+     * @param angularSpeedZ Angular speed of body frame with respect NED frame, resolved about body-frame
      *                      z-axis, averaged over time interval.
      */
-    public ECIKinematics(final AngularSpeed angularSpeedX,
+    public NEDKinematics(final AngularSpeed angularSpeedX,
                          final AngularSpeed angularSpeedY,
                          final AngularSpeed angularSpeedZ) {
         super(angularSpeedX, angularSpeedY, angularSpeedZ);
@@ -106,27 +106,27 @@ public class ECIKinematics extends FrameKinematics<ECIKinematics> {
     /**
      * Constructor.
      *
-     * @param specificForceX Specific force of body frame with respect ECI frame resolved along body-frame x-axis,
+     * @param specificForceX Specific force of body frame with respect NED frame resolved along body-frame x-axis,
      *                       averaged over time interval.
-     * @param specificForceY Specific force of body frame with respect ECI frame resolved along body-frame y-axis,
+     * @param specificForceY Specific force of body frame with respect NED frame resolved along body-frame y-axis,
      *                       averaged over time interval.
-     * @param specificForceZ Specific force of body frame with respect ECI frame resolved along body-frame z-axis,
+     * @param specificForceZ Specific force of body frame with respect NED frame resolved along body-frame z-axis,
      *                       averaged over time interval.
-     * @param angularSpeedX  Angular speed of body frame with respect ECI frame, resolved about body-frame
-     *                       x-axis, averaged over time interval.
-     * @param angularSpeedY  Angular speed of body frame with respect ECI frame, resolved about body-frame
-     *                       y-axis, averaged over time interval.
-     * @param angularSpeedZ  Angular speed of body frame with respect ECI frame, resolved about body-frame
-     *                       z-axis, averaged over time interval.
+     * @param angularSpeedX Angular speed of body frame with respect NED frame, resolved about body-frame
+     *                      x-axis, averaged over time interval.
+     * @param angularSpeedY Angular speed of body frame with respect NED frame, resolved about body-frame
+     *                      y-axis, averaged over time interval.
+     * @param angularSpeedZ Angular speed of body frame with respect NED frame, resolved about body-frame
+     *                      z-axis, averaged over time interval.
      */
-    public ECIKinematics(final Acceleration specificForceX,
+    public NEDKinematics(final Acceleration specificForceX,
                          final Acceleration specificForceY,
                          final Acceleration specificForceZ,
                          final AngularSpeed angularSpeedX,
                          final AngularSpeed angularSpeedY,
                          final AngularSpeed angularSpeedZ) {
-        super(specificForceX, specificForceY, specificForceZ, angularSpeedX,
-                angularSpeedY, angularSpeedZ);
+        super(specificForceX, specificForceY, specificForceZ,
+                angularSpeedX, angularSpeedY, angularSpeedZ);
     }
 
     /**
@@ -134,12 +134,12 @@ public class ECIKinematics extends FrameKinematics<ECIKinematics> {
      *
      * @param input instance to copy data from.
      */
-    public ECIKinematics(final ECIKinematics input) {
+    public NEDKinematics(final NEDKinematics input) {
         super(input);
     }
 
     /**
-     * Checks if provided object is an ECIKinematics instance having exactly the same contents
+     * Checks if provided object is a NEDKinematics instance having exactly the same contents
      * as this instance.
      *
      * @param obj object to be compared.
@@ -153,11 +153,11 @@ public class ECIKinematics extends FrameKinematics<ECIKinematics> {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof ECIKinematics)) {
+        if (!(obj instanceof NEDKinematics)) {
             return false;
         }
 
-        final ECIKinematics other = (ECIKinematics) obj;
+        final NEDKinematics other = (NEDKinematics) obj;
         return equals(other);
     }
 
@@ -169,6 +169,6 @@ public class ECIKinematics extends FrameKinematics<ECIKinematics> {
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
     protected Object clone() {
-        return new ECIKinematics(this);
+        return new NEDKinematics(this);
     }
 }

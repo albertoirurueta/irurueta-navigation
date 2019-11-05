@@ -20,12 +20,12 @@ import com.irurueta.units.AngularSpeed;
 
 /**
  * Describes the motion of a body based on the specific forces (i.e. specific accelerations) and
- * angular rates applied to it with respect the ECEF frame and resolved along body-frame axes.
+ * angular rates applied to it with respect and resolved along the ECEF frame.
  * Body frame axes are typically defined so that x is the forward axis, pointing in the usual direction
  * of travel, z is the down axis, pointing in the usual direction of gravity, and y is the right axis,
  * completing the orthogonal set.
  */
-public class ECEFKinematics extends ECIorECEFKinematics<ECEFKinematics> {
+public class ECEFKinematics extends FrameKinematics<ECEFKinematics> {
 
     /**
      * Constructor.
