@@ -769,6 +769,9 @@ public class ECIKinematicsEstimatorTest {
                     LARGE_ABSOLUTE_ERROR);
             assertEquals(eciK.getAngularRateZ(), nedK.getAngularRateZ(),
                     LARGE_ABSOLUTE_ERROR);
+
+            assertTrue(ecefK.equals(nedK, LARGE_ABSOLUTE_ERROR));
+            assertTrue(eciK.equals(nedK, LARGE_ABSOLUTE_ERROR));
         }
     }
 

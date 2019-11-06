@@ -312,7 +312,7 @@ public abstract class GravityOrGravitation<T extends GravityOrGravitation> imple
     }
 
     /**
-     * Gets gravity coordinates as an array.
+     * Gets gravity coordinates expressed in meters per squared second (m/s^2) as an array.
      *
      * @param result array instance where gravity coordinates will be stored in
      *               x,y,z order.
@@ -329,7 +329,7 @@ public abstract class GravityOrGravitation<T extends GravityOrGravitation> imple
     }
 
     /**
-     * Gets gravity coordinates as an array.
+     * Gets gravity coordinates expressed in meters per squared second (m/s^2) as an array.
      *
      * @return array containing gravity coordinates in x,y,z order.
      */
@@ -340,14 +340,14 @@ public abstract class GravityOrGravitation<T extends GravityOrGravitation> imple
     }
 
     /**
-     * Gets gravity coordinates as a column matrix.
+     * Gets gravity coordinates expressed in meters per squared second (m/s^2) as a column matrix.
      * If provided matrix does not have size 3x1, it will be resized.
      *
      * @param result matrix instance where gravity coordinates will be stored in
      *               x,y,z order.
      */
     public void asMatrix(final Matrix result) {
-        if (result.getColumns() != COMPONENTS || result.getRows() != 1) {
+        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
             try {
                 result.resize(COMPONENTS, 1);
             } catch (final WrongSizeException ignore) {

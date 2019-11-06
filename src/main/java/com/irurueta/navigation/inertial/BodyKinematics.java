@@ -15,6 +15,8 @@
  */
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
 import com.irurueta.units.AccelerationUnit;
@@ -31,8 +33,13 @@ import java.util.Objects;
  * of travel, z is the down axis, pointing in the usual direction of gravity, and y is the right axis,
  * completing the orthogonal set.
  */
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "DuplicatedCode"})
 public class BodyKinematics {
+    /**
+     * Number of components of specific force or angular rate.
+     */
+    public static final int COMPONENTS = 3;
+
     /**
      * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
@@ -682,6 +689,138 @@ public class BodyKinematics {
         mAngularRateX = input.mAngularRateX;
         mAngularRateY = input.mAngularRateY;
         mAngularRateZ = input.mAngularRateZ;
+    }
+
+    /**
+     * Gets specific force coordinates expressed in meters per squared second (m/s^2) as an array.
+     *
+     * @param result array instance where specific force coordinates will be stored in
+     *               x, y, z order.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public void asSpecificForceArray(final double[] result) {
+        if (result.length != COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        result[0] = mFx;
+        result[1] = mFy;
+        result[2] = mFz;
+    }
+
+    /**
+     * Gets specific force coordinates expressed in meters per squared second (m/s^2) as an array.
+     *
+     * @return array containing specific force coordinates in x,y,z order.
+     */
+    public double[] asSpecificForceArray() {
+        final double[] result = new double[COMPONENTS];
+        asSpecificForceArray(result);
+        return result;
+    }
+
+    /**
+     * Gets specific force coordinates expressed in meters per squared second (m/s^2) as a column matrix.
+     * If provided matrix does not have size 3x1, it will be resized.
+     *
+     * @param result matrix instance where gravity coordinates will be stored in
+     *               x,y,z order.
+     */
+    public void asSpecificForceMatrix(final Matrix result) {
+        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
+            try {
+                result.resize(COMPONENTS, 1);
+            } catch (final WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        result.setElementAtIndex(0, mFx);
+        result.setElementAtIndex(1, mFy);
+        result.setElementAtIndex(2, mFz);
+    }
+
+    /**
+     * Gets specific force coordinates expressed in meters per squared second (m/s^2) as a column matrix.
+     *
+     * @return a matrix containing specific force coordinates stored in x,y,z order.
+     */
+    public Matrix asSpecificForceMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(COMPONENTS, 1);
+            asSpecificForceMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
+    }
+
+    /**
+     * Gets angular rate coordinates expressed in radians per second (rad/s) as an array.
+     *
+     * @param result array instance where angular rate coordinates will be stored in
+     *               x,y,z order.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public void asAngularRateArray(final double[] result) {
+        if (result.length != COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        result[0] = mAngularRateX;
+        result[1] = mAngularRateY;
+        result[2] = mAngularRateZ;
+    }
+
+    /**
+     * Gets angular rate coordinates expressed in radians per second (rad/s) as an array.
+     *
+     * @return array containing angular rate coordinates in x,y,z order.
+     */
+    public double[] asAngularRateArray() {
+        final double[] result = new double[COMPONENTS];
+        asAngularRateArray(result);
+        return result;
+    }
+
+    /**
+     * Gets angular rate coordinates expressed in radians per second (rad/s) as a column matrix.
+     * If provided matrix does not have size 3x1, it will be resized.
+     *
+     * @param result matrix instance where angular rate coordinates will be stored in
+     *               x,y,z order.
+     */
+    public void asAngularRateMatrix(final Matrix result) {
+        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
+            try {
+                result.resize(COMPONENTS, 1);
+            } catch (final WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        result.setElementAtIndex(0, mAngularRateX);
+        result.setElementAtIndex(1, mAngularRateY);
+        result.setElementAtIndex(2, mAngularRateZ);
+    }
+
+    /**
+     * Gets angular rate coordinates expressed in radians per second (rad/s) as a column matrix.
+     *
+     * @return a matrix containing angular rate coordinates stored in x,y,z order.
+     */
+    public Matrix asAngularRateMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(COMPONENTS, 1);
+            asAngularRateMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
     }
 
     /**

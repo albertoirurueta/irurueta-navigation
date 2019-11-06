@@ -15,6 +15,8 @@
  */
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
@@ -722,6 +724,132 @@ public class BodyKinematicsTest {
         assertEquals(k1.getAngularRateX(), k2.getAngularRateX(), 0.0);
         assertEquals(k1.getAngularRateY(), k2.getAngularRateY(), 0.0);
         assertEquals(k1.getAngularRateZ(), k2.getAngularRateZ(), 0.0);
+    }
+
+    @Test
+    public void testAsSpecificForceArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fz = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double angularRateX = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateY = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+
+        final BodyKinematics k = new BodyKinematics(fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+
+        final double[] array1 = new double[BodyKinematics.COMPONENTS];
+        k.asSpecificForceArray(array1);
+        final double[] array2 = k.asSpecificForceArray();
+
+        // check
+        assertEquals(array1[0], fx, 0.0);
+        assertEquals(array1[1], fy, 0.0);
+        assertEquals(array1[2], fz, 0.0);
+        assertArrayEquals(array1, array2, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            k.asSpecificForceArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testAsSpecificForceMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fz = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double angularRateX = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateY = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+
+        final BodyKinematics k = new BodyKinematics(fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+
+        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
+        k.asSpecificForceMatrix(m1);
+        final Matrix m2 = k.asSpecificForceMatrix();
+        final Matrix m3 = new Matrix(1, 1);
+        k.asSpecificForceMatrix(m3);
+
+        // check
+        assertEquals(m1.getElementAtIndex(0), fx, 0.0);
+        assertEquals(m1.getElementAtIndex(1), fy, 0.0);
+        assertEquals(m1.getElementAtIndex(2), fz, 0.0);
+        assertEquals(m1, m2);
+        assertEquals(m1, m3);
+    }
+
+    @Test
+    public void testAsAngularRateArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fz = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double angularRateX = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateY = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+
+        final BodyKinematics k = new BodyKinematics(fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+
+        final double[] array1 = new double[BodyKinematics.COMPONENTS];
+        k.asAngularRateArray(array1);
+        final double[] array2 = k.asAngularRateArray();
+
+        // check
+        assertEquals(array1[0], angularRateX, 0.0);
+        assertEquals(array1[1], angularRateY, 0.0);
+        assertEquals(array1[2], angularRateZ, 0.0);
+        assertArrayEquals(array1, array2, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            k.asAngularRateArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testAsAngularRateMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double fz = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
+        final double angularRateX = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateY = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+        final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
+                MAX_ANGULAR_RATE_VALUE);
+
+        final BodyKinematics k = new BodyKinematics(fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+
+        final Matrix m1 = new Matrix(BodyKinematics.COMPONENTS, 1);
+        k.asAngularRateMatrix(m1);
+        final Matrix m2 = k.asAngularRateMatrix();
+        final Matrix m3 = new Matrix(1, 1);
+        k.asAngularRateMatrix(m3);
+
+        // check
+        assertEquals(m1.getElementAtIndex(0), angularRateX, 0.0);
+        assertEquals(m1.getElementAtIndex(1), angularRateY, 0.0);
+        assertEquals(m1.getElementAtIndex(2), angularRateZ, 0.0);
+        assertEquals(m1, m2);
+        assertEquals(m1, m3);
     }
 
     @Test
