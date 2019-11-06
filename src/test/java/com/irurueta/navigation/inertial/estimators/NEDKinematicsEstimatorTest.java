@@ -31,9 +31,8 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.ECEFtoECIFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
-import com.irurueta.navigation.inertial.ECIKinematics;
 import com.irurueta.navigation.inertial.NEDGravity;
-import com.irurueta.navigation.inertial.NEDKinematics;
+import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.RadiiOfCurvature;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
@@ -114,37 +113,37 @@ public class NEDKinematicsEstimatorTest {
 
         final NEDKinematicsEstimator estimator = new NEDKinematicsEstimator();
 
-        final NEDKinematics k1 = new NEDKinematics();
+        final BodyKinematics k1 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight,
                 k1);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final NEDKinematics k2 = new NEDKinematics();
+        final BodyKinematics k2 = new BodyKinematics();
         estimator.estimate(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight,
                 k2);
 
-        final NEDKinematics k3 = new NEDKinematics();
+        final BodyKinematics k3 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, k3);
 
-        final NEDKinematics k4 = new NEDKinematics();
+        final BodyKinematics k4 = new BodyKinematics();
         estimator.estimate(timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight, k4);
 
-        final NEDKinematics k5 = new NEDKinematics();
+        final BodyKinematics k5 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, vn, ve, vd, latitude, height,
                 oldFrame, k5);
 
-        final NEDKinematics k6 = new NEDKinematics();
+        final BodyKinematics k6 = new BodyKinematics();
         estimator.estimate(timeInterval, c, vn, ve, vd, latitude, height,
                 oldFrame, k6);
 
-        final NEDKinematics k7 = new NEDKinematics();
+        final BodyKinematics k7 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, frame, oldFrame, k7);
 
-        final NEDKinematics k8 = new NEDKinematics();
+        final BodyKinematics k8 = new BodyKinematics();
         estimator.estimate(timeInterval, frame, oldFrame, k8);
 
         final Speed speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
@@ -155,12 +154,12 @@ public class NEDKinematicsEstimatorTest {
         final Speed oldSpeedE = new Speed(oldVe, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedD = new Speed(oldVd, SpeedUnit.METERS_PER_SECOND);
 
-        final NEDKinematics k9 = new NEDKinematics();
+        final BodyKinematics k9 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitude, height,
                 oldLatitude, oldHeight, k9);
 
-        final NEDKinematics k10 = new NEDKinematics();
+        final BodyKinematics k10 = new BodyKinematics();
         estimator.estimate(timeInterval, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitude, height,
                 oldLatitude, oldHeight, k10);
@@ -168,12 +167,12 @@ public class NEDKinematicsEstimatorTest {
         final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
         final Angle oldLatitudeAngle = new Angle(oldLatitude, AngleUnit.RADIANS);
 
-        final NEDKinematics k11 = new NEDKinematics();
+        final BodyKinematics k11 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight,
                 k11);
 
-        final NEDKinematics k12 = new NEDKinematics();
+        final BodyKinematics k12 = new BodyKinematics();
         estimator.estimate(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight,
                 k12);
@@ -181,22 +180,22 @@ public class NEDKinematicsEstimatorTest {
         final Distance heightDistance = new Distance(height, DistanceUnit.METER);
         final Distance oldHeightDistance = new Distance(oldHeight, DistanceUnit.METER);
 
-        final NEDKinematics k13 = new NEDKinematics();
+        final BodyKinematics k13 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, heightDistance,
                 oldLatitude, oldHeightDistance, k13);
 
-        final NEDKinematics k14 = new NEDKinematics();
+        final BodyKinematics k14 = new BodyKinematics();
         estimator.estimate(timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, heightDistance,
                 oldLatitude, oldHeightDistance, k14);
 
-        final NEDKinematics k15 = new NEDKinematics();
+        final BodyKinematics k15 = new BodyKinematics();
         estimator.estimate(TIME_INTERVAL_SECONDS, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitudeAngle, heightDistance,
                 oldLatitudeAngle, oldHeightDistance, k15);
 
-        final NEDKinematics k16 = new NEDKinematics();
+        final BodyKinematics k16 = new BodyKinematics();
         estimator.estimate(timeInterval, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitudeAngle, heightDistance,
                 oldLatitudeAngle, oldHeightDistance, k16);
@@ -246,35 +245,35 @@ public class NEDKinematicsEstimatorTest {
 
         final NEDKinematicsEstimator estimator = new NEDKinematicsEstimator();
 
-        final NEDKinematics k1 = estimator.estimateAndReturnNew(
+        final BodyKinematics k1 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final NEDKinematics k2 = estimator.estimateAndReturnNew(
+        final BodyKinematics k2 = estimator.estimateAndReturnNew(
                 timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
 
-        final NEDKinematics k3 = estimator.estimateAndReturnNew(
+        final BodyKinematics k3 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight);
 
-        final NEDKinematics k4 = estimator.estimateAndReturnNew(
+        final BodyKinematics k4 = estimator.estimateAndReturnNew(
                 timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                 oldLatitude, oldHeight);
 
-        final NEDKinematics k5 = estimator.estimateAndReturnNew(
+        final BodyKinematics k5 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, vn, ve, vd, latitude, height,
                 oldFrame);
 
-        final NEDKinematics k6 = estimator.estimateAndReturnNew(
+        final BodyKinematics k6 = estimator.estimateAndReturnNew(
                 timeInterval, c, vn, ve, vd, latitude, height,
                 oldFrame);
 
-        final NEDKinematics k7 = estimator.estimateAndReturnNew(
+        final BodyKinematics k7 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, frame, oldFrame);
 
-        final NEDKinematics k8 = estimator.estimateAndReturnNew(
+        final BodyKinematics k8 = estimator.estimateAndReturnNew(
                 timeInterval, frame, oldFrame);
 
         final Speed speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
@@ -285,12 +284,12 @@ public class NEDKinematicsEstimatorTest {
         final Speed oldSpeedE = new Speed(oldVe, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedD = new Speed(oldVd, SpeedUnit.METERS_PER_SECOND);
 
-        final NEDKinematics k9 = estimator.estimateAndReturnNew(
+        final BodyKinematics k9 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitude, height,
                 oldLatitude, oldHeight);
 
-        final NEDKinematics k10 = estimator.estimateAndReturnNew(
+        final BodyKinematics k10 = estimator.estimateAndReturnNew(
                 timeInterval, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitude, height,
                 oldLatitude, oldHeight);
@@ -298,33 +297,33 @@ public class NEDKinematicsEstimatorTest {
         final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
         final Angle oldLatitudeAngle = new Angle(oldLatitude, AngleUnit.RADIANS);
 
-        final NEDKinematics k11 = estimator.estimateAndReturnNew(
+        final BodyKinematics k11 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight);
 
-        final NEDKinematics k12 = estimator.estimateAndReturnNew(
+        final BodyKinematics k12 = estimator.estimateAndReturnNew(
                 timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight);
 
         final Distance heightDistance = new Distance(height, DistanceUnit.METER);
         final Distance oldHeightDistance = new Distance(oldHeight, DistanceUnit.METER);
 
-        final NEDKinematics k13 = estimator.estimateAndReturnNew(
+        final BodyKinematics k13 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, heightDistance,
                 oldLatitude, oldHeightDistance);
 
-        final NEDKinematics k14 = estimator.estimateAndReturnNew(
+        final BodyKinematics k14 = estimator.estimateAndReturnNew(
                 timeInterval, c, oldC, vn, ve, vd,
                 oldVn, oldVe, oldVd, latitude, heightDistance,
                 oldLatitude, oldHeightDistance);
 
-        final NEDKinematics k15 = estimator.estimateAndReturnNew(
+        final BodyKinematics k15 = estimator.estimateAndReturnNew(
                 TIME_INTERVAL_SECONDS, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitudeAngle, heightDistance,
                 oldLatitudeAngle, oldHeightDistance);
 
-        final NEDKinematics k16 = estimator.estimateAndReturnNew(
+        final BodyKinematics k16 = estimator.estimateAndReturnNew(
                 timeInterval, c, oldC, speedN, speedE, speedD,
                 oldSpeedN, oldSpeedE, oldSpeedD, latitudeAngle, heightDistance,
                 oldLatitudeAngle, oldHeightDistance);
@@ -374,38 +373,38 @@ public class NEDKinematicsEstimatorTest {
             final double oldLatitude = oldFrame.getLatitude();
             final double oldHeight = oldFrame.getHeight();
 
-            final NEDKinematics k1 = new NEDKinematics();
+            final BodyKinematics k1 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                     vn, ve, vd, oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight,
                     k1);
 
             final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-            final NEDKinematics k2 = new NEDKinematics();
+            final BodyKinematics k2 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, c, oldC, vn, ve, vd,
                     oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight,
                     k2);
 
-            final NEDKinematics k3 = new NEDKinematics();
+            final BodyKinematics k3 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, frame, oldC,
                     oldVn, oldVe, oldVd, oldLatitude, oldHeight, k3);
 
-            final NEDKinematics k4 = new NEDKinematics();
+            final BodyKinematics k4 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, frame, oldC,
                     oldVn, oldVe, oldVd, oldLatitude, oldHeight, k4);
 
-            final NEDKinematics k5 = new NEDKinematics();
+            final BodyKinematics k5 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c,
                     vn, ve, vd, latitude, height, oldFrame, k5);
 
-            final NEDKinematics k6 = new NEDKinematics();
+            final BodyKinematics k6 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, c, vn, ve, vd,
                     latitude, height, oldFrame, k6);
 
-            final NEDKinematics k7 = new NEDKinematics();
+            final BodyKinematics k7 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, frame,
                     oldFrame, k7);
 
-            final NEDKinematics k8 = new NEDKinematics();
+            final BodyKinematics k8 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, frame, oldFrame, k8);
 
             final Speed speedN = new Speed(vn, SpeedUnit.METERS_PER_SECOND);
@@ -416,12 +415,12 @@ public class NEDKinematicsEstimatorTest {
             final Speed oldSpeedE = new Speed(oldVe, SpeedUnit.METERS_PER_SECOND);
             final Speed oldSpeedD = new Speed(oldVd, SpeedUnit.METERS_PER_SECOND);
 
-            final NEDKinematics k9 = new NEDKinematics();
+            final BodyKinematics k9 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                     speedN, speedE, speedD, oldSpeedN, oldSpeedE, oldSpeedD,
                     latitude, height, oldLatitude, oldHeight, k9);
 
-            final NEDKinematics k10 = new NEDKinematics();
+            final BodyKinematics k10 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
                     speedN, speedE, speedD, oldSpeedN, oldSpeedE, oldSpeedD,
                     latitude, height, oldLatitude, oldHeight, k10);
@@ -429,12 +428,12 @@ public class NEDKinematicsEstimatorTest {
             final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
             final Angle oldLatitudeAngle = new Angle(oldLatitude, AngleUnit.RADIANS);
 
-            final NEDKinematics k11 = new NEDKinematics();
+            final BodyKinematics k11 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                     vn, ve, vd, oldVn, oldVe, oldVd, latitudeAngle, height,
                     oldLatitudeAngle, oldHeight, k11);
 
-            final NEDKinematics k12 = new NEDKinematics();
+            final BodyKinematics k12 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, c, oldC, vn, ve, vd,
                     oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight,
                     k12);
@@ -442,22 +441,22 @@ public class NEDKinematicsEstimatorTest {
             final Distance heightDistance = new Distance(height, DistanceUnit.METER);
             final Distance oldHeightDistance = new Distance(oldHeight, DistanceUnit.METER);
 
-            final NEDKinematics k13 = new NEDKinematics();
+            final BodyKinematics k13 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                     vn, ve, vd, oldVn, oldVe, oldVd, latitude, heightDistance,
                     oldLatitude, oldHeightDistance, k13);
 
-            final NEDKinematics k14 = new NEDKinematics();
+            final BodyKinematics k14 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, c, oldC, vn, ve, vd,
                     oldVn, oldVe, oldVd, latitude, heightDistance,
                     oldLatitude, oldHeightDistance, k14);
 
-            final NEDKinematics k15 = new NEDKinematics();
+            final BodyKinematics k15 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(TIME_INTERVAL_SECONDS, c, oldC,
                     speedN, speedE, speedD, oldSpeedN, oldSpeedE, oldSpeedD,
                     latitudeAngle, heightDistance, oldLatitudeAngle, oldHeightDistance, k15);
 
-            final NEDKinematics k16 = new NEDKinematics();
+            final BodyKinematics k16 = new BodyKinematics();
             NEDKinematicsEstimator.estimateKinematics(timeInterval, c, oldC,
                     speedN, speedE, speedD, oldSpeedN, oldSpeedE, oldSpeedD,
                     latitudeAngle, heightDistance, oldLatitudeAngle, oldHeightDistance, k16);
@@ -478,7 +477,7 @@ public class NEDKinematicsEstimatorTest {
             assertEquals(k1, k15);
             assertEquals(k1, k16);
 
-            final NEDKinematics k = estimateKinematics(TIME_INTERVAL_SECONDS,
+            final BodyKinematics k = estimateKinematics(TIME_INTERVAL_SECONDS,
                     c, oldC, vn, ve, vd, oldVn, oldVe, oldVd, latitude, height,
                     oldLatitude, oldHeight);
 
@@ -513,42 +512,42 @@ public class NEDKinematicsEstimatorTest {
             final double oldLatitude = oldFrame.getLatitude();
             final double oldHeight = oldFrame.getHeight();
 
-            final NEDKinematics k1 = NEDKinematicsEstimator
+            final BodyKinematics k1 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                             oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
 
             final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-            final NEDKinematics k2 = NEDKinematicsEstimator
+            final BodyKinematics k2 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, c, oldC, vn, ve, vd,
                             oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
 
-            final NEDKinematics k3 = NEDKinematicsEstimator
+            final BodyKinematics k3 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, frame, oldC, oldVn, oldVe, oldVd,
                             oldLatitude, oldHeight);
 
-            final NEDKinematics k4 = NEDKinematicsEstimator
+            final BodyKinematics k4 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, frame, oldC, oldVn, oldVe, oldVd,
                             oldLatitude, oldHeight);
 
-            final NEDKinematics k5 = NEDKinematicsEstimator
+            final BodyKinematics k5 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, c, vn, ve, vd, latitude, height,
                             oldFrame);
 
-            final NEDKinematics k6 = NEDKinematicsEstimator
+            final BodyKinematics k6 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, c, vn, ve, vd, latitude, height,
                             oldFrame);
 
-            final NEDKinematics k7 = NEDKinematicsEstimator
+            final BodyKinematics k7 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, frame, oldFrame);
 
-            final NEDKinematics k8 = NEDKinematicsEstimator
+            final BodyKinematics k8 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, frame, oldFrame);
 
@@ -560,13 +559,13 @@ public class NEDKinematicsEstimatorTest {
             final Speed oldSpeedE = new Speed(oldVe, SpeedUnit.METERS_PER_SECOND);
             final Speed oldSpeedD = new Speed(oldVd, SpeedUnit.METERS_PER_SECOND);
 
-            final NEDKinematics k9 = NEDKinematicsEstimator
+            final BodyKinematics k9 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, c, oldC, speedN, speedE, speedD,
                             oldSpeedN, oldSpeedE, oldSpeedD, latitude, height,
                             oldLatitude, oldHeight);
 
-            final NEDKinematics k10 = NEDKinematicsEstimator
+            final BodyKinematics k10 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, c, oldC, speedN, speedE, speedD,
                             oldSpeedN, oldSpeedE, oldSpeedD, latitude, height,
@@ -575,12 +574,12 @@ public class NEDKinematicsEstimatorTest {
             final Angle latitudeAngle = new Angle(latitude, AngleUnit.RADIANS);
             final Angle oldLatitudeAngle = new Angle(oldLatitude, AngleUnit.RADIANS);
 
-            final NEDKinematics k11 = NEDKinematicsEstimator
+            final BodyKinematics k11 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                             oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight);
 
-            final NEDKinematics k12 = NEDKinematicsEstimator
+            final BodyKinematics k12 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, c, oldC, vn, ve, vd,
                             oldVn, oldVe, oldVd, latitudeAngle, height, oldLatitudeAngle, oldHeight);
@@ -588,25 +587,25 @@ public class NEDKinematicsEstimatorTest {
             final Distance heightDistance = new Distance(height, DistanceUnit.METER);
             final Distance oldHeightDistance = new Distance(oldHeight, DistanceUnit.METER);
 
-            final NEDKinematics k13 = NEDKinematicsEstimator
+            final BodyKinematics k13 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, c, oldC, vn, ve, vd,
                             oldVn, oldVe, oldVd, latitude, heightDistance,
                             oldLatitude, oldHeightDistance);
 
-            final NEDKinematics k14 = NEDKinematicsEstimator
+            final BodyKinematics k14 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, c, oldC, vn, ve, vd,
                             oldVn, oldVe, oldVd, latitude, heightDistance,
                             oldLatitude, oldHeightDistance);
 
-            final NEDKinematics k15 = NEDKinematicsEstimator
+            final BodyKinematics k15 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             TIME_INTERVAL_SECONDS, c, oldC, speedN, speedE, speedD,
                             oldSpeedN, oldSpeedE, oldSpeedD, latitudeAngle, heightDistance,
                             oldLatitudeAngle, oldHeightDistance);
 
-            final NEDKinematics k16 = NEDKinematicsEstimator
+            final BodyKinematics k16 = NEDKinematicsEstimator
                     .estimateKinematicsAndReturnNew(
                             timeInterval, c, oldC, speedN, speedE, speedD,
                             oldSpeedN, oldSpeedE, oldSpeedD, latitudeAngle, heightDistance,
@@ -628,7 +627,7 @@ public class NEDKinematicsEstimatorTest {
             assertEquals(k1, k15);
             assertEquals(k1, k16);
 
-            final NEDKinematics k = estimateKinematics(TIME_INTERVAL_SECONDS,
+            final BodyKinematics k = estimateKinematics(TIME_INTERVAL_SECONDS,
                     c, oldC, vn, ve, vd, oldVn, oldVe, oldVd, latitude, height,
                     oldLatitude, oldHeight);
 
@@ -758,7 +757,7 @@ public class NEDKinematicsEstimatorTest {
         final double oldLatitude = oldFrame.getLatitude();
         final double oldHeight = oldFrame.getHeight();
 
-        final NEDKinematics k = NEDKinematicsEstimator.estimateKinematicsAndReturnNew(
+        final BodyKinematics k = NEDKinematicsEstimator.estimateKinematicsAndReturnNew(
                 0.0, c, oldC, vn, ve, vd, oldVn, oldVe, oldVd,
                 latitude, height, oldLatitude, oldHeight);
 
@@ -770,14 +769,14 @@ public class NEDKinematicsEstimatorTest {
         assertEquals(k.getAngularRateY(), 0.0, 0.0);
         assertEquals(k.getAngularRateZ(), 0.0, 0.0);
 
-        final NEDKinematics k2 = estimateKinematics(0.0, c, oldC,
+        final BodyKinematics k2 = estimateKinematics(0.0, c, oldC,
                 vn, ve, vd, oldVn, oldVe, oldVd, latitude, height, oldLatitude, oldHeight);
 
         assertTrue(k2.equals(k, 0.0));
     }
 
     @Test
-    public void testCompareNEDAndECIKinematics() throws InvalidSourceAndDestinationFrameTypeException,
+    public void testCompareKinematics() throws InvalidSourceAndDestinationFrameTypeException,
             InvalidRotationMatrixException {
         for (int t = 0; t < TIMES; t++) {
             final NEDFrame oldNedFrame = createOldNedFrame();
@@ -792,20 +791,36 @@ public class NEDKinematicsEstimatorTest {
             final ECIFrame newEciFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
                     TIME_INTERVAL_SECONDS, newEcefFrame);
 
-            final NEDKinematics nedK = NEDKinematicsEstimator.estimateKinematicsAndReturnNew(
+            final BodyKinematics nedK = NEDKinematicsEstimator.estimateKinematicsAndReturnNew(
                     TIME_INTERVAL_SECONDS, newNedFrame, oldNedFrame);
-
-            final ECIKinematics eciK = ECIKinematicsEstimator.estimateKinematicsAndReturnNew(
+            final BodyKinematics ecefK = ECEFKinematicsEstimator.estimateKinematicsAndReturnNew(
+                    TIME_INTERVAL_SECONDS, newEcefFrame, oldEcefFrame);
+            final BodyKinematics eciK = ECIKinematicsEstimator.estimateKinematicsAndReturnNew(
                     TIME_INTERVAL_SECONDS, newEciFrame, oldEciFrame);
 
             final double nedSpecificForceNorm = nedK.getSpecificForceNorm();
+            final double ecefSpecificForceNorm = ecefK.getSpecificForceNorm();
             final double eciSpecificForceNorm = eciK.getSpecificForceNorm();
 
             final double nedAngularRateNorm = nedK.getAngularRateNorm();
+            final double ecefAngularRateNorm = ecefK.getAngularRateNorm();
             final double eciAngularRateNorm = eciK.getAngularRateNorm();
 
+            assertEquals(ecefSpecificForceNorm, nedSpecificForceNorm, LARGE_ABSOLUTE_ERROR);
             assertEquals(eciSpecificForceNorm, nedSpecificForceNorm, LARGE_ABSOLUTE_ERROR);
+
+            assertEquals(ecefAngularRateNorm, nedAngularRateNorm, LARGE_ABSOLUTE_ERROR);
             assertEquals(eciAngularRateNorm, nedAngularRateNorm, LARGE_ABSOLUTE_ERROR);
+
+            assertEquals(ecefK.getFx(), nedK.getFx(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefK.getFy(), nedK.getFy(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefK.getFz(), nedK.getFz(), LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefK.getAngularRateX(), nedK.getAngularRateX(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefK.getAngularRateY(), nedK.getAngularRateY(),
+                    LARGE_ABSOLUTE_ERROR);
+            assertEquals(ecefK.getAngularRateZ(), nedK.getAngularRateZ(),
+                    LARGE_ABSOLUTE_ERROR);
 
             assertEquals(eciK.getFx(), nedK.getFx(), LARGE_ABSOLUTE_ERROR);
             assertEquals(eciK.getFy(), nedK.getFy(), LARGE_ABSOLUTE_ERROR);
@@ -913,7 +928,7 @@ public class NEDKinematicsEstimatorTest {
         return new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
     }
 
-    private static NEDKinematics estimateKinematics(final double timeInterval,
+    private static BodyKinematics estimateKinematics(final double timeInterval,
                                                     final CoordinateTransformation c,
                                                     final CoordinateTransformation oldC,
                                                     final double vn,
@@ -1063,12 +1078,12 @@ public class NEDKinematicsEstimatorTest {
             final double angularRateY = omegaIbb.getElementAtIndex(1);
             final double angularRateZ = omegaIbb.getElementAtIndex(2);
 
-            return new NEDKinematics(fx, fy, fz,
+            return new BodyKinematics(fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ);
 
         } else {
             // If time interval is zero, set angular rate and specific force to zero
-            return new NEDKinematics();
+            return new BodyKinematics();
         }
     }
 }

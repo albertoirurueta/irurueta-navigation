@@ -25,50 +25,54 @@ import com.irurueta.units.AngularSpeedUnit;
 import java.util.Objects;
 
 /**
- * Base class for body kinematics with respect and resolved either along ECI, ECEF or NED frames.
+ * Describes the motion of a body based on the specific forces (i.e. specific acceleration) and
+ * angular rates applied to it.
+ * Body frame axes are typically defined so that x is the forward axis, pointing in the usual direction
+ * of travel, z is the down axis, pointing in the usual direction of gravity, and y is the right axis,
+ * completing the orthogonal set.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class FrameKinematics<T extends FrameKinematics> {
+public class BodyKinematics {
     /**
      * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame x-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      */
-    double mFx;
+    private double mFx;
 
     /**
      * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame y-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      */
-    double mFy;
+    private double mFy;
 
     /**
      * Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis, averaged
      * over time interval and expressed in meters per squared second (m/s^2).
      */
-    double mFz;
+    private double mFz;
 
     /**
      * Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame x-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      */
-    double mAngularRateX;
+    private double mAngularRateX;
 
     /**
      * Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame y-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      */
-    double mAngularRateY;
+    private double mAngularRateY;
 
     /**
      * Angular rate of body frame with respect ECI, ECEF or NED frame, resolved about body-frame z-axis, averaged
      * over time interval and expressed in radians per second (rad/s).
      */
-    double mAngularRateZ;
+    private double mAngularRateZ;
 
     /**
      * Constructor.
      */
-    public FrameKinematics() {
+    public BodyKinematics() {
     }
 
     /**
@@ -81,7 +85,7 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      * @param fz Specific force of body frame with respect ECI, ECEF or NED frame resolved along body-frame z-axis,
      *           averaged over time interval and expressed in meters per squared second (m/s^2).
      */
-    public FrameKinematics(final double fx, final double fy, final double fz) {
+    public BodyKinematics(final double fx, final double fy, final double fz) {
         setSpecificForceCoordinates(fx, fy, fz);
     }
 
@@ -107,9 +111,9 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      *                     body-frame z-axis, averaged over time interval and expressed in radians per
      *                     second (rad/s).
      */
-    public FrameKinematics(final double fx, final double fy, final double fz,
-                           final double angularRateX, final double angularRateY,
-                           final double angularRateZ) {
+    public BodyKinematics(final double fx, final double fy, final double fz,
+                          final double angularRateX, final double angularRateY,
+                          final double angularRateZ) {
         setSpecificForceCoordinates(fx, fy, fz);
         setAngularRateCoordinates(angularRateX, angularRateY, angularRateZ);
     }
@@ -124,9 +128,9 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      * @param specificForceZ Specific force of body frame with respect ECI, ECEF or NED frame resolved
      *                       along body-frame z-axis, averaged over time interval.
      */
-    public FrameKinematics(final Acceleration specificForceX,
-                           final Acceleration specificForceY,
-                           final Acceleration specificForceZ) {
+    public BodyKinematics(final Acceleration specificForceX,
+                          final Acceleration specificForceY,
+                          final Acceleration specificForceZ) {
         setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);
     }
 
@@ -140,9 +144,9 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      * @param angularSpeedZ Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
      *                      about body-frame z-axis, averaged over time interval.
      */
-    public FrameKinematics(final AngularSpeed angularSpeedX,
-                           final AngularSpeed angularSpeedY,
-                           final AngularSpeed angularSpeedZ) {
+    public BodyKinematics(final AngularSpeed angularSpeedX,
+                          final AngularSpeed angularSpeedY,
+                          final AngularSpeed angularSpeedZ) {
         setAngularSpeedCoordinates(angularSpeedX, angularSpeedY, angularSpeedZ);
     }
 
@@ -162,12 +166,12 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      * @param angularSpeedZ Angular speed of body frame with respect ECI, ECEF or NED frame, resolved
      *                      about body-frame z-axis, averaged over time interval.
      */
-    public FrameKinematics(final Acceleration specificForceX,
-                           final Acceleration specificForceY,
-                           final Acceleration specificForceZ,
-                           final AngularSpeed angularSpeedX,
-                           final AngularSpeed angularSpeedY,
-                           final AngularSpeed angularSpeedZ) {
+    public BodyKinematics(final Acceleration specificForceX,
+                          final Acceleration specificForceY,
+                          final Acceleration specificForceZ,
+                          final AngularSpeed angularSpeedX,
+                          final AngularSpeed angularSpeedY,
+                          final AngularSpeed angularSpeedZ) {
         setSpecificForceCoordinates(specificForceX, specificForceY, specificForceZ);
         setAngularSpeedCoordinates(angularSpeedX, angularSpeedY, angularSpeedZ);
     }
@@ -177,7 +181,7 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      *
      * @param input instance to copy data from.
      */
-    public FrameKinematics(final T input) {
+    public BodyKinematics(final BodyKinematics input) {
         copyFrom(input);
     }
 
@@ -657,7 +661,7 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(final T output) {
+    public void copyTo(final BodyKinematics output) {
         output.mFx = mFx;
         output.mFy = mFy;
         output.mFz = mFz;
@@ -671,7 +675,7 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(final T input) {
+    public void copyFrom(final BodyKinematics input) {
         mFx = input.mFx;
         mFy = input.mFy;
         mFz = input.mFz;
@@ -697,7 +701,7 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(final T other) {
+    public boolean equals(final BodyKinematics other) {
         return equals(other, 0.0);
     }
 
@@ -711,7 +715,7 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
      * @return true if both instances are considered to be equal (up to provided
      * threshold), false otherwise.
      */
-    public boolean equals(final T other, final double threshold) {
+    public boolean equals(final BodyKinematics other, final double threshold) {
         if (other == null) {
             return false;
         }
@@ -722,5 +726,39 @@ public abstract class FrameKinematics<T extends FrameKinematics> {
                 && Math.abs(mAngularRateX - other.mAngularRateX) <= threshold
                 && Math.abs(mAngularRateY - other.mAngularRateY) <= threshold
                 && Math.abs(mAngularRateZ - other.mAngularRateZ) <= threshold;
+    }
+
+    /**
+     * Checks if provided object is a NEDKinematics instance having exactly the same contents
+     * as this instance.
+     *
+     * @param obj object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof BodyKinematics)) {
+            return false;
+        }
+
+        final BodyKinematics other = (BodyKinematics) obj;
+        return equals(other);
+    }
+
+    /**
+     * Makes a copy of this instance.
+     *
+     * @return a copy of this instance.
+     */
+    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
+    @Override
+    protected Object clone() {
+        return new BodyKinematics(this);
     }
 }

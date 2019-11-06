@@ -27,7 +27,7 @@ import java.util.Random;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 
-public class NEDKinematicsTest {
+public class BodyKinematicsTest {
 
     private static final double MIN_SPECIFIC_FORCE = -9.81;
     private static final double MAX_SPECIFIC_FORCE = 9.81;
@@ -40,7 +40,7 @@ public class NEDKinematicsTest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        NEDKinematics k = new NEDKinematics();
+        BodyKinematics k = new BodyKinematics();
 
         // check default values
         assertEquals(k.getFx(), 0.0, 0.0);
@@ -71,7 +71,7 @@ public class NEDKinematicsTest {
         final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
         final double fz = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
 
-        k = new NEDKinematics(fx, fy, fz);
+        k = new BodyKinematics(fx, fy, fz);
 
         // check default values
         assertEquals(k.getFx(), fx, 0.0);
@@ -105,7 +105,7 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        k = new NEDKinematics(fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+        k = new BodyKinematics(fx, fy, fz, angularRateX, angularRateY, angularRateZ);
 
         // check default values
         assertEquals(k.getFx(), fx, 0.0);
@@ -137,7 +137,7 @@ public class NEDKinematicsTest {
         final Acceleration specificForceY = new Acceleration(fy, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration specificForceZ = new Acceleration(fz, AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        k = new NEDKinematics(specificForceX, specificForceY, specificForceZ);
+        k = new BodyKinematics(specificForceX, specificForceY, specificForceZ);
 
         // check default values
         assertEquals(k.getFx(), fx, 0.0);
@@ -167,7 +167,7 @@ public class NEDKinematicsTest {
         final AngularSpeed angularSpeedY = new AngularSpeed(angularRateY, AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed angularSpeedZ = new AngularSpeed(angularRateZ, AngularSpeedUnit.RADIANS_PER_SECOND);
 
-        k = new NEDKinematics(angularSpeedX, angularSpeedY, angularSpeedZ);
+        k = new BodyKinematics(angularSpeedX, angularSpeedY, angularSpeedZ);
 
         // check default values
         assertEquals(k.getFx(), 0.0, 0.0);
@@ -193,7 +193,7 @@ public class NEDKinematicsTest {
 
 
         // test constructor with specific forces accelerations and angular speeds
-        k = new NEDKinematics(specificForceX, specificForceY, specificForceZ,
+        k = new BodyKinematics(specificForceX, specificForceY, specificForceZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
         // check default values
@@ -220,7 +220,7 @@ public class NEDKinematicsTest {
 
 
         // test copy constructor
-        final NEDKinematics k2 = new NEDKinematics(k);
+        final BodyKinematics k2 = new BodyKinematics(k);
 
         // check default values
         assertEquals(k.getFx(), k2.getFx(), 0.0);
@@ -233,7 +233,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetFx() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getFx(), 0.0, 0.0);
@@ -251,7 +251,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetFy() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getFy(), 0.0, 0.0);
@@ -269,7 +269,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetFz() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getFz(), 0.0, 0.0);
@@ -286,7 +286,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testSetSpecificForceCoordinates() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default values
         assertEquals(k.getFx(), 0.0, 0.0);
@@ -308,7 +308,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetSpecificForceX() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), 0.0, 0.0);
@@ -334,7 +334,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetSpecificForceY() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getSpecificForceY().getValue().doubleValue(), 0.0, 0.0);
@@ -360,7 +360,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetSpecificForceZ() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getSpecificForceZ().getValue().doubleValue(), 0.0, 0.0);
@@ -386,7 +386,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testSetSpecificForceCoordinatesAsAcceleration() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default values
         assertEquals(k.getSpecificForceX().getValue().doubleValue(), 0.0, 0.0);
@@ -418,7 +418,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetAngularRateX() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getAngularRateX(), 0.0, 0.0);
@@ -436,7 +436,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetAngularRateY() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getAngularRateY(), 0.0, 0.0);
@@ -454,7 +454,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetAngularRateZ() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getAngularRateZ(), 0.0, 0.0);
@@ -472,7 +472,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testSetAngularRateCoordinates() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default values
         assertEquals(k.getAngularRateX(), 0.0, 0.0);
@@ -498,7 +498,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetAngularSpeedX() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), 0.0, 0.0);
@@ -524,7 +524,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetAngularSpeedY() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getAngularSpeedY().getValue().doubleValue(), 0.0, 0.0);
@@ -550,7 +550,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testGetSetAngularSpeedZ() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default value
         assertEquals(k.getAngularSpeedZ().getValue().doubleValue(), 0.0, 0.0);
@@ -576,7 +576,7 @@ public class NEDKinematicsTest {
 
     @Test
     public void testSetAngularSpeedCoordinates() {
-        final NEDKinematics k = new NEDKinematics();
+        final BodyKinematics k = new BodyKinematics();
 
         // check default values
         assertEquals(k.getAngularSpeedX().getValue().doubleValue(), 0.0, 0.0);
@@ -622,7 +622,7 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final double normF = Math.sqrt(fx * fx + fy * fy + fz * fz);
@@ -651,7 +651,7 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final double normAngularRate = Math.sqrt(angularRateX * angularRateX +
@@ -681,10 +681,10 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k1 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k1 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final NEDKinematics k2 = new NEDKinematics();
+        final BodyKinematics k2 = new BodyKinematics();
         k1.copyTo(k2);
 
         // check
@@ -709,10 +709,10 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k1 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k1 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final NEDKinematics k2 = new NEDKinematics();
+        final BodyKinematics k2 = new BodyKinematics();
         k2.copyFrom(k1);
 
         // check
@@ -737,11 +737,11 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k1 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k1 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
-        final NEDKinematics k2 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k2 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
-        final NEDKinematics k3 = new NEDKinematics();
+        final BodyKinematics k3 = new BodyKinematics();
 
         assertEquals(k1.hashCode(), k2.hashCode());
         assertNotEquals(k1.hashCode(), k3.hashCode());
@@ -760,11 +760,11 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k1 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k1 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
-        final NEDKinematics k2 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k2 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
-        final NEDKinematics k3 = new NEDKinematics();
+        final BodyKinematics k3 = new BodyKinematics();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
         assertTrue(k1.equals((Object)k1));
@@ -791,11 +791,11 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k1 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k1 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
-        final NEDKinematics k2 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k2 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
-        final NEDKinematics k3 = new NEDKinematics();
+        final BodyKinematics k3 = new BodyKinematics();
 
         assertTrue(k1.equals(k1, THRESHOLD));
         assertTrue(k1.equals(k2, THRESHOLD));
@@ -816,7 +816,7 @@ public class NEDKinematicsTest {
         final double angularRateZ = randomizer.nextDouble(MIN_ANGULAR_RATE_VALUE,
                 MAX_ANGULAR_RATE_VALUE);
 
-        final NEDKinematics k1 = new NEDKinematics(fx, fy, fz,
+        final BodyKinematics k1 = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final Object k2 = k1.clone();
