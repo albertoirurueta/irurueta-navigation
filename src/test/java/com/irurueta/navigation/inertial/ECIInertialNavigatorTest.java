@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.irurueta.navigation.inertial;
 
 import com.irurueta.algebra.Matrix;
@@ -23,10 +8,13 @@ import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.frames.ECEFFrame;
+import com.irurueta.navigation.frames.ECIFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.frames.NEDFrame;
+import com.irurueta.navigation.frames.converters.ECEFtoECIFrameConverter;
 import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
+import com.irurueta.navigation.frames.converters.ECItoECEFFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.statistics.UniformRandomizer;
@@ -38,7 +26,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class InertialECEFNavigatorTest {
+public class ECIInertialNavigatorTest {
     private static final double TIME_INTERVAL_SECONDS = 0.02;
 
     private static final double LATITUDE_DEGREES = 41.3825;
@@ -61,19 +49,19 @@ public class InertialECEFNavigatorTest {
     private static final double MIN_ANGULAR_RATE_DEGREES_PER_SECOND = -5.0;
     private static final double MAX_ANGULAR_RATE_DEGREES_PER_SECOND = 5.0;
 
-    private static final double ABSOLUTE_ERROR = 1e-8;
-    private static final double LARGE_ABSOLUTE_ERROR = 1e-2;
-    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-1;
+    private static final double ABSOLUTE_ERROR = 1e-5;
 
     private static final int TIMES = 100;
 
     @Test(expected = InvalidSourceAndDestinationFrameTypeException.class)
-    public void testNavigateEcefWhenInvalidCoordinateTransformationMatrix()
-            throws InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
+    public void testNavigateECiWhenInvalidCoordinateTransformationMatrix()
+            throws InvalidSourceAndDestinationFrameTypeException,
+            InertialNavigatorException {
+
         final CoordinateTransformation c = new CoordinateTransformation(
                 FrameType.BODY_FRAME, FrameType.BODY_FRAME);
-        final ECEFFrame result = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(0.0,
+        final ECIFrame result = new ECIFrame();
+        ECIInertialNavigator.navigateECI(0.0,
                 0.0, 0.0, 0.0, c,
                 0.0, 0.0, 0.0,
                 0.0, 0.0, 0.0,
@@ -81,9 +69,8 @@ public class InertialECEFNavigatorTest {
     }
 
     @Test
-    public void testNavigate() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
-        final InertialECEFNavigator navigator = new InertialECEFNavigator();
+    public void testNavigate() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
+        final ECIInertialNavigator navigator = new ECIInertialNavigator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -104,11 +91,14 @@ public class InertialECEFNavigatorTest {
 
         final Matrix m = q.asInhomogeneousMatrix();
         final CoordinateTransformation c = new CoordinateTransformation(
-                m, FrameType.BODY_FRAME,
-                FrameType.LOCAL_NAVIGATION_FRAME);
+                m, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, HEIGHT, vn, ve, vd, c);
-        final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, HEIGHT,
+                vn, ve, vd, c);
+        final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
+                .convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECIFrame oldFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
+                TIME_INTERVAL_SECONDS, oldEcefFrame);
 
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
@@ -117,7 +107,6 @@ public class InertialECEFNavigatorTest {
         final double oldVx = oldFrame.getVx();
         final double oldVy = oldFrame.getVy();
         final double oldVz = oldFrame.getVz();
-
 
         final double fx = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
         final double fy = randomizer.nextDouble(MIN_SPECIFIC_FORCE, MAX_SPECIFIC_FORCE);
@@ -153,65 +142,65 @@ public class InertialECEFNavigatorTest {
         final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result1 = new ECEFFrame();
+        final ECIFrame result1 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result1);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final ECEFFrame result2 = new ECEFFrame();
+        final ECIFrame result2 = new ECIFrame();
         navigator.navigate(timeInterval, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result2);
 
-        final ECEFFrame result3 = new ECEFFrame();
+        final ECIFrame result3 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, kinematics, result3);
 
-        final ECEFFrame result4 = new ECEFFrame();
+        final ECIFrame result4 = new ECIFrame();
         navigator.navigate(timeInterval, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, kinematics, result4);
 
         final Point3D oldPosition = new InhomogeneousPoint3D(oldX, oldY, oldZ);
-        final ECEFFrame result5 = new ECEFFrame();
+        final ECIFrame result5 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS, oldPosition,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result5);
 
-        final ECEFFrame result6 = new ECEFFrame();
+        final ECIFrame result6 = new ECIFrame();
         navigator.navigate(timeInterval, oldPosition,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result6);
 
-        final ECEFFrame result7 = new ECEFFrame();
+        final ECIFrame result7 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS, oldPosition,
                 oldC, oldVx, oldVy, oldVz, kinematics, result7);
 
-        final ECEFFrame result8 = new ECEFFrame();
+        final ECIFrame result8 = new ECIFrame();
         navigator.navigate(timeInterval, oldPosition,
                 oldC, oldVx, oldVy, oldVz, kinematics, result8);
 
         final Distance oldDistanceX = new Distance(oldX, DistanceUnit.METER);
         final Distance oldDistanceY = new Distance(oldY, DistanceUnit.METER);
         final Distance oldDistanceZ = new Distance(oldZ, DistanceUnit.METER);
-        final ECEFFrame result9 = new ECEFFrame();
+        final ECIFrame result9 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result9);
 
-        final ECEFFrame result10 = new ECEFFrame();
+        final ECIFrame result10 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result10);
 
-        final ECEFFrame result11 = new ECEFFrame();
+        final ECIFrame result11 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, kinematics, result11);
 
-        final ECEFFrame result12 = new ECEFFrame();
+        final ECIFrame result12 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, kinematics, result12);
@@ -219,24 +208,24 @@ public class InertialECEFNavigatorTest {
         final Speed oldSpeedX = new Speed(oldVx, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
-        final ECEFFrame result13 = new ECEFFrame();
+        final ECIFrame result13 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ,
                 result13);
 
-        final ECEFFrame result14 = new ECEFFrame();
+        final ECIFrame result14 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ,
                 result14);
 
-        final ECEFFrame result15 = new ECEFFrame();
+        final ECIFrame result15 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 kinematics, result15);
 
-        final ECEFFrame result16 = new ECEFFrame();
+        final ECIFrame result16 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 kinematics, result16);
@@ -244,122 +233,122 @@ public class InertialECEFNavigatorTest {
         final Acceleration accelerationX = new Acceleration(fx, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationY = new Acceleration(fy, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationZ = new Acceleration(fz, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final ECEFFrame result17 = new ECEFFrame();
+        final ECIFrame result17 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result17);
 
-        final ECEFFrame result18 = new ECEFFrame();
+        final ECIFrame result18 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result18);
 
-        final ECEFFrame result19 = new ECEFFrame();
+        final ECIFrame result19 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result19);
 
-        final ECEFFrame result20 = new ECEFFrame();
+        final ECIFrame result20 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result20);
 
-        final ECEFFrame result21 = new ECEFFrame();
+        final ECIFrame result21 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result21);
 
-        final ECEFFrame result22 = new ECEFFrame();
+        final ECIFrame result22 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result22);
 
-        final ECEFFrame result23 = new ECEFFrame();
+        final ECIFrame result23 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result23);
 
-        final ECEFFrame result24 = new ECEFFrame();
+        final ECIFrame result24 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result24);
 
-        final ECEFFrame result25 = new ECEFFrame();
+        final ECIFrame result25 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result25);
 
-        final ECEFFrame result26 = new ECEFFrame();
+        final ECIFrame result26 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result26);
 
-        final ECEFFrame result27 = new ECEFFrame();
+        final ECIFrame result27 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics,
                 result27);
 
-        final ECEFFrame result28 = new ECEFFrame();
+        final ECIFrame result28 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics,
                 result28);
 
-        final ECEFFrame result29 = new ECEFFrame();
+        final ECIFrame result29 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldFrame, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result29);
 
-        final ECEFFrame result30 = new ECEFFrame();
+        final ECIFrame result30 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldFrame, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result30);
 
-        final ECEFFrame result31 = new ECEFFrame();
+        final ECIFrame result31 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldFrame, kinematics, result31);
 
-        final ECEFFrame result32 = new ECEFFrame();
+        final ECIFrame result32 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldFrame, kinematics, result32);
 
-        final ECEFFrame result33 = new ECEFFrame();
+        final ECIFrame result33 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result33);
 
-        final ECEFFrame result34 = new ECEFFrame();
+        final ECIFrame result34 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result34);
 
-        final ECEFFrame result35 = new ECEFFrame();
+        final ECIFrame result35 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldFrame, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result35);
 
-        final ECEFFrame result36 = new ECEFFrame();
+        final ECIFrame result36 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldFrame, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result36);
 
-        final ECEFFrame result37 = new ECEFFrame();
+        final ECIFrame result37 = new ECIFrame();
         navigator.navigate(TIME_INTERVAL_SECONDS,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result37);
 
-        final ECEFFrame result38 = new ECEFFrame();
+        final ECIFrame result38 = new ECIFrame();
         navigator.navigate(timeInterval,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result38);
@@ -406,7 +395,7 @@ public class InertialECEFNavigatorTest {
     @Test
     public void testNavigateAndReturnNew() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
-        final InertialECEFNavigator navigator = new InertialECEFNavigator();
+        final ECIInertialNavigator navigator = new ECIInertialNavigator();
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -431,7 +420,9 @@ public class InertialECEFNavigatorTest {
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
         final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, HEIGHT, vn, ve, vd, c);
-        final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECIFrame oldFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
+                TIME_INTERVAL_SECONDS, oldEcefFrame);
 
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
@@ -476,65 +467,65 @@ public class InertialECEFNavigatorTest {
         final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result1 = navigator.navigateAndReturnNew(
+        final ECIFrame result1 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final ECEFFrame result2 = navigator.navigateAndReturnNew(
+        final ECIFrame result2 = navigator.navigateAndReturnNew(
                 timeInterval, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result3 = navigator.navigateAndReturnNew(
+        final ECIFrame result3 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, kinematics);
 
-        final ECEFFrame result4 = navigator.navigateAndReturnNew(
+        final ECIFrame result4 = navigator.navigateAndReturnNew(
                 timeInterval, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, kinematics);
 
         final Point3D oldPosition = new InhomogeneousPoint3D(oldX, oldY, oldZ);
-        final ECEFFrame result5 = navigator.navigateAndReturnNew(
+        final ECIFrame result5 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS, oldPosition,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result6 = navigator.navigateAndReturnNew(
+        final ECIFrame result6 = navigator.navigateAndReturnNew(
                 timeInterval, oldPosition,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result7 = navigator.navigateAndReturnNew(
+        final ECIFrame result7 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS, oldPosition,
                 oldC, oldVx, oldVy, oldVz, kinematics);
 
-        final ECEFFrame result8 = navigator.navigateAndReturnNew(
+        final ECIFrame result8 = navigator.navigateAndReturnNew(
                 timeInterval, oldPosition,
                 oldC, oldVx, oldVy, oldVz, kinematics);
 
         final Distance oldDistanceX = new Distance(oldX, DistanceUnit.METER);
         final Distance oldDistanceY = new Distance(oldY, DistanceUnit.METER);
         final Distance oldDistanceZ = new Distance(oldZ, DistanceUnit.METER);
-        final ECEFFrame result9 = navigator.navigateAndReturnNew(
+        final ECIFrame result9 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result10 = navigator.navigateAndReturnNew(
+        final ECIFrame result10 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result11 = navigator.navigateAndReturnNew(
+        final ECIFrame result11 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, kinematics);
 
-        final ECEFFrame result12 = navigator.navigateAndReturnNew(
+        final ECIFrame result12 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, kinematics);
@@ -542,22 +533,22 @@ public class InertialECEFNavigatorTest {
         final Speed oldSpeedX = new Speed(oldVx, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
-        final ECEFFrame result13 = navigator.navigateAndReturnNew(
+        final ECIFrame result13 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result14 = navigator.navigateAndReturnNew(
+        final ECIFrame result14 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result15 = navigator.navigateAndReturnNew(
+        final ECIFrame result15 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 kinematics);
 
-        final ECEFFrame result16 = navigator.navigateAndReturnNew(
+        final ECIFrame result16 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 kinematics);
@@ -565,118 +556,118 @@ public class InertialECEFNavigatorTest {
         final Acceleration accelerationX = new Acceleration(fx, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationY = new Acceleration(fy, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationZ = new Acceleration(fz, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final ECEFFrame result17 = navigator.navigateAndReturnNew(
+        final ECIFrame result17 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result18 = navigator.navigateAndReturnNew(
+        final ECIFrame result18 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result19 = navigator.navigateAndReturnNew(
+        final ECIFrame result19 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result20 = navigator.navigateAndReturnNew(
+        final ECIFrame result20 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result21 = navigator.navigateAndReturnNew(
+        final ECIFrame result21 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result22 = navigator.navigateAndReturnNew(
+        final ECIFrame result22 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result23 = navigator.navigateAndReturnNew(
+        final ECIFrame result23 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result24 = navigator.navigateAndReturnNew(
+        final ECIFrame result24 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result25 = navigator.navigateAndReturnNew(
+        final ECIFrame result25 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result26 = navigator.navigateAndReturnNew(
+        final ECIFrame result26 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result27 = navigator.navigateAndReturnNew(
+        final ECIFrame result27 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
 
-        final ECEFFrame result28 = navigator.navigateAndReturnNew(
+        final ECIFrame result28 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
 
-        final ECEFFrame result29 = navigator.navigateAndReturnNew(
+        final ECIFrame result29 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldFrame, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result30 = navigator.navigateAndReturnNew(
+        final ECIFrame result30 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldFrame, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result31 = navigator.navigateAndReturnNew(
+        final ECIFrame result31 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS, oldFrame, kinematics);
 
-        final ECEFFrame result32 = navigator.navigateAndReturnNew(
+        final ECIFrame result32 = navigator.navigateAndReturnNew(
                 timeInterval, oldFrame, kinematics);
 
-        final ECEFFrame result33 = navigator.navigateAndReturnNew(
+        final ECIFrame result33 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result34 = navigator.navigateAndReturnNew(
+        final ECIFrame result34 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result35 = navigator.navigateAndReturnNew(
+        final ECIFrame result35 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldFrame, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result36 = navigator.navigateAndReturnNew(
+        final ECIFrame result36 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldFrame, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result37 = navigator.navigateAndReturnNew(
+        final ECIFrame result37 = navigator.navigateAndReturnNew(
                 TIME_INTERVAL_SECONDS,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result38 = navigator.navigateAndReturnNew(
+        final ECIFrame result38 = navigator.navigateAndReturnNew(
                 timeInterval,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ);
@@ -721,7 +712,7 @@ public class InertialECEFNavigatorTest {
     }
 
     @Test
-    public void testNavigateEcef() throws InvalidRotationMatrixException,
+    public void testNavigateEci() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -746,7 +737,10 @@ public class InertialECEFNavigatorTest {
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
         final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, HEIGHT, vn, ve, vd, c);
-        final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
+                .convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECIFrame oldFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
+                TIME_INTERVAL_SECONDS, oldEcefFrame);
 
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
@@ -791,214 +785,214 @@ public class InertialECEFNavigatorTest {
         final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result1 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
+        final ECIFrame result1 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result1);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final ECEFFrame result2 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval, oldX, oldY, oldZ,
+        final ECIFrame result2 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result2);
 
-        final ECEFFrame result3 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
+        final ECIFrame result3 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, kinematics, result3);
 
-        final ECEFFrame result4 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval, oldX, oldY, oldZ,
+        final ECIFrame result4 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval, oldX, oldY, oldZ,
                 oldC, oldVx, oldVy, oldVz, kinematics, result4);
 
         final Point3D oldPosition = new InhomogeneousPoint3D(oldX, oldY, oldZ);
-        final ECEFFrame result5 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS, oldPosition,
+        final ECIFrame result5 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS, oldPosition,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result5);
 
-        final ECEFFrame result6 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval, oldPosition,
+        final ECIFrame result6 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval, oldPosition,
                 oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result6);
 
-        final ECEFFrame result7 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS, oldPosition,
+        final ECIFrame result7 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS, oldPosition,
                 oldC, oldVx, oldVy, oldVz, kinematics, result7);
 
-        final ECEFFrame result8 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval, oldPosition,
+        final ECIFrame result8 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval, oldPosition,
                 oldC, oldVx, oldVy, oldVz, kinematics, result8);
 
         final Distance oldDistanceX = new Distance(oldX, DistanceUnit.METER);
         final Distance oldDistanceY = new Distance(oldY, DistanceUnit.METER);
         final Distance oldDistanceZ = new Distance(oldZ, DistanceUnit.METER);
-        final ECEFFrame result9 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result9 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result9);
 
-        final ECEFFrame result10 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result10 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result10);
 
-        final ECEFFrame result11 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result11 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, kinematics, result11);
 
-        final ECEFFrame result12 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result12 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldVx, oldVy, oldVz, kinematics, result12);
 
         final Speed oldSpeedX = new Speed(oldVx, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
-        final ECEFFrame result13 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result13 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ,
                 result13);
 
-        final ECEFFrame result14 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result14 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ,
                 result14);
 
-        final ECEFFrame result15 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result15 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 kinematics, result15);
 
-        final ECEFFrame result16 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result16 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                 kinematics, result16);
 
         final Acceleration accelerationX = new Acceleration(fx, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationY = new Acceleration(fy, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationZ = new Acceleration(fz, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final ECEFFrame result17 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result17 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result17);
 
-        final ECEFFrame result18 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result18 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result18);
 
-        final ECEFFrame result19 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result19 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result19);
 
-        final ECEFFrame result20 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result20 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result20);
 
-        final ECEFFrame result21 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result21 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result21);
 
-        final ECEFFrame result22 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result22 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result22);
 
-        final ECEFFrame result23 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result23 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result23);
 
-        final ECEFFrame result24 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result24 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result24);
 
-        final ECEFFrame result25 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result25 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result25);
 
-        final ECEFFrame result26 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result26 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result26);
 
-        final ECEFFrame result27 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result27 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics,
                 result27);
 
-        final ECEFFrame result28 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result28 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics,
                 result28);
 
-        final ECEFFrame result29 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result29 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldFrame, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result29);
 
-        final ECEFFrame result30 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result30 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldFrame, fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ, result30);
 
-        final ECEFFrame result31 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result31 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldFrame, kinematics, result31);
 
-        final ECEFFrame result32 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result32 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldFrame, kinematics, result32);
 
-        final ECEFFrame result33 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result33 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result33);
 
-        final ECEFFrame result34 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result34 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularRateX, angularRateY, angularRateZ, result34);
 
-        final ECEFFrame result35 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result35 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldFrame, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result35);
 
-        final ECEFFrame result36 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result36 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldFrame, fx, fy, fz,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result36);
 
-        final ECEFFrame result37 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(TIME_INTERVAL_SECONDS,
+        final ECIFrame result37 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(TIME_INTERVAL_SECONDS,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result37);
 
-        final ECEFFrame result38 = new ECEFFrame();
-        InertialECEFNavigator.navigateECEF(timeInterval,
+        final ECIFrame result38 = new ECIFrame();
+        ECIInertialNavigator.navigateECI(timeInterval,
                 oldFrame, accelerationX, accelerationY, accelerationZ,
                 angularSpeedX, angularSpeedY, angularSpeedZ, result38);
 
@@ -1042,7 +1036,7 @@ public class InertialECEFNavigatorTest {
     }
 
     @Test
-    public void testNavigateEcefAndReturnNew() throws InvalidRotationMatrixException,
+    public void testNavigateEciAndReturnNew() throws InvalidRotationMatrixException,
             InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 
@@ -1067,7 +1061,10 @@ public class InertialECEFNavigatorTest {
                 FrameType.LOCAL_NAVIGATION_FRAME);
 
         final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, HEIGHT, vn, ve, vd, c);
-        final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
+                .convertNEDtoECEFAndReturnNew(oldNedFrame);
+        final ECIFrame oldFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
+                TIME_INTERVAL_SECONDS, oldEcefFrame);
 
         final double oldX = oldFrame.getX();
         final double oldY = oldFrame.getY();
@@ -1112,210 +1109,210 @@ public class InertialECEFNavigatorTest {
         final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
                 angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result1 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
+        final ECIFrame result1 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                         oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
         final Time timeInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
-        final ECEFFrame result2 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ,
+        final ECIFrame result2 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval, oldX, oldY, oldZ,
                         oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result3 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
+        final ECIFrame result3 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS, oldX, oldY, oldZ,
                         oldC, oldVx, oldVy, oldVz, kinematics);
 
-        final ECEFFrame result4 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ,
+        final ECIFrame result4 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval, oldX, oldY, oldZ,
                         oldC, oldVx, oldVy, oldVz, kinematics);
 
         final Point3D oldPosition = new InhomogeneousPoint3D(oldX, oldY, oldZ);
-        final ECEFFrame result5 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS, oldPosition,
+        final ECIFrame result5 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS, oldPosition,
                         oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result6 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval, oldPosition,
+        final ECIFrame result6 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval, oldPosition,
                         oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result7 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS, oldPosition,
+        final ECIFrame result7 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS, oldPosition,
                         oldC, oldVx, oldVy, oldVz, kinematics);
 
-        final ECEFFrame result8 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval, oldPosition,
+        final ECIFrame result8 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval, oldPosition,
                         oldC, oldVx, oldVy, oldVz, kinematics);
 
         final Distance oldDistanceX = new Distance(oldX, DistanceUnit.METER);
         final Distance oldDistanceY = new Distance(oldY, DistanceUnit.METER);
         final Distance oldDistanceZ = new Distance(oldZ, DistanceUnit.METER);
-        final ECEFFrame result9 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result9 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldVx, oldVy, oldVz, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result10 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result10 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldVx, oldVy, oldVz, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result11 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result11 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldVx, oldVy, oldVz, kinematics);
 
-        final ECEFFrame result12 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result12 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldVx, oldVy, oldVz, kinematics);
 
         final Speed oldSpeedX = new Speed(oldVx, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedY = new Speed(oldVy, SpeedUnit.METERS_PER_SECOND);
         final Speed oldSpeedZ = new Speed(oldVz, SpeedUnit.METERS_PER_SECOND);
-        final ECEFFrame result13 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result13 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                         fx, fy, fz, angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result14 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result14 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                         fx, fy, fz, angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result15 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result15 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                         kinematics);
 
-        final ECEFFrame result16 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result16 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
                         kinematics);
 
         final Acceleration accelerationX = new Acceleration(fx, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationY = new Acceleration(fy, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration accelerationZ = new Acceleration(fz, AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final ECEFFrame result17 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result17 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                         accelerationX, accelerationY, accelerationZ,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result18 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result18 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                         accelerationX, accelerationY, accelerationZ,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result19 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result19 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result20 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result20 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy, fz,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result21 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result21 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result22 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result22 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result23 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result23 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldSpeedX, oldSpeedY, oldSpeedZ,
                         accelerationX, accelerationY, accelerationZ,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result24 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result24 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldSpeedX, oldSpeedY, oldSpeedZ,
                         accelerationX, accelerationY, accelerationZ,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result25 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result25 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                         accelerationX, accelerationY, accelerationZ,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result26 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result26 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                         accelerationX, accelerationY, accelerationZ,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result27 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result27 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
 
-        final ECEFFrame result28 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result28 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldDistanceX, oldDistanceY, oldDistanceZ, oldC,
                         oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
 
-        final ECEFFrame result29 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result29 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldFrame, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result30 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result30 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldFrame, fx, fy, fz,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result31 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result31 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldFrame, kinematics);
 
-        final ECEFFrame result32 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result32 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldFrame, kinematics);
 
-        final ECEFFrame result33 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result33 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldFrame, accelerationX, accelerationY, accelerationZ,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result34 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result34 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldFrame, accelerationX, accelerationY, accelerationZ,
                         angularRateX, angularRateY, angularRateZ);
 
-        final ECEFFrame result35 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result35 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldFrame, fx, fy, fz,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result36 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result36 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldFrame, fx, fy, fz,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result37 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(TIME_INTERVAL_SECONDS,
+        final ECIFrame result37 = ECIInertialNavigator
+                .navigateECIAndReturnNew(TIME_INTERVAL_SECONDS,
                         oldFrame, accelerationX, accelerationY, accelerationZ,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
-        final ECEFFrame result38 = InertialECEFNavigator
-                .navigateECEFAndReturnNew(timeInterval,
+        final ECIFrame result38 = ECIInertialNavigator
+                .navigateECIAndReturnNew(timeInterval,
                         oldFrame, accelerationX, accelerationY, accelerationZ,
                         angularSpeedX, angularSpeedY, angularSpeedZ);
 
@@ -1359,9 +1356,10 @@ public class InertialECEFNavigatorTest {
     }
 
     @Test
-    public void testNavigateFreeFallingBody() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException,
-            WrongSizeException {
+    public void testCompareNavigations()
+            throws InvalidSourceAndDestinationFrameTypeException,
+            InvalidRotationMatrixException, WrongSizeException,
+            InertialNavigatorException {
 
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
@@ -1373,9 +1371,9 @@ public class InertialECEFNavigatorTest {
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
             final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
 
-            final double vn = 0.0;
-            final double ve = 0.0;
-            final double vd = 0.0;
+            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
             final double roll = Math.toRadians(
                     randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
@@ -1391,10 +1389,13 @@ public class InertialECEFNavigatorTest {
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-            final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(oldFrame);
+            final ECEFFrame oldEcefFrame = NEDtoECEFFrameConverter
+                    .convertNEDtoECEFAndReturnNew(oldNedFrame);
+            final ECIFrame oldFrame = ECEFtoECIFrameConverter.convertECEFtoECIAndReturnNew(
+                    TIME_INTERVAL_SECONDS, oldEcefFrame);
+            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(oldEcefFrame);
             final Matrix g = gravity.asMatrix();
-            final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
+            final Matrix cbe = oldEcefFrame.getCoordinateTransformation().getMatrix();
             final Matrix f = cbe.multiplyAndReturnNew(g);
 
             final double fx = f.getElementAtIndex(0);
@@ -1431,304 +1432,26 @@ public class InertialECEFNavigatorTest {
             final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
                     angularRateX, angularRateY, angularRateZ);
 
-            final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
-                    TIME_INTERVAL_SECONDS,
-                    oldFrame, kinematics);
-
-            final NEDFrame newNedFrame = ECEFtoNEDFrameConverter
-                    .convertECEFtoNEDAndReturnNew(newFrame);
-
-            // Because body is in free fall its latitude and longitude does not change
-            assertEquals(oldNedFrame.getLatitude(), newNedFrame.getLatitude(),
-                    ABSOLUTE_ERROR);
-            assertEquals(oldNedFrame.getLongitude(), newNedFrame.getLongitude(),
-                    ABSOLUTE_ERROR);
-
-            // Since body is falling, new height is smaller than the initial one
-            assertTrue(newNedFrame.getHeight() < oldNedFrame.getHeight());
-
-            numValid++;
-        }
-
-        assertEquals(numValid, TIMES);
-    }
-
-    @Test
-    public void testNavigateZeroTimeInterval() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException,
-            WrongSizeException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
-
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-            final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-            final ECEFGravity gravity = ECEFGravityEstimator.estimateGravityAndReturnNew(oldFrame);
-            final Matrix g = gravity.asMatrix();
-            final Matrix cbe = oldFrame.getCoordinateTransformation().getMatrix();
-            final Matrix f = cbe.multiplyAndReturnNew(g);
-
-            final double fx = f.getElementAtIndex(0);
-            final double fy = f.getElementAtIndex(1);
-            final double fz = f.getElementAtIndex(2);
-
-            final double angularRateXDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-            final double angularRateYDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-            final double angularRateZDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-
-            final AngularSpeed angularSpeedX = new AngularSpeed(angularRateXDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-            final AngularSpeed angularSpeedY = new AngularSpeed(angularRateYDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-            final AngularSpeed angularSpeedZ = new AngularSpeed(angularRateZDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-
-            final double angularRateX = AngularSpeedConverter.convert(
-                    angularSpeedX.getValue().doubleValue(), angularSpeedX.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final double angularRateY = AngularSpeedConverter.convert(
-                    angularSpeedY.getValue().doubleValue(), angularSpeedY.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final double angularRateZ = AngularSpeedConverter.convert(
-                    angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-
-            final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
-                    angularRateX, angularRateY, angularRateZ);
-
-            final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
-                    0.0, oldFrame, kinematics);
-
-            final NEDFrame newNedFrame = ECEFtoNEDFrameConverter
-                    .convertECEFtoNEDAndReturnNew(newFrame);
-
-            // Because time interval is zero, body hasn't moved
-            assertEquals(oldNedFrame.getLatitude(), newNedFrame.getLatitude(),
-                    ABSOLUTE_ERROR);
-            assertEquals(oldNedFrame.getLongitude(), newNedFrame.getLongitude(),
-                    ABSOLUTE_ERROR);
-            assertEquals(oldNedFrame.getHeight(), newNedFrame.getHeight(),
-                    ABSOLUTE_ERROR);
-            assertTrue(oldNedFrame.equals(newNedFrame, ABSOLUTE_ERROR));
-
-            numValid++;
-        }
-
-        assertEquals(numValid, TIMES);
-    }
-
-    @Test
-    public void testNavigateWithInitialVelocityAndNoSpecificForce() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-            final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
-
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
-
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-            final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-
-            final double fx = 0.0;
-            final double fy = 0.0;
-            final double fz = 0.0;
-
-            final double angularRateXDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-            final double angularRateYDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-            final double angularRateZDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-
-            final AngularSpeed angularSpeedX = new AngularSpeed(angularRateXDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-            final AngularSpeed angularSpeedY = new AngularSpeed(angularRateYDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-            final AngularSpeed angularSpeedZ = new AngularSpeed(angularRateZDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-
-            final double angularRateX = AngularSpeedConverter.convert(
-                    angularSpeedX.getValue().doubleValue(), angularSpeedX.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final double angularRateY = AngularSpeedConverter.convert(
-                    angularSpeedY.getValue().doubleValue(), angularSpeedY.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final double angularRateZ = AngularSpeedConverter.convert(
-                    angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-
-            final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
-                    angularRateX, angularRateY, angularRateZ);
-
-            final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
-                    TIME_INTERVAL_SECONDS,
-                    oldFrame, kinematics);
-
-            final NEDFrame newNedFrame = ECEFtoNEDFrameConverter
-                    .convertECEFtoNEDAndReturnNew(newFrame);
-
-            // Because no specific force is applied to body, it will keep its inertia
-            // (initial speed). This is approximate, since as the body moves the amount
-            // of gravity applied to it changes as well
-            final double oldSpeed = oldNedFrame.getVelocityNorm();
-            double newSpeed = newNedFrame.getVelocityNorm();
-
-            final Point3D oldPosition = oldFrame.getPosition();
-            final Point3D newPosition = newFrame.getPosition();
-            final double distance = oldPosition.distanceTo(newPosition);
-
-            final double estimatedSpeed = distance / TIME_INTERVAL_SECONDS;
-
-            assertEquals(estimatedSpeed, newSpeed, VERY_LARGE_ABSOLUTE_ERROR);
-            assertEquals(oldSpeed, newSpeed, 2.0 * VERY_LARGE_ABSOLUTE_ERROR);
-
-            numValid++;
-        }
-
-        assertEquals(numValid, TIMES);
-    }
-
-    @Test
-    public void testNavigateWithNoInitialVelocityAndNoSpecificForce() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException, InertialNavigatorException {
-
-        int numValid = 0;
-        for (int t = 0; t < TIMES; t++) {
-            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-
-            final double latitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double longitude = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-
-            final double vn = 0.0;
-            final double ve = 0.0;
-            final double vd = 0.0;
-
-            final double roll = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double pitch = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final double yaw = Math.toRadians(
-                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-            final Quaternion q = new Quaternion(roll, pitch, yaw);
-
-            final Matrix m = q.asInhomogeneousMatrix();
-            final CoordinateTransformation c = new CoordinateTransformation(
-                    m, FrameType.BODY_FRAME,
-                    FrameType.LOCAL_NAVIGATION_FRAME);
-
-            final NEDFrame oldNedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-            final ECEFFrame oldFrame = NEDtoECEFFrameConverter.convertNEDtoECEFAndReturnNew(oldNedFrame);
-
-            final double fx = 0.0;
-            final double fy = 0.0;
-            final double fz = 0.0;
-
-            final double angularRateXDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-            final double angularRateYDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-            final double angularRateZDegreesPerSecond = randomizer.nextDouble(
-                    MIN_ANGULAR_RATE_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_RATE_DEGREES_PER_SECOND);
-
-            final AngularSpeed angularSpeedX = new AngularSpeed(angularRateXDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-            final AngularSpeed angularSpeedY = new AngularSpeed(angularRateYDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-            final AngularSpeed angularSpeedZ = new AngularSpeed(angularRateZDegreesPerSecond,
-                    AngularSpeedUnit.DEGREES_PER_SECOND);
-
-            final double angularRateX = AngularSpeedConverter.convert(
-                    angularSpeedX.getValue().doubleValue(), angularSpeedX.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final double angularRateY = AngularSpeedConverter.convert(
-                    angularSpeedY.getValue().doubleValue(), angularSpeedY.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-            final double angularRateZ = AngularSpeedConverter.convert(
-                    angularSpeedZ.getValue().doubleValue(), angularSpeedZ.getUnit(),
-                    AngularSpeedUnit.RADIANS_PER_SECOND);
-
-            final BodyKinematics kinematics = new BodyKinematics(fx, fy, fz,
-                    angularRateX, angularRateY, angularRateZ);
-
-            final ECEFFrame newFrame = InertialECEFNavigator.navigateECEFAndReturnNew(
+            final ECIFrame newFrame = ECIInertialNavigator.navigateECIAndReturnNew(
                     TIME_INTERVAL_SECONDS, oldFrame, kinematics);
 
-            final NEDFrame newNedFrame = ECEFtoNEDFrameConverter
-                    .convertECEFtoNEDAndReturnNew(newFrame);
+            final ECEFFrame newEcefFrame1 = ECEFInertialNavigator.navigateECEFAndReturnNew(
+                    TIME_INTERVAL_SECONDS, oldEcefFrame, kinematics);
+            final ECEFFrame newEcefFrame2 = ECItoECEFFrameConverter.convertECItoECEFAndReturnNew(
+                    TIME_INTERVAL_SECONDS, newFrame);
 
-            // Because no forces are applied to the body and the body has no initial velocity,
-            // the body will remain on the same position
-            assertEquals(oldNedFrame.getLatitude(), newNedFrame.getLatitude(),
-                    ABSOLUTE_ERROR);
-            assertEquals(oldNedFrame.getLongitude(), newNedFrame.getLongitude(),
-                    ABSOLUTE_ERROR);
-            assertEquals(oldNedFrame.getHeight(), newNedFrame.getHeight(),
-                    LARGE_ABSOLUTE_ERROR);
+            final NEDFrame newNedFrame1 = ECEFtoNEDFrameConverter
+                    .convertECEFtoNEDAndReturnNew(newEcefFrame1);
+            final NEDFrame newNedFrame2 = ECEFtoNEDFrameConverter
+                    .convertECEFtoNEDAndReturnNew(newEcefFrame2);
+
+            // compare
+            assertTrue(newNedFrame1.equals(newNedFrame2, ABSOLUTE_ERROR));
 
             numValid++;
         }
 
         assertEquals(numValid, TIMES);
     }
+
 }

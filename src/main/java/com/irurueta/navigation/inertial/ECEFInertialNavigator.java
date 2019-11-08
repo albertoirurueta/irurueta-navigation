@@ -36,7 +36,7 @@ import com.irurueta.units.*;
  * https://github.com/ymjdz/InertialDemoECEF
  */
 @SuppressWarnings("WeakerAccess")
-public class InertialECEFNavigator {
+public class ECEFInertialNavigator {
 
     /**
      * Earth rotation rate expressed in radians per second (rad/s).
@@ -3735,7 +3735,6 @@ public class InertialECEFNavigator {
             fibb.setElementAtIndex(2, fz);
 
             // fibe = aveCbe * fibb
-//            final Matrix fibe = oldCbe.multiplyAndReturnNew(fibb);
             oldCbe.multiply(fibb);
 
             // Update velocity
