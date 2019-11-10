@@ -51,7 +51,7 @@ public class CoordinateTransformationTest {
         assertEquals(CoordinateTransformation.ROWS, 3);
         assertEquals(CoordinateTransformation.COLS, 3);
         assertEquals(CoordinateTransformation.DEFAULT_THRESHOLD,
-                Rotation3D.DEFAULT_VALID_THRESHOLD, 0.0);
+                1e-11, 0.0);
         assertEquals(CoordinateTransformation.EARTH_ROTATION_RATE,
                 Constants.EARTH_ROTATION_RATE, 0.0);
     }

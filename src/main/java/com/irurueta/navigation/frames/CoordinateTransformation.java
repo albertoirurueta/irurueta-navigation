@@ -55,7 +55,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
     /**
      * Default threshold to consider a matrix valid.
      */
-    public static final double DEFAULT_THRESHOLD = Rotation3D.DEFAULT_VALID_THRESHOLD;
+    public static final double DEFAULT_THRESHOLD = 1e-11;
 
     /**
      * Earth rotation rate expressed in radians per second (rad/s).
@@ -223,7 +223,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * @throws InvalidRotationMatrixException if provided matrix is not a valid rotation matrix (3x3 and orthonormal).
      */
     public void setMatrix(final Matrix matrix) throws InvalidRotationMatrixException {
-        setMatrix(matrix, Rotation3D.DEFAULT_VALID_THRESHOLD);
+        setMatrix(matrix, DEFAULT_THRESHOLD);
     }
 
     /**
