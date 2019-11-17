@@ -18,6 +18,7 @@ package com.irurueta.navigation.inertial.estimators;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.NEDGravity;
+import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
@@ -163,6 +164,45 @@ public class NEDGravityEstimatorTest {
         final NEDGravityEstimator estimator = new NEDGravityEstimator();
         final NEDGravity gravity = estimator.estimateAndReturnNew(
                 latitudeAngle, heightDistance);
+
+        final double g = Math.sqrt(Math.pow(gravity.getGn(), 2.0)
+                + Math.pow(gravity.getGe(), 2.0)
+                + Math.pow(gravity.getGd(), 2.0));
+
+        assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testEstimateWithNEDPosition() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double latitude = Math.toRadians(LATITUDE_DEGREES);
+        final double longitude = Math.toRadians(LONGITUDE_DEGREES);
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final NEDPosition position = new NEDPosition(latitude, longitude, height);
+
+        final NEDGravityEstimator estimator = new NEDGravityEstimator();
+        final NEDGravity gravity = new NEDGravity();
+        estimator.estimate(position, gravity);
+
+        final double g = Math.sqrt(Math.pow(gravity.getGn(), 2.0)
+                + Math.pow(gravity.getGe(), 2.0)
+                + Math.pow(gravity.getGd(), 2.0));
+
+        assertEquals(g, GRAVITY, ABSOLUTE_ERROR);
+    }
+
+    @Test
+    public void testEstimateAndReturnNewWithNEDPosition() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+        final double latitude = Math.toRadians(LATITUDE_DEGREES);
+        final double longitude = Math.toRadians(LONGITUDE_DEGREES);
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+        final NEDPosition position = new NEDPosition(latitude, longitude, height);
+
+        final NEDGravityEstimator estimator = new NEDGravityEstimator();
+        final NEDGravity gravity = estimator.estimateAndReturnNew(position);
 
         final double g = Math.sqrt(Math.pow(gravity.getGn(), 2.0)
                 + Math.pow(gravity.getGe(), 2.0)

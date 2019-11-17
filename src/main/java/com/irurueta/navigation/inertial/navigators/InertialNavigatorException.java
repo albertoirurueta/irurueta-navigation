@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial;
+package com.irurueta.navigation.inertial.navigators;
+
+import com.irurueta.navigation.inertial.InertialException;
 
 /**
  * Exception raised when inertial navigation fails for some reason (typically, numerical instabilities).

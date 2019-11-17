@@ -18,6 +18,7 @@ package com.irurueta.navigation.inertial.estimators;
 import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.NEDGravity;
+import com.irurueta.navigation.inertial.NEDPosition;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleConverter;
 import com.irurueta.units.AngleUnit;
@@ -134,6 +135,26 @@ public class NEDGravityEstimator {
     /**
      * Estimates acceleration due to gravity resolved about NED for a given position expressed in NED coordinates.
      *
+     * @param position curvilinear position expressed in NED coordinates.
+     * @param result   instance where estimated acceleration due to gravity will be stored.
+     */
+    public void estimate(final NEDPosition position, final NEDGravity result) {
+        estimateGravity(position, result);
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about NED for a given position expressed in NED coordinates.
+     *
+     * @param position curvilinear position expressed in NED coordinates.
+     * @return a new gravity instance containing estimated acceleration due to gravity.
+     */
+    public NEDGravity estimateAndReturnNew(final NEDPosition position) {
+        return estimateGravityAndReturnNew(position);
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about NED for a given position expressed in NED coordinates.
+     *
      * @param latitude latitude expressed in radians (rad).
      * @param height   height expressed in meters (m).
      * @param result   instance where estimated acceleration due to gravity will be stored.
@@ -212,6 +233,28 @@ public class NEDGravityEstimator {
      */
     public static NEDGravity estimateGravityAndReturnNew(final Angle latitude, final Distance height) {
         return estimateGravityAndReturnNew(convertAngle(latitude), convertDistance(height));
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about NED for a given position expressed in NED coordinates.
+     *
+     * @param position curvilinear position expressed in NED coordinates.
+     * @param result   instance where estimated acceleration due to gravity will be stored.
+     */
+    public static void estimateGravity(final NEDPosition position, final NEDGravity result) {
+        estimateGravity(position.getLatitude(), position.getHeight(), result);
+    }
+
+    /**
+     * Estimates acceleration due to gravity resolved about NED for a given position expressed in NED coordinates.
+     *
+     * @param position curvilinear position expressed in NED coordinates.
+     * @return a new gravity instance containing estimated acceleration due to gravity.
+     */
+    public static NEDGravity estimateGravityAndReturnNew(final NEDPosition position) {
+        final NEDGravity result = new NEDGravity();
+        estimateGravity(position, result);
+        return result;
     }
 
     /**

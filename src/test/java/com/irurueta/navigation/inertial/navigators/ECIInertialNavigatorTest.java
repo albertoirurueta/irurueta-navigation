@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial;
+package com.irurueta.navigation.inertial.navigators;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
@@ -31,6 +31,8 @@ import com.irurueta.navigation.frames.converters.ECEFtoECIFrameConverter;
 import com.irurueta.navigation.frames.converters.ECEFtoNEDFrameConverter;
 import com.irurueta.navigation.frames.converters.ECItoECEFFrameConverter;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
+import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.ECEFGravity;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.*;

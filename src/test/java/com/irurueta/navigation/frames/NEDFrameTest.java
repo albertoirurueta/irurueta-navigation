@@ -19,6 +19,8 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Quaternion;
+import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleUnit;
@@ -226,6 +228,35 @@ public class NEDFrameTest {
 
         // test constructor with position coordinates
         frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance);
+
+        // check
+        assertEquals(frame.getLatitude(), latitude, 0.0);
+        assertEquals(frame.getLongitude(), longitude, 0.0);
+        assertEquals(frame.getHeight(), height, 0.0);
+
+        assertEquals(frame.getVn(), 0.0, 0.0);
+        assertEquals(frame.getVe(), 0.0, 0.0);
+        assertEquals(frame.getVd(), 0.0, 0.0);
+
+        assertEquals(frame.getLatitudeAngle().getValue().doubleValue(), latitude, 0.0);
+        assertEquals(frame.getLongitudeAngle().getValue().doubleValue(), longitude, 0.0);
+        assertEquals(frame.getHeightDistance().getValue().doubleValue(), height, 0.0);
+
+        assertEquals(frame.getSpeedN().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
+        // test constructor with NED position
+        final NEDPosition nedPosition = new NEDPosition(latitude, longitude, height);
+        frame = new NEDFrame(nedPosition);
 
         // check
         assertEquals(frame.getLatitude(), latitude, 0.0);
@@ -486,6 +517,35 @@ public class NEDFrameTest {
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
+        // test constructor with NED position and NED velocity
+        final NEDVelocity nedVelocity = new NEDVelocity(vn, ve, vd);
+        frame = new NEDFrame(nedPosition, nedVelocity);
+
+        // check
+        assertEquals(frame.getLatitude(), latitude, 0.0);
+        assertEquals(frame.getLongitude(), longitude, 0.0);
+        assertEquals(frame.getHeight(), height, 0.0);
+
+        assertEquals(frame.getVn(), vn, 0.0);
+        assertEquals(frame.getVe(), ve, 0.0);
+        assertEquals(frame.getVd(), vd, 0.0);
+
+        assertEquals(frame.getLatitudeAngle().getValue().doubleValue(), latitude, 0.0);
+        assertEquals(frame.getLongitudeAngle().getValue().doubleValue(), longitude, 0.0);
+        assertEquals(frame.getHeightDistance().getValue().doubleValue(), height, 0.0);
+
+        assertEquals(frame.getSpeedN().getValue().doubleValue(), vn, 0.0);
+        assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
+        assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.LOCAL_NAVIGATION_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
         // test constructor with position and coordinate transformation matrix
         frame = new NEDFrame(latitude, longitude, height, c1);
 
@@ -581,6 +641,40 @@ public class NEDFrameTest {
         frame = null;
         try {
             frame = new NEDFrame(latitudeAngle, longitudeAngle, heightDistance,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
+        // test constructor with NED position and coordinate transformation matrix
+        frame = new NEDFrame(nedPosition, c1);
+
+        // check
+        assertEquals(frame.getLatitude(), latitude, 0.0);
+        assertEquals(frame.getLongitude(), longitude, 0.0);
+        assertEquals(frame.getHeight(), height, 0.0);
+
+        assertEquals(frame.getVn(), 0.0, 0.0);
+        assertEquals(frame.getVe(), 0.0, 0.0);
+        assertEquals(frame.getVd(), 0.0, 0.0);
+
+        assertEquals(frame.getLatitudeAngle().getValue().doubleValue(), latitude, 0.0);
+        assertEquals(frame.getLongitudeAngle().getValue().doubleValue(), longitude, 0.0);
+        assertEquals(frame.getHeightDistance().getValue().doubleValue(), height, 0.0);
+
+        assertEquals(frame.getSpeedN().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new NEDFrame(nedPosition,
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -867,6 +961,40 @@ public class NEDFrameTest {
         assertNull(frame);
 
 
+        // test constructor with NED position, NED velocity and coordinates transformation matrix
+        frame = new NEDFrame(nedPosition, nedVelocity, c1);
+
+        // check
+        assertEquals(frame.getLatitude(), latitude, 0.0);
+        assertEquals(frame.getLongitude(), longitude, 0.0);
+        assertEquals(frame.getHeight(), height, 0.0);
+
+        assertEquals(frame.getVn(), vn, 0.0);
+        assertEquals(frame.getVe(), ve, 0.0);
+        assertEquals(frame.getVd(), vd, 0.0);
+
+        assertEquals(frame.getLatitudeAngle().getValue().doubleValue(), latitude, 0.0);
+        assertEquals(frame.getLongitudeAngle().getValue().doubleValue(), longitude, 0.0);
+        assertEquals(frame.getHeightDistance().getValue().doubleValue(), height, 0.0);
+
+        assertEquals(frame.getSpeedN().getValue().doubleValue(), vn, 0.0);
+        assertEquals(frame.getSpeedE().getValue().doubleValue(), ve, 0.0);
+        assertEquals(frame.getSpeedD().getValue().doubleValue(), vd, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new NEDFrame(nedPosition, nedVelocity,
+                    new CoordinateTransformation(FrameType.BODY_FRAME,
+                            FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
         // test constructor with another NED frame
         frame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c1);
         final NEDFrame frame2 = new NEDFrame(frame);
@@ -1126,6 +1254,42 @@ public class NEDFrameTest {
     }
 
     @Test
+    public void testGetSetNEDPosition() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double latitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES));
+        final double longitude = Math.toRadians(randomizer.nextDouble(MIN_ANGLE_DEGREES,
+                MAX_ANGLE_DEGREES));
+        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+
+        final NEDFrame frame = new NEDFrame();
+
+        // check initial values
+        assertEquals(frame.getLatitude(), 0.0, 0.0);
+        assertEquals(frame.getLongitude(), 0.0, 0.0);
+        assertEquals(frame.getHeight(), 0.0, 0.0);
+
+        // set new values
+        final NEDPosition position1 = new NEDPosition(latitude, longitude, height);
+        frame.setPosition(position1);
+
+        // check
+        assertEquals(frame.getLatitude(), latitude, 0.0);
+        assertEquals(frame.getLongitude(), longitude, 0.0);
+        assertEquals(frame.getHeight(), height, 0.0);
+
+        final NEDPosition position2 = new NEDPosition();
+        frame.getPosition(position2);
+        final NEDPosition position3 = frame.getPosition();
+
+        assertEquals(position2.getLatitude(), latitude, 0.0);
+        assertEquals(position2.getLongitude(), longitude, 0.0);
+        assertEquals(position2.getHeight(), height, 0.0);
+
+        assertEquals(position2, position3);
+    }
+
+    @Test
     public void testGetSetVn() {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -1325,6 +1489,39 @@ public class NEDFrameTest {
         assertEquals(frame.getSpeedN(), speedN);
         assertEquals(frame.getSpeedE(), speedE);
         assertEquals(frame.getSpeedD(), speedD);
+    }
+
+    @Test
+    public void testGetSetNEDVelocity() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double ve = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vd = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final NEDFrame frame = new NEDFrame();
+
+        // check initial values
+        assertEquals(frame.getSpeedN().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedE().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedD().getValue().doubleValue(), 0.0, 0.0);
+
+        final NEDVelocity velocity1 = new NEDVelocity(vn, ve, vd);
+        frame.setVelocity(velocity1);
+
+        // check
+        assertEquals(frame.getVn(), vn, 0.0);
+        assertEquals(frame.getVe(), ve, 0.0);
+        assertEquals(frame.getVd(), vd, 0.0);
+
+        final NEDVelocity velocity2 = new NEDVelocity();
+        frame.getVelocity(velocity2);
+        final NEDVelocity velocity3 = frame.getVelocity();
+
+        assertEquals(velocity2.getVn(), vn, 0.0);
+        assertEquals(velocity2.getVe(), ve, 0.0);
+        assertEquals(velocity2.getVd(), vd, 0.0);
+
+        assertEquals(velocity2, velocity3);
     }
 
     @Test

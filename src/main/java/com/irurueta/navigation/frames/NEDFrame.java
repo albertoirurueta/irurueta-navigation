@@ -17,6 +17,8 @@ package com.irurueta.navigation.frames;
 
 import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
+import com.irurueta.navigation.inertial.NEDPosition;
+import com.irurueta.navigation.inertial.NEDVelocity;
 import com.irurueta.units.Angle;
 import com.irurueta.units.AngleConverter;
 import com.irurueta.units.AngleUnit;
@@ -147,6 +149,16 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height) {
         this();
         setPosition(latitude, longitude, height);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position curvilinear position containing latitude, longitude and height.
+     */
+    public NEDFrame(final NEDPosition position) {
+        this();
+        setPosition(position);
     }
 
     /**
@@ -292,6 +304,17 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     /**
      * Constructor.
      *
+     * @param position curvilinear position to be set containing latitude, longitude and height.
+     * @param velocity velocity of body frame resolved along North, East, Down axes.
+     */
+    public NEDFrame(final NEDPosition position, final NEDVelocity velocity) {
+        this(position);
+        setVelocity(velocity);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param latitude  latitude expressed in radians.
      * @param longitude longitude expressed in radians.
      * @param height    height expressed in meters.
@@ -331,6 +354,19 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
     public NEDFrame(final Angle latitude, final Angle longitude, final Distance height,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height);
+        setCoordinateTransformation(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position curvilinear position containing latitude, longitude and height.
+     * @param c        Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final NEDPosition position, final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(position);
         setCoordinateTransformation(c);
     }
 
@@ -495,6 +531,20 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
                     final Speed speedN, final Speed speedE, final Speed speedD,
                     final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
         this(latitude, longitude, height, speedN, speedE, speedD);
+        setCoordinateTransformation(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position curvilinear position to be set containing latitude, longitude and height.
+     * @param velocity velocity of body frame resolved along North, East, Down axes.
+     * @param c        Body to NED (Local Navigation frame) coordinate transformation matrix to be set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public NEDFrame(final NEDPosition position, final NEDVelocity velocity,
+                    final CoordinateTransformation c) throws InvalidSourceAndDestinationFrameTypeException {
+        this(position, velocity);
         setCoordinateTransformation(c);
     }
 
@@ -699,6 +749,35 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
         setLatitudeAngle(latitude);
         setLongitudeAngle(longitude);
         setHeightDistance(height);
+    }
+
+    /**
+     * Gets curvilinear position, expressed in terms of latitude, longitude and height.
+     *
+     * @param result instance where curvilinear coordinates will be stored.
+     */
+    public void getPosition(final NEDPosition result) {
+        result.setCoordinates(mLatitude, mLongitude, mHeight);
+    }
+
+    /**
+     * Gets curvilinear position, expressed in terms of latitude, longitude and height.
+     *
+     * @return curvilinear coordinates.
+     */
+    public NEDPosition getPosition() {
+        return new NEDPosition(mLatitude, mLongitude, mHeight);
+    }
+
+    /**
+     * Sets curvilinear position, expressed in terms of latitude, longitude and height.
+     *
+     * @param position curvilinear position to be set.
+     */
+    public void setPosition(final NEDPosition position) {
+        mLatitude = position.getLatitude();
+        mLongitude = position.getLongitude();
+        mHeight = position.getHeight();
     }
 
     /**
@@ -913,6 +992,35 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
         setSpeedN(speedN);
         setSpeedE(speedE);
         setSpeedD(speedD);
+    }
+
+    /**
+     * Gets velocity coordinates of body frame resolved along North, East, Down axes.
+     *
+     * @param result instance where velocity values will be stored.
+     */
+    public void getVelocity(final NEDVelocity result) {
+        result.setCoordinates(mVn, mVe, mVd);
+    }
+
+    /**
+     * Gets velocity coordinates of body frame resolved along North, East, Down axes.
+     *
+     * @return velocity coordinates.
+     */
+    public NEDVelocity getVelocity() {
+        return new NEDVelocity(mVn, mVe, mVd);
+    }
+
+    /**
+     * Sets velocity coordinates of body frame resolved along North, East, Down axes.
+     *
+     * @param velocity velocity to be set.
+     */
+    public void setVelocity(final NEDVelocity velocity) {
+        mVn = velocity.getVn();
+        mVe = velocity.getVe();
+        mVd = velocity.getVd();
     }
 
     /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation.inertial;
+package com.irurueta.navigation.inertial.navigators;
 
 import com.irurueta.algebra.AlgebraException;
 import com.irurueta.algebra.Matrix;
@@ -26,6 +26,8 @@ import com.irurueta.navigation.frames.FrameException;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.navigation.inertial.BodyKinematics;
+import com.irurueta.navigation.inertial.ECEFGravity;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.units.*;
 
