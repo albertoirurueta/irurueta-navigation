@@ -51,6 +51,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final double oldLatitude,
                          final double oldLongitude, final double oldHeight,
@@ -81,6 +82,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final double oldLatitude,
                          final double oldLongitude, final double oldHeight,
@@ -111,6 +113,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final Angle oldLatitude,
                          final Angle oldLongitude, final Distance oldHeight,
@@ -141,6 +144,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final Angle oldLatitude,
                          final Angle oldLongitude, final Distance oldHeight,
@@ -171,6 +175,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final Angle oldLatitude,
                          final Angle oldLongitude, final Distance oldHeight,
@@ -201,6 +206,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final Angle oldLatitude,
                          final Angle oldLongitude, final Distance oldHeight,
@@ -228,6 +234,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final double oldLatitude,
                          final double oldLongitude, final double oldHeight,
@@ -255,6 +262,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final double oldLatitude,
                          final double oldLongitude, final double oldHeight,
@@ -282,6 +290,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final Angle oldLatitude,
                          final Angle oldLongitude, final Distance oldHeight,
@@ -309,6 +318,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final Angle oldLatitude,
                          final Angle oldLongitude, final Distance oldHeight,
@@ -332,6 +342,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final NEDFrame oldFrame,
                          final double latitude, final double longitude,
@@ -352,6 +363,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final NEDFrame oldFrame,
                          final double latitude, final double longitude,
@@ -372,6 +384,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final NEDFrame oldFrame,
                          final Angle latitude, final Angle longitude,
@@ -392,6 +405,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final NEDFrame oldFrame,
                          final Angle latitude, final Angle longitude,
@@ -417,6 +431,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final NEDPosition oldPosition,
                          final double oldVn, final double oldVe, final double oldVd,
@@ -443,6 +458,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final NEDPosition oldPosition,
                          final double oldVn, final double oldVe, final double oldVd,
@@ -469,6 +485,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final NEDPosition oldPosition,
                          final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -495,6 +512,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final NEDPosition oldPosition,
                          final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -518,6 +536,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final NEDPosition oldPosition,
                          final NEDVelocity oldVelocity, final NEDPosition position,
@@ -540,6 +559,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final NEDPosition oldPosition,
                          final NEDVelocity oldVelocity, final NEDPosition position,
@@ -559,6 +579,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final double timeInterval, final NEDFrame oldFrame,
                          final NEDPosition position, final NEDVelocity result) {
@@ -577,6 +598,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public void estimate(final Time timeInterval, final NEDFrame oldFrame,
                          final NEDPosition position, final NEDVelocity result) {
@@ -602,6 +624,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final double oldLatitude,
                                             final double oldLongitude, final double oldHeight,
@@ -632,6 +655,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final double oldLatitude,
                                             final double oldLongitude, final double oldHeight,
@@ -662,6 +686,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final Angle oldLatitude,
                                             final Angle oldLongitude, final Distance oldHeight,
@@ -692,6 +717,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final Angle oldLatitude,
                                             final Angle oldLongitude, final Distance oldHeight,
@@ -722,6 +748,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final Angle oldLatitude,
                                             final Angle oldLongitude, final Distance oldHeight,
@@ -752,6 +779,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final Angle oldLatitude,
                                             final Angle oldLongitude, final Distance oldHeight,
@@ -779,6 +807,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final double oldLatitude,
                                             final double oldLongitude, final double oldHeight,
@@ -806,6 +835,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final double oldLatitude,
                                             final double oldLongitude, final double oldHeight,
@@ -833,6 +863,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final Angle oldLatitude,
                                             final Angle oldLongitude, final Distance oldHeight,
@@ -860,6 +891,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final Angle oldLatitude,
                                             final Angle oldLongitude, final Distance oldHeight,
@@ -882,6 +914,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final NEDFrame oldFrame,
                                             final double latitude, final double longitude,
@@ -901,6 +934,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final NEDFrame oldFrame,
                                             final double latitude, final double longitude,
@@ -920,6 +954,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final NEDFrame oldFrame,
                                             final Angle latitude, final Angle longitude,
@@ -940,6 +975,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final NEDFrame oldFrame,
                                             final Angle latitude, final Angle longitude,
@@ -965,6 +1001,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final NEDPosition oldPosition,
                                             final double oldVn, final double oldVe, final double oldVd,
@@ -990,6 +1027,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final NEDPosition oldPosition,
                                             final double oldVn, final double oldVe, final double oldVd,
@@ -1015,6 +1053,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final NEDPosition oldPosition,
                                             final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -1040,6 +1079,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final NEDPosition oldPosition,
                                             final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -1062,6 +1102,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final NEDPosition oldPosition,
                                             final NEDVelocity oldVelocity,
@@ -1084,6 +1125,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final NEDPosition oldPosition,
                                             final NEDVelocity oldVelocity,
@@ -1103,6 +1145,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final double timeInterval, final NEDFrame oldFrame,
                                             final NEDPosition position) {
@@ -1120,6 +1163,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public NEDVelocity estimateAndReturnNew(final Time timeInterval, final NEDFrame oldFrame,
                                             final NEDPosition position) {
@@ -1177,7 +1221,7 @@ public class NEDVelocityEstimator {
         final double vn = (oldRn + height) * (2.0 * latRate - oldVn / (oldRn + oldHeight));
         final double ve = ((re + height) * Math.cos(latitude))
                 * (2.0 * longRate - oldVe / ((oldRe + oldHeight) * Math.cos(oldLatitude)));
-        final double vd = - 2.0 * heightRate - oldVd;
+        final double vd = -2.0 * heightRate - oldVd;
 
         result.setCoordinates(vn, ve, vd);
     }
@@ -1202,6 +1246,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final double oldLatitude,
                                         final double oldLongitude, final double oldHeight,
@@ -1232,6 +1277,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final Angle oldLatitude,
                                         final Angle oldLongitude, final Distance oldHeight,
@@ -1265,6 +1311,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final Angle oldLatitude,
                                         final Angle oldLongitude, final Distance oldHeight,
@@ -1295,6 +1342,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final Angle oldLatitude,
                                         final Angle oldLongitude, final Distance oldHeight,
@@ -1327,6 +1375,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final Angle oldLatitude,
                                         final Angle oldLongitude, final Distance oldHeight,
@@ -1354,6 +1403,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final double oldLatitude,
                                         final double oldLongitude, final double oldHeight,
@@ -1382,6 +1432,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final double oldLatitude,
                                         final double oldLongitude, final double oldHeight,
@@ -1409,6 +1460,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final Angle oldLatitude,
                                         final Angle oldLongitude, final Distance oldHeight,
@@ -1437,6 +1489,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final Angle oldLatitude,
                                         final Angle oldLongitude, final Distance oldHeight,
@@ -1460,6 +1513,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final NEDFrame oldFrame,
                                         final double latitude, final double longitude,
@@ -1482,6 +1536,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final NEDFrame oldFrame,
                                         final double latitude, final double longitude,
@@ -1503,6 +1558,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final NEDFrame oldFrame,
                                         final Angle latitude, final Angle longitude,
@@ -1524,6 +1580,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final NEDFrame oldFrame,
                                         final Angle latitude, final Angle longitude,
@@ -1550,6 +1607,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final NEDPosition oldPosition,
                                         final double oldVn, final double oldVe, final double oldVd,
@@ -1577,6 +1635,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final NEDPosition oldPosition,
                                         final double oldVn, final double oldVe, final double oldVd,
@@ -1603,6 +1662,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final NEDPosition oldPosition,
                                         final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -1629,6 +1689,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final NEDPosition oldPosition,
                                         final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -1652,6 +1713,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final NEDPosition oldPosition,
                                         final NEDVelocity oldVelocity,
@@ -1677,6 +1739,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final NEDPosition oldPosition,
                                         final NEDVelocity oldVelocity,
@@ -1698,6 +1761,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final double timeInterval, final NEDFrame oldFrame,
                                         final NEDPosition position, final NEDVelocity result) {
@@ -1717,6 +1781,7 @@ public class NEDVelocityEstimator {
      * @param result       instance where updated velocity with respect the Earth, resolved
      *                     about north, east and down and expressed in meters per second (m/s) will
      *                     be stored.
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static void estimateVelocity(final Time timeInterval, final NEDFrame oldFrame,
                                         final NEDPosition position, final NEDVelocity result) {
@@ -1742,6 +1807,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final double oldLatitude,
                                                            final double oldLongitude, final double oldHeight,
@@ -1773,6 +1839,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final double oldLatitude,
                                                            final double oldLongitude, final double oldHeight,
@@ -1804,6 +1871,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final Angle oldLatitude,
                                                            final Angle oldLongitude, final Distance oldHeight,
@@ -1835,6 +1903,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final Angle oldLatitude,
                                                            final Angle oldLongitude, final Distance oldHeight,
@@ -1866,6 +1935,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final Angle oldLatitude,
                                                            final Angle oldLongitude, final Distance oldHeight,
@@ -1897,6 +1967,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final Angle oldLatitude,
                                                            final Angle oldLongitude, final Distance oldHeight,
@@ -1925,6 +1996,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final double oldLatitude,
                                                            final double oldLongitude, final double oldHeight,
@@ -1953,6 +2025,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final double oldLatitude,
                                                            final double oldLongitude, final double oldHeight,
@@ -1981,6 +2054,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final Angle oldLatitude,
                                                            final Angle oldLongitude, final Distance oldHeight,
@@ -2009,6 +2083,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final Angle oldLatitude,
                                                            final Angle oldLongitude, final Distance oldHeight,
@@ -2032,6 +2107,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final NEDFrame oldFrame,
                                                            final double latitude, final double longitude,
@@ -2053,6 +2129,7 @@ public class NEDVelocityEstimator {
      * @param height       current height expressed in meters (m).
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final NEDFrame oldFrame,
                                                            final double latitude, final double longitude,
@@ -2074,6 +2151,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final NEDFrame oldFrame,
                                                            final Angle latitude, final Angle longitude,
@@ -2095,6 +2173,7 @@ public class NEDVelocityEstimator {
      * @param height       current height.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final NEDFrame oldFrame,
                                                            final Angle latitude, final Angle longitude,
@@ -2121,6 +2200,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final NEDPosition oldPosition,
                                                            final double oldVn, final double oldVe, final double oldVd,
@@ -2148,6 +2228,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final NEDPosition oldPosition,
                                                            final double oldVn, final double oldVe, final double oldVd,
@@ -2175,6 +2256,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final NEDPosition oldPosition,
                                                            final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -2202,6 +2284,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final NEDPosition oldPosition,
                                                            final Speed oldVn, final Speed oldVe, final Speed oldVd,
@@ -2226,6 +2309,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final NEDPosition oldPosition,
                                                            final NEDVelocity oldVelocity,
@@ -2249,6 +2333,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final NEDPosition oldPosition,
                                                            final NEDVelocity oldVelocity,
@@ -2270,6 +2355,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final double timeInterval, final NEDFrame oldFrame,
                                                            final NEDPosition position) {
@@ -2289,6 +2375,7 @@ public class NEDVelocityEstimator {
      *                     north, east and down axes.
      * @return estimated updated velocity with respect the Earth, resolved about north,
      * east and down and expressed in meters per second (m/s).
+     * @throws IllegalArgumentException if provided time interval is negative or zero.
      */
     public static NEDVelocity estimateVelocityAndReturnNew(final Time timeInterval, final NEDFrame oldFrame,
                                                            final NEDPosition position) {
