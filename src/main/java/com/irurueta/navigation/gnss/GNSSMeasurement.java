@@ -619,7 +619,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(GNSSMeasurement input) {
+    public void copyFrom(final GNSSMeasurement input) {
         mPseudoRange = input.mPseudoRange;
         mPseudoRate = input.mPseudoRate;
 
@@ -651,7 +651,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -672,7 +672,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(GNSSMeasurement other) {
+    public boolean equals(final GNSSMeasurement other) {
         return equals(other, 0.0);
     }
 
@@ -685,7 +685,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(GNSSMeasurement other, final double threshold) {
+    public boolean equals(final GNSSMeasurement other, final double threshold) {
         if (other == null) {
             return false;
         }
