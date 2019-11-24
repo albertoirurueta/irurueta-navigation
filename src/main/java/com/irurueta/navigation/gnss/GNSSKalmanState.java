@@ -1,5 +1,22 @@
+/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irurueta.navigation.gnss;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.units.Distance;
@@ -17,6 +34,11 @@ import java.util.Objects;
  */
 @SuppressWarnings("WeakerAccess")
 public class GNSSKalmanState implements Serializable, Cloneable {
+
+    /**
+     * Number of parameters stored into Kalman filter state.
+     */
+    public static final int NUM_PARAMETERS = 8;
 
     /**
      * X coordinate of estimated ECEF user position expressed in meters (m).
@@ -612,6 +634,114 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     public void setClockDrift(final Speed clockDrift) {
         mClockDrift = SpeedConverter.convert(clockDrift.getValue().doubleValue(),
                 clockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Converts state data into an array.
+     *
+     * @param result instance where state data will be stored.
+     * @throws IllegalArgumentException if provided array does not have length 8.
+     */
+    public void asArray(double[] result) {
+        if (result.length != NUM_PARAMETERS) {
+            throw new IllegalArgumentException();
+        }
+
+        result[0] = mX;
+        result[1] = mY;
+        result[2] = mZ;
+        result[3] = mVx;
+        result[4] = mVy;
+        result[5] = mVz;
+        result[6] = mClockOffset;
+        result[7] = mClockDrift;
+    }
+
+    /**
+     * Converts state data into an array.
+     *
+     * @return a new array containing state data.
+     */
+    public double[] asArray() {
+        final double[] result = new double[NUM_PARAMETERS];
+        asArray(result);
+        return result;
+    }
+
+    /**
+     * Sets array values into this instance state.
+     *
+     * @param array array to copy data from.
+     * @throws IllegalArgumentException if provided array does not have length 8.
+     */
+    public void fromArray(final double[] array) {
+        if (array.length != NUM_PARAMETERS) {
+            throw new IllegalArgumentException();
+        }
+
+        mX = array[0];
+        mY = array[1];
+        mZ = array[2];
+        mVx = array[3];
+        mVy = array[4];
+        mVz = array[5];
+        mClockOffset = array[6];
+        mClockDrift = array[7];
+    }
+
+    /**
+     * Converts state data into a column matrix.
+     * If provided matrix is not 8x1 it will be resized.
+     *
+     * @param result instance where state data will be stored.
+     */
+    public void asMatrix(final Matrix result) {
+        if (result.getRows() != NUM_PARAMETERS || result.getColumns() != 1) {
+            try {
+                result.resize(NUM_PARAMETERS, 1);
+            } catch (WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        result.setElementAtIndex(0, mX);
+        result.setElementAtIndex(1, mY);
+        result.setElementAtIndex(2, mZ);
+        result.setElementAtIndex(3, mVx);
+        result.setElementAtIndex(4, mVy);
+        result.setElementAtIndex(5, mVz);
+        result.setElementAtIndex(6, mClockOffset);
+        result.setElementAtIndex(7, mClockDrift);
+    }
+
+    /**
+     * Converts state data into a column matrix.
+     *
+     * @return a new 8x1 column matrix containing state data.
+     */
+    public Matrix asMatrix() {
+        final Matrix result;
+        try {
+            result = new Matrix(NUM_PARAMETERS, 1);
+            asMatrix(result);
+            return result;
+        } catch (WrongSizeException ignore) {
+            // never happens
+            return null;
+        }
+    }
+
+    /**
+     * Sets matrix values into this instance state.
+     *
+     * @param matrix matrix to copy data from.
+     * @throws IllegalArgumentException if provided matrix is not 8x1.
+     */
+    public void fromMatrix(final Matrix matrix) {
+        if (matrix.getRows() != NUM_PARAMETERS || matrix.getColumns() != 1) {
+            throw new IllegalArgumentException();
+        }
+        fromArray(matrix.getBuffer());
     }
 
     /**

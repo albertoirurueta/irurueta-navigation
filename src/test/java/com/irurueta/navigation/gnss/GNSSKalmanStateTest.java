@@ -1,5 +1,22 @@
+/*
+ * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irurueta.navigation.gnss;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.geodesic.Constants;
@@ -640,6 +657,165 @@ public class GNSSKalmanStateTest {
     }
 
     @Test
+    public void testAsArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+                MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+                MAX_CLOCK_DRIFT);
+
+        final GNSSKalmanState state = new GNSSKalmanState(x, y, z, vx, vy, vz,
+                clockOffset, clockDrift);
+
+        final double[] result1 = new double[GNSSKalmanState.NUM_PARAMETERS];
+        state.asArray(result1);
+        final double[] result2 = state.asArray();
+
+        // check
+        assertEquals(result1[0], x, 0.0);
+        assertEquals(result1[1], y, 0.0);
+        assertEquals(result1[2], z, 0.0);
+        assertEquals(result1[3], vx, 0.0);
+        assertEquals(result1[4], vy, 0.0);
+        assertEquals(result1[5], vz, 0.0);
+        assertEquals(result1[6], clockOffset, 0.0);
+        assertEquals(result1[7], clockDrift, 0.0);
+        assertArrayEquals(result1, result2, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            state.asArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+    }
+
+    @Test
+    public void testFromArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+                MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+                MAX_CLOCK_DRIFT);
+
+        final double[] array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
+
+        final GNSSKalmanState state = new GNSSKalmanState();
+        state.fromArray(array);
+
+        // check
+        assertEquals(state.getX(), x, 0.0);
+        assertEquals(state.getY(), y, 0.0);
+        assertEquals(state.getZ(), z, 0.0);
+        assertEquals(state.getVx(), vx, 0.0);
+        assertEquals(state.getVy(), vy, 0.0);
+        assertEquals(state.getVz(), vz, 0.0);
+        assertEquals(state.getClockOffset(), clockOffset, 0.0);
+        assertEquals(state.getClockDrift(), clockDrift, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            state.fromArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testAsMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+                MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+                MAX_CLOCK_DRIFT);
+
+        final GNSSKalmanState state = new GNSSKalmanState(x, y, z, vx, vy, vz,
+                clockOffset, clockDrift);
+
+        final Matrix result1 = new Matrix(GNSSKalmanState.NUM_PARAMETERS, 1);
+        state.asMatrix(result1);
+        final Matrix result2 = new Matrix(1, 1);
+        state.asMatrix(result2);
+        final Matrix result3 = state.asMatrix();
+
+        // check
+        assertEquals(result1.getRows(), GNSSKalmanState.NUM_PARAMETERS);
+        assertEquals(result1.getColumns(), 1);
+        assertEquals(result1.getElementAtIndex(0), x, 0.0);
+        assertEquals(result1.getElementAtIndex(1), y, 0.0);
+        assertEquals(result1.getElementAtIndex(2), z, 0.0);
+        assertEquals(result1.getElementAtIndex(3), vx, 0.0);
+        assertEquals(result1.getElementAtIndex(4), vy, 0.0);
+        assertEquals(result1.getElementAtIndex(5), vz, 0.0);
+        assertEquals(result1.getElementAtIndex(6), clockOffset, 0.0);
+        assertEquals(result1.getElementAtIndex(7), clockDrift, 0.0);
+        assertEquals(result1, result2);
+        assertEquals(result1, result3);
+    }
+
+    @Test
+    public void testFromMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final double clockOffset = randomizer.nextDouble(MIN_CLOCK_OFFSET,
+                MAX_CLOCK_OFFSET);
+        final double clockDrift = randomizer.nextDouble(MIN_CLOCK_DRIFT,
+                MAX_CLOCK_DRIFT);
+
+        final double[] array = new double[]{x, y, z, vx, vy, vz, clockOffset, clockDrift};
+        final Matrix matrix = Matrix.newFromArray(array);
+
+        final GNSSKalmanState state = new GNSSKalmanState();
+        state.fromMatrix(matrix);
+
+        // check
+        assertEquals(state.getX(), x, 0.0);
+        assertEquals(state.getY(), y, 0.0);
+        assertEquals(state.getZ(), z, 0.0);
+        assertEquals(state.getVx(), vx, 0.0);
+        assertEquals(state.getVy(), vy, 0.0);
+        assertEquals(state.getVz(), vz, 0.0);
+        assertEquals(state.getClockOffset(), clockOffset, 0.0);
+        assertEquals(state.getClockDrift(), clockDrift, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            state.fromMatrix(new Matrix(1, GNSSKalmanState.NUM_PARAMETERS));
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
     public void testCopyto() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
@@ -754,12 +930,12 @@ public class GNSSKalmanStateTest {
         final GNSSKalmanState state3 = new GNSSKalmanState();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(state1.equals((Object)state1));
+        assertTrue(state1.equals((Object) state1));
         assertTrue(state1.equals(state1));
         assertTrue(state1.equals(state2));
         assertFalse(state1.equals(state3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(state1.equals((Object)null));
+        assertFalse(state1.equals((Object) null));
         assertFalse(state1.equals(null));
         //noinspection SimplifiableJUnitAssertion
         assertFalse(state1.equals(new Object()));
