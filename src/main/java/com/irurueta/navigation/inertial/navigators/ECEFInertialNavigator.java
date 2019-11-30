@@ -28,6 +28,8 @@ import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeExcept
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.inertial.BodyKinematics;
 import com.irurueta.navigation.inertial.ECEFGravity;
+import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
 import com.irurueta.units.*;
 
@@ -37,7 +39,6 @@ import com.irurueta.units.*;
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/InertialDemoECEF
  */
-@SuppressWarnings("WeakerAccess")
 public class ECEFInertialNavigator {
 
     /**
@@ -92,9 +93,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -153,9 +154,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -181,6 +182,316 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -198,9 +509,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -238,9 +549,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -255,6 +566,190 @@ public class ECEFInertialNavigator {
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics,
+                result);
     }
 
     /**
@@ -290,9 +785,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Point3D oldPosition,
@@ -345,9 +840,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Point3D oldPosition,
@@ -374,6 +869,102 @@ public class ECEFInertialNavigator {
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final Point3D oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final Point3D oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -384,9 +975,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Point3D oldPosition,
@@ -418,9 +1009,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Point3D oldPosition,
@@ -439,6 +1030,58 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final Point3D oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final Point3D oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -472,9 +1115,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Distance oldX,
@@ -533,9 +1176,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Distance oldX,
@@ -568,6 +1211,114 @@ public class ECEFInertialNavigator {
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final Distance oldX,
+                         final Distance oldY,
+                         final Distance oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final Distance oldX,
+                         final Distance oldY,
+                         final Distance oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -578,9 +1329,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Distance oldX,
@@ -618,9 +1369,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Distance oldX,
@@ -642,6 +1393,72 @@ public class ECEFInertialNavigator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final Distance oldX,
+                         final Distance oldY,
+                         final Distance oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final Distance oldX,
+                         final Distance oldY,
+                         final Distance oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
@@ -674,9 +1491,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -736,9 +1553,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -765,6 +1582,116 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final Speed oldSpeedX,
+                         final Speed oldSpeedY,
+                         final Speed oldSpeedZ,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final Speed oldSpeedX,
+                         final Speed oldSpeedY,
+                         final Speed oldSpeedZ,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -782,9 +1709,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -822,9 +1749,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -845,6 +1772,72 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final Speed oldSpeedX,
+                         final Speed oldSpeedY,
+                         final Speed oldSpeedZ,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final Speed oldSpeedX,
+                         final Speed oldSpeedY,
+                         final Speed oldSpeedZ,
+                         final BodyKinematics kinematics,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -875,9 +1868,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -933,9 +1926,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -955,6 +1948,298 @@ public class ECEFInertialNavigator {
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final double angularRateX,
+                         final double angularRateY,
+                         final double angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
     }
 
     /**
@@ -991,9 +2276,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -1049,9 +2334,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -1071,6 +2356,300 @@ public class ECEFInertialNavigator {
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final double fx,
+                         final double fy,
+                         final double fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
     }
 
     /**
@@ -1110,9 +2689,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Distance oldX,
@@ -1172,9 +2751,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Distance oldX,
@@ -1228,9 +2807,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Distance oldX,
@@ -1284,9 +2863,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Distance oldX,
@@ -1307,6 +2886,280 @@ public class ECEFInertialNavigator {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
                 oldSpeedZ, fx, fy, fz, angularRateX, angularRateY, angularRateZ,
                 result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final Speed oldSpeedX,
+                         final Speed oldSpeedY,
+                         final Speed oldSpeedZ,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final Speed oldSpeedX,
+                         final Speed oldSpeedY,
+                         final Speed oldSpeedZ,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final Distance oldX,
+                         final Distance oldY,
+                         final Distance oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final Distance oldX,
+                         final Distance oldY,
+                         final Distance oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
     }
 
     /**
@@ -1340,9 +3193,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final double oldX,
@@ -1395,9 +3248,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final double oldX,
@@ -1416,6 +3269,198 @@ public class ECEFInertialNavigator {
                          final ECEFFrame result) throws InertialNavigatorException,
             InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final ECEFPosition oldPosition,
+                         final CoordinateTransformation oldC,
+                         final double oldVx,
+                         final double oldVy,
+                         final double oldVz,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final double timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public void navigate(final Time timeInterval,
+                         final double oldX,
+                         final double oldY,
+                         final double oldZ,
+                         final CoordinateTransformation oldC,
+                         final ECEFVelocity oldVelocity,
+                         final Acceleration fx,
+                         final Acceleration fy,
+                         final Acceleration fz,
+                         final AngularSpeed angularRateX,
+                         final AngularSpeed angularRateY,
+                         final AngularSpeed angularRateZ,
+                         final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
                 fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
     }
 
@@ -1440,9 +3485,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final double timeInterval,
                          final Distance oldX,
@@ -1480,9 +3525,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public void navigate(final Time timeInterval,
                          final Distance oldX,
@@ -1878,9 +3923,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -1938,9 +3983,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -1965,6 +4010,311 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -1982,9 +4332,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -2021,9 +4371,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -2037,6 +4387,184 @@ public class ECEFInertialNavigator {
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC, oldVx,
                 oldVy, oldVz, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, kinematics);
     }
 
     /**
@@ -2072,9 +4600,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Point3D oldPosition,
@@ -2126,9 +4654,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Point3D oldPosition,
@@ -2154,6 +4682,100 @@ public class ECEFInertialNavigator {
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final Point3D oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final Point3D oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2164,9 +4786,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Point3D oldPosition,
@@ -2197,9 +4819,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Point3D oldPosition,
@@ -2211,6 +4833,58 @@ public class ECEFInertialNavigator {
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC, oldVx,
                 oldVy, oldVz, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final Point3D oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final Point3D oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, kinematics);
     }
 
     /**
@@ -2250,9 +4924,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Distance oldX,
@@ -2311,9 +4985,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Distance oldX,
@@ -2345,6 +5019,112 @@ public class ECEFInertialNavigator {
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final Distance oldX,
+                                          final Distance oldY,
+                                          final Distance oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final Distance oldX,
+                                          final Distance oldY,
+                                          final Distance oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -2355,9 +5135,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Distance oldX,
@@ -2394,9 +5174,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Distance oldX,
@@ -2417,6 +5197,70 @@ public class ECEFInertialNavigator {
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final Distance oldX,
+                                          final Distance oldY,
+                                          final Distance oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final Distance oldX,
+                                          final Distance oldY,
+                                          final Distance oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
@@ -2449,9 +5293,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -2510,9 +5354,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -2538,6 +5382,114 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final Speed oldSpeedX,
+                                          final Speed oldSpeedY,
+                                          final Speed oldSpeedZ,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final Speed oldSpeedX,
+                                          final Speed oldSpeedY,
+                                          final Speed oldSpeedZ,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -2555,9 +5507,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -2594,9 +5546,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -2609,6 +5561,70 @@ public class ECEFInertialNavigator {
                                           final BodyKinematics kinematics)
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final Speed oldSpeedX,
+                                          final Speed oldSpeedY,
+                                          final Speed oldSpeedZ,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final Speed oldSpeedX,
+                                          final Speed oldSpeedY,
+                                          final Speed oldSpeedZ,
+                                          final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics);
     }
 
@@ -2646,9 +5662,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -2704,9 +5720,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -2725,6 +5741,294 @@ public class ECEFInertialNavigator {
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC, oldVx,
                 oldVy, oldVz, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final double angularRateX,
+                                          final double angularRateY,
+                                          final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
     }
 
     /**
@@ -2761,9 +6065,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -2818,9 +6122,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -2846,6 +6150,293 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final double fx,
+                                          final double fy,
+                                          final double fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -2879,9 +6470,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Distance oldX,
@@ -2940,9 +6531,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Distance oldX,
@@ -2995,9 +6586,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Distance oldX,
@@ -3050,9 +6641,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Distance oldX,
@@ -3072,6 +6663,276 @@ public class ECEFInertialNavigator {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz, angularRateX,
                 angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final Speed oldSpeedX,
+                                          final Speed oldSpeedY,
+                                          final Speed oldSpeedZ,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final Speed oldSpeedX,
+                                          final Speed oldSpeedY,
+                                          final Speed oldSpeedZ,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final Distance oldX,
+                                          final Distance oldY,
+                                          final Distance oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final Distance oldX,
+                                          final Distance oldY,
+                                          final Distance oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
     }
 
     /**
@@ -3105,9 +6966,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final double oldX,
@@ -3159,9 +7020,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final double oldX,
@@ -3181,6 +7042,196 @@ public class ECEFInertialNavigator {
         return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz, angularRateX, angularRateY,
                 angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final ECEFPosition oldPosition,
+                                          final CoordinateTransformation oldC,
+                                          final double oldVx,
+                                          final double oldVy,
+                                          final double oldVz,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final double timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public ECEFFrame navigateAndReturnNew(final Time timeInterval,
+                                          final double oldX,
+                                          final double oldY,
+                                          final double oldZ,
+                                          final CoordinateTransformation oldC,
+                                          final ECEFVelocity oldVelocity,
+                                          final Acceleration fx,
+                                          final Acceleration fy,
+                                          final Acceleration fz,
+                                          final AngularSpeed angularRateX,
+                                          final AngularSpeed angularRateY,
+                                          final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        return navigateECEFAndReturnNew(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ);
     }
 
     /**
@@ -3204,9 +7255,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final double timeInterval,
                                           final Distance oldX,
@@ -3243,9 +7294,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public ECEFFrame navigateAndReturnNew(final Time timeInterval,
                                           final Distance oldX,
@@ -3640,9 +7691,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -3822,9 +7873,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -3851,6 +7902,320 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -3868,9 +8233,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -3910,9 +8275,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -3927,6 +8292,196 @@ public class ECEFInertialNavigator {
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
                 oldVx, oldVy, oldVz, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                kinematics.getFx(), kinematics.getFy(), kinematics.getFz(),
+                kinematics.getAngularRateX(), kinematics.getAngularRateY(),
+                kinematics.getAngularRateZ(), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                kinematics.getFx(), kinematics.getFy(), kinematics.getFz(),
+                kinematics.getAngularRateX(), kinematics.getAngularRateY(),
+                kinematics.getAngularRateZ(), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity, kinematics, result);
     }
 
     /**
@@ -3962,9 +8517,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Point3D oldPosition,
@@ -4017,9 +8572,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Point3D oldPosition,
@@ -4046,6 +8601,102 @@ public class ECEFInertialNavigator {
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final Point3D oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getInhomX(), oldPosition.getInhomY(), oldPosition.getInhomZ(),
+                oldC, oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final Point3D oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getInhomX(), oldPosition.getInhomY(), oldPosition.getInhomZ(),
+                oldC, oldVelocity, fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4056,9 +8707,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Point3D oldPosition,
@@ -4092,9 +8743,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Point3D oldPosition,
@@ -4107,6 +8758,62 @@ public class ECEFInertialNavigator {
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldPosition, oldC,
                 oldVx, oldVy, oldVz, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final Point3D oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final Point3D oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                kinematics, result);
     }
 
     /**
@@ -4146,9 +8853,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Distance oldX,
@@ -4209,9 +8916,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Distance oldX,
@@ -4245,6 +8952,116 @@ public class ECEFInertialNavigator {
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final Distance oldX,
+                                    final Distance oldY,
+                                    final Distance oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final Distance oldX,
+                                    final Distance oldY,
+                                    final Distance oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -4255,9 +9072,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Distance oldX,
@@ -4297,9 +9114,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Distance oldX,
@@ -4316,6 +9133,74 @@ public class ECEFInertialNavigator {
                 kinematics.getFx(), kinematics.getFy(), kinematics.getFz(),
                 kinematics.getAngularRateX(), kinematics.getAngularRateY(),
                 kinematics.getAngularRateZ(), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final Distance oldX,
+                                    final Distance oldY,
+                                    final Distance oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final Distance oldX,
+                                    final Distance oldY,
+                                    final Distance oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                kinematics, result);
     }
 
     /**
@@ -4355,9 +9240,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -4418,9 +9303,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -4447,6 +9332,116 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final Speed oldSpeedX,
+                                    final Speed oldSpeedY,
+                                    final Speed oldSpeedZ,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final Speed oldSpeedX,
+                                    final Speed oldSpeedY,
+                                    final Speed oldSpeedZ,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -4464,9 +9459,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -4506,9 +9501,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -4523,6 +9518,72 @@ public class ECEFInertialNavigator {
             throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final Speed oldSpeedX,
+                                    final Speed oldSpeedY,
+                                    final Speed oldSpeedZ,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldSpeedX, oldSpeedY, oldSpeedZ, kinematics, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final Speed oldSpeedX,
+                                    final Speed oldSpeedY,
+                                    final Speed oldSpeedZ,
+                                    final BodyKinematics kinematics,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldSpeedX, oldSpeedY, oldSpeedZ, kinematics, result);
     }
 
     /**
@@ -4559,9 +9620,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -4619,9 +9680,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -4643,6 +9704,308 @@ public class ECEFInertialNavigator {
                 oldVx, oldVy, oldVz, convertAccelerationToDouble(fx),
                 convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
                 angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz, angularRateX, angularRateY, angularRateZ,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz, angularRateX, angularRateY, angularRateZ,
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx), convertAccelerationToDouble(fy),
+                convertAccelerationToDouble(fz), angularRateX, angularRateY,
+                angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx), convertAccelerationToDouble(fy),
+                convertAccelerationToDouble(fz), angularRateX, angularRateY,
+                angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity, fx, fy, fz, angularRateX, angularRateY,
+                angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final double angularRateX,
+                                    final double angularRateY,
+                                    final double angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity, fx, fy, fz, angularRateX, angularRateY,
+                angularRateZ, result);
     }
 
     /**
@@ -4679,9 +10042,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -4739,9 +10102,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -4762,6 +10125,312 @@ public class ECEFInertialNavigator {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
                 oldVx, oldVy, oldVz, fx, fy, fz, angularRateX, angularRateY,
                 angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final double fx,
+                                    final double fy,
+                                    final double fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                fx, fy, fz, convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
     }
 
     /**
@@ -4801,9 +10470,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Distance oldX,
@@ -4865,9 +10534,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Distance oldX,
@@ -4921,9 +10590,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Distance oldX,
@@ -4983,9 +10652,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Distance oldX,
@@ -5006,6 +10675,316 @@ public class ECEFInertialNavigator {
         navigateECEF(convertTimeToDouble(timeInterval), oldX, oldY, oldZ, oldC,
                 oldSpeedX, oldSpeedY, oldSpeedZ, fx, fy, fz, angularRateX,
                 angularRateY, angularRateZ, result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final Speed oldSpeedX,
+                                    final Speed oldSpeedY,
+                                    final Speed oldSpeedZ,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldSpeedX, oldSpeedY, oldSpeedZ, convertAccelerationToDouble(fx),
+                convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ),
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final Speed oldSpeedX,
+                                    final Speed oldSpeedY,
+                                    final Speed oldSpeedZ,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldSpeedX, oldSpeedY, oldSpeedZ, convertAccelerationToDouble(fx),
+                convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ),
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final Distance oldX,
+                                    final Distance oldY,
+                                    final Distance oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, convertDistanceToDouble(oldX),
+                convertDistanceToDouble(oldY), convertDistanceToDouble(oldZ), oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx),
+                convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ),
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final Distance oldX,
+                                    final Distance oldY,
+                                    final Distance oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, convertDistanceToDouble(oldX),
+                convertDistanceToDouble(oldY), convertDistanceToDouble(oldZ), oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx),
+                convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ),
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx),
+                convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ),
+                result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx),
+                convertAccelerationToDouble(fy), convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ),
+                result);
     }
 
     /**
@@ -5039,9 +11018,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final double oldX,
@@ -5098,9 +11077,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final double oldX,
@@ -5127,6 +11106,218 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz,
+                convertAccelerationToDouble(fx), convertAccelerationToDouble(fy),
+                convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final ECEFPosition oldPosition,
+                                    final CoordinateTransformation oldC,
+                                    final double oldVx,
+                                    final double oldVy,
+                                    final double oldVz,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldPosition.getX(), oldPosition.getY(), oldPosition.getZ(),
+                oldC, oldVx, oldVy, oldVz,
+                convertAccelerationToDouble(fx), convertAccelerationToDouble(fy),
+                convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final double timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx), convertAccelerationToDouble(fy),
+                convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param result       instance where new estimated ECEF frame containing new body
+     *                     position, velocity and coordinate transformation matrix will be stored.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static void navigateECEF(final Time timeInterval,
+                                    final double oldX,
+                                    final double oldY,
+                                    final double oldZ,
+                                    final CoordinateTransformation oldC,
+                                    final ECEFVelocity oldVelocity,
+                                    final Acceleration fx,
+                                    final Acceleration fy,
+                                    final Acceleration fz,
+                                    final AngularSpeed angularRateX,
+                                    final AngularSpeed angularRateY,
+                                    final AngularSpeed angularRateZ,
+                                    final ECEFFrame result)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC,
+                oldVelocity.getVx(), oldVelocity.getVy(), oldVelocity.getVz(),
+                convertAccelerationToDouble(fx), convertAccelerationToDouble(fy),
+                convertAccelerationToDouble(fz),
+                convertAngularSpeedToDouble(angularRateX),
+                convertAngularSpeedToDouble(angularRateY),
+                convertAngularSpeedToDouble(angularRateZ), result);
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -5144,9 +11335,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final double timeInterval,
                                     final Distance oldX,
@@ -5186,9 +11377,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @param result       instance where new estimated ECEF frame containing new body
      *                     position, velocity and coordinate transformation matrix will be stored.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static void navigateECEF(final Time timeInterval,
                                     final Distance oldX,
@@ -5625,9 +11816,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -5687,9 +11878,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -5716,6 +11907,322 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -5733,9 +12240,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -5774,9 +12281,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -5791,6 +12298,196 @@ public class ECEFInertialNavigator {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 kinematics, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz, kinematics,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz, kinematics,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics,
+                result);
         return result;
     }
 
@@ -5827,9 +12524,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Point3D oldPosition,
@@ -5883,9 +12580,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Point3D oldPosition,
@@ -5913,6 +12610,104 @@ public class ECEFInertialNavigator {
      * @param oldPosition  previous cartesian position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final Point3D oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final Point3D oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -5923,9 +12718,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Point3D oldPosition,
@@ -5958,9 +12753,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Point3D oldPosition,
@@ -5980,6 +12775,60 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final Point3D oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final Point3D oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, kinematics, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -6013,9 +12862,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Distance oldX,
@@ -6075,9 +12924,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Distance oldX,
@@ -6111,6 +12960,116 @@ public class ECEFInertialNavigator {
      * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final Distance oldX,
+                                                     final Distance oldY,
+                                                     final Distance oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final Distance oldX,
+                                                     final Distance oldY,
+                                                     final Distance oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
      * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
      *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
      * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
@@ -6121,9 +13080,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Distance oldX,
@@ -6162,9 +13121,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Distance oldX,
@@ -6179,6 +13138,74 @@ public class ECEFInertialNavigator {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz,
                 kinematics, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final Distance oldX,
+                                                     final Distance oldY,
+                                                     final Distance oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final Distance oldX,
+                                                     final Distance oldY,
+                                                     final Distance oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, kinematics,
+                result);
         return result;
     }
 
@@ -6219,9 +13246,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -6281,9 +13308,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -6310,6 +13337,118 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final Speed oldSpeedX,
+                                                     final Speed oldSpeedY,
+                                                     final Speed oldSpeedZ,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY,
+                oldSpeedZ, fx, fy, fz, angularRateX, angularRateY, angularRateZ,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final Speed oldSpeedX,
+                                                     final Speed oldSpeedY,
+                                                     final Speed oldSpeedZ,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY,
+                oldSpeedZ, fx, fy, fz, angularRateX, angularRateY, angularRateZ,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -6327,9 +13466,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -6368,9 +13507,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -6392,6 +13531,74 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final Speed oldSpeedX,
+                                                     final Speed oldSpeedY,
+                                                     final Speed oldSpeedZ,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY,
+                oldSpeedZ, kinematics, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param kinematics   body kinematics containing specific forces and angular rates applied to
+     *                     the body.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final Speed oldSpeedX,
+                                                     final Speed oldSpeedY,
+                                                     final Speed oldSpeedZ,
+                                                     final BodyKinematics kinematics)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldSpeedX, oldSpeedY, oldSpeedZ, kinematics, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -6422,9 +13629,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -6481,9 +13688,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -6503,6 +13710,307 @@ public class ECEFInertialNavigator {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy,
                 fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC,
+                oldVx, oldVy, oldVz, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ,
+                result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in radians per second (rad/s).
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final double angularRateX,
+                                                     final double angularRateY,
+                                                     final double angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
         return result;
     }
 
@@ -6540,9 +14048,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -6599,9 +14107,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -6621,6 +14129,304 @@ public class ECEFInertialNavigator {
         final ECEFFrame result = new ECEFFrame();
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVx, oldVy, oldVz, fx, fy,
                 fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval and
+     *                     expressed in meters per squared second (m/s^2).
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final double fx,
+                                                     final double fy,
+                                                     final double fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
         return result;
     }
 
@@ -6661,9 +14467,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Distance oldX,
@@ -6724,9 +14530,9 @@ public class ECEFInertialNavigator {
      *                     expressed in radians per second (rad/s).
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Distance oldX,
@@ -6781,9 +14587,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Distance oldX,
@@ -6838,9 +14644,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Distance oldX,
@@ -6861,6 +14667,286 @@ public class ECEFInertialNavigator {
         navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldSpeedX, oldSpeedY,
                 oldSpeedZ, fx, fy, fz, angularRateX, angularRateY, angularRateZ,
                 result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final Speed oldSpeedX,
+                                                     final Speed oldSpeedY,
+                                                     final Speed oldSpeedZ,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldSpeedX    previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedY    previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param oldSpeedZ    previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final Speed oldSpeedX,
+                                                     final Speed oldSpeedY,
+                                                     final Speed oldSpeedZ,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldSpeedX, oldSpeedY, oldSpeedZ,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final Distance oldX,
+                                                     final Distance oldY,
+                                                     final Distance oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final Distance oldX,
+                                                     final Distance oldY,
+                                                     final Distance oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
         return result;
     }
 
@@ -6895,9 +14981,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final double oldX,
@@ -6951,9 +15037,9 @@ public class ECEFInertialNavigator {
      *                     resolved along body-frame axes, averaged over time interval.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final double oldX,
@@ -6980,6 +15066,202 @@ public class ECEFInertialNavigator {
      * Runs precision ECEF-frame inertial navigation equations.
      *
      * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldPosition  previous cartesian position resolved along ECEF-frame axes.
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVx        previous velocity x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVy        previous velocity y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param oldVz        previous velocity z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along ECEF-frame axes and expressed in meters per second (m/s).
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final ECEFPosition oldPosition,
+                                                     final CoordinateTransformation oldC,
+                                                     final double oldVx,
+                                                     final double oldVy,
+                                                     final double oldVz,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldPosition, oldC, oldVx, oldVy, oldVz,
+                fx, fy, fz, angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs.
+     * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldZ         previous cartesian z-coordinate position of body frame with respect ECEF
+     *                     frame, resolved along ECEF-frame axes and expressed in meters (m).
+     * @param oldC         previous body-to-ECEF-frame coordinate transformation.
+     * @param oldVelocity  previous body velocity resolved along ECEF-frame axes.
+     * @param fx           specific force x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fy           specific force y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param fz           specific force z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateX angular rate x-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateY angular rate y-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @param angularRateZ angular rate z-coordinate of body frame with respect ECEF frame,
+     *                     resolved along body-frame axes, averaged over time interval.
+     * @return estimated ECEF frame containing new body position, velocity and coordinate
+     * transformation matrix.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
+     */
+    public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
+                                                     final double oldX,
+                                                     final double oldY,
+                                                     final double oldZ,
+                                                     final CoordinateTransformation oldC,
+                                                     final ECEFVelocity oldVelocity,
+                                                     final Acceleration fx,
+                                                     final Acceleration fy,
+                                                     final Acceleration fz,
+                                                     final AngularSpeed angularRateX,
+                                                     final AngularSpeed angularRateY,
+                                                     final AngularSpeed angularRateZ)
+            throws InertialNavigatorException, InvalidSourceAndDestinationFrameTypeException {
+        final ECEFFrame result = new ECEFFrame();
+        navigateECEF(timeInterval, oldX, oldY, oldZ, oldC, oldVelocity, fx, fy, fz,
+                angularRateX, angularRateY, angularRateZ, result);
+        return result;
+    }
+
+    /**
+     * Runs precision ECEF-frame inertial navigation equations.
+     *
+     * @param timeInterval time interval between epochs expressed in seconds (s).
      * @param oldX         previous cartesian x-coordinate position of body frame with respect ECEF
      *                     frame, resolved along ECEF-frame axes.
      * @param oldY         previous cartesian y-coordinate position of body frame with respect ECEF
@@ -6997,9 +15279,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final double timeInterval,
                                                      final Distance oldX,
@@ -7038,9 +15320,9 @@ public class ECEFInertialNavigator {
      *                     the body.
      * @return estimated ECEF frame containing new body position, velocity and coordinate
      * transformation matrix.
-     * @throws InertialNavigatorException if navigation fails due to numerical instabilities.
+     * @throws InertialNavigatorException                    if navigation fails due to numerical instabilities.
      * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types of previous
-     * body-to-ECEF-frame coordinate transformation matrix are invalid.
+     *                                                       body-to-ECEF-frame coordinate transformation matrix are invalid.
      */
     public static ECEFFrame navigateECEFAndReturnNew(final Time timeInterval,
                                                      final Distance oldX,

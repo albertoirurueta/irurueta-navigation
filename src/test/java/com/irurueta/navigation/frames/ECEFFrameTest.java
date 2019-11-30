@@ -22,6 +22,8 @@ import com.irurueta.geometry.InvalidRotationMatrixException;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.geometry.Quaternion;
 import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -231,12 +233,69 @@ public class ECEFFrameTest {
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
+        // test constructor with ECEF position
+        final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
+        frame = new ECEFFrame(ecefPosition);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), 0.0, 0.0);
+        assertEquals(frame.getVy(), 0.0, 0.0);
+        assertEquals(frame.getVz(), 0.0, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
         // test constructor with cartesian position and velocity coordinates
         final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
         final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
 
         frame = new ECEFFrame(x, y, z, vx, vy, vz);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
+        // test constructor with ECEF position and velocity coordinates
+        frame = new ECEFFrame(ecefPosition, vx, vy, vz);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -323,8 +382,93 @@ public class ECEFFrameTest {
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
+        // test constructor with ECEF position and speed coordinates
+        frame = new ECEFFrame(ecefPosition, speedX, speedY, speedZ);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
+        // test constructor with position and ECEF velocity
+        final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
+        frame = new ECEFFrame(position, ecefVelocity);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
         // test constructor with cartesian position coordinates and speed coordinates
         frame = new ECEFFrame(x, y, z, speedX, speedY, speedZ);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
+        // test constructor with cartesian position coordinates and ECEF velocity
+        frame = new ECEFFrame(x, y, z, ecefVelocity);
 
         // check
         assertEquals(frame.getX(), x, 0.0);
@@ -407,6 +551,62 @@ public class ECEFFrameTest {
         assertEquals(c.getMatrix(), Matrix.identity(3, 3));
 
 
+        // test constructor with position and ECEF velocity
+        frame = new ECEFFrame(positionX, positionY, positionZ, ecefVelocity);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
+        // test constructor with ECEF position and velocity
+        frame = new ECEFFrame(ecefPosition, ecefVelocity);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        assertNotNull(frame.getCoordinateTransformation());
+
+        c = frame.getCoordinateTransformation();
+        assertEquals(c.getSourceType(), FrameType.BODY_FRAME);
+        assertEquals(c.getDestinationType(), FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+        assertEquals(c.getMatrix(), Matrix.identity(3, 3));
+
+
         // test constructor with cartesian position coordinates and coordinate transformation matrix
         frame = new ECEFFrame(x, y, z, c1);
 
@@ -434,6 +634,39 @@ public class ECEFFrameTest {
         frame = null;
         try {
             frame = new ECEFFrame(x, y, z, new CoordinateTransformation(
+                    FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
+        // test constructor with ECEF position and coordinate transformation matrix
+        frame = new ECEFFrame(ecefPosition, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), 0.0, 0.0);
+        assertEquals(frame.getVy(), 0.0, 0.0);
+        assertEquals(frame.getVz(), 0.0, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), 0.0, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(ecefPosition, new CoordinateTransformation(
                     FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
@@ -541,6 +774,108 @@ public class ECEFFrameTest {
         assertNull(frame);
 
 
+        // test constructor with ECEF position, velocity coordinates, and coordinate transformation matrix
+        frame = new ECEFFrame(ecefPosition, vx, vy, vz, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(ecefPosition, vx, vy, vz,
+                    new CoordinateTransformation(
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
+        // test constructor with cartesian position, ecef velocity and coordinate transformation matrix
+        frame = new ECEFFrame(x, y, z, ecefVelocity, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(x, y, z, ecefVelocity,
+                    new CoordinateTransformation(
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
+        // test constructor with ECEF position, ECEF velocity and coordinate transformation matrix
+        frame = new ECEFFrame(ecefPosition, ecefVelocity, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(ecefPosition, ecefVelocity,
+                    new CoordinateTransformation(
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
         // test constructor with position, velocity coordinates, and coordinate transformation matrix
         frame = new ECEFFrame(position, vx, vy, vz, c1);
 
@@ -575,6 +910,40 @@ public class ECEFFrameTest {
         assertNull(frame);
 
 
+        // test constructor with position, ECEF velocity and coordinate transformation matrix
+        frame = new ECEFFrame(position, ecefVelocity, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(position, ecefVelocity,
+                    new CoordinateTransformation(
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
         // test constructor with position, speed coordinates and coordinate transformation matrix
         frame = new ECEFFrame(position, speedX, speedY, speedZ, c1);
 
@@ -602,6 +971,40 @@ public class ECEFFrameTest {
         frame = null;
         try {
             frame = new ECEFFrame(position, speedX, speedY, speedZ,
+                    new CoordinateTransformation(
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
+        // test constructor with position, speed coordinates and coordinate transformation matrix
+        frame = new ECEFFrame(ecefPosition, speedX, speedY, speedZ, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(ecefPosition, speedX, speedY, speedZ,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -707,6 +1110,41 @@ public class ECEFFrameTest {
         try {
             frame = new ECEFFrame(positionX, positionY, positionZ,
                     speedX, speedY, speedZ,
+                    new CoordinateTransformation(
+                            FrameType.BODY_FRAME, FrameType.BODY_FRAME));
+            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+        } catch (InvalidSourceAndDestinationFrameTypeException ignore) { }
+        assertNull(frame);
+
+
+        // test constructor with position coordinates, ECEF velocity and coordinate transformation matrix
+        frame = new ECEFFrame(positionX, positionY, positionZ, ecefVelocity, c1);
+
+        // check
+        assertEquals(frame.getX(), x, 0.0);
+        assertEquals(frame.getY(), y, 0.0);
+        assertEquals(frame.getZ(), z, 0.0);
+
+        assertEquals(frame.getVx(), vx, 0.0);
+        assertEquals(frame.getVy(), vy, 0.0);
+        assertEquals(frame.getVz(), vz, 0.0);
+
+        assertEquals(frame.getPositionX().getValue().doubleValue(), x, 0.0);
+        assertEquals(frame.getPositionY().getValue().doubleValue(), y, 0.0);
+        assertEquals(frame.getPositionZ().getValue().doubleValue(), z, 0.0);
+
+        assertEquals(frame.getSpeedX().getValue().doubleValue(), vx, 0.0);
+        assertEquals(frame.getSpeedY().getValue().doubleValue(), vy, 0.0);
+        assertEquals(frame.getSpeedZ().getValue().doubleValue(), vz, 0.0);
+
+        c2 = frame.getCoordinateTransformation();
+        assertEquals(c1, c2);
+
+        // Force InvalidSourceAndDestinationFrameTypeException
+        frame = null;
+        try {
+            frame = new ECEFFrame(positionX, positionY, positionZ,
+                    ecefVelocity,
                     new CoordinateTransformation(
                             FrameType.BODY_FRAME, FrameType.BODY_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -1146,6 +1584,64 @@ public class ECEFFrameTest {
         assertEquals(frame.getSpeedX(), speedX);
         assertEquals(frame.getSpeedY(), speedY);
         assertEquals(frame.getSpeedZ(), speedZ);
+    }
+
+    @Test
+    public void testGetSetECEFPosition() {
+        final ECEFFrame frame = new ECEFFrame();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+
+        // check initial value
+        final ECEFPosition position1 = frame.getECEFPosition();
+
+        assertEquals(position1.getX(), 0.0, 0.0);
+        assertEquals(position1.getY(), 0.0, 0.0);
+        assertEquals(position1.getZ(), 0.0, 0.0);
+
+        // set new value
+        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        frame.setPosition(position2);
+
+        // check
+        final ECEFPosition position3 = new ECEFPosition();
+        frame.getECEFPosition(position3);
+        final ECEFPosition position4 = frame.getECEFPosition();
+
+        assertEquals(position2, position3);
+        assertEquals(position2, position4);
+    }
+
+    @Test
+    public void testGetSetECEFVelocity() {
+        final ECEFFrame frame = new ECEFFrame();
+
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        // check initial value
+        final ECEFVelocity velocity1 = frame.getECEFVelocity();
+
+        assertEquals(velocity1.getVx(), 0.0, 0.0);
+        assertEquals(velocity1.getVy(), 0.0, 0.0);
+        assertEquals(velocity1.getVz(), 0.0, 0.0);
+
+        // set new value
+        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+        frame.setVelocity(velocity2);
+
+        // check
+        final ECEFVelocity velocity3 = new ECEFVelocity();
+        frame.getECEFVelocity(velocity3);
+        final ECEFVelocity velocity4 = frame.getECEFVelocity();
+
+        assertEquals(velocity2, velocity3);
+        assertEquals(velocity2, velocity4);
     }
 
     @Test

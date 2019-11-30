@@ -606,6 +606,7 @@ public abstract class ECIorECEFFrame<T extends ECIorECEFFrame> implements Frame,
      *
      * @return Hash code.
      */
+    @Override
     public int hashCode() {
         return Objects.hash(mX, mY, mZ, mVx, mVy, mVz, mC);
     }
