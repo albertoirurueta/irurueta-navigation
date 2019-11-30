@@ -46,9 +46,6 @@ public class ECEFToNEDFrameConverterTest {
     private static final double MAX_POSITION_VALUE =
             Constants.EARTH_EQUATORIAL_RADIUS_WGS84 + 50.0;
 
-    private static final double MIN_Z_VALUE = -50.0;
-    private static final double MAX_Z_VALUE = 50.0;
-
     private static final double MIN_VELOCITY_VALUE = -2.0;
     private static final double MAX_VELOCITY_VALUE = 2.0;
 
@@ -83,7 +80,7 @@ public class ECEFToNEDFrameConverterTest {
 
             final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
             final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
             final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
@@ -154,7 +151,7 @@ public class ECEFToNEDFrameConverterTest {
 
             final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
             final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
             final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
@@ -227,7 +224,7 @@ public class ECEFToNEDFrameConverterTest {
 
             final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
             final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
             final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
@@ -294,7 +291,7 @@ public class ECEFToNEDFrameConverterTest {
 
             final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
             final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-            final double z = randomizer.nextDouble(MIN_Z_VALUE, MAX_Z_VALUE);
+            final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
 
             final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
             final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
@@ -352,5 +349,4 @@ public class ECEFToNEDFrameConverterTest {
 
         assertEquals(numValid, TIMES);
     }
-
 }
