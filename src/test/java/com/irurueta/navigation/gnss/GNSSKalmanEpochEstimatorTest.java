@@ -155,6 +155,14 @@ public class GNSSKalmanEpochEstimatorTest {
             final Matrix previousCovariance = Matrix.identity(
                     GNSSKalmanState.NUM_PARAMETERS, GNSSKalmanState.NUM_PARAMETERS);
 
+            final double initialPositionUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double initialVelocityUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double initialClockOffsetUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double initialClockDriftUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
             final double accelerationPSD = randomizer.nextDouble(
                     MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
             final double clockFrequencyPSD = randomizer.nextDouble(
@@ -166,7 +174,10 @@ public class GNSSKalmanEpochEstimatorTest {
             final double rangeRateSD = randomizer.nextDouble(
                     MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
 
-            final GNSSKalmanConfig config = new GNSSKalmanConfig(accelerationPSD, clockFrequencyPSD,
+            final GNSSKalmanConfig config = new GNSSKalmanConfig(
+                    initialPositionUncertainty, initialVelocityUncertainty,
+                    initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                    accelerationPSD, clockFrequencyPSD,
                     clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
             final GNSSKalmanState updatedState = new GNSSKalmanState();

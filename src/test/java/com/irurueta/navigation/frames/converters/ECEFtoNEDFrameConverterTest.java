@@ -33,7 +33,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ECEFToNEDFrameConverterTest {
+public class ECEFtoNEDFrameConverterTest {
 
     private static final double LARGE_ABSOLUTE_ERROR = 1e-4;
     private static final double ABSOLUTE_ERROR = 1e-8;

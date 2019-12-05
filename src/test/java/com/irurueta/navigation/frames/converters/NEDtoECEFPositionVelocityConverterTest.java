@@ -89,9 +89,10 @@ public class NEDtoECEFPositionVelocityConverterTest {
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame nedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-            final NEDPosition nedPosition = nedFrame.getPosition();
-            final NEDVelocity nedVelocity = nedFrame.getVelocity();
+            final NEDPosition nedPosition1 = nedFrame.getPosition();
+            final NEDVelocity nedVelocity1 = nedFrame.getVelocity();
 
+            // convert
             final NEDtoECEFPositionVelocityConverter converter =
                     new NEDtoECEFPositionVelocityConverter();
             final ECEFPosition ecefPosition1 = new ECEFPosition();
@@ -101,7 +102,7 @@ public class NEDtoECEFPositionVelocityConverterTest {
 
             final ECEFPosition ecefPosition2 = new ECEFPosition();
             final ECEFVelocity ecefVelocity2 = new ECEFVelocity();
-            converter.convert(nedPosition, nedVelocity,
+            converter.convert(nedPosition1, nedVelocity1,
                     ecefPosition2, ecefVelocity2);
 
             final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
@@ -109,10 +110,22 @@ public class NEDtoECEFPositionVelocityConverterTest {
             final ECEFPosition ecefPosition3 = ecefFrame.getECEFPosition();
             final ECEFVelocity ecefVelocity3 = ecefFrame.getECEFVelocity();
 
+            // check
             assertEquals(ecefPosition1, ecefPosition2);
             assertEquals(ecefVelocity1, ecefVelocity2);
             assertTrue(ecefPosition1.equals(ecefPosition3, ABSOLUTE_ERROR));
             assertTrue(ecefVelocity1.equals(ecefVelocity3, ABSOLUTE_ERROR));
+
+            // convert back
+            final NEDPosition nedPosition2 = new NEDPosition();
+            final NEDVelocity nedVelocity2 = new NEDVelocity();
+            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(
+                    ecefPosition1, ecefVelocity1,
+                    nedPosition2, nedVelocity2);
+
+            // check
+            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
+            assertTrue(nedVelocity1.equals(nedVelocity2, ABSOLUTE_ERROR));
 
             numValid++;
         }
@@ -149,9 +162,10 @@ public class NEDtoECEFPositionVelocityConverterTest {
                     FrameType.LOCAL_NAVIGATION_FRAME);
 
             final NEDFrame nedFrame = new NEDFrame(latitude, longitude, height, vn, ve, vd, c);
-            final NEDPosition nedPosition = nedFrame.getPosition();
-            final NEDVelocity nedVelocity = nedFrame.getVelocity();
+            final NEDPosition nedPosition1 = nedFrame.getPosition();
+            final NEDVelocity nedVelocity1 = nedFrame.getVelocity();
 
+            // convert
             final ECEFPosition ecefPosition1 = new ECEFPosition();
             final ECEFVelocity ecefVelocity1 = new ECEFVelocity();
             NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
@@ -161,17 +175,28 @@ public class NEDtoECEFPositionVelocityConverterTest {
             final ECEFPosition ecefPosition2 = new ECEFPosition();
             final ECEFVelocity ecefVelocity2 = new ECEFVelocity();
             NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
-                    nedPosition, nedVelocity, ecefPosition2, ecefVelocity2);
+                    nedPosition1, nedVelocity1, ecefPosition2, ecefVelocity2);
 
             final ECEFFrame ecefFrame = NEDtoECEFFrameConverter
                     .convertNEDtoECEFAndReturnNew(nedFrame);
             final ECEFPosition ecefPosition3 = ecefFrame.getECEFPosition();
             final ECEFVelocity ecefVelocity3 = ecefFrame.getECEFVelocity();
 
+            // check
             assertEquals(ecefPosition1, ecefPosition2);
             assertEquals(ecefVelocity1, ecefVelocity2);
             assertTrue(ecefPosition1.equals(ecefPosition3, ABSOLUTE_ERROR));
             assertTrue(ecefVelocity1.equals(ecefVelocity3, ABSOLUTE_ERROR));
+
+            // convert back
+            final NEDPosition nedPosition2 = new NEDPosition();
+            final NEDVelocity nedVelocity2 = new NEDVelocity();
+            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(ecefPosition1, ecefVelocity1,
+                    nedPosition2, nedVelocity2);
+
+            // check
+            assertTrue(nedPosition1.equals(nedPosition2, ABSOLUTE_ERROR));
+            assertTrue(nedVelocity1.equals(nedVelocity2, ABSOLUTE_ERROR));
 
             numValid++;
         }

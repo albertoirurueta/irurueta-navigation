@@ -63,7 +63,8 @@ public class ECEFtoNEDPositionVelocityConverterTest {
     }
 
     @Test
-    public void testConvert() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    public void testConvert() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
         int numValid = 0;
         for (int t = 0; t < TIMES; t++) {
             final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -90,9 +91,10 @@ public class ECEFtoNEDPositionVelocityConverterTest {
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
             final ECEFFrame ecefFrame = new ECEFFrame(x, y, z, vx, vy, vz, c);
-            final ECEFPosition ecefPosition = ecefFrame.getECEFPosition();
-            final ECEFVelocity ecefVelocity = ecefFrame.getECEFVelocity();
+            final ECEFPosition ecefPosition1 = ecefFrame.getECEFPosition();
+            final ECEFVelocity ecefVelocity1 = ecefFrame.getECEFVelocity();
 
+            // convert
             final ECEFtoNEDPositionVelocityConverter converter =
                     new ECEFtoNEDPositionVelocityConverter();
             final NEDPosition nedPosition1 = new NEDPosition();
@@ -101,17 +103,100 @@ public class ECEFtoNEDPositionVelocityConverterTest {
 
             final NEDPosition nedPosition2 = new NEDPosition();
             final NEDVelocity nedVelocity2 = new NEDVelocity();
-            converter.convert(ecefPosition, ecefVelocity, nedPosition2, nedVelocity2);
+            converter.convert(ecefPosition1, ecefVelocity1, nedPosition2, nedVelocity2);
 
             final NEDFrame nedFrame = ECEFtoNEDFrameConverter
                     .convertECEFtoNEDAndReturnNew(ecefFrame);
             final NEDPosition nedPosition3 = nedFrame.getPosition();
             final NEDVelocity nedVelocity3 = nedFrame.getVelocity();
 
+            // check
             assertEquals(nedPosition1, nedPosition2);
             assertEquals(nedVelocity1, nedVelocity2);
             assertTrue(nedPosition1.equals(nedPosition3, ABSOLUTE_ERROR));
             assertTrue(nedVelocity1.equals(nedVelocity3, ABSOLUTE_ERROR));
+
+            // convert back
+            final ECEFPosition ecefPosition2 = new ECEFPosition();
+            final ECEFVelocity ecefVelocity2 = new ECEFVelocity();
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
+                    nedPosition1, nedVelocity1,
+                    ecefPosition2, ecefVelocity2);
+
+            // check
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
+            assertTrue(ecefVelocity1.equals(ecefVelocity2, ABSOLUTE_ERROR));
+
+            numValid++;
+        }
+
+        assertEquals(numValid, TIMES);
+    }
+
+    @Test
+    public void testConvertECEFtoNED() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException {
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+            final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+
+            final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+            final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+            final double roll = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final Quaternion q = new Quaternion(roll, pitch, yaw);
+
+            final Matrix m = q.asInhomogeneousMatrix();
+            final CoordinateTransformation c = new CoordinateTransformation(
+                    m, FrameType.BODY_FRAME,
+                    FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
+
+            final ECEFFrame ecefFrame = new ECEFFrame(x, y, z, vx, vy, vz, c);
+            final ECEFPosition ecefPosition1 = ecefFrame.getECEFPosition();
+            final ECEFVelocity ecefVelocity1 = ecefFrame.getECEFVelocity();
+
+            // convert
+            final NEDPosition nedPosition1 = new NEDPosition();
+            final NEDVelocity nedVelocity1 = new NEDVelocity();
+            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(x, y, z, vx, vy, vz,
+                    nedPosition1, nedVelocity1);
+
+            final NEDPosition nedPosition2 = new NEDPosition();
+            final NEDVelocity nedVelocity2 = new NEDVelocity();
+            ECEFtoNEDPositionVelocityConverter.convertECEFtoNED(ecefPosition1,
+                    ecefVelocity1, nedPosition2, nedVelocity2);
+
+            final NEDFrame nedFrame = ECEFtoNEDFrameConverter
+                    .convertECEFtoNEDAndReturnNew(ecefFrame);
+            final NEDPosition nedPosition3 = nedFrame.getPosition();
+            final NEDVelocity nedVelocity3 = nedFrame.getVelocity();
+
+            // check
+            assertEquals(nedPosition1, nedPosition2);
+            assertEquals(nedVelocity1, nedVelocity2);
+            assertTrue(nedPosition1.equals(nedPosition3, ABSOLUTE_ERROR));
+            assertTrue(nedVelocity1.equals(nedVelocity3, ABSOLUTE_ERROR));
+
+            // convert back
+            final ECEFPosition ecefPosition2 = new ECEFPosition();
+            final ECEFVelocity ecefVelocity2 = new ECEFVelocity();
+            NEDtoECEFPositionVelocityConverter.convertNEDtoECEF(
+                    nedPosition1, nedVelocity1,
+                    ecefPosition2, ecefVelocity2);
+
+            // check
+            assertTrue(ecefPosition1.equals(ecefPosition2, ABSOLUTE_ERROR));
+            assertTrue(ecefVelocity1.equals(ecefVelocity2, ABSOLUTE_ERROR));
 
             numValid++;
         }
