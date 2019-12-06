@@ -33,7 +33,7 @@ import com.irurueta.navigation.lateration.RobustLaterationSolverListener;
  *
  * @param <P> a {@link Point} type.
  */
-public abstract class RobustMixedPositionEstimator<P extends Point> extends
+public abstract class RobustMixedPositionEstimator<P extends Point<?>> extends
         RobustPositionEstimator<P, Reading<? extends RadioSource>,
         RobustMixedPositionEstimatorListener<P>> {
 

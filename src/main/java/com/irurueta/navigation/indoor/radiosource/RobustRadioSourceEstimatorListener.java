@@ -20,7 +20,7 @@ package com.irurueta.navigation.indoor.radiosource;
  * estimation starts, ends or when progress changes.
  * @param <E> a {@link RobustRadioSourceEstimator} type.
  */
-public interface RobustRadioSourceEstimatorListener<E extends RobustRadioSourceEstimator> {
+public interface RobustRadioSourceEstimatorListener<E extends RobustRadioSourceEstimator<?, ?, ?>> {
 
     /**
      * Called when estimation starts.

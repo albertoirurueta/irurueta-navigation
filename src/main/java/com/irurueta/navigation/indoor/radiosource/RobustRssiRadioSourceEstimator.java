@@ -60,7 +60,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P extends Point> extends
+public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P extends Point<P>> extends
         RobustRadioSourceEstimator<P, RssiReadingLocated<S, P>, RobustRssiRadioSourceEstimatorListener<S,P>> {
 
     /**
@@ -750,7 +750,6 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
         P readingPosition = reading.getPosition();
         P radioSourcePosition = currentEstimation.getEstimatedPosition();
 
-        //noinspection unchecked
         double sqrDistance = radioSourcePosition.sqrDistanceTo(readingPosition);
 
         double transmittedPowerdBm = currentEstimation.
@@ -770,7 +769,7 @@ public abstract class RobustRssiRadioSourceEstimator<S extends RadioSource, P ex
      * samples.
      * @param <P> a {@link Point} type.
      */
-    static class Solution<P extends Point> {
+    static class Solution<P extends Point<?>> {
         /**
          * Estimated position for a subset of samples.
          */

@@ -19,7 +19,7 @@ package com.irurueta.navigation.indoor.radiosource;
  * Listener defining events of RssiRadioSourceEstimator
  * @param <E> a {@link RadioSourceEstimator} type.
  */
-public interface RadioSourceEstimatorListener<E extends RadioSourceEstimator> {
+public interface RadioSourceEstimatorListener<E extends RadioSourceEstimator<?, ?, ?>> {
 
     /**
      * Called when estimation starts.

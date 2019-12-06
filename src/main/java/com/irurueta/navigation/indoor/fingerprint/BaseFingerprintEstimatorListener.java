@@ -21,7 +21,7 @@ package com.irurueta.navigation.indoor.fingerprint;
  * using fingerprints starts or ends.
  * @param <E> a {@link BaseFingerprintPositionEstimator} type.
  */
-public interface BaseFingerprintEstimatorListener<E extends BaseFingerprintPositionEstimator> {
+public interface BaseFingerprintEstimatorListener<E extends BaseFingerprintPositionEstimator<?, ?>> {
 
     /**
      * Called when estimation starts.

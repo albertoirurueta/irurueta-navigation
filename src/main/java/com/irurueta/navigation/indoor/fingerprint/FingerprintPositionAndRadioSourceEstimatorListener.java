@@ -23,5 +23,5 @@ import com.irurueta.geometry.Point;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public interface FingerprintPositionAndRadioSourceEstimatorListener<P extends Point>
+public interface FingerprintPositionAndRadioSourceEstimatorListener<P extends Point<?>>
         extends BaseFingerprintPositionAndRadioSourceEstimatorListener<FingerprintPositionAndRadioSourceEstimator<P>> { }

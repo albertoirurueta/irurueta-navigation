@@ -59,7 +59,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, P extends Point>
+public abstract class RangingAndRssiRadioSourceEstimator<S extends RadioSource, P extends Point<P>>
         extends RadioSourceEstimator<P, RangingAndRssiReadingLocated<S, P>,
         RangingAndRssiRadioSourceEstimatorListener<S, P>> {
 

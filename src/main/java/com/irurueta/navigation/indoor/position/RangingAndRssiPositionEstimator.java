@@ -30,7 +30,7 @@ import com.irurueta.navigation.indoor.RangingAndRssiReading;
  */
 @SuppressWarnings("WeakerAccess")
 public abstract class RangingAndRssiPositionEstimator<
-        P extends Point> extends PositionEstimator<P,
+        P extends Point<?>> extends PositionEstimator<P,
         RangingAndRssiReading<? extends RadioSource>,
         RangingAndRssiPositionEstimatorListener<P>> {
 

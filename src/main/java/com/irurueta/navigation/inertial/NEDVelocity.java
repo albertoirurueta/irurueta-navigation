@@ -385,10 +385,12 @@ public class NEDVelocity implements Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new NEDVelocity(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final NEDVelocity result = (NEDVelocity)super.clone();
+        copyTo(result);
+        return result;
     }
 }

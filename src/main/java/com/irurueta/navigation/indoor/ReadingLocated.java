@@ -25,7 +25,7 @@ import java.io.Serializable;
  * (e.g. WiFi access point or bluetooth beacon).
  * @param <P> a {@link Point} type.
  */
-public interface ReadingLocated<P extends Point> extends Serializable {
+public interface ReadingLocated<P extends Point<?>> extends Serializable {
 
     /**
      * Gets position where reading was made.

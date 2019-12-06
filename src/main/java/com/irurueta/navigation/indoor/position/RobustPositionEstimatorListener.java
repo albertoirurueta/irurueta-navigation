@@ -21,7 +21,7 @@ package com.irurueta.navigation.indoor.position;
  *
  * @param <E> a {@link RobustPositionEstimator} type.
  */
-public interface RobustPositionEstimatorListener<E extends RobustPositionEstimator> {
+public interface RobustPositionEstimatorListener<E extends RobustPositionEstimator<?, ?, ?>> {
 
     /**
      * Called when estimation starts.

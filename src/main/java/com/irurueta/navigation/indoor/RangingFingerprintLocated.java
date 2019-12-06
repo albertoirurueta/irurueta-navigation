@@ -28,7 +28,7 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public class RangingFingerprintLocated<S extends RadioSource, R extends RangingReading<S>,
-        P extends Point> extends RangingFingerprint<S, R> implements FingerprintLocated<P> {
+        P extends Point<?>> extends RangingFingerprint<S, R> implements FingerprintLocated<P> {
 
     /**
      * Position where fingerprint readings were made.

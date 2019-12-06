@@ -26,7 +26,7 @@ import com.irurueta.navigation.NotReadyException;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("Duplicates")
-public abstract class LaterationSolver<P extends Point> {
+public abstract class LaterationSolver<P extends Point<?>> {
 
     /**
      * Minimum allowed distance for a given circle or sphere.

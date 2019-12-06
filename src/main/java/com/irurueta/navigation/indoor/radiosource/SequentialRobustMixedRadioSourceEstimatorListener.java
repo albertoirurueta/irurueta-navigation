@@ -24,7 +24,7 @@ import com.irurueta.navigation.indoor.RadioSource;
  * changes.
  */
 public interface SequentialRobustMixedRadioSourceEstimatorListener<S extends RadioSource,
-        P extends Point> {
+        P extends Point<P>> {
 
     /**
      * Called when estimation starts.

@@ -407,7 +407,7 @@ public class NEDVelocityTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws CloneNotSupportedException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vn = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);

@@ -22,7 +22,7 @@ import com.irurueta.geometry.Point;
  * when progress changes.
  * @param <P> a {@link Point} type.
  */
-public interface RobustLaterationSolverListener<P extends Point> {
+public interface RobustLaterationSolverListener<P extends Point<?>> {
 
     /**
      * Called when solving starts.

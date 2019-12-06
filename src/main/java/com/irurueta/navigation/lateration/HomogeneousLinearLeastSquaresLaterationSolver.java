@@ -26,7 +26,7 @@ import com.irurueta.navigation.NotReadyException;
  * Linearly solves the lateration problem using an homogeneous LMSE solution.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Point> extends
+public abstract class HomogeneousLinearLeastSquaresLaterationSolver<P extends Point<?>> extends
         LaterationSolver<P> {
 
     /**

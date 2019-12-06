@@ -35,7 +35,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class LinearFingerprintPositionEstimator<P extends Point> extends
+public abstract class LinearFingerprintPositionEstimator<P extends Point<P>> extends
         FingerprintPositionEstimator<P> {
 
     /**
@@ -427,7 +427,6 @@ public abstract class LinearFingerprintPositionEstimator<P extends Point> extend
 
                             P sourcePosition = locatedSource.getPosition();
                             double locatedRssi = locatedReading.getRssi();
-                            //noinspection unchecked
                             double sqrDistance = fingerprintPosition.sqrDistanceTo(sourcePosition);
                             if (mRemoveMeansFromFingerprintReadings) {
                                 meanRssi = mFingerprint.getMeanRssi();

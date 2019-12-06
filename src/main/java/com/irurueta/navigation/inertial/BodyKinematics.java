@@ -24,6 +24,7 @@ import com.irurueta.units.AngularSpeed;
 import com.irurueta.units.AngularSpeedConverter;
 import com.irurueta.units.AngularSpeedUnit;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -34,7 +35,7 @@ import java.util.Objects;
  * completing the orthogonal set.
  */
 @SuppressWarnings({"WeakerAccess", "DuplicatedCode"})
-public class BodyKinematics {
+public class BodyKinematics implements Serializable, Cloneable {
     /**
      * Number of components of specific force or angular rate.
      */
@@ -894,10 +895,12 @@ public class BodyKinematics {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new BodyKinematics(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final BodyKinematics result = (BodyKinematics)super.clone();
+        copyTo(result);
+        return result;
     }
 }

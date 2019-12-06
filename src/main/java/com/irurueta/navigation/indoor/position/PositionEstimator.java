@@ -37,9 +37,9 @@ import java.util.List;
  * @param <L> a {@link PositionEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class PositionEstimator<P extends Point,
+public abstract class PositionEstimator<P extends Point<?>,
         R extends Reading<? extends RadioSource>,
-        L extends PositionEstimatorListener<? extends PositionEstimator>> {
+        L extends PositionEstimatorListener<? extends PositionEstimator<?, ?, ?>>> {
 
     /**
      * Located radio sources used for lateration.

@@ -1209,10 +1209,12 @@ public class NEDFrame implements Frame, Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
-    protected Object clone() {
-        return new NEDFrame(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final NEDFrame result = (NEDFrame)super.clone();
+        copyTo(result);
+        return result;
     }
 }

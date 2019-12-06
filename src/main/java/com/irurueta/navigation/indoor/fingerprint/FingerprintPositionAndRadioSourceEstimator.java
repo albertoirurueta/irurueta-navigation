@@ -33,7 +33,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class FingerprintPositionAndRadioSourceEstimator<P extends Point> extends
+public abstract class FingerprintPositionAndRadioSourceEstimator<P extends Point<?>> extends
         BaseFingerprintPositionAndRadioSourceEstimator<P, FingerprintPositionAndRadioSourceEstimatorListener<P>> {
 
     /**

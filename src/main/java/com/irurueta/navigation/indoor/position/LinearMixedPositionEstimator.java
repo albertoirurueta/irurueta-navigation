@@ -34,7 +34,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class LinearMixedPositionEstimator<P extends Point> extends
+public abstract class LinearMixedPositionEstimator<P extends Point<P>> extends
         MixedPositionEstimator<P> {
 
     /**

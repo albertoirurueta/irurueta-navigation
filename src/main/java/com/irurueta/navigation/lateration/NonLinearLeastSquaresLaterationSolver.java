@@ -37,7 +37,7 @@ import java.util.Arrays;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point> extends LaterationSolver<P> {
+public abstract class NonLinearLeastSquaresLaterationSolver<P extends Point<?>> extends LaterationSolver<P> {
 
     /**
      * Default standard deviation assumed for provided distances when none is

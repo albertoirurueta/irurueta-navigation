@@ -38,7 +38,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
+public abstract class SequentialRobustMixedPositionEstimator<P extends Point<?>> {
 
     /**
      * Default robust estimator method for robust position estimation using ranging
@@ -2111,7 +2111,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
      * data or RSSI data.
      * @param readings readings to be checked.
      */
-    private void checkReadings(List<? extends Reading> readings) {
+    private void checkReadings(List<? extends Reading<?>> readings) {
         mNumRssiReadings = 0;
         mNumRangingReadings = 0;
         mRangingEstimatorAvailable = mRssiEstimatorAvailable = false;
@@ -2120,7 +2120,7 @@ public abstract class SequentialRobustMixedPositionEstimator<P extends Point> {
             return;
         }
 
-        for (Reading reading : readings) {
+        for (Reading<?> reading : readings) {
             if (reading instanceof RangingReading) {
                 mNumRangingReadings++;
             } else if (reading instanceof RssiReading) {

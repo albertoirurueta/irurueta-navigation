@@ -25,7 +25,7 @@ import java.io.Serializable;
  * Bluetooth beacon) whose location is known.
  * @param <P> a {@link Point} type.
  */
-public interface RadioSourceLocated<P extends Point> extends Serializable {
+public interface RadioSourceLocated<P extends Point<?>> extends Serializable {
     /**
      * Gets position where radio source is located.
      * @return position where radio source is located.

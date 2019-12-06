@@ -44,7 +44,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class NonLinearFingerprintPositionEstimator<P extends Point> extends
+public abstract class NonLinearFingerprintPositionEstimator<P extends Point<?>> extends
         FingerprintPositionEstimator<P> {
 
     /**
@@ -1022,7 +1022,7 @@ public abstract class NonLinearFingerprintPositionEstimator<P extends Point> ext
                     }
 
                     for(int i = 0; i < dims; i++) {
-                        initial[i] /= (double)num;
+                        initial[i] /= num;
                     }
                 } else {
                     //use provided initial position

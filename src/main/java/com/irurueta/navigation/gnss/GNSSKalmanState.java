@@ -852,10 +852,12 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new GNSSKalmanState(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final GNSSKalmanState result = (GNSSKalmanState)super.clone();
+        copyTo(result);
+        return result;
     }
 }

@@ -35,8 +35,8 @@ import java.util.List;
  * @param <L> a {@link BaseFingerprintEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseFingerprintPositionEstimator<P extends Point,
-        L extends BaseFingerprintEstimatorListener> {
+public abstract class BaseFingerprintPositionEstimator<P extends Point<?>,
+        L extends BaseFingerprintEstimatorListener<?>> {
 
     /**
      * Default minimum number of nearest fingerprints to search.

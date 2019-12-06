@@ -40,7 +40,7 @@ import java.util.*;
  * algorithm.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P extends Point> extends
+public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P extends Point<?>> extends
         FingerprintPositionAndRadioSourceEstimator<P> {
 
     /**
@@ -903,7 +903,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
         }
 
         for(int i = 0; i < dims; i++) {
-            centroidCoords[i] /= (double)num;
+            centroidCoords[i] /= num;
             nearestFingerprintsCentroid.setInhomogeneousCoordinate(i, centroidCoords[i]);
         }
 
@@ -1378,7 +1378,7 @@ public abstract class NonLinearFingerprintPositionAndRadioSourceEstimator<P exte
 
         if (centroid != null) {
             for (int i = 0; i < dims; i++) {
-                centroidCoords[i] /= (double) result;
+                centroidCoords[i] /= result;
                 centroid.setInhomogeneousCoordinate(i, centroidCoords[i]);
             }
         }

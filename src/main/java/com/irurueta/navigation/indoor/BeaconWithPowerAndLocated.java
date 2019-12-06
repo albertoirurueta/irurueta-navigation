@@ -26,7 +26,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public class BeaconWithPowerAndLocated<P extends Point> extends BeaconWithPower
+public class BeaconWithPowerAndLocated<P extends Point<?>> extends BeaconWithPower
         implements RadioSourceWithPowerAndLocated<P> {
 
     /**

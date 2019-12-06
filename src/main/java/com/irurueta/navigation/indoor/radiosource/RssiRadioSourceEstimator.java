@@ -64,7 +64,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends Point>
+public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends Point<P>>
         extends RadioSourceEstimator<P, RssiReadingLocated<S, P>,
         RssiRadioSourceEstimatorListener<S, P>> {
 
@@ -1083,7 +1083,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                //noinspection unchecked
                 double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
 
                 double transmittedPowerdBm = params[0];
@@ -1173,7 +1172,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                //noinspection unchecked
                 double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
                 double pathLossExponent = params[0];
 
@@ -1521,7 +1519,6 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
 
             @Override
             public double evaluate(int i, double[] point, double[] params, double[] derivatives) {
-                //noinspection unchecked
                 double sqrDistance = mInitialPosition.sqrDistanceTo(mReadings.get(i).getPosition());
                 double transmittedPowerdBm = params[0];
                 double pathLossExponent = params[1];

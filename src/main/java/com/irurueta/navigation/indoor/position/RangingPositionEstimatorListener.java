@@ -22,5 +22,5 @@ import com.irurueta.geometry.Point;
  *
  * @param <P> a {@link Point} type.
  */
-public interface RangingPositionEstimatorListener<P extends Point> extends
+public interface RangingPositionEstimatorListener<P extends Point<?>> extends
         PositionEstimatorListener<RangingPositionEstimator<P>> { }

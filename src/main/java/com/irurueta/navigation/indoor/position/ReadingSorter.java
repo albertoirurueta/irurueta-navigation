@@ -27,7 +27,7 @@ import java.util.*;
  * @param <P> a {@link Point} type.
  * @param <R> a {@link Reading} type.
  */
-public class ReadingSorter<P extends Point, R extends Reading<? extends RadioSource>> {
+public class ReadingSorter<P extends Point<?>, R extends Reading<? extends RadioSource>> {
 
     /**
      * Sources to be taken into account within readings.
@@ -173,13 +173,12 @@ public class ReadingSorter<P extends Point, R extends Reading<? extends RadioSou
         }
 
         // sort all readings within sources
-        for (RadioSourceSourceWithQualityScore sourceWithQualityScore : sourcesWithQualityScores) {
+        for (RadioSourceSourceWithQualityScore<P, R> sourceWithQualityScore : sourcesWithQualityScores) {
             // sort all readings for this source from highest to lowest quality
 
             // noinspection unchecked
             ReadingWithQualityScore<R>[] readingsWithQualityScoresArray =
                     new ReadingWithQualityScore[sourceWithQualityScore.readingsWithQualityScores.size()];
-            //noinspection SuspiciousToArrayCall
             sourceWithQualityScore.readingsWithQualityScores.toArray(readingsWithQualityScoresArray);
             Arrays.sort(readingsWithQualityScoresArray, new ReadingComparator<R>());
 
@@ -235,7 +234,7 @@ public class ReadingSorter<P extends Point, R extends Reading<? extends RadioSou
      * @param <P> a {@link Point} type.
      * @param <R> a {@link Reading} type.
      */
-    static class RadioSourceSourceWithQualityScore<P extends Point,
+    static class RadioSourceSourceWithQualityScore<P extends Point<?>,
             R extends Reading<? extends RadioSource>> {
         /**
          * Radio source.
@@ -312,7 +311,7 @@ public class ReadingSorter<P extends Point, R extends Reading<? extends RadioSou
      * @param <P> a {@link Point} type.
      * @param <R> a {@link Reading} type.
      */
-    private static class RadioSourceComparator<P extends Point,
+    private static class RadioSourceComparator<P extends Point<?>,
             R extends Reading<? extends RadioSource>> implements
             Comparator<RadioSourceSourceWithQualityScore<P, R>> {
 

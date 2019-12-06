@@ -29,8 +29,8 @@ import java.util.List;
  * @param <L> a {@link BaseFingerprintPositionAndRadioSourceEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends Point,
-        L extends BaseFingerprintPositionAndRadioSourceEstimatorListener> {
+public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends Point<?>,
+        L extends BaseFingerprintPositionAndRadioSourceEstimatorListener<?>> {
 
     /**
      * Default minimum number of nearest fingerprints to search.
@@ -455,7 +455,7 @@ public abstract class BaseFingerprintPositionAndRadioSourceEstimator<P extends P
             int maxNearestFingerprints) {
         if (minNearestFingerprints == 0 ||
                 (minNearestFingerprints < 1 && maxNearestFingerprints >= 0) ||
-                (minNearestFingerprints >= 1 && maxNearestFingerprints >= 0 &&
+                (maxNearestFingerprints >= 0 &&
                         minNearestFingerprints > maxNearestFingerprints)) {
             throw new IllegalArgumentException();
         }

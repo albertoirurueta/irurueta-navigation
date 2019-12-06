@@ -21,7 +21,7 @@ import com.irurueta.geometry.Point;
  * Listener to be notified of events such as when lateration solving starts or ends.
  * @param <P> a {@link Point} type.
  */
-public interface LaterationSolverListener<P extends Point> {
+public interface LaterationSolverListener<P extends Point<?>> {
 
     /**
      * Called when solving starts.

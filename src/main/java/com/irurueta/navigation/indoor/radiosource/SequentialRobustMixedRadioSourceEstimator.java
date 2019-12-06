@@ -64,7 +64,7 @@ import java.util.List;
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
 public abstract class SequentialRobustMixedRadioSourceEstimator<S extends RadioSource,
-        P extends Point> {
+        P extends Point<P>> {
 
     /**
      * Default robust estimator method for robust position estimation using ranging

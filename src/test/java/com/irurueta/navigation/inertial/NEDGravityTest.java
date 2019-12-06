@@ -407,7 +407,7 @@ public class NEDGravityTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double gn = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gd = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);

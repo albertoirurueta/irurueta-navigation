@@ -1349,10 +1349,12 @@ public class CoordinateTransformation implements Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
-    protected Object clone() {
-        return new CoordinateTransformation(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final CoordinateTransformation result = (CoordinateTransformation)super.clone();
+        copyTo(result);
+        return result;
     }
 }

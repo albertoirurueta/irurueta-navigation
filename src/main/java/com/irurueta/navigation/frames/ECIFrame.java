@@ -463,10 +463,12 @@ public class ECIFrame extends ECIorECEFFrame<ECIFrame> {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new ECIFrame(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final ECIFrame result = (ECIFrame)super.clone();
+        copyTo(result);
+        return result;
     }
 }

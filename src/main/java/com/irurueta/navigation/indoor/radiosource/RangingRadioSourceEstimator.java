@@ -38,7 +38,7 @@ import java.util.List;
  * account the speed of light as the propagation speed.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class RangingRadioSourceEstimator<S extends RadioSource, P extends Point>
+public abstract class RangingRadioSourceEstimator<S extends RadioSource, P extends Point<P>>
         extends RadioSourceEstimator<P, RangingReadingLocated<S, P>,
         RangingRadioSourceEstimatorListener<S, P>> {
 

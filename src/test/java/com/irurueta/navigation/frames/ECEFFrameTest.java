@@ -1929,7 +1929,7 @@ public class ECEFFrameTest {
 
     @Test
     public void testClone() throws InvalidRotationMatrixException,
-            InvalidSourceAndDestinationFrameTypeException {
+            InvalidSourceAndDestinationFrameTypeException, CloneNotSupportedException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 

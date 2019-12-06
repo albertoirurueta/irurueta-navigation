@@ -970,7 +970,7 @@ public class GNSSKalmanStateTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
         final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);

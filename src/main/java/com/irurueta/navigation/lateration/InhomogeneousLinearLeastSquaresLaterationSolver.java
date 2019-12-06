@@ -30,7 +30,7 @@ import com.irurueta.navigation.NotReadyException;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends Point> extends
+public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends Point<P>> extends
         LaterationSolver<P> {
 
     /**
@@ -155,7 +155,6 @@ public abstract class InhomogeneousLinearLeastSquaresLaterationSolver<P extends 
                 double sqrRi = ri * ri;
 
                 //find distance between ri and r0
-                //noinspection unchecked
                 double sqrRi0 = mPositions[i].sqrDistanceTo(mPositions[0]);
                 b[i2] = 0.5 * (sqrRefDistance - sqrRi + sqrRi0);
             }

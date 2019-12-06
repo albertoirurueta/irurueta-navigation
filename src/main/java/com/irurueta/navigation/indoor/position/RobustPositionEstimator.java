@@ -44,9 +44,9 @@ import java.util.List;
  * @param <L> a {@link RobustPositionEstimatorListener} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class RobustPositionEstimator<P extends Point,
+public abstract class RobustPositionEstimator<P extends Point<?>,
         R extends Reading<? extends RadioSource>,
-        L extends RobustPositionEstimatorListener<? extends RobustPositionEstimator>> {
+        L extends RobustPositionEstimatorListener<? extends RobustPositionEstimator<?, ?, ?>>> {
 
     /**
      * Default robust estimator method when none is provided.

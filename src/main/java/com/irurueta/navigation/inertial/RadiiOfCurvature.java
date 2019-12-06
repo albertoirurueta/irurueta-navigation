@@ -377,10 +377,12 @@ public class RadiiOfCurvature implements Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
-    protected Object clone() {
-        return new RadiiOfCurvature(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final RadiiOfCurvature result = (RadiiOfCurvature)super.clone();
+        copyTo(result);
+        return result;
     }
 }

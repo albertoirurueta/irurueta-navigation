@@ -769,7 +769,7 @@ public class GNSSMeasurementTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double pseudoRange = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
         final double pseudoRate = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);

@@ -1424,7 +1424,9 @@ public class ECIFrameTest {
     }
 
     @Test
-    public void testClone() throws InvalidRotationMatrixException, InvalidSourceAndDestinationFrameTypeException {
+    public void testClone() throws InvalidRotationMatrixException,
+            InvalidSourceAndDestinationFrameTypeException,
+            CloneNotSupportedException {
 
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
 

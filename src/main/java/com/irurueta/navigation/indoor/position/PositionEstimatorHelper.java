@@ -54,7 +54,7 @@ public class PositionEstimatorHelper {
      * @param distances     list where extracted distances will be stored.
      * @param <P> a {@link Point} type.
      */
-    public static <P extends Point> void buildPositionsAndDistances(
+    public static <P extends Point<?>> void buildPositionsAndDistances(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             List<P> positions, List<Double> distances) {
@@ -142,7 +142,7 @@ public class PositionEstimatorHelper {
      * is negative.
      * @param <P> a {@link Point} type.
      */
-    public static <P extends Point> void buildPositionsDistancesAndDistanceStandardDeviations(
+    public static <P extends Point<?>> void buildPositionsDistancesAndDistanceStandardDeviations(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             boolean useRadioSourcePositionCovariance,
@@ -190,7 +190,7 @@ public class PositionEstimatorHelper {
      * fallback is negative.
      * @param <P> a {@link Point} type.
      */
-    public static <P extends Point> void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
+    public static <P extends Point<?>> void buildPositionsDistancesDistanceStandardDeviationsAndQualityScores(
             List<? extends RadioSourceLocated<P>> sources,
             Fingerprint<? extends RadioSource, ? extends Reading<? extends RadioSource>> fingerprint,
             double[] sourceQualityScores, double[] fingerprintReadingsQualityScores,
@@ -370,7 +370,7 @@ public class PositionEstimatorHelper {
      * @return estimated distance or null if not available.
      * @param <P> a {@link Point} type.
      */
-    private static <P extends Point> Double computeDistanceRssi(
+    private static <P extends Point<?>> Double computeDistanceRssi(
             RadioSourceLocated<P> locatedSource,
             RssiReading<? extends RadioSource> reading) {
         return computeDistanceRssi(locatedSource, reading.getRssi());
@@ -384,7 +384,7 @@ public class PositionEstimatorHelper {
      * @return estimated distance or null if not available.
      * @param <P> a {@link Point} type.
      */
-    private static <P extends Point> Double computeDistanceRssi(
+    private static <P extends Point<?>> Double computeDistanceRssi(
             RadioSourceLocated<P> locatedSource,
             RangingAndRssiReading<? extends RadioSource> reading) {
         return computeDistanceRssi(locatedSource, reading.getRssi());
@@ -398,7 +398,7 @@ public class PositionEstimatorHelper {
      * @return estimated distance or null if not available.
      * @param <P> a {@link Point} type.
      */
-    private static <P extends Point> Double computeDistanceRssi(
+    private static <P extends Point<?>> Double computeDistanceRssi(
             RadioSourceLocated<P> locatedSource, double rxPower) {
         if(!(locatedSource instanceof RadioSourceWithPower)) {
             return null;
@@ -508,7 +508,7 @@ public class PositionEstimatorHelper {
      *                                  deviation, in such order.
      * @param <P> a {@link Point} type.
      */
-    private static <P extends Point> void computeDistanceAndStandardDeviationRssi(
+    private static <P extends Point<?>> void computeDistanceAndStandardDeviationRssi(
             RadioSourceLocated<P> locatedSource,
             RssiReading<? extends RadioSource> reading,
             Double positionStandardDeviation, Double[] result) {
@@ -529,7 +529,7 @@ public class PositionEstimatorHelper {
      *                                  deviation, in such order.
      * @param <P> a {@link Point} type.
      */
-    private static <P extends Point> void computeDistanceAndStandardDeviationRssi(
+    private static <P extends Point<?>> void computeDistanceAndStandardDeviationRssi(
             RadioSourceLocated<P> locatedSource,
             RangingAndRssiReading<? extends RadioSource> reading,
             Double positionStandardDeviation, Double[] result) {
@@ -550,7 +550,7 @@ public class PositionEstimatorHelper {
      *                                  deviation, in such order.
      * @param <P> a {@link Point} type.
      */
-    private static <P extends Point> void computeDistanceAndStandardDeviationRssi(
+    private static <P extends Point<?>> void computeDistanceAndStandardDeviationRssi(
             RadioSourceLocated<P> locatedSource, double rxPower,
             Double rxPowerStandardDeviation,
             Double positionStandardDeviation,

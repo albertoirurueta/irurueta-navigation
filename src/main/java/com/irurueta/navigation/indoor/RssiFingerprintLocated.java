@@ -27,7 +27,7 @@ import java.util.List;
  * @param <R> a {@link RssiReading} type.
  */
 public abstract class RssiFingerprintLocated<S extends RadioSource, R extends RssiReading<S>,
-        P extends Point> extends RssiFingerprint<S, R> implements FingerprintLocated<P> {
+        P extends Point<?>> extends RssiFingerprint<S, R> implements FingerprintLocated<P> {
 
     /**
      * Position where fingerprint readings were made.

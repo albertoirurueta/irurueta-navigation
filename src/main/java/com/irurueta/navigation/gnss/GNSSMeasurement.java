@@ -719,10 +719,12 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new GNSSMeasurement(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final GNSSMeasurement result = (GNSSMeasurement)super.clone();
+        copyTo(result);
+        return result;
     }
 }

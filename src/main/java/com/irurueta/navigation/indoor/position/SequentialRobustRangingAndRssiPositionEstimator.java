@@ -35,7 +35,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class SequentialRobustRangingAndRssiPositionEstimator<P extends Point> {
+public abstract class SequentialRobustRangingAndRssiPositionEstimator<P extends Point<?>> {
 
     /**
      * Default robust estimator method for robust position estimation using ranging

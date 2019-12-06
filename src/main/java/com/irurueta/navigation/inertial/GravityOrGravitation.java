@@ -29,7 +29,7 @@ import java.util.Objects;
  * on the implementation.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class GravityOrGravitation<T extends GravityOrGravitation> implements Serializable, Cloneable {
+public abstract class GravityOrGravitation<T extends GravityOrGravitation<?>> implements Serializable, Cloneable {
     /**
      * Number of components.
      */

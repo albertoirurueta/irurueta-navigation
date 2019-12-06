@@ -23,5 +23,5 @@ import com.irurueta.navigation.indoor.RadioSource;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-public interface RangingAndRssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point>
+public interface RangingAndRssiRadioSourceEstimatorListener<S extends RadioSource, P extends Point<P>>
         extends RadioSourceEstimatorListener<RangingAndRssiRadioSourceEstimator<S, P>> { }

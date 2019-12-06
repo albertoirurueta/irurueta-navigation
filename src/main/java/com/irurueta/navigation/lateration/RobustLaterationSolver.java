@@ -31,7 +31,7 @@ import com.irurueta.numerical.robust.RobustEstimatorMethod;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class RobustLaterationSolver<P extends Point> {
+public abstract class RobustLaterationSolver<P extends Point<?>> {
 
     /**
      * Indicates that by default a linear solver is used for preliminary solution estimation.

@@ -37,7 +37,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class LinearRssiPositionEstimator<P extends Point> extends
+public abstract class LinearRssiPositionEstimator<P extends Point<P>> extends
         RssiPositionEstimator<P> {
 
     /**

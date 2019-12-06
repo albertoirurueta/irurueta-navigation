@@ -89,10 +89,12 @@ public class ECEFGravity extends GravityOrGravitation<ECEFGravity> {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new ECEFGravity(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final ECEFGravity result = (ECEFGravity)super.clone();
+        copyTo(result);
+        return result;
     }
 }

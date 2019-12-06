@@ -21,13 +21,14 @@ import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationConverter;
 import com.irurueta.units.AccelerationUnit;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Contains acceleration due to gravity resolved about NED frame.
  */
 @SuppressWarnings("WeakerAccess")
-public class NEDGravity {
+public class NEDGravity implements Serializable, Cloneable {
 
     /**
      * Acceleration due to gravity through east-naxis of NED frame expressed in meters per squared second (m/s^2).
@@ -417,10 +418,12 @@ public class NEDGravity {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new NEDGravity(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final NEDGravity result = (NEDGravity)super.clone();
+        copyTo(result);
+        return result;
     }
 }

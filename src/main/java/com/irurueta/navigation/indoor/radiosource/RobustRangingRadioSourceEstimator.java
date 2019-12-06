@@ -30,7 +30,7 @@ import java.util.List;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P extends Point> extends
+public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P extends Point<P>> extends
         RobustRadioSourceEstimator<P, RangingReadingLocated<S, P>, RobustRangingRadioSourceEstimatorListener<S, P>> {
 
     /**
@@ -251,7 +251,6 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
         P readingPosition = reading.getPosition();
         P radioSourcePosition = currentEstimation.getEstimatedPosition();
 
-        //noinspection unchecked
         return Math.abs(radioSourcePosition.distanceTo(readingPosition) - distance);
     }
 
@@ -260,7 +259,7 @@ public abstract class RobustRangingRadioSourceEstimator<S extends RadioSource, P
      * samples.
      * @param <P> a {@link Point} type.
      */
-    static class Solution<P extends Point> {
+    static class Solution<P extends Point<?>> {
         /**
          * Estimated position for a subset of samples.
          */

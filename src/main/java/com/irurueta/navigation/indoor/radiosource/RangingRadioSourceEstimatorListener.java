@@ -24,5 +24,5 @@ import com.irurueta.navigation.indoor.RadioSource;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public interface RangingRadioSourceEstimatorListener<S extends RadioSource, P extends Point>
+public interface RangingRadioSourceEstimatorListener<S extends RadioSource, P extends Point<P>>
         extends RadioSourceEstimatorListener<RangingRadioSourceEstimator<S, P>> { }

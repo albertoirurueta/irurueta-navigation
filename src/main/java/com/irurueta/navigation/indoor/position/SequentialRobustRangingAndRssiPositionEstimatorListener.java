@@ -23,7 +23,7 @@ import com.irurueta.geometry.Point;
  *
  * @param <P> a {@link Point} type.
  */
-public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P extends Point> {
+public interface SequentialRobustRangingAndRssiPositionEstimatorListener<P extends Point<?>> {
 
     /**
      * Called when estimation starts.

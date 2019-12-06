@@ -1243,7 +1243,7 @@ public class CoordinateTransformationTest {
     }
 
     @Test
-    public void testClone() throws InvalidRotationMatrixException {
+    public void testClone() throws InvalidRotationMatrixException, CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double roll = Math.toRadians(
                 randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));

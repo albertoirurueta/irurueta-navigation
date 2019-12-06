@@ -26,7 +26,7 @@ import java.util.List;
  * @param <P> a {@link Point} type.
  * @param <S> a {@link RadioSource type}.
  */
-public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
+public class RadioSourceKNearestFinder<P extends Point<?>, S extends RadioSource> {
 
     /**
      * Collection of fingerprints to match against.
@@ -104,7 +104,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
      * @param <S> a {@link RadioSource} type.
      */
     @SuppressWarnings("Duplicates")
-    public static <P extends Point, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P>
+    public static <P extends Point<?>, S extends RadioSource> RssiFingerprintLocated<S, RssiReading<S>, P>
             findNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
             Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints) {
         if (fingerprint == null || fingerprints == null) {
@@ -136,7 +136,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
      * @param <P> a {@link Point} type.
      * @param <S> a {@link RadioSource} type.
      */
-    public static <P extends Point, S extends RadioSource> List<RssiFingerprintLocated<S, RssiReading<S>, P>>
+    public static <P extends Point<?>, S extends RadioSource> List<RssiFingerprintLocated<S, RssiReading<S>, P>>
             findKNearestTo(RssiFingerprint<S, RssiReading<S>> fingerprint,
             Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
             int k) {
@@ -164,7 +164,7 @@ public class RadioSourceKNearestFinder<P extends Point, S extends RadioSource> {
      * @param <S> a {@link RadioSource} type.
      */
     @SuppressWarnings("Duplicates")
-    public static <P extends Point, S extends RadioSource> void findKNearestTo(
+    public static <P extends Point<?>, S extends RadioSource> void findKNearestTo(
             RssiFingerprint<S, RssiReading<S>> fingerprint,
             Collection<? extends RssiFingerprintLocated<S, RssiReading<S>, P>> fingerprints,
             int k, List<RssiFingerprintLocated<S, RssiReading<S>, P>> nearestFingerprints,

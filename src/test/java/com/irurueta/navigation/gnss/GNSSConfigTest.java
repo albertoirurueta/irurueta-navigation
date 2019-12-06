@@ -815,7 +815,7 @@ public class GNSSConfigTest {
                 constellationLongitudeOffsetDegrees, ABSOLUTE_ERROR);
         assertEquals(config.getConstellationTimingOffset(), constellationTimingOffset,
                 0.0);
-        assertEquals(config.getMaskAngleDegrees(), maskAngleDegrees, 0.0);
+        assertEquals(config.getMaskAngleDegrees(), maskAngleDegrees, ABSOLUTE_ERROR);
         assertEquals(config.getSISErrorSD(), sisErrorSD, 0.0);
         assertEquals(config.getZenithIonosphereErrorSD(), zenithIonosphereErrorSD,
                 0.0);
@@ -945,7 +945,7 @@ public class GNSSConfigTest {
                 constellationLongitudeOffsetDegrees, ABSOLUTE_ERROR);
         assertEquals(config2.getConstellationTimingOffset(), constellationTimingOffset,
                 0.0);
-        assertEquals(config2.getMaskAngleDegrees(), maskAngleDegrees, 0.0);
+        assertEquals(config2.getMaskAngleDegrees(), maskAngleDegrees, ABSOLUTE_ERROR);
         assertEquals(config2.getSISErrorSD(), sisErrorSD, 0.0);
         assertEquals(config2.getZenithIonosphereErrorSD(), zenithIonosphereErrorSD,
                 0.0);
@@ -3444,7 +3444,7 @@ public class GNSSConfigTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double epochInterval = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double initialEstimatedEcefPositionX = randomizer.nextDouble(MIN_VALUE,

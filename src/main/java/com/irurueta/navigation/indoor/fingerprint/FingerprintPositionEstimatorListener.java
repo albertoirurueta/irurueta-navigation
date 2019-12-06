@@ -22,5 +22,5 @@ import com.irurueta.geometry.Point;
  * fingerprints and radio sources starts or ends.
  * @param <P> a {@link Point} type.
  */
-public interface FingerprintPositionEstimatorListener<P extends Point>
+public interface FingerprintPositionEstimatorListener<P extends Point<?>>
         extends BaseFingerprintEstimatorListener<FingerprintPositionEstimator<P>> { }

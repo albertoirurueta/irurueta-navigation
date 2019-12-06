@@ -22,7 +22,7 @@ import com.irurueta.geometry.Point;
  * starts or ends.
  * @param <P> a {@link Point} type.
  */
-public interface WeightedKNearestNeighboursPositionSolverListener<P extends Point> {
+public interface WeightedKNearestNeighboursPositionSolverListener<P extends Point<?>> {
 
     /**
      * Called when solving starts.

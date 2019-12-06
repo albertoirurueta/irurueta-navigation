@@ -741,10 +741,12 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
-    protected Object clone() {
-        return new ECEFFrame(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final ECEFFrame result = (ECEFFrame)super.clone();
+        copyTo(result);
+        return result;
     }
 }

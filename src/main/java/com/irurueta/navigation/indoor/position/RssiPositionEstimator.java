@@ -29,7 +29,7 @@ import com.irurueta.navigation.indoor.RssiReading;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings("WeakerAccess")
-public abstract class RssiPositionEstimator<P extends Point> extends PositionEstimator<P,
+public abstract class RssiPositionEstimator<P extends Point<?>> extends PositionEstimator<P,
         RssiReading<? extends RadioSource>,
         RssiPositionEstimatorListener<P>> {
 

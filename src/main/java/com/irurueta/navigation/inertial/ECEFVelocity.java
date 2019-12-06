@@ -316,22 +316,18 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * Checks if provided object is an ECEFVelocity having exactly the same contents
      * as this instance.
      *
-     * @param obj Object to be compared.
+     * @param o Object to be compared.
      * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (!(obj instanceof ECEFVelocity)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
-        final ECEFVelocity other = (ECEFVelocity) obj;
+        final ECEFVelocity other = (ECEFVelocity) o;
         return equals(other);
     }
 
@@ -368,11 +364,13 @@ public class ECEFVelocity implements Serializable, Cloneable {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new ECEFVelocity(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final ECEFVelocity result = (ECEFVelocity)super.clone();
+        copyTo(result);
+        return result;
     }
 
     /**

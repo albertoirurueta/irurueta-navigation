@@ -21,7 +21,7 @@ package com.irurueta.navigation.indoor.fingerprint;
  * @param <E> a {@link BaseFingerprintPositionAndRadioSourceEstimator} type.
  */
 public interface BaseFingerprintPositionAndRadioSourceEstimatorListener<
-        E extends BaseFingerprintPositionAndRadioSourceEstimator> {
+        E extends BaseFingerprintPositionAndRadioSourceEstimator<?, ?>> {
 
     /**
      * Called when estimation starts.

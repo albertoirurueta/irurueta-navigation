@@ -23,5 +23,5 @@ import com.irurueta.geometry.Point;
  *
  * @param <P> a {@link Point} type.
  */
-public interface RobustRssiPositionEstimatorListener<P extends Point> extends
+public interface RobustRssiPositionEstimatorListener<P extends Point<?>> extends
         RobustPositionEstimatorListener<RobustRssiPositionEstimator<P>> { }

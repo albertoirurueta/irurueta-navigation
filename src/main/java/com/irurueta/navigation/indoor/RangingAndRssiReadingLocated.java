@@ -24,7 +24,7 @@ import com.irurueta.geometry.Point;
  * @param <S> a {@link RadioSource} type.
  * @param <P> a {@link Point} type.
  */
-public class RangingAndRssiReadingLocated<S extends RadioSource, P extends Point> extends
+public class RangingAndRssiReadingLocated<S extends RadioSource, P extends Point<?>> extends
         RangingAndRssiReading<S> implements ReadingLocated<P> {
 
     /**

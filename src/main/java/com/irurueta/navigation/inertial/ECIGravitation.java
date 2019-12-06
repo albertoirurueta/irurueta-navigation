@@ -89,10 +89,12 @@ public class ECIGravitation extends GravityOrGravitation<ECIGravitation> {
      * Makes a copy of this instance.
      *
      * @return a copy of this instance.
+     * @throws CloneNotSupportedException if clone fails for some reason.
      */
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "MethodDoesntCallSuperMethod"})
     @Override
-    protected Object clone() {
-        return new ECIGravitation(this);
+    protected Object clone() throws CloneNotSupportedException {
+        final ECIGravitation result = (ECIGravitation)super.clone();
+        copyTo(result);
+        return result;
     }
 }

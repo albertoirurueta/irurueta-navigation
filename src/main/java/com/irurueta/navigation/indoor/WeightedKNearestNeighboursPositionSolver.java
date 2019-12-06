@@ -26,7 +26,7 @@ import com.irurueta.navigation.NotReadyException;
  * @param <P> a {@link Point} type.
  */
 @SuppressWarnings({"WeakerAccess", "Duplicates"})
-public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point> {
+public abstract class WeightedKNearestNeighboursPositionSolver<P extends Point<?>> {
 
     /**
      * Default minimum allowed distance between received WiFi fingerprints.

@@ -454,7 +454,7 @@ public class ECIGravitationTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double gx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);

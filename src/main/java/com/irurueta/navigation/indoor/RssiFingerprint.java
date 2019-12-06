@@ -144,8 +144,8 @@ public class RssiFingerprint<S extends RadioSource, R extends RssiReading<S>>
             return Double.MAX_VALUE;
         }
 
-        avgRssiThis /= (double)numAccessPoints;
-        avgRssiOther /= (double)numAccessPoints;
+        avgRssiThis /= numAccessPoints;
+        avgRssiOther /= numAccessPoints;
 
 
         double result = 0.0;
