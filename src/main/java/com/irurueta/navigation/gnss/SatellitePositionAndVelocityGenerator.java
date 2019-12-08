@@ -23,6 +23,9 @@ import java.util.List;
 
 /**
  * Computes satellites positions and velocities.
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * Integrated Navigation Systems, Second Edition" and on the companion software available at:
+ * https://github.com/ymjdz/MATLAB-Codes
  */
 public class SatellitePositionAndVelocityGenerator {
 
@@ -59,6 +62,8 @@ public class SatellitePositionAndVelocityGenerator {
      */
     public static void generateSatellitesPositionAndVelocity(final double time, final GNSSConfig config,
                                                              final Collection<SatellitePositionAndVelocity> result) {
+        result.clear();
+
         final int numSatellites = config.getNumberOfSatellites();
         for (int j = 0; j < numSatellites; j++) {
             final SatellitePositionAndVelocity satellitePositionAndVelocity = new SatellitePositionAndVelocity();
