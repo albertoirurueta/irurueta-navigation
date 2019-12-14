@@ -18,6 +18,8 @@ package com.irurueta.navigation.gnss;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceUnit;
@@ -111,6 +113,66 @@ public class GNSSMeasurementTest {
 
         measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
                 position, speedX, speedY, speedZ);
+
+        // check default values
+        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
+        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
+        assertEquals(measurement.getX(), x, 0.0);
+        assertEquals(measurement.getY(), y, 0.0);
+        assertEquals(measurement.getZ(), z, 0.0);
+        assertEquals(measurement.getVx(), vx, 0.0);
+        assertEquals(measurement.getVy(), vy, 0.0);
+        assertEquals(measurement.getVz(), vz, 0.0);
+
+
+        // test constructor with ECEF position and velocity
+        final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
+        final ECEFVelocity ecefVelocity = new ECEFVelocity(vx, vy, vz);
+        measurement = new GNSSMeasurement(pseudoRange, pseudoRate,
+                ecefPosition, ecefVelocity);
+
+        // check default values
+        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
+        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
+        assertEquals(measurement.getX(), x, 0.0);
+        assertEquals(measurement.getY(), y, 0.0);
+        assertEquals(measurement.getZ(), z, 0.0);
+        assertEquals(measurement.getVx(), vx, 0.0);
+        assertEquals(measurement.getVy(), vy, 0.0);
+        assertEquals(measurement.getVz(), vz, 0.0);
+
+
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity(ecefPosition, ecefVelocity);
+        measurement = new GNSSMeasurement(pseudoRange, pseudoRate, positionAndVelocity);
+
+        // check default values
+        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
+        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
+        assertEquals(measurement.getX(), x, 0.0);
+        assertEquals(measurement.getY(), y, 0.0);
+        assertEquals(measurement.getZ(), z, 0.0);
+        assertEquals(measurement.getVx(), vx, 0.0);
+        assertEquals(measurement.getVy(), vy, 0.0);
+        assertEquals(measurement.getVz(), vz, 0.0);
+
+
+        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
+                ecefPosition, ecefVelocity);
+
+        // check default values
+        assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
+        assertEquals(measurement.getPseudoRate(), pseudoRate, 0.0);
+        assertEquals(measurement.getX(), x, 0.0);
+        assertEquals(measurement.getY(), y, 0.0);
+        assertEquals(measurement.getZ(), z, 0.0);
+        assertEquals(measurement.getVx(), vx, 0.0);
+        assertEquals(measurement.getVy(), vy, 0.0);
+        assertEquals(measurement.getVz(), vz, 0.0);
+
+
+        measurement = new GNSSMeasurement(pseudoRangeDistance, pseudoRateSpeed,
+                positionAndVelocity);
 
         // check default values
         assertEquals(measurement.getPseudoRange(), pseudoRange, 0.0);
@@ -438,6 +500,36 @@ public class GNSSMeasurementTest {
     }
 
     @Test
+    public void testGetSetEcefPosition() {
+        final GNSSMeasurement measurement = new GNSSMeasurement();
+
+        // check default value
+        final ECEFPosition position1 = measurement.getEcefPosition();
+
+        // check
+        assertEquals(position1.getX(), 0.0, 0.0);
+        assertEquals(position1.getY(), 0.0, 0.0);
+        assertEquals(position1.getZ(), 0.0, 0.0);
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final ECEFPosition position2 = new ECEFPosition(x, y, z);
+        measurement.setEcefPosition(position2);
+
+        // check
+        final ECEFPosition position3 = measurement.getEcefPosition();
+        final ECEFPosition position4 = new ECEFPosition();
+        measurement.getEcefPosition(position4);
+
+        assertEquals(position2, position3);
+        assertEquals(position2, position4);
+    }
+
+    @Test
     public void testGetSetVx() {
         final GNSSMeasurement measurement = new GNSSMeasurement();
 
@@ -620,6 +712,74 @@ public class GNSSMeasurementTest {
         assertEquals(speedX2, speedX3);
         assertEquals(speedY2, speedY3);
         assertEquals(speedZ2, speedZ3);
+    }
+
+    @Test
+    public void testGetSetEcefVelocity() {
+        final GNSSMeasurement measurement = new GNSSMeasurement();
+
+        // check default value
+        final ECEFVelocity velocity1 = measurement.getEcefVelocity();
+
+        assertEquals(velocity1.getVx(), 0.0, 0.0);
+        assertEquals(velocity1.getVy(), 0.0, 0.0);
+        assertEquals(velocity1.getVz(), 0.0, 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final ECEFVelocity velocity2 = new ECEFVelocity(vx, vy, vz);
+
+        measurement.setEcefVelocity(velocity2);
+
+        // check
+        final ECEFVelocity velocity3 = new ECEFVelocity();
+        measurement.getEcefVelocity(velocity3);
+        final ECEFVelocity velocity4 = measurement.getEcefVelocity();
+
+        assertEquals(velocity2, velocity3);
+        assertEquals(velocity2, velocity4);
+    }
+
+    @Test
+    public void testGetSetPositionAndVelocity() {
+        final GNSSMeasurement measurement = new GNSSMeasurement();
+
+        // check default value
+        final ECEFPositionAndVelocity positionAndVelocity1 = measurement.getPositionAndVelocity();
+
+        assertEquals(positionAndVelocity1.getX(), 0.0, 0.0);
+        assertEquals(positionAndVelocity1.getY(), 0.0, 0.0);
+        assertEquals(positionAndVelocity1.getZ(), 0.0, 0.0);
+        assertEquals(positionAndVelocity1.getVx(), 0.0, 0.0);
+        assertEquals(positionAndVelocity1.getVy(), 0.0, 0.0);
+        assertEquals(positionAndVelocity1.getVz(), 0.0, 0.0);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+        final double z = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+        final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+
+        measurement.setPositionAndVelocity(positionAndVelocity2);
+
+        // check
+        final ECEFPositionAndVelocity positionAndVelocity3 = new ECEFPositionAndVelocity();
+        measurement.getPositionAndVelocity(positionAndVelocity3);
+        final ECEFPositionAndVelocity positionAndVelocity4 = measurement.getPositionAndVelocity();
+
+        assertEquals(positionAndVelocity2, positionAndVelocity3);
+        assertEquals(positionAndVelocity2, positionAndVelocity4);
     }
 
     @Test

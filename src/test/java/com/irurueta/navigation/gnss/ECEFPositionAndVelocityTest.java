@@ -31,7 +31,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class SatellitePositionAndVelocityTest {
+public class ECEFPositionAndVelocityTest {
 
     private static final double THRESHOLD = 1e-6;
 
@@ -46,21 +46,21 @@ public class SatellitePositionAndVelocityTest {
     @Test
     public void testConstructor() {
         // test empty constructor
-        SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(),
+        assertEquals(positionAndVelocity.getX(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(),
+        assertEquals(positionAndVelocity.getY(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(),
+        assertEquals(positionAndVelocity.getZ(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(),
+        assertEquals(positionAndVelocity.getVx(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(),
+        assertEquals(positionAndVelocity.getVy(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(),
+        assertEquals(positionAndVelocity.getVz(),
                 0.0, 0.0);
 
 
@@ -73,17 +73,17 @@ public class SatellitePositionAndVelocityTest {
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE,
                 MAX_POSITION_VALUE);
 
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(x, y, z);
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(),
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(),
+        assertEquals(positionAndVelocity.getVy(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(),
+        assertEquals(positionAndVelocity.getVz(),
                 0.0, 0.0);
 
 
@@ -92,52 +92,52 @@ public class SatellitePositionAndVelocityTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 distanceX, distanceY, distanceZ);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(),
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(),
+        assertEquals(positionAndVelocity.getVy(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(),
+        assertEquals(positionAndVelocity.getVz(),
                 0.0, 0.0);
 
 
         // test constructor with ECEF position
         final ECEFPosition ecefPosition = new ECEFPosition(x, y, z);
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 ecefPosition);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(),
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(),
+        assertEquals(positionAndVelocity.getVy(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(),
+        assertEquals(positionAndVelocity.getVz(),
                 0.0, 0.0);
 
 
         // test constructor with position
         final Point3D position = new InhomogeneousPoint3D(x, y, z);
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 position);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(),
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(),
+        assertEquals(positionAndVelocity.getVy(),
                 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(),
+        assertEquals(positionAndVelocity.getVz(),
                 0.0, 0.0);
 
 
@@ -153,266 +153,287 @@ public class SatellitePositionAndVelocityTest {
         final Speed speedZ = new Speed(vz,
                 SpeedUnit.METERS_PER_SECOND);
 
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with ECEF velocity
         final ECEFVelocity ecefVelocity = new ECEFVelocity(
                 vx, vy, vz);
 
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 ecefVelocity);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(x, y, z,
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
                 vx, vy, vz);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(x, y, z,
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
                 speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position coordinates and ECEF velocity
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(x, y, z,
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
                 ecefVelocity);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position distance and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 distanceX, distanceY, distanceZ, vx, vy, vz);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position distance and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 distanceX, distanceY, distanceZ, speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position distance and ECEF velocity
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(
+        positionAndVelocity = new ECEFPositionAndVelocity(
                 distanceX, distanceY, distanceZ, ecefVelocity);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with ECEF position and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(ecefPosition,
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition,
                 vx, vy, vz);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with ECEF position and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(ecefPosition,
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition,
                 speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with ECEF position and velocity
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(ecefPosition,
+        positionAndVelocity = new ECEFPositionAndVelocity(ecefPosition,
                 ecefVelocity);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(position,
+        positionAndVelocity = new ECEFPositionAndVelocity(position,
                 vx, vy, vz);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position and speed coordinates
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(position,
+        positionAndVelocity = new ECEFPositionAndVelocity(position,
                 speedX, speedY, speedZ);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
 
 
         // test constructor with position and ECEF velocity
-        satellitePositionAndVelocity = new SatellitePositionAndVelocity(position,
+        positionAndVelocity = new ECEFPositionAndVelocity(position,
                 ecefVelocity);
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
+
+
+        // test copy constructor
+        positionAndVelocity = new ECEFPositionAndVelocity(x, y, z,
+                vx, vy, vz);
+
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity(positionAndVelocity);
+
+        // check default values
+        assertEquals(positionAndVelocity2.getX(), x, 0.0);
+        assertEquals(positionAndVelocity2.getY(), y, 0.0);
+        assertEquals(positionAndVelocity2.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity2.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity2.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity2.getVz(), vz, 0.0);
     }
 
     @Test
     public void testGetSetX() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getX(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        satellitePositionAndVelocity.setX(x);
+        positionAndVelocity.setX(x);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
     }
 
     @Test
     public void testGetSetY() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getY(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        satellitePositionAndVelocity.setY(y);
+        positionAndVelocity.setY(y);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
     }
 
     @Test
     public void testGetSetZ() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        satellitePositionAndVelocity.setZ(z);
+        positionAndVelocity.setZ(z);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
     }
 
     @Test
     public void testSetPositionCoordinates() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
-        satellitePositionAndVelocity.setPositionCoordinates(x, y, z);
+        positionAndVelocity.setPositionCoordinates(x, y, z);
+
+        // check
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
     }
 
     @Test
     public void testGetSetXDistance() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Distance distanceX1 = satellitePositionAndVelocity.getXDistance();
+        final Distance distanceX1 = positionAndVelocity.getXDistance();
 
         assertEquals(distanceX1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(distanceX1.getUnit(), DistanceUnit.METER);
@@ -422,12 +443,12 @@ public class SatellitePositionAndVelocityTest {
         final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final Distance distanceX2 = new Distance(x, DistanceUnit.METER);
 
-        satellitePositionAndVelocity.setXDistance(distanceX2);
+        positionAndVelocity.setXDistance(distanceX2);
 
         // check
         final Distance distanceX3 = new Distance(0.0, DistanceUnit.KILOMETER);
-        satellitePositionAndVelocity.getXDistance(distanceX3);
-        final Distance distanceX4 = satellitePositionAndVelocity.getXDistance();
+        positionAndVelocity.getXDistance(distanceX3);
+        final Distance distanceX4 = positionAndVelocity.getXDistance();
 
         assertEquals(distanceX2, distanceX3);
         assertEquals(distanceX2, distanceX4);
@@ -435,11 +456,11 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testGetSetYDistance() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Distance distanceY1 = satellitePositionAndVelocity.getYDistance();
+        final Distance distanceY1 = positionAndVelocity.getYDistance();
 
         assertEquals(distanceY1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(distanceY1.getUnit(), DistanceUnit.METER);
@@ -449,12 +470,12 @@ public class SatellitePositionAndVelocityTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final Distance distanceY2 = new Distance(y, DistanceUnit.METER);
 
-        satellitePositionAndVelocity.setYDistance(distanceY2);
+        positionAndVelocity.setYDistance(distanceY2);
 
         // check
         final Distance distanceY3 = new Distance(0.0, DistanceUnit.KILOMETER);
-        satellitePositionAndVelocity.getYDistance(distanceY3);
-        final Distance distanceY4 = satellitePositionAndVelocity.getYDistance();
+        positionAndVelocity.getYDistance(distanceY3);
+        final Distance distanceY4 = positionAndVelocity.getYDistance();
 
         assertEquals(distanceY2, distanceY3);
         assertEquals(distanceY2, distanceY4);
@@ -462,11 +483,11 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testGetSetZDistance() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Distance distanceZ1 = satellitePositionAndVelocity.getZDistance();
+        final Distance distanceZ1 = positionAndVelocity.getZDistance();
 
         assertEquals(distanceZ1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(distanceZ1.getUnit(), DistanceUnit.METER);
@@ -476,12 +497,12 @@ public class SatellitePositionAndVelocityTest {
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final Distance distanceZ2 = new Distance(z, DistanceUnit.METER);
 
-        satellitePositionAndVelocity.setZDistance(distanceZ2);
+        positionAndVelocity.setZDistance(distanceZ2);
 
         // check
         final Distance distanceZ3 = new Distance(0.0, DistanceUnit.KILOMETER);
-        satellitePositionAndVelocity.getZDistance(distanceZ3);
-        final Distance distanceZ4 = satellitePositionAndVelocity.getZDistance();
+        positionAndVelocity.getZDistance(distanceZ3);
+        final Distance distanceZ4 = positionAndVelocity.getZDistance();
 
         assertEquals(distanceZ2, distanceZ3);
         assertEquals(distanceZ2, distanceZ4);
@@ -489,13 +510,13 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testSetPositionDistanceCoordinates() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getX(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getX(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getY(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getZ(), 0.0, 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -507,22 +528,22 @@ public class SatellitePositionAndVelocityTest {
         final Distance distanceY = new Distance(y, DistanceUnit.METER);
         final Distance distanceZ = new Distance(z, DistanceUnit.METER);
 
-        satellitePositionAndVelocity.setPositionDistanceCoordinates(
+        positionAndVelocity.setPositionDistanceCoordinates(
                 distanceX, distanceY, distanceZ);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity.getX(), x, 0.0);
+        assertEquals(positionAndVelocity.getY(), y, 0.0);
+        assertEquals(positionAndVelocity.getZ(), z, 0.0);
     }
 
     @Test
     public void testGetSetEcefPosition() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final ECEFPosition ecefPosition1 = satellitePositionAndVelocity
+        final ECEFPosition ecefPosition1 = positionAndVelocity
                 .getEcefPosition();
 
         assertEquals(ecefPosition1.getX(), 0.0, 0.0);
@@ -535,12 +556,12 @@ public class SatellitePositionAndVelocityTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final ECEFPosition ecefPosition2 = new ECEFPosition(x, y, z);
-        satellitePositionAndVelocity.setEcefPosition(ecefPosition2);
+        positionAndVelocity.setEcefPosition(ecefPosition2);
 
         // check
         final ECEFPosition ecefPosition3 = new ECEFPosition();
-        satellitePositionAndVelocity.getEcefPosition(ecefPosition3);
-        final ECEFPosition ecefPosition4 = satellitePositionAndVelocity
+        positionAndVelocity.getEcefPosition(ecefPosition3);
+        final ECEFPosition ecefPosition4 = positionAndVelocity
                 .getEcefPosition();
 
         assertEquals(ecefPosition2, ecefPosition3);
@@ -549,11 +570,11 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testGetSetPosition() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Point3D position1 = satellitePositionAndVelocity.getPosition();
+        final Point3D position1 = positionAndVelocity.getPosition();
 
         assertEquals(position1.getInhomX(), 0.0, 0.0);
         assertEquals(position1.getInhomY(), 0.0, 0.0);
@@ -565,12 +586,12 @@ public class SatellitePositionAndVelocityTest {
         final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
         final Point3D position2 = new InhomogeneousPoint3D(x, y, z);
-        satellitePositionAndVelocity.setPosition(position2);
+        positionAndVelocity.setPosition(position2);
 
         // check
         final Point3D position3 = new InhomogeneousPoint3D();
-        satellitePositionAndVelocity.getPosition(position3);
-        final Point3D position4 = satellitePositionAndVelocity.getPosition();
+        positionAndVelocity.getPosition(position3);
+        final Point3D position4 = positionAndVelocity.getPosition();
 
         assertEquals(position2, position3);
         assertEquals(position2, position4);
@@ -578,85 +599,85 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testGetSetVx() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getVx(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVx(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        satellitePositionAndVelocity.setVx(vx);
+        positionAndVelocity.setVx(vx);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
     }
 
     @Test
     public void testGetSetVy() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getVy(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVy(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        satellitePositionAndVelocity.setVy(vy);
+        positionAndVelocity.setVy(vy);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
     }
 
     @Test
     public void testGetSetVz() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getVz(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVz(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        satellitePositionAndVelocity.setVz(vz);
+        positionAndVelocity.setVz(vz);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
     }
 
     @Test
     public void testSetVelocityCoordinates() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default values
-        assertEquals(satellitePositionAndVelocity.getVx(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVx(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVy(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVz(), 0.0, 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
-        satellitePositionAndVelocity.setVelocityCoordinates(vx, vy, vz);
+        positionAndVelocity.setVelocityCoordinates(vx, vy, vz);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
     }
 
     @Test
     public void testGetSetSpeedX() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Speed speedX1 = satellitePositionAndVelocity.getSpeedX();
+        final Speed speedX1 = positionAndVelocity.getSpeedX();
 
         assertEquals(speedX1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(speedX1.getUnit(), SpeedUnit.METERS_PER_SECOND);
@@ -665,12 +686,12 @@ public class SatellitePositionAndVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vx = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final Speed speedX2 = new Speed(vx, SpeedUnit.METERS_PER_SECOND);
-        satellitePositionAndVelocity.setSpeedX(speedX2);
+        positionAndVelocity.setSpeedX(speedX2);
 
         // check
         final Speed speedX3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        satellitePositionAndVelocity.getSpeedX(speedX3);
-        final Speed speedX4 = satellitePositionAndVelocity.getSpeedX();
+        positionAndVelocity.getSpeedX(speedX3);
+        final Speed speedX4 = positionAndVelocity.getSpeedX();
 
         assertEquals(speedX2, speedX3);
         assertEquals(speedX2, speedX4);
@@ -678,11 +699,11 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testGetSetSpeedY() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Speed speedY1 = satellitePositionAndVelocity.getSpeedY();
+        final Speed speedY1 = positionAndVelocity.getSpeedY();
 
         assertEquals(speedY1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(speedY1.getUnit(), SpeedUnit.METERS_PER_SECOND);
@@ -691,12 +712,12 @@ public class SatellitePositionAndVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final Speed speedY2 = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
-        satellitePositionAndVelocity.setSpeedY(speedY2);
+        positionAndVelocity.setSpeedY(speedY2);
 
         // check
         final Speed speedY3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_SECOND);
-        satellitePositionAndVelocity.getSpeedY(speedY3);
-        final Speed speedY4 = satellitePositionAndVelocity.getSpeedY();
+        positionAndVelocity.getSpeedY(speedY3);
+        final Speed speedY4 = positionAndVelocity.getSpeedY();
 
         assertEquals(speedY2, speedY3);
         assertEquals(speedY2, speedY4);
@@ -704,11 +725,11 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testGetSetSpeedZ() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final Speed speedZ1 = satellitePositionAndVelocity.getSpeedZ();
+        final Speed speedZ1 = positionAndVelocity.getSpeedZ();
 
         assertEquals(speedZ1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(speedZ1.getUnit(), SpeedUnit.METERS_PER_SECOND);
@@ -717,12 +738,12 @@ public class SatellitePositionAndVelocityTest {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final Speed speedZ2 = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
-        satellitePositionAndVelocity.setSpeedZ(speedZ2);
+        positionAndVelocity.setSpeedZ(speedZ2);
 
         // check
         final Speed speedZ3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        satellitePositionAndVelocity.getSpeedZ(speedZ3);
-        final Speed speedZ4 = satellitePositionAndVelocity.getSpeedZ();
+        positionAndVelocity.getSpeedZ(speedZ3);
+        final Speed speedZ4 = positionAndVelocity.getSpeedZ();
 
         assertEquals(speedZ2, speedZ3);
         assertEquals(speedZ2, speedZ4);
@@ -730,13 +751,13 @@ public class SatellitePositionAndVelocityTest {
 
     @Test
     public void testSetSpeedCoordinates() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        assertEquals(satellitePositionAndVelocity.getVx(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), 0.0, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVx(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVy(), 0.0, 0.0);
+        assertEquals(positionAndVelocity.getVz(), 0.0, 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
@@ -748,21 +769,21 @@ public class SatellitePositionAndVelocityTest {
         final Speed speedY = new Speed(vy, SpeedUnit.METERS_PER_SECOND);
         final Speed speedZ = new Speed(vz, SpeedUnit.METERS_PER_SECOND);
 
-        satellitePositionAndVelocity.setSpeedCoordinates(speedX, speedY, speedZ);
+        positionAndVelocity.setSpeedCoordinates(speedX, speedY, speedZ);
 
         // check
-        assertEquals(satellitePositionAndVelocity.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity.getVz(), vz, 0.0);
     }
 
     @Test
     public void testGetSetEcefVelocity() {
-        final SatellitePositionAndVelocity satellitePositionAndVelocity =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity =
+                new ECEFPositionAndVelocity();
 
         // check default value
-        final ECEFVelocity ecefVelocity1 = satellitePositionAndVelocity
+        final ECEFVelocity ecefVelocity1 = positionAndVelocity
                 .getEcefVelocity();
 
         assertEquals(ecefVelocity1.getVx(), 0.0, 0.0);
@@ -776,12 +797,12 @@ public class SatellitePositionAndVelocityTest {
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final ECEFVelocity ecefVelocity2 = new ECEFVelocity(vx, vy, vz);
 
-        satellitePositionAndVelocity.setEcefVelocity(ecefVelocity2);
+        positionAndVelocity.setEcefVelocity(ecefVelocity2);
 
         // check
         final ECEFVelocity ecefVelocity3 = new ECEFVelocity();
-        satellitePositionAndVelocity.getEcefVelocity(ecefVelocity3);
-        final ECEFVelocity ecefVelocity4 = satellitePositionAndVelocity
+        positionAndVelocity.getEcefVelocity(ecefVelocity3);
+        final ECEFVelocity ecefVelocity4 = positionAndVelocity
                 .getEcefVelocity();
 
         assertEquals(ecefVelocity2, ecefVelocity3);
@@ -801,20 +822,20 @@ public class SatellitePositionAndVelocityTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final SatellitePositionAndVelocity satellitePositionAndVelocity1 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity2 =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity();
 
-        satellitePositionAndVelocity1.copyTo(satellitePositionAndVelocity2);
+        positionAndVelocity1.copyTo(positionAndVelocity2);
 
         // check
-        assertEquals(satellitePositionAndVelocity2.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity2.getX(), x, 0.0);
+        assertEquals(positionAndVelocity2.getY(), y, 0.0);
+        assertEquals(positionAndVelocity2.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity2.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity2.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity2.getVz(), vz, 0.0);
     }
 
     @Test
@@ -830,20 +851,20 @@ public class SatellitePositionAndVelocityTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final SatellitePositionAndVelocity satellitePositionAndVelocity1 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity2 =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity();
 
-        satellitePositionAndVelocity2.copyFrom(satellitePositionAndVelocity1);
+        positionAndVelocity2.copyFrom(positionAndVelocity1);
 
         // check
-        assertEquals(satellitePositionAndVelocity2.getX(), x, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getY(), y, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getZ(), z, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getVx(), vx, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getVy(), vy, 0.0);
-        assertEquals(satellitePositionAndVelocity2.getVz(), vz, 0.0);
+        assertEquals(positionAndVelocity2.getX(), x, 0.0);
+        assertEquals(positionAndVelocity2.getY(), y, 0.0);
+        assertEquals(positionAndVelocity2.getZ(), z, 0.0);
+        assertEquals(positionAndVelocity2.getVx(), vx, 0.0);
+        assertEquals(positionAndVelocity2.getVy(), vy, 0.0);
+        assertEquals(positionAndVelocity2.getVz(), vz, 0.0);
     }
 
     @Test
@@ -859,18 +880,18 @@ public class SatellitePositionAndVelocityTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final SatellitePositionAndVelocity satellitePositionAndVelocity1 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity2 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity3 =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity3 =
+                new ECEFPositionAndVelocity();
 
         // check
-        assertEquals(satellitePositionAndVelocity1.hashCode(),
-                satellitePositionAndVelocity2.hashCode());
-        assertNotEquals(satellitePositionAndVelocity1.hashCode(),
-                satellitePositionAndVelocity3.hashCode());
+        assertEquals(positionAndVelocity1.hashCode(),
+                positionAndVelocity2.hashCode());
+        assertNotEquals(positionAndVelocity1.hashCode(),
+                positionAndVelocity3.hashCode());
     }
 
     @Test
@@ -886,23 +907,23 @@ public class SatellitePositionAndVelocityTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final SatellitePositionAndVelocity satellitePositionAndVelocity1 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity2 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity3 =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity3 =
+                new ECEFPositionAndVelocity();
 
         //noinspection ConstantConditions,SimplifiableJUnitAssertion
-        assertTrue(satellitePositionAndVelocity1.equals((Object)satellitePositionAndVelocity1));
-        assertTrue(satellitePositionAndVelocity1.equals(satellitePositionAndVelocity1));
-        assertTrue(satellitePositionAndVelocity1.equals(satellitePositionAndVelocity2));
-        assertFalse(satellitePositionAndVelocity1.equals(satellitePositionAndVelocity3));
+        assertTrue(positionAndVelocity1.equals((Object)positionAndVelocity1));
+        assertTrue(positionAndVelocity1.equals(positionAndVelocity1));
+        assertTrue(positionAndVelocity1.equals(positionAndVelocity2));
+        assertFalse(positionAndVelocity1.equals(positionAndVelocity3));
         //noinspection SimplifiableJUnitAssertion,ConstantConditions
-        assertFalse(satellitePositionAndVelocity1.equals((Object)null));
-        assertFalse(satellitePositionAndVelocity1.equals(null));
+        assertFalse(positionAndVelocity1.equals((Object)null));
+        assertFalse(positionAndVelocity1.equals(null));
         //noinspection SimplifiableJUnitAssertion
-        assertFalse(satellitePositionAndVelocity1.equals(new Object()));
+        assertFalse(positionAndVelocity1.equals(new Object()));
     }
 
     @Test
@@ -918,20 +939,20 @@ public class SatellitePositionAndVelocityTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final SatellitePositionAndVelocity satellitePositionAndVelocity1 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity2 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
-        final SatellitePositionAndVelocity satellitePositionAndVelocity3 =
-                new SatellitePositionAndVelocity();
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity2 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity3 =
+                new ECEFPositionAndVelocity();
 
-        assertTrue(satellitePositionAndVelocity1.equals(satellitePositionAndVelocity1,
+        assertTrue(positionAndVelocity1.equals(positionAndVelocity1,
                 THRESHOLD));
-        assertTrue(satellitePositionAndVelocity1.equals(satellitePositionAndVelocity2,
+        assertTrue(positionAndVelocity1.equals(positionAndVelocity2,
                 THRESHOLD));
-        assertFalse(satellitePositionAndVelocity1.equals(satellitePositionAndVelocity3,
+        assertFalse(positionAndVelocity1.equals(positionAndVelocity3,
                 THRESHOLD));
-        assertFalse(satellitePositionAndVelocity1.equals(null, THRESHOLD));
+        assertFalse(positionAndVelocity1.equals(null, THRESHOLD));
     }
 
     @Test
@@ -947,12 +968,12 @@ public class SatellitePositionAndVelocityTest {
         final double vy = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
         final double vz = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
-        final SatellitePositionAndVelocity satellitePositionAndVelocity1 =
-                new SatellitePositionAndVelocity(x, y, z, vx, vy, vz);
+        final ECEFPositionAndVelocity positionAndVelocity1 =
+                new ECEFPositionAndVelocity(x, y, z, vx, vy, vz);
 
-        final Object satellitePositionAndVelocity2 = satellitePositionAndVelocity1
+        final Object positionAndVelocity2 = positionAndVelocity1
                 .clone();
 
-        assertEquals(satellitePositionAndVelocity1, satellitePositionAndVelocity2);
+        assertEquals(positionAndVelocity1, positionAndVelocity2);
     }
 }

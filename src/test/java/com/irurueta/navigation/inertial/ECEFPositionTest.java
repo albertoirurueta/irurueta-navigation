@@ -1,5 +1,7 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.navigation.geodesic.Constants;
@@ -355,6 +357,58 @@ public class ECEFPositionTest {
         assertEquals(position2.getX(), x, 0.0);
         assertEquals(position2.getY(), y, 0.0);
         assertEquals(position2.getZ(), z, 0.0);
+    }
+
+    @Test
+    public void testAsArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+
+        final ECEFPosition position = new ECEFPosition(x, y, z);
+
+        final double[] result1 = new double[ECEFPosition.COMPONENTS];
+        position.asArray(result1);
+
+        final double[] result2 = position.asArray();
+
+        assertEquals(result1[0], x, 0.0);
+        assertEquals(result1[1], y, 0.0);
+        assertEquals(result1[2], z, 0.0);
+
+        assertArrayEquals(result1, result2, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            position.asArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testAsMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double y = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+        final double z = randomizer.nextDouble(MIN_POSITION_VALUE, MAX_POSITION_VALUE);
+
+        final ECEFPosition position = new ECEFPosition(x, y, z);
+
+        final Matrix result1 = new Matrix(ECEFPosition.COMPONENTS, 1);
+        position.asMatrix(result1);
+
+        final Matrix result2 = position.asMatrix();
+
+        final Matrix result3 = new Matrix(1, 1);
+        position.asMatrix(result3);
+
+        assertEquals(result1.getElementAtIndex(0), x, 0.0);
+        assertEquals(result1.getElementAtIndex(1), y, 0.0);
+        assertEquals(result1.getElementAtIndex(2), z, 0.0);
+
+        assertEquals(result1, result2);
+        assertEquals(result1, result3);
     }
 
     @Test

@@ -29,7 +29,7 @@ import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SatellitePositionAndVelocityGeneratorTest {
+public class SatelliteECEFPositionAndVelocityGeneratorTest {
 
     private static final double MIN_VALUE = 1e-4;
     private static final double MAX_VALUE = 1e-3;
@@ -44,9 +44,9 @@ public class SatellitePositionAndVelocityGeneratorTest {
 
     @Test
     public void testConstants() {
-        assertEquals(SatellitePositionAndVelocityGenerator.EARTH_GRAVITATIONAL_CONSTANT,
+        assertEquals(SatelliteECEFPositionAndVelocityGenerator.EARTH_GRAVITATIONAL_CONSTANT,
                 Constants.EARTH_GRAVITATIONAL_CONSTANT, 0.0);
-        assertEquals(SatellitePositionAndVelocityGenerator.EARTH_ROTATION_RATE, Constants.EARTH_ROTATION_RATE,
+        assertEquals(SatelliteECEFPositionAndVelocityGenerator.EARTH_ROTATION_RATE, Constants.EARTH_ROTATION_RATE,
                 0.0);
     }
 
@@ -96,16 +96,16 @@ public class SatellitePositionAndVelocityGeneratorTest {
 
         final double time = randomizer.nextDouble(MIN_TIME_SECONDS, MAX_TIME_SECONDS);
 
-        final List<SatellitePositionAndVelocity> result1 = new ArrayList<>();
+        final List<ECEFPositionAndVelocity> result1 = new ArrayList<>();
         for (int j = 0; j < numberOfSatellites; j++) {
             result1.add(computeSatellitePositionAndVelocity(time, config, j));
         }
 
-        final Collection<SatellitePositionAndVelocity> result2 =
-                SatellitePositionAndVelocityGenerator
+        final Collection<ECEFPositionAndVelocity> result2 =
+                SatelliteECEFPositionAndVelocityGenerator
                         .generateSatellitesPositionAndVelocity(time, config);
-        final Collection<SatellitePositionAndVelocity> result3 = new ArrayList<>();
-        SatellitePositionAndVelocityGenerator.generateSatellitesPositionAndVelocity(
+        final Collection<ECEFPositionAndVelocity> result3 = new ArrayList<>();
+        SatelliteECEFPositionAndVelocityGenerator.generateSatellitesPositionAndVelocity(
                 time, config, result3);
 
         assertEquals(result1, result2);
@@ -159,20 +159,20 @@ public class SatellitePositionAndVelocityGeneratorTest {
         final double time = randomizer.nextDouble(MIN_TIME_SECONDS, MAX_TIME_SECONDS);
 
         for (int j = 0; j < numberOfSatellites; j++) {
-            final SatellitePositionAndVelocity result1 = new SatellitePositionAndVelocity();
-            SatellitePositionAndVelocityGenerator.generateSatellitePositionAndVelocity(time, config, j, result1);
-            final SatellitePositionAndVelocity result2 = SatellitePositionAndVelocityGenerator
+            final ECEFPositionAndVelocity result1 = new ECEFPositionAndVelocity();
+            SatelliteECEFPositionAndVelocityGenerator.generateSatellitePositionAndVelocity(time, config, j, result1);
+            final ECEFPositionAndVelocity result2 = SatelliteECEFPositionAndVelocityGenerator
                     .generateSatellitePositionAndVelocity(time, config, j);
 
-            final SatellitePositionAndVelocity result3 = computeSatellitePositionAndVelocity(time, config, j);
+            final ECEFPositionAndVelocity result3 = computeSatellitePositionAndVelocity(time, config, j);
 
             assertTrue(result1.equals(result3, ABSOLUTE_ERROR));
             assertTrue(result2.equals(result3, ABSOLUTE_ERROR));
         }
     }
 
-    private SatellitePositionAndVelocity computeSatellitePositionAndVelocity(final double time,
-                                                                             final GNSSConfig config, final int j) {
+    private ECEFPositionAndVelocity computeSatellitePositionAndVelocity(final double time,
+                                                                                 final GNSSConfig config, final int j) {
         final double inclination = Math.toRadians(config.getSatellitesInclinationDegrees());
 
         final double omegaIs = Math.sqrt(Constants.EARTH_GRAVITATIONAL_CONSTANT /
@@ -204,6 +204,6 @@ public class SatellitePositionAndVelocityGeneratorTest {
                         - Constants.EARTH_ROTATION_RATE * position.getX(),
                 voso[1] * Math.sin(inclination));
 
-        return new SatellitePositionAndVelocity(position, velocity);
+        return new ECEFPositionAndVelocity(position, velocity);
     }
 }

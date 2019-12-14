@@ -35,7 +35,7 @@ public class GNSSKalmanEpochEstimator {
     /**
      * Speed of light in the vacuum expressed in meters per second (m/s).
      */
-    public static final double SPEED_OF_LIGHT = 299792458;
+    public static final double SPEED_OF_LIGHT = Constants.SPEED_OF_LIGHT;
 
     /**
      * Earth rotation rate expressed in radians per second (rad/s).

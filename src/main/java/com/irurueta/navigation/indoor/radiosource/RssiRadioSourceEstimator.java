@@ -20,6 +20,7 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.geometry.Point;
 import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
+import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.indoor.RadioSource;
 import com.irurueta.navigation.indoor.RssiReadingLocated;
 import com.irurueta.navigation.indoor.Utils;
@@ -71,7 +72,7 @@ public abstract class RssiRadioSourceEstimator<S extends RadioSource, P extends 
     /**
      * Speed of light expressed in meters per second (m/s).
      */
-    public static final double SPEED_OF_LIGHT = 299792458.0;
+    public static final double SPEED_OF_LIGHT = Constants.SPEED_OF_LIGHT;
 
     /**
      * Default standard deviations assumed for RSSI readings being fitted.

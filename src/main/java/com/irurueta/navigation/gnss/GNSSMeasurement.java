@@ -17,6 +17,8 @@ package com.irurueta.navigation.gnss;
 
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceConverter;
 import com.irurueta.units.DistanceUnit;
@@ -138,6 +140,68 @@ public class GNSSMeasurement implements Serializable, Cloneable {
         setPseudoRateSpeed(pseudoRate);
         setPosition(position);
         setVelocityCoordinates(vx, vy, vz);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement expressed in meters (m).
+     * @param pseudoRate  pseudo-range rate measurement expressed in meters per second (m/s).
+     * @param position    satellite ECEF position.
+     * @param velocity    satellite ECEF velocity.
+     */
+    public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
+                           final ECEFPosition position,
+                           final ECEFVelocity velocity) {
+        setPseudoRange(pseudoRange);
+        setPseudoRate(pseudoRate);
+        setEcefPosition(position);
+        setEcefVelocity(velocity);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange         pseudo-range measurement expressed in meters (m).
+     * @param pseudoRate          pseudo-range rate measurement expressed in meters per second (m/s).
+     * @param positionAndVelocity satellite ECEF position and velocity.
+     */
+    public GNSSMeasurement(final double pseudoRange, final double pseudoRate,
+                           final ECEFPositionAndVelocity positionAndVelocity) {
+        setPseudoRange(pseudoRange);
+        setPseudoRate(pseudoRate);
+        setPositionAndVelocity(positionAndVelocity);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange pseudo-range measurement.
+     * @param pseudoRate  pseudo-range rate measurement.
+     * @param position    satellite ECEF position.
+     * @param velocity    satellite ECEF velocity.
+     */
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
+                           final ECEFPosition position,
+                           final ECEFVelocity velocity) {
+        setPseudoRangeDistance(pseudoRange);
+        setPseudoRateSpeed(pseudoRate);
+        setEcefPosition(position);
+        setEcefVelocity(velocity);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param pseudoRange         pseudo-range measurement.
+     * @param pseudoRate          pseudo-range rate measurement.
+     * @param positionAndVelocity satellite ECEF position and velocity.
+     */
+    public GNSSMeasurement(final Distance pseudoRange, final Speed pseudoRate,
+                           final ECEFPositionAndVelocity positionAndVelocity) {
+        setPseudoRangeDistance(pseudoRange);
+        setPseudoRateSpeed(pseudoRate);
+        setPositionAndVelocity(positionAndVelocity);
     }
 
     /**
@@ -443,6 +507,35 @@ public class GNSSMeasurement implements Serializable, Cloneable {
     }
 
     /**
+     * Gets ECEF position of satellite.
+     *
+     * @param result instance where ECEF position of satellite will be stored.
+     */
+    public void getEcefPosition(final ECEFPosition result) {
+        result.setCoordinates(mX, mY, mZ);
+    }
+
+    /**
+     * Gets ECEF position of satellite.
+     *
+     * @return ECEF position of satellite.
+     */
+    public ECEFPosition getEcefPosition() {
+        return new ECEFPosition(mX, mY, mZ);
+    }
+
+    /**
+     * Sets ECEF position of satellite.
+     *
+     * @param ecefPosition ECEF position of satellite.
+     */
+    public void setEcefPosition(final ECEFPosition ecefPosition) {
+        mX = ecefPosition.getX();
+        mY = ecefPosition.getY();
+        mZ = ecefPosition.getZ();
+    }
+
+    /**
      * Gets x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
      *
      * @return x coordinate of satellite ECEF velocity expressed in meters per second (m/s).
@@ -612,6 +705,69 @@ public class GNSSMeasurement implements Serializable, Cloneable {
     }
 
     /**
+     * Gets ECEF velocity of satellite.
+     *
+     * @param result instance where ECEF velocity of satellite will be stored.
+     */
+    public void getEcefVelocity(final ECEFVelocity result) {
+        result.setCoordinates(mVx, mVy, mVz);
+    }
+
+    /**
+     * Gets ECEF velocity of satellite.
+     *
+     * @return ECEF velocity of satellite.
+     */
+    public ECEFVelocity getEcefVelocity() {
+        return new ECEFVelocity(mVx, mVy, mVz);
+    }
+
+    /**
+     * Sets ECEF velocity of satellite.
+     *
+     * @param ecefVelocity ECEF velocity of satellite.
+     */
+    public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
+        mVx = ecefVelocity.getVx();
+        mVy = ecefVelocity.getVy();
+        mVz = ecefVelocity.getVz();
+    }
+
+    /**
+     * Gets ECEF position and velocity of satellite.
+     *
+     * @param result instance where position and velocity will be stored.
+     */
+    public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
+        result.setPositionCoordinates(mX, mY, mZ);
+        result.setVelocityCoordinates(mVx, mVy, mVz);
+    }
+
+    /**
+     * Gets ECEF position and velocity of satellite.
+     *
+     * @return ECEF position and velocity of satellite.
+     */
+    public ECEFPositionAndVelocity getPositionAndVelocity() {
+        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);
+    }
+
+    /**
+     * Sets ECEF position and velocity of satellite.
+     *
+     * @param positionAndVelocity ECEF position and velocity of satellite.
+     */
+    public void setPositionAndVelocity(final ECEFPositionAndVelocity positionAndVelocity) {
+        mX = positionAndVelocity.getX();
+        mY = positionAndVelocity.getY();
+        mZ = positionAndVelocity.getZ();
+
+        mVx = positionAndVelocity.getVx();
+        mVy = positionAndVelocity.getVy();
+        mVz = positionAndVelocity.getVz();
+    }
+
+    /**
      * Copies this instance data into provided instance.
      *
      * @param output destination instance where data will be copied to.
@@ -723,7 +879,7 @@ public class GNSSMeasurement implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final GNSSMeasurement result = (GNSSMeasurement)super.clone();
+        final GNSSMeasurement result = (GNSSMeasurement) super.clone();
         copyTo(result);
         return result;
     }

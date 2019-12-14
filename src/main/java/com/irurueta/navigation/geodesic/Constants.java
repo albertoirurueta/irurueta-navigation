@@ -57,6 +57,11 @@ public class Constants {
     public static final double EARTH_ROTATION_RATE = 7.292115E-5;
 
     /**
+     * Speed of light in the vacuum expressed in meters per second (m/s).
+     */
+    public static final double SPEED_OF_LIGHT = 299792458.0;
+
+    /**
      * Constructor.
      * Prevents instantiation.
      */

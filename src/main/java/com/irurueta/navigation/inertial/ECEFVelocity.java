@@ -1,5 +1,7 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedConverter;
 import com.irurueta.units.SpeedUnit;
@@ -13,6 +15,11 @@ import java.util.Objects;
  */
 @SuppressWarnings("WeakerAccess")
 public class ECEFVelocity implements Serializable, Cloneable {
+
+    /**
+     * Number of components.
+     */
+    public static final int COMPONENTS = 3;
 
     /**
      * X coordinate of velocity of body frame expressed in meters per second (m/s) with
@@ -298,6 +305,75 @@ public class ECEFVelocity implements Serializable, Cloneable {
         mVx = input.mVx;
         mVy = input.mVy;
         mVz = input.mVz;
+    }
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s)
+     * as an array.
+     *
+     * @param result array instance where velocity coordinates will
+     *               be stored in x,y,z order.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public void asArray(final double[] result) {
+        if (result.length != COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        result[0] = mVx;
+        result[1] = mVy;
+        result[2] = mVz;
+    }
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s) as an array.
+     *
+     * @return array containing velocity coordinates in x,y,z order.
+     */
+    public double[] asArray() {
+        final double[] result = new double[COMPONENTS];
+        asArray(result);
+        return result;
+    }
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s) as a column
+     * matrix.
+     * If provided matrix does not have size 3x1, it will be resized.
+     *
+     * @param result matrix instance where velocity coordinates will be stored
+     *               in x,y,z order.
+     */
+    public void asMatrix(final Matrix result) {
+        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
+            try {
+                result.resize(COMPONENTS, 1);
+            } catch (final WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        result.setElementAtIndex(0, mVx);
+        result.setElementAtIndex(1, mVy);
+        result.setElementAtIndex(2, mVz);
+    }
+
+    /**
+     * Gets velocity coordinates expressed in meters per second (m/s) as a column
+     * matrix.
+     *
+     * @return velocity coordinates stored in x,y,z order.
+     */
+    public Matrix asMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(COMPONENTS, 1);
+            asMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
     }
 
     /**

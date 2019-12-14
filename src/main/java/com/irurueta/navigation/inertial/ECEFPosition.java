@@ -1,5 +1,7 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
 import com.irurueta.units.Distance;
@@ -15,6 +17,11 @@ import java.util.Objects;
  */
 @SuppressWarnings("WeakerAccess")
 public class ECEFPosition implements Serializable, Cloneable {
+
+    /**
+     * Number of components.
+     */
+    public static final int COMPONENTS = 3;
 
     /**
      * Cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved
@@ -326,6 +333,72 @@ public class ECEFPosition implements Serializable, Cloneable {
         mX = input.mX;
         mY = input.mY;
         mZ = input.mZ;
+    }
+
+    /**
+     * Gets position coordinates expressed in meters (m) as an array.
+     *
+     * @param result array instance where position coordinates will
+     *               be stored in x,y,z order.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public void asArray(final double[] result) {
+        if (result.length != COMPONENTS) {
+            throw new IllegalArgumentException();
+        }
+
+        result[0] = mX;
+        result[1] = mY;
+        result[2] = mZ;
+    }
+
+    /**
+     * Gets position coordinates expressed in meters (m) as an array.
+     *
+     * @return array containing position coordinates in x,y,z order.
+     */
+    public double[] asArray() {
+        final double[] result = new double[COMPONENTS];
+        asArray(result);
+        return result;
+    }
+
+    /**
+     * Gets position coordinates expressed in meters (m) as a column matrix.
+     * If provided matrix does not have size 3x1, it will be resized.
+     *
+     * @param result matrix instance where gravity coordinates will be stored in
+     *               x,y,z order.
+     */
+    public void asMatrix(final Matrix result) {
+        if (result.getRows() != COMPONENTS || result.getColumns() != 1) {
+            try {
+                result.resize(COMPONENTS, 1);
+            } catch (final WrongSizeException ignore) {
+                // never happens
+            }
+        }
+
+        result.setElementAtIndex(0, mX);
+        result.setElementAtIndex(1, mY);
+        result.setElementAtIndex(2, mZ);
+    }
+
+    /**
+     * Gets position coordinates expressed in meters (m) as a column matrix.
+     *
+     * @return position coordinates stored in x,y,z order.
+     */
+    public Matrix asMatrix() {
+        Matrix result;
+        try {
+            result = new Matrix(COMPONENTS, 1);
+            asMatrix(result);
+        } catch (final WrongSizeException ignore) {
+            // never happens
+            result = null;
+        }
+        return result;
     }
 
     /**

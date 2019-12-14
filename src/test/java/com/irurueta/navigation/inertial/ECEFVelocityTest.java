@@ -1,5 +1,7 @@
 package com.irurueta.navigation.inertial;
 
+import com.irurueta.algebra.Matrix;
+import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Speed;
 import com.irurueta.units.SpeedUnit;
@@ -325,6 +327,58 @@ public class ECEFVelocityTest {
         assertEquals(velocity2.getVx(), vx, 0.0);
         assertEquals(velocity2.getVy(), vy, 0.0);
         assertEquals(velocity2.getVz(), vz, 0.0);
+    }
+
+    @Test
+    public void testAsArray() {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final ECEFVelocity velocity = new ECEFVelocity(vx, vy, vz);
+
+        final double[] result1 = new double[ECEFVelocity.COMPONENTS];
+        velocity.asArray(result1);
+
+        final double[] result2 = velocity.asArray();
+
+        assertEquals(result1[0], vx, 0.0);
+        assertEquals(result1[1], vy, 0.0);
+        assertEquals(result1[2], vz, 0.0);
+
+        assertArrayEquals(result1, result2, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            velocity.asArray(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) { }
+    }
+
+    @Test
+    public void testAsMatrix() throws WrongSizeException {
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double vx = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VELOCITY_VALUE, MAX_VELOCITY_VALUE);
+
+        final ECEFVelocity velocity = new ECEFVelocity(vx, vy, vz);
+
+        final Matrix result1 = new Matrix(ECEFVelocity.COMPONENTS, 1);
+        velocity.asMatrix(result1);
+
+        final Matrix result2 = velocity.asMatrix();
+
+        final Matrix result3 = new Matrix(1, 1);
+        velocity.asMatrix(result3);
+
+        assertEquals(result1.getElementAtIndex(0), vx, 0.0);
+        assertEquals(result1.getElementAtIndex(1), vy, 0.0);
+        assertEquals(result1.getElementAtIndex(2), vz, 0.0);
+
+        assertEquals(result1, result2);
+        assertEquals(result1, result3);
     }
 
     @Test

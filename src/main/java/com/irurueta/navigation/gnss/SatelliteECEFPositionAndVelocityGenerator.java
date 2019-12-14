@@ -27,7 +27,7 @@ import java.util.List;
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
  * https://github.com/ymjdz/MATLAB-Codes
  */
-public class SatellitePositionAndVelocityGenerator {
+public class SatelliteECEFPositionAndVelocityGenerator {
 
     /**
      * WGS84 Earth gravitational constant expressed in m^3 * s^-2
@@ -46,9 +46,9 @@ public class SatellitePositionAndVelocityGenerator {
      * @param config GNSS configuration.
      * @return collection containing position and velocities of satellites.
      */
-    public static Collection<SatellitePositionAndVelocity> generateSatellitesPositionAndVelocity(
+    public static Collection<ECEFPositionAndVelocity> generateSatellitesPositionAndVelocity(
             final double time, final GNSSConfig config) {
-        final List<SatellitePositionAndVelocity> result = new ArrayList<>();
+        final List<ECEFPositionAndVelocity> result = new ArrayList<>();
         generateSatellitesPositionAndVelocity(time, config, result);
         return result;
     }
@@ -61,12 +61,12 @@ public class SatellitePositionAndVelocityGenerator {
      * @param result instance where computed positions and velocities of satellites will be stored.
      */
     public static void generateSatellitesPositionAndVelocity(final double time, final GNSSConfig config,
-                                                             final Collection<SatellitePositionAndVelocity> result) {
+                                                             final Collection<ECEFPositionAndVelocity> result) {
         result.clear();
 
         final int numSatellites = config.getNumberOfSatellites();
         for (int j = 0; j < numSatellites; j++) {
-            final SatellitePositionAndVelocity satellitePositionAndVelocity = new SatellitePositionAndVelocity();
+            final ECEFPositionAndVelocity satellitePositionAndVelocity = new ECEFPositionAndVelocity();
             generateSatellitePositionAndVelocity(time, config, j, satellitePositionAndVelocity);
             result.add(satellitePositionAndVelocity);
         }
@@ -80,10 +80,10 @@ public class SatellitePositionAndVelocityGenerator {
      * @param j      number of satellite whose position and velocity must be computed.
      * @return computed satellite position and velocity.
      */
-    public static SatellitePositionAndVelocity generateSatellitePositionAndVelocity(final double time,
-                                                                                    final GNSSConfig config,
-                                                                                    final int j) {
-        final SatellitePositionAndVelocity result = new SatellitePositionAndVelocity();
+    public static ECEFPositionAndVelocity generateSatellitePositionAndVelocity(final double time,
+                                                                                        final GNSSConfig config,
+                                                                                        final int j) {
+        final ECEFPositionAndVelocity result = new ECEFPositionAndVelocity();
         generateSatellitePositionAndVelocity(time, config, j, result);
         return result;
     }
@@ -98,7 +98,7 @@ public class SatellitePositionAndVelocityGenerator {
      */
     public static void generateSatellitePositionAndVelocity(final double time, final GNSSConfig config,
                                                             final int j,
-                                                            final SatellitePositionAndVelocity result) {
+                                                            final ECEFPositionAndVelocity result) {
 
         // Convert inclination angle to radians.
         final double inclinationRadians = Math.toRadians(config.getSatellitesInclinationDegrees());
