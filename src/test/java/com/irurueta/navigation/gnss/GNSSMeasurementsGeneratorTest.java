@@ -174,8 +174,8 @@ public class GNSSMeasurementsGeneratorTest {
             assertNotNull(measurement8);
 
             final GNSSMeasurement measurement9 = new GNSSMeasurement();
-            GNSSMeasurementsGenerator.generate(time, satellitePositionAndVelocity,
-                    userPositionAndVelocity, bias, config, random, measurement9);
+            assertTrue(GNSSMeasurementsGenerator.generate(time, satellitePositionAndVelocity,
+                    userPositionAndVelocity, bias, config, random, measurement9));
 
             final GNSSMeasurement measurement10 = GNSSMeasurementsGenerator
                     .generate(time, satellitePositionAndVelocity,

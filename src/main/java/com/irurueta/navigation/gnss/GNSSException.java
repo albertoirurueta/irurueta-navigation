@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.irurueta.navigation;
+package com.irurueta.navigation.gnss;
+
+import com.irurueta.navigation.NavigationException;
 
 /**
- * Exception related to GNSS/INS navigation.
+ * Exception related to GNSS estimation.
  */
-public class NavigationException extends Exception {
+public class GNSSException extends NavigationException {
 
     /**
      * Constructor.
      */
-    public NavigationException() {
+    public GNSSException() {
         super();
     }
 
@@ -32,7 +34,7 @@ public class NavigationException extends Exception {
      *
      * @param message message indicating the cause of the exception.
      */
-    public NavigationException(final String message) {
+    public GNSSException(final String message) {
         super(message);
     }
 
@@ -42,7 +44,7 @@ public class NavigationException extends Exception {
      * @param message message describing the cause of the exception.
      * @param cause   instance containing the cause of the exception.
      */
-    public NavigationException(final String message, final Throwable cause) {
+    public GNSSException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -51,7 +53,7 @@ public class NavigationException extends Exception {
      *
      * @param cause instance containing the cause of the exception.
      */
-    public NavigationException(final Throwable cause) {
+    public GNSSException(final Throwable cause) {
         super(cause);
     }
 }
