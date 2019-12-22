@@ -27,7 +27,7 @@ import com.irurueta.units.DistanceUnit;
  * Calculates acceleration due to gravity resolved about ECEF frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/InertialDemoECEF
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Gravity_ECEF.m
  */
 @SuppressWarnings("WeakerAccess")
 public class ECEFGravityEstimator {

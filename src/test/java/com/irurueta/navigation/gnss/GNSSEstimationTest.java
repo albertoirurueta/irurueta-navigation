@@ -220,17 +220,17 @@ public class GNSSEstimationTest {
 
 
         // test copy constructor
-        final GNSSEstimation state2 = new GNSSEstimation(estimation);
+        final GNSSEstimation estimation2 = new GNSSEstimation(estimation);
 
         // check default values
-        assertEquals(state2.getX(), x, 0.0);
-        assertEquals(state2.getY(), y, 0.0);
-        assertEquals(state2.getZ(), z, 0.0);
-        assertEquals(state2.getVx(), vx, 0.0);
-        assertEquals(state2.getVy(), vy, 0.0);
-        assertEquals(state2.getVz(), vz, 0.0);
-        assertEquals(state2.getClockOffset(), clockOffset, 0.0);
-        assertEquals(state2.getClockDrift(), clockDrift, 0.0);
+        assertEquals(estimation2.getX(), x, 0.0);
+        assertEquals(estimation2.getY(), y, 0.0);
+        assertEquals(estimation2.getZ(), z, 0.0);
+        assertEquals(estimation2.getVx(), vx, 0.0);
+        assertEquals(estimation2.getVy(), vy, 0.0);
+        assertEquals(estimation2.getVz(), vz, 0.0);
+        assertEquals(estimation2.getClockOffset(), clockOffset, 0.0);
+        assertEquals(estimation2.getClockDrift(), clockDrift, 0.0);
     }
 
     @Test
@@ -1080,10 +1080,10 @@ public class GNSSEstimationTest {
                 clockOffset, clockDrift);
         final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz,
                 clockOffset, clockDrift);
-        final GNSSEstimation state3 = new GNSSEstimation();
+        final GNSSEstimation estimation3 = new GNSSEstimation();
 
         assertEquals(estimation1.hashCode(), estimation2.hashCode());
-        assertNotEquals(estimation1.hashCode(), state3.hashCode());
+        assertNotEquals(estimation1.hashCode(), estimation3.hashCode());
     }
 
     @Test

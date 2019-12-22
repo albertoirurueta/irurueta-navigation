@@ -25,7 +25,7 @@ import com.irurueta.units.AngleUnit;
  * Calculates radii of curvature at a given latitude.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/InertialDemoECEF
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Radii_of_curvature.m
  */
 @SuppressWarnings("WeakerAccess")
 public class RadiiOfCurvatureEstimator {

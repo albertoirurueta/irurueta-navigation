@@ -38,7 +38,7 @@ import com.irurueta.units.*;
  * NOTE: only the attitude update and specific force frame transformation phases are precise).
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Nav_equations_NED.m
  */
 public class NEDInertialNavigator {
 

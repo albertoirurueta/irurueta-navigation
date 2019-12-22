@@ -31,7 +31,7 @@ import com.irurueta.units.DistanceUnit;
  * and down axes of a NED frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Gravity_NED.m
  */
 @SuppressWarnings("WeakerAccess")
 public class NEDGravityEstimator {

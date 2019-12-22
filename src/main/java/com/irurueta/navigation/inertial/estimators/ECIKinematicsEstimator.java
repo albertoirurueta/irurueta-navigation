@@ -35,7 +35,7 @@ import com.irurueta.units.TimeUnit;
  * along ECI-frame axes.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Kinematics_ECI.m
  */
 public class ECIKinematicsEstimator {
 

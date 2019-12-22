@@ -26,7 +26,7 @@ import com.irurueta.units.*;
  * a time interval.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Velocity_from_curvilinear.m
  */
 @SuppressWarnings("WeakerAccess")
 public class NEDVelocityEstimator {

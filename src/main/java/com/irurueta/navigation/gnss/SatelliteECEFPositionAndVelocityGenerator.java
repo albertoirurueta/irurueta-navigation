@@ -25,7 +25,7 @@ import java.util.List;
  * Computes satellites positions and velocities.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Satellite_positions_and_velocities.m
  */
 public class SatelliteECEFPositionAndVelocityGenerator {
 

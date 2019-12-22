@@ -31,7 +31,7 @@ import com.irurueta.navigation.inertial.NEDVelocity;
  * from ECEF to NED.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/pv_ECEF_to_NED.m
  */
 public class ECEFtoNEDPositionVelocityConverter {
 

@@ -32,7 +32,7 @@ import com.irurueta.units.TimeUnit;
  * Converts from ECI frame to ECEF frame.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/ECI_to_ECEF.m
  */
 @SuppressWarnings("WeakerAccess")
 public class ECItoECEFFrameConverter implements TimeIntervalFrameConverter<ECIFrame, ECEFFrame> {

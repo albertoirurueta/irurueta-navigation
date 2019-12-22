@@ -38,6 +38,10 @@ import java.util.Objects;
  * matrix where a vector may be transformed in one step from one set of resolving axes to another by pre-multiplying it
  * by the appropriate coordinate transformation matrix. The coordinate transformation matrix is associated to a source
  * and destination frame.
+ * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
+ * Integrated Navigation Systems, Second Edition" and on the companion software available at:
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Euler_to_CTM.m
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/CTM_to_Euler.m
  */
 @SuppressWarnings("WeakerAccess")
 public class CoordinateTransformation implements Serializable, Cloneable {

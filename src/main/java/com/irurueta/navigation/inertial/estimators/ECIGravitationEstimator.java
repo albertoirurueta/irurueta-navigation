@@ -27,7 +27,7 @@ import com.irurueta.units.DistanceUnit;
  * Calculates gravitational acceleration resolved about ECI-frame axes.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Gravitation_ECI.m
  */
 @SuppressWarnings("WeakerAccess")
 public class ECIGravitationEstimator {

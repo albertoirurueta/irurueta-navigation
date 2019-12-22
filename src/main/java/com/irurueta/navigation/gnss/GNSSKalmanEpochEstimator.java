@@ -28,7 +28,7 @@ import java.util.Collection;
  * Implements one cycle of the GNSS extended Kalman filter.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/GNSS_KF_Epoch.m
  */
 public class GNSSKalmanEpochEstimator {
 
@@ -52,16 +52,16 @@ public class GNSSKalmanEpochEstimator {
      *
      * @param measurements        satellite measurements data.
      * @param propagationInterval propagation interval expressed in seconds (s).
-     * @param previousState       previous Kalman filter state estimates.
+     * @param previousEstimation  previous Kalman filter state estimates.
      * @param previousCovariance  previous Kalman filter error covariance matrix.
      * @param config              system configuration (usually obtained through calibration).
-     * @param updatedState        instance where updated Kalman filter state will be stored after executing this method.
+     * @param updatedEstimation   instance where updated Kalman filter state will be stored after executing this method.
      * @param updatedCovariance   instance where updated Kalman filter error covariance matrix will be stored.
      * @throws IllegalArgumentException if provided previous covariance matrix is not 8x8.
      */
     public static void estimate(final Collection<GNSSMeasurement> measurements, final double propagationInterval,
-                                final GNSSEstimation previousState, final Matrix previousCovariance,
-                                final GNSSKalmanConfig config, GNSSEstimation updatedState,
+                                final GNSSEstimation previousEstimation, final Matrix previousCovariance,
+                                final GNSSKalmanConfig config, GNSSEstimation updatedEstimation,
                                 final Matrix updatedCovariance) throws AlgebraException {
 
         if (previousCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
@@ -116,7 +116,7 @@ public class GNSSKalmanEpochEstimator {
 
 
         // 3. Propagate state estimates using (3.14)
-        final Matrix xEstOld = previousState.asMatrix();
+        final Matrix xEstOld = previousEstimation.asMatrix();
         final Matrix xEstPropagated = phiMatrix.multiplyAndReturnNew(xEstOld);
         final Matrix propagatedVelocity = xEstPropagated.getSubmatrix(
                 3, 0, 5, 0);
@@ -260,7 +260,7 @@ public class GNSSKalmanEpochEstimator {
         xEstPropagated.add(kMatrix.multiplyAndReturnNew(deltaZ));
 
         // xEstPropagated now contains updated state
-        updatedState.fromMatrix(xEstPropagated);
+        updatedEstimation.fromMatrix(xEstPropagated);
 
         // 10. Update state estimation error covariance matrix using (3.25)
         if (updatedCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
