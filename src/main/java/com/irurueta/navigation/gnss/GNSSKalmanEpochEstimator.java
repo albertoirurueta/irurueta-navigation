@@ -47,12 +47,28 @@ public class GNSSKalmanEpochEstimator {
      */
     private static final int MATRIX_SIZE = 8;
 
+    public static void estimate(final Collection<GNSSMeasurement> measurements,
+                                final double propagationInterval,
+                                final GNSSKalmanState previousState,
+                                final GNSSKalmanConfig config,
+                                final GNSSKalmanState result) throws AlgebraException {
+        final GNSSEstimation resultEstimation = new GNSSEstimation();
+        final Matrix resultCovariance = new Matrix(GNSSEstimation.NUM_PARAMETERS,
+                GNSSEstimation.NUM_PARAMETERS);
+
+        estimate(measurements, propagationInterval, previousState.getEstimation(),
+                previousState.getCovariance(), config, resultEstimation, resultCovariance);
+
+        result.setEstimation(resultEstimation);
+        result.setCovariance(resultCovariance);
+    }
+
     /**
      * Estimates the update of Kalman filter state and covariance matrix for a single epoch.
      *
      * @param measurements        satellite measurements data.
      * @param propagationInterval propagation interval expressed in seconds (s).
-     * @param previousEstimation  previous Kalman filter state estimates.
+     * @param previousEstimation  previous GNSS estimates.
      * @param previousCovariance  previous Kalman filter error covariance matrix.
      * @param config              system configuration (usually obtained through calibration).
      * @param updatedEstimation   instance where updated Kalman filter state will be stored after executing this method.

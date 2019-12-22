@@ -31,8 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class GNSSKalmanEpochEstimatorTest {
 
@@ -208,6 +207,156 @@ public class GNSSKalmanEpochEstimatorTest {
                     updatedEstimation2.getClockOffset(), ABSOLUTE_ERROR);
             assertEquals(updatedEstimation.getClockDrift(),
                     updatedEstimation2.getClockDrift(), ABSOLUTE_ERROR);
+
+            assertTrue(updatedCovariance.equals(updatedCovariance2, ABSOLUTE_ERROR));
+        }
+    }
+
+    @Test
+    public void testEstimateWithKalmanState() throws AlgebraException {
+        for (int t = 0; t < TIMES; t++) {
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+
+            final double userLatitude = Math.toRadians(randomizer.nextDouble(
+                    MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+            final double userLongitude = Math.toRadians(randomizer.nextDouble(
+                    MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double userheight = randomizer.nextDouble(
+                    MIN_HEIGHT_METERS, MAX_HEIGHT_METERS);
+
+            final double userVn = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+            final double userVe = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+            final double userVd = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
+
+            final NEDFrame userNedFrame = new NEDFrame(
+                    userLatitude, userLongitude, userheight, userVn, userVe, userVd);
+            final ECEFFrame userEcefFrame = NEDtoECEFFrameConverter
+                    .convertNEDtoECEFAndReturnNew(userNedFrame);
+
+            final Point3D userPosition = userEcefFrame.getPosition();
+
+            final int numMeasurements = randomizer.nextInt(MIN_MEASUREMENTS, MAX_MEASUREMENTS);
+
+            final List<GNSSMeasurement> measurements = new ArrayList<>();
+            for (int i = 0; i < numMeasurements; i++) {
+                final double satLatitude = Math.toRadians(randomizer.nextDouble(
+                        MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
+                final double satLongitude = Math.toRadians(randomizer.nextDouble(
+                        MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+                final double satHeight = randomizer.nextDouble(
+                        MIN_SAT_HEIGHT_METERS, MAX_SAT_HEIGHT_METERS);
+
+                final double satVn = randomizer.nextDouble(
+                        MIN_SAT_SPEED_VALUE, MAX_SAT_SPEED_VALUE);
+                final double satVe = randomizer.nextDouble(
+                        MIN_SAT_SPEED_VALUE, MAX_SAT_SPEED_VALUE);
+                final double satVd = randomizer.nextDouble(
+                        MIN_SAT_SPEED_VALUE, MAX_SAT_SPEED_VALUE);
+
+                final NEDFrame satNedFrame = new NEDFrame(satLatitude, satLongitude, satHeight,
+                        satVn, satVe, satVd);
+                final ECEFFrame satEcefFrame = NEDtoECEFFrameConverter
+                        .convertNEDtoECEFAndReturnNew(satNedFrame);
+
+                final Point3D satPosition = satEcefFrame.getPosition();
+
+                final double pseudoRange = userPosition.distanceTo(satPosition);
+
+                final double[] posDiff = new double[]{
+                        satEcefFrame.getX() - userEcefFrame.getX(),
+                        satEcefFrame.getY() - userEcefFrame.getY(),
+                        satEcefFrame.getZ() - userEcefFrame.getZ()};
+                final double posNorm = Utils.normF(posDiff);
+
+                final double[] velDiff = new double[]{
+                        satEcefFrame.getVx() - userEcefFrame.getVx(),
+                        satEcefFrame.getVy() - userEcefFrame.getVy(),
+                        satEcefFrame.getVz() - userEcefFrame.getVz()};
+                final double velNorm = Utils.normF(velDiff);
+
+                final double dot = Utils.dotProduct(posDiff, velDiff);
+                final double cosAngle = dot / (posNorm * velNorm);
+
+                final double pseudoRate = velNorm * cosAngle;
+
+                final double x = satEcefFrame.getX();
+                final double y = satEcefFrame.getY();
+                final double z = satEcefFrame.getZ();
+
+                final double vx = satEcefFrame.getVx();
+                final double vy = satEcefFrame.getVy();
+                final double vz = satEcefFrame.getVz();
+
+                measurements.add(new GNSSMeasurement(pseudoRange, pseudoRate, x, y, z,
+                        vx, vy, vz));
+            }
+
+            final GNSSEstimation previousEstimation = new GNSSEstimation(
+                    userEcefFrame.getX(), userEcefFrame.getY(), userEcefFrame.getZ(),
+                    userEcefFrame.getVx(), userEcefFrame.getVy(), userEcefFrame.getVz(),
+                    CLOCK_OFFSET, CLOCK_DRIFT);
+
+            final Matrix previousCovariance = Matrix.identity(
+                    GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
+
+            final GNSSKalmanState previousState =
+                    new GNSSKalmanState(previousEstimation, previousCovariance);
+
+            final double initialPositionUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double initialVelocityUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double initialClockOffsetUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double initialClockDriftUncertainty = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double accelerationPSD = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double clockFrequencyPSD = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double clockPhasePSD = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double pseudoRangeSD = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+            final double rangeRateSD = randomizer.nextDouble(
+                    MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
+
+            final GNSSKalmanConfig config = new GNSSKalmanConfig(
+                    initialPositionUncertainty, initialVelocityUncertainty,
+                    initialClockOffsetUncertainty, initialClockDriftUncertainty,
+                    accelerationPSD, clockFrequencyPSD,
+                    clockPhasePSD, pseudoRangeSD, rangeRateSD);
+
+            final GNSSKalmanState updatedState = new GNSSKalmanState();
+
+            GNSSKalmanEpochEstimator.estimate(measurements, TIME_INTERVAL_SECONDS,
+                    previousState, config, updatedState);
+
+            final GNSSEstimation updatedEstimation = updatedState.getEstimation();
+            final Matrix updatedCovariance = updatedState.getCovariance();
+
+            final GNSSEstimation updatedEstimation2 = new GNSSEstimation();
+            final Matrix updatedCovariance2 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
+                    GNSSEstimation.NUM_PARAMETERS);
+            estimate(measurements, previousEstimation,
+                    previousCovariance, config, updatedEstimation2, updatedCovariance2);
+
+            assertNotNull(updatedEstimation);
+
+            assertEquals(updatedEstimation.getX(), updatedEstimation2.getX(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation.getY(), updatedEstimation2.getY(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation.getZ(), updatedEstimation2.getZ(), ABSOLUTE_ERROR);
+
+            assertEquals(updatedEstimation.getVx(), updatedEstimation2.getVx(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation.getVy(), updatedEstimation2.getVy(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation.getVz(), updatedEstimation2.getVz(), ABSOLUTE_ERROR);
+
+            assertEquals(updatedEstimation.getClockOffset(),
+                    updatedEstimation2.getClockOffset(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation.getClockDrift(),
+                    updatedEstimation2.getClockDrift(), ABSOLUTE_ERROR);
+
+            assertTrue(updatedCovariance.equals(updatedCovariance2, ABSOLUTE_ERROR));
         }
     }
 

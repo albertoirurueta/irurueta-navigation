@@ -995,7 +995,7 @@ public class GNSSEstimationTest {
     }
 
     @Test
-    public void testCopyto() {
+    public void testCopyTo() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double x = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
         final double y = randomizer.nextDouble(MIN_POS_VALUE, MAX_POS_VALUE);
