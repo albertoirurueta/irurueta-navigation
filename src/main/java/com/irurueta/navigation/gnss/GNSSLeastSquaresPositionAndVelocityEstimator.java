@@ -314,16 +314,16 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * Constructor.
      *
      * @param measurements GNSS measurement of a collection of satellites.
-     * @param priorResult  previously predicted result.
+     * @param priorEstimation  previously predicted GNSS estimation.
      * @throws IllegalArgumentException if less than 4 measurements are provided.
      */
     public GNSSLeastSquaresPositionAndVelocityEstimator(
             final Collection<GNSSMeasurement> measurements,
-            final GNSSLeastSquaresPositionAndVelocityEstimatorResult priorResult) {
+            final GNSSEstimation priorEstimation) {
         this();
         try {
             setMeasurements(measurements);
-            setPriorPositionAndVelocityFromResult(priorResult);
+            setPriorPositionAndVelocityFromEstimation(priorEstimation);
         } catch (final LockedException ignore) {
             // never happens
         }
@@ -388,15 +388,15 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * Constructor.
      *
      * @param measurements GNSS measurement of a collection of satellites.
-     * @param priorResult  previously predicted result.
+     * @param priorEstimation  previously predicted GNSS estimation.
      * @param listener     listener notifying events raised by this instance.
      * @throws IllegalArgumentException if less than 4 measurements are provided.
      */
     public GNSSLeastSquaresPositionAndVelocityEstimator(
             final Collection<GNSSMeasurement> measurements,
-            final GNSSLeastSquaresPositionAndVelocityEstimatorResult priorResult,
+            final GNSSEstimation priorEstimation,
             final GNSSLeastSquaresPositionAndVelocityEstimatorListener listener) {
-        this(measurements, priorResult);
+        this(measurements, priorEstimation);
         try {
             setListener(listener);
         } catch (final LockedException ignore) {
@@ -459,20 +459,20 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
     }
 
     /**
-     * Sets previously predicted ECEF user position and velocity fomr a previous
-     * result.
+     * Sets previously predicted ECEF user position and velocity from a previous
+     * predicted result.
      *
-     * @param priorResult previously predicted result.
+     * @param priorEstimation previously predicted GNSS estimation.
      * @throws LockedException if this estimator is already running.
      */
-    public void setPriorPositionAndVelocityFromResult(
-            final GNSSLeastSquaresPositionAndVelocityEstimatorResult priorResult)
+    public void setPriorPositionAndVelocityFromEstimation(
+            final GNSSEstimation priorEstimation)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
         }
 
-        mPriorPositionAndVelocity = priorResult.getPositionAndVelocity();
+        mPriorPositionAndVelocity = priorEstimation.getPositionAndVelocity();
     }
 
     /**
@@ -566,7 +566,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException   if estimator is already running.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
-    public void estimate(final GNSSLeastSquaresPositionAndVelocityEstimatorResult result)
+    public void estimate(final GNSSEstimation result)
             throws NotReadyException, LockedException, GNSSException {
         if (!isReady()) {
             throw new NotReadyException();
@@ -682,7 +682,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
             result.setPositionCoordinates(resultX, resultY, resultZ);
 
             final double resultClockOffset = mXEst.getElementAtIndex(3);
-            result.setEstimatedReceiverClockOffset(resultClockOffset);
+            result.setClockOffset(resultClockOffset);
 
 
             // VELOCITY AND CLOCK DRIFT
@@ -811,7 +811,7 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
             result.setVelocityCoordinates(resultVx, resultVy, resultVz);
 
             final double resultClockDrift = mXEst.getElementAtIndex(3);
-            result.setEstimatedReceiverClockDrift(resultClockDrift);
+            result.setClockDrift(resultClockDrift);
 
         } catch (final AlgebraException e) {
             throw new GNSSException(e);
@@ -834,10 +834,10 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
      * @throws LockedException   if estimator is already running.
      * @throws GNSSException     if estimation fails due to numerical instabilities.
      */
-    public GNSSLeastSquaresPositionAndVelocityEstimatorResult estimate()
+    public GNSSEstimation estimate()
             throws NotReadyException, LockedException, GNSSException {
-        final GNSSLeastSquaresPositionAndVelocityEstimatorResult result =
-                new GNSSLeastSquaresPositionAndVelocityEstimatorResult();
+        final GNSSEstimation result =
+                new GNSSEstimation();
         estimate(result);
         return result;
     }

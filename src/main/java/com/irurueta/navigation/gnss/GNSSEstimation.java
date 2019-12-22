@@ -19,6 +19,8 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 import com.irurueta.geometry.InhomogeneousPoint3D;
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.inertial.ECEFPosition;
+import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.units.Distance;
 import com.irurueta.units.DistanceConverter;
 import com.irurueta.units.DistanceUnit;
@@ -30,10 +32,11 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Contains state estimation for GNSS extended Kalman filter.
+ * Contains GNSS state estimation, which contains user
+ * position, velocity and estimated clock offset and drift.
  */
 @SuppressWarnings("WeakerAccess")
-public class GNSSKalmanState implements Serializable, Cloneable {
+public class GNSSEstimation implements Serializable, Cloneable {
 
     /**
      * Number of parameters stored into Kalman filter state.
@@ -83,7 +86,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     /**
      * Constructor.
      */
-    public GNSSKalmanState() {
+    public GNSSEstimation() {
     }
 
     /**
@@ -98,9 +101,9 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @param clockOffset estimated receiver clock offset expressed in meters (m).
      * @param clockDrift  estimated receiver clock drift expressed in meters per second (m/s).
      */
-    public GNSSKalmanState(final double x, final double y, final double z,
-                           final double vx, final double vy, final double vz,
-                           final double clockOffset, final double clockDrift) {
+    public GNSSEstimation(final double x, final double y, final double z,
+                          final double vx, final double vy, final double vz,
+                          final double clockOffset, final double clockDrift) {
         setPositionCoordinates(x, y, z);
         setVelocityCoordinates(vx, vy, vz);
         setClockOffset(clockOffset);
@@ -119,10 +122,35 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @param clockOffset estimated receiver clock offset.
      * @param clockDrift  estimated receiver clock drift.
      */
-    public GNSSKalmanState(final Distance x, final Distance y, final Distance z,
-                           final Speed vx, final Speed vy, final Speed vz,
-                           final Distance clockOffset, final Speed clockDrift) {
+    public GNSSEstimation(final Distance x, final Distance y, final Distance z,
+                          final Speed vx, final Speed vy, final Speed vz,
+                          final Distance clockOffset, final Speed clockDrift) {
         setPositionCoordinates(x, y, z);
+        setVelocityCoordinates(vx, vy, vz);
+        setClockOffset(clockOffset);
+        setClockDrift(clockDrift);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position    estimated ECEF user position.
+     * @param vx          x coordinate of estimated ECEF user velocity
+     *                    expressed in meters per second (m/s).
+     * @param vy          y coordinate of estimated ECEF user velocity
+     *                    expressed in meters per second (m/s).
+     * @param vz          z coordinate of estimated ECEF user velocity
+     *                    expressed in meters per second (m/s).
+     * @param clockOffset estimated receiver clock offset expressed in
+     *                    meters (m).
+     * @param clockDrift  estimated receiver clock drift expressed in
+     *                    meters per second (m/s).
+     */
+    public GNSSEstimation(
+            final Point3D position,
+            final double vx, final double vy, final double vz,
+            final double clockOffset, final double clockDrift) {
+        setPosition(position);
         setVelocityCoordinates(vx, vy, vz);
         setClockOffset(clockOffset);
         setClockDrift(clockDrift);
@@ -137,12 +165,84 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @param vz          z coordinate of estimated ECEF user velocity.
      * @param clockOffset estimated receiver clock offset.
      * @param clockDrift  estimated receiver clock drift.
-8     */
-    public GNSSKalmanState(final Point3D position,
-                           final Speed vx, final Speed vy, final Speed vz,
-                           final Distance clockOffset, final Speed clockDrift) {
+     *                    8
+     */
+    public GNSSEstimation(final Point3D position,
+                          final Speed vx, final Speed vy, final Speed vz,
+                          final Distance clockOffset, final Speed clockDrift) {
         setPosition(position);
         setVelocityCoordinates(vx, vy, vz);
+        setClockOffset(clockOffset);
+        setClockDrift(clockDrift);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position    estimated ECEF user position.
+     * @param velocity    estimated ECEF user velocity.
+     * @param clockOffset estimated receiver clock offset expressed in meters (m).
+     * @param clockDrift  estimated receiver clock drift expressed in meters per
+     *                    second (m/s).
+     */
+    public GNSSEstimation(
+            final ECEFPosition position,
+            final ECEFVelocity velocity,
+            final double clockOffset, final double clockDrift) {
+        setEcefPosition(position);
+        setEcefVelocity(velocity);
+        setClockOffset(clockOffset);
+        setClockDrift(clockDrift);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param position    estimated ECEF user position.
+     * @param velocity    estimated ECEF user velocity.
+     * @param clockOffset estimated receiver clock offset.
+     * @param clockDrift  estimated receiver clock drift.
+     */
+    public GNSSEstimation(
+            final ECEFPosition position,
+            final ECEFVelocity velocity,
+            final Distance clockOffset,
+            final Speed clockDrift) {
+        setEcefPosition(position);
+        setEcefVelocity(velocity);
+        setClockOffset(clockOffset);
+        setClockDrift(clockDrift);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionAndVelocity estimated ECEF user position and velocity.
+     * @param clockOffset         estimated receiver clock offset expressed in
+     *                            meters (m).
+     * @param clockDrift          estimated receiver clock drift expressed in
+     *                            meters per second (m/s).
+     */
+    public GNSSEstimation(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final double clockOffset, final double clockDrift) {
+        setPositionAndVelocity(positionAndVelocity);
+        setClockOffset(clockOffset);
+        setClockDrift(clockDrift);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionAndVelocity estimated ECEF user position and velocity.
+     * @param clockOffset         estimated receiver clock offset.
+     * @param clockDrift          estimated receiver clock drift.
+     */
+    public GNSSEstimation(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final Distance clockOffset,
+            final Speed clockDrift) {
+        setPositionAndVelocity(positionAndVelocity);
         setClockOffset(clockOffset);
         setClockDrift(clockDrift);
     }
@@ -152,7 +252,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      *
      * @param input input instance to copy data from.
      */
-    public GNSSKalmanState(final GNSSKalmanState input) {
+    public GNSSEstimation(final GNSSEstimation input) {
         copyFrom(input);
     }
 
@@ -172,6 +272,166 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      */
     public void setX(final double x) {
         mX = x;
+    }
+
+    /**
+     * Gets y coordinate of estimated ECEF user position expressed in meters (m).
+     *
+     * @return y coordinate of estimated ECEF user position.
+     */
+    public double getY() {
+        return mY;
+    }
+
+    /**
+     * Sets y coordinate of estimated ECEF user position expressed in meters (m).
+     *
+     * @param y y coordinate of estimated ECEF user position.
+     */
+    public void setY(final double y) {
+        mY = y;
+    }
+
+    /**
+     * Gets z coordinate of estimated ECEF user position expressed in meters (m).
+     *
+     * @return z coordinate of estimated ECEF user position.
+     */
+    public double getZ() {
+        return mZ;
+    }
+
+    /**
+     * Sets z coordinate of estimated ECEF user position expressed in meters (m).
+     *
+     * @param z z coordinate of estimated ECEF user position.
+     */
+    public void setZ(final double z) {
+        mZ = z;
+    }
+
+    /**
+     * Sets coordinates of estimated ECEF user position expressed in meters (m).
+     *
+     * @param x x coordinate.
+     * @param y y coordinate.
+     * @param z z coordinate.
+     */
+    public void setPositionCoordinates(final double x, final double y, final double z) {
+        mX = x;
+        mY = y;
+        mZ = z;
+    }
+
+    /**
+     * Gets x coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @return x coordinate of estimated ECEF user velocity.
+     */
+    public double getVx() {
+        return mVx;
+    }
+
+    /**
+     * Sets x coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @param vx x coordinate of estimated ECEF user velocity.
+     */
+    public void setVx(final double vx) {
+        mVx = vx;
+    }
+
+    /**
+     * Gets y coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @return y coordinate of estimated ECEF user velocity.
+     */
+    public double getVy() {
+        return mVy;
+    }
+
+    /**
+     * Sets y coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @param vy y coordinate of estimated ECEF user velocity.
+     */
+    public void setVy(final double vy) {
+        mVy = vy;
+    }
+
+    /**
+     * Gets z coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @return z coordinate of estimated ECEF user velocity.
+     */
+    public double getVz() {
+        return mVz;
+    }
+
+    /**
+     * Sets z coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @param vz z coordinate of estimated ECEF user velocity.
+     */
+    public void setVz(final double vz) {
+        mVz = vz;
+    }
+
+    /**
+     * Sets coordinates of estimated ECEF user velocity expressed in meters per second (m/s).
+     *
+     * @param vx x coordinate.
+     * @param vy y coordinate.
+     * @param vz z coordinate.
+     */
+    public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
+        mVx = vx;
+        mVy = vy;
+        mVz = vz;
+    }
+
+    /**
+     * Gets estimated receiver clock offset expressed in meters (m).
+     * Notice that clock offset is estimated in terms of distance, since timing errors
+     * will ultimately propagated as distance errors.
+     *
+     * @return estimated receiver clock offset.
+     */
+    public double getClockOffset() {
+        return mClockOffset;
+    }
+
+    /**
+     * Sets estimated receiver clock offset expressed in meters (m).
+     * Notice that clock offset is estimated in terms of distance, since timing errors
+     * are ultimately propagated as distance errors.
+     *
+     * @param clockOffset estimated receiver clock offset.
+     */
+    public void setClockOffset(final double clockOffset) {
+        mClockOffset = clockOffset;
+    }
+
+    /**
+     * Gets estimated receiver clock drift expressed in meters per second (m/s).
+     * Notice that the rate at which clock errors increase or decrease will ultimately
+     * propagate as speed (and hence position) errors.
+     *
+     * @return estimated receiver clock drift.
+     */
+    public double getClockDrift() {
+        return mClockDrift;
+    }
+
+    /**
+     * Sets estimated receiver clock drift expressed in meters per second (m/s).
+     * Notice that the rate at which clock errors increase or decrease will ultimately
+     * propagate as speed (and hence position) errors.
+     *
+     * @param clockDrift estimated receiver clock drift.
+     */
+    public void setClockDrift(final double clockDrift) {
+        mClockDrift = clockDrift;
     }
 
     /**
@@ -204,24 +464,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     }
 
     /**
-     * Gets y coordinate of estimated ECEF user position expressed in meters (m).
-     *
-     * @return y coordinate of estimated ECEF user position.
-     */
-    public double getY() {
-        return mY;
-    }
-
-    /**
-     * Sets y coordinate of estimated ECEF user position expressed in meters (m).
-     *
-     * @param y y coordinate of estimated ECEF user position.
-     */
-    public void setY(final double y) {
-        mY = y;
-    }
-
-    /**
      * Gets y coordinate of estimated ECEF user position.
      *
      * @param result instance where y coordinate of estimated ECEF user position will be stored.
@@ -248,24 +490,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     public void setDistanceY(final Distance y) {
         mY = DistanceConverter.convert(y.getValue().doubleValue(), y.getUnit(),
                 DistanceUnit.METER);
-    }
-
-    /**
-     * Gets z coordinate of estimated ECEF user position expressed in meters (m).
-     *
-     * @return z coordinate of estimated ECEF user position.
-     */
-    public double getZ() {
-        return mZ;
-    }
-
-    /**
-     * Sets z coordinate of estimated ECEF user position expressed in meters (m).
-     *
-     * @param z z coordinate of estimated ECEF user position.
-     */
-    public void setZ(final double z) {
-        mZ = z;
     }
 
     /**
@@ -298,19 +522,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     }
 
     /**
-     * Sets coordinates of estimated ECEF user position expressed in meters (m).
-     *
-     * @param x x coordinate.
-     * @param y y coordinate.
-     * @param z z coordinate.
-     */
-    public void setPositionCoordinates(final double x, final double y, final double z) {
-        mX = x;
-        mY = y;
-        mZ = z;
-    }
-
-    /**
      * Sets coordinates of estimated ECEF user position.
      *
      * @param x x coordinate.
@@ -321,53 +532,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
         setDistanceX(x);
         setDistanceY(y);
         setDistanceZ(z);
-    }
-
-    /**
-     * Gets estimated ECEF user position expressed in meters (m).
-     *
-     * @param result instance where estimated ECEF user position will be stored.
-     */
-    public void getPosition(final Point3D result) {
-        result.setInhomogeneousCoordinates(mX, mY, mZ);
-    }
-
-    /**
-     * Gets estimated ECEF user position expressed in meters (m).
-     *
-     * @return estimated ECEF user position.
-     */
-    public Point3D getPosition() {
-        return new InhomogeneousPoint3D(mX, mY, mZ);
-    }
-
-    /**
-     * Sets estimated ECEF user position expressed in meters (m).
-     *
-     * @param position estimated ECEF user position.
-     */
-    public void setPosition(final Point3D position) {
-        mX = position.getInhomX();
-        mY = position.getInhomY();
-        mZ = position.getInhomZ();
-    }
-
-    /**
-     * Gets x coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @return x coordinate of estimated ECEF user velocity.
-     */
-    public double getVx() {
-        return mVx;
-    }
-
-    /**
-     * Sets x coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @param vx x coordinate of estimated ECEF user velocity.
-     */
-    public void setVx(final double vx) {
-        mVx = vx;
     }
 
     /**
@@ -401,24 +565,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     }
 
     /**
-     * Gets y coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @return y coordinate of estimated ECEF user velocity.
-     */
-    public double getVy() {
-        return mVy;
-    }
-
-    /**
-     * Sets y coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @param vy y coordinate of estimated ECEF user velocity.
-     */
-    public void setVy(final double vy) {
-        mVy = vy;
-    }
-
-    /**
      * Gets y coordinate of estimated ECEF user velocity.
      *
      * @param result instance where y coordinate of estimated ECEF user velocity will
@@ -446,24 +592,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     public void setSpeedY(final Speed speedY) {
         mVy = SpeedConverter.convert(speedY.getValue().doubleValue(), speedY.getUnit(),
                 SpeedUnit.METERS_PER_SECOND);
-    }
-
-    /**
-     * Gets z coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @return z coordinate of estimated ECEF user velocity.
-     */
-    public double getVz() {
-        return mVz;
-    }
-
-    /**
-     * Sets z coordinate of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @param vz z coordinate of estimated ECEF user velocity.
-     */
-    public void setVz(final double vz) {
-        mVz = vz;
     }
 
     /**
@@ -497,19 +625,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     }
 
     /**
-     * Sets coordinates of estimated ECEF user velocity expressed in meters per second (m/s).
-     *
-     * @param vx x coordinate.
-     * @param vy y coordinate.
-     * @param vz z coordinate.
-     */
-    public void setVelocityCoordinates(final double vx, final double vy, final double vz) {
-        mVx = vx;
-        mVy = vy;
-        mVz = vz;
-    }
-
-    /**
      * Sets coordinates of estimated ECEF user velocity.
      *
      * @param speedX x coordinate.
@@ -520,28 +635,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
         setSpeedX(speedX);
         setSpeedY(speedY);
         setSpeedZ(speedZ);
-    }
-
-    /**
-     * Gets estimated receiver clock offset expressed in meters (m).
-     * Notice that clock offset is estimated in terms of distance, since timing errors
-     * will ultimately propagated as distance errors.
-     *
-     * @return estimated receiver clock offset.
-     */
-    public double getClockOffset() {
-        return mClockOffset;
-    }
-
-    /**
-     * Sets estimated receiver clock offset expressed in meters (m).
-     * Notice that clock offset is estimated in terms of distance, since timing errors
-     * are ultimately propagated as distance errors.
-     *
-     * @param clockOffset estimated receiver clock offset.
-     */
-    public void setClockOffset(final double clockOffset) {
-        mClockOffset = clockOffset;
     }
 
     /**
@@ -580,28 +673,6 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     }
 
     /**
-     * Gets estimated receiver clock drift expressed in meters per second (m/s).
-     * Notice that the rate at which clock errors increase or decrease will ultimately
-     * propagate as speed (and hence position) errors.
-     *
-     * @return estimated receiver clock drift.
-     */
-    public double getClockDrift() {
-        return mClockDrift;
-    }
-
-    /**
-     * Sets estimated receiver clock drift expressed in meters per second (m/s).
-     * Notice that the rate at which clock errors increase or decrease will ultimately
-     * propagate as speed (and hence position) errors.
-     *
-     * @param clockDrift estimated receiver clock drift.
-     */
-    public void setClockDrift(final double clockDrift) {
-        mClockDrift = clockDrift;
-    }
-
-    /**
      * Gets estimated receiver clock drift.
      * Notice that the rate at which clock errors increase or decrease will ultimately
      * propagate as speed (and hence position) errors.
@@ -634,6 +705,125 @@ public class GNSSKalmanState implements Serializable, Cloneable {
     public void setClockDrift(final Speed clockDrift) {
         mClockDrift = SpeedConverter.convert(clockDrift.getValue().doubleValue(),
                 clockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets estimated ECEF user position expressed in meters (m).
+     *
+     * @param result instance where estimated ECEF user position will be stored.
+     */
+    public void getPosition(final Point3D result) {
+        result.setInhomogeneousCoordinates(mX, mY, mZ);
+    }
+
+    /**
+     * Gets estimated ECEF user position expressed in meters (m).
+     *
+     * @return estimated ECEF user position.
+     */
+    public Point3D getPosition() {
+        return new InhomogeneousPoint3D(mX, mY, mZ);
+    }
+
+    /**
+     * Sets estimated ECEF user position expressed in meters (m).
+     *
+     * @param position estimated ECEF user position.
+     */
+    public void setPosition(final Point3D position) {
+        mX = position.getInhomX();
+        mY = position.getInhomY();
+        mZ = position.getInhomZ();
+    }
+
+    /**
+     * Gets estimatedECEF user position.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getEcefPosition(final ECEFPosition result) {
+        result.setCoordinates(mX, mY, mZ);
+    }
+
+    /**
+     * Gets estimated ECEF user position.
+     *
+     * @return estimated ECEF user position.
+     */
+    public ECEFPosition getEcefPosition() {
+        return new ECEFPosition(mX, mY, mZ);
+    }
+
+    /**
+     * Sets estimated ECEF user position.
+     *
+     * @param ecefPosition estimated ECEF user position.
+     */
+    public void setEcefPosition(final ECEFPosition ecefPosition) {
+        mX = ecefPosition.getX();
+        mY = ecefPosition.getY();
+        mZ = ecefPosition.getZ();
+    }
+
+    /**
+     * Gets estimated ECEF user velocity.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getEcefVelocity(final ECEFVelocity result) {
+        result.setCoordinates(mVx, mVy, mVz);
+    }
+
+    /**
+     * Gets estimated ECEF user velocity.
+     *
+     * @return estimated ECEF user velocity.
+     */
+    public ECEFVelocity getEcefVelocity() {
+        return new ECEFVelocity(mVx, mVy, mVz);
+    }
+
+    /**
+     * Sets estimated ECEF user velocity.
+     *
+     * @param ecefVelocity estimated ECEF user velocity.
+     */
+    public void setEcefVelocity(final ECEFVelocity ecefVelocity) {
+        mVx = ecefVelocity.getVx();
+        mVy = ecefVelocity.getVy();
+        mVz = ecefVelocity.getVz();
+    }
+
+    /**
+     * Gets estimated ECEF user position and velocity.
+     *
+     * @param result instance where result will be stored.
+     */
+    public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
+        result.setPositionCoordinates(mX, mY, mZ);
+        result.setVelocityCoordinates(mVx, mVy, mVz);
+    }
+
+    /**
+     * Gets estimated ECEF user position and velocity.
+     *
+     * @return estimated ECEF user position and velocity.
+     */
+    public ECEFPositionAndVelocity getPositionAndVelocity() {
+        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);
+    }
+
+    /**
+     * Sets estimated ECEF user position and velocity.
+     *
+     * @param positionAndVelocity estimated ECEF user position and velocity.
+     */
+    public void setPositionAndVelocity(
+            final ECEFPositionAndVelocity positionAndVelocity) {
+        setPositionCoordinates(positionAndVelocity.getX(),
+                positionAndVelocity.getY(), positionAndVelocity.getZ());
+        setVelocityCoordinates(positionAndVelocity.getVx(),
+                positionAndVelocity.getVy(), positionAndVelocity.getVz());
     }
 
     /**
@@ -749,7 +939,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(GNSSKalmanState output) {
+    public void copyTo(GNSSEstimation output) {
         output.mX = mX;
         output.mY = mY;
         output.mZ = mZ;
@@ -767,7 +957,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(GNSSKalmanState input) {
+    public void copyFrom(GNSSEstimation input) {
         mX = input.mX;
         mY = input.mY;
         mZ = input.mZ;
@@ -800,17 +990,14 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GNSSKalmanState)) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
-        final GNSSKalmanState other = (GNSSKalmanState) obj;
+        final GNSSEstimation other = (GNSSEstimation) obj;
         return equals(other);
     }
 
@@ -820,7 +1007,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(GNSSKalmanState other) {
+    public boolean equals(GNSSEstimation other) {
         return equals(other, 0.0);
     }
 
@@ -833,7 +1020,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(GNSSKalmanState other, final double threshold) {
+    public boolean equals(GNSSEstimation other, final double threshold) {
         if (other == null) {
             return false;
         }
@@ -856,7 +1043,7 @@ public class GNSSKalmanState implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final GNSSKalmanState result = (GNSSKalmanState)super.clone();
+        final GNSSEstimation result = (GNSSEstimation) super.clone();
         copyTo(result);
         return result;
     }

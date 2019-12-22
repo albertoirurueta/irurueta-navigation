@@ -60,12 +60,12 @@ public class GNSSKalmanEpochEstimator {
      * @throws IllegalArgumentException if provided previous covariance matrix is not 8x8.
      */
     public static void estimate(final Collection<GNSSMeasurement> measurements, final double propagationInterval,
-                                final GNSSKalmanState previousState, final Matrix previousCovariance,
-                                final GNSSKalmanConfig config, GNSSKalmanState updatedState,
+                                final GNSSEstimation previousState, final Matrix previousCovariance,
+                                final GNSSKalmanConfig config, GNSSEstimation updatedState,
                                 final Matrix updatedCovariance) throws AlgebraException {
 
-        if (previousCovariance.getRows() != GNSSKalmanState.NUM_PARAMETERS ||
-                previousCovariance.getColumns() != GNSSKalmanState.NUM_PARAMETERS) {
+        if (previousCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
+                previousCovariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
             throw new IllegalArgumentException();
         }
 
@@ -210,7 +210,7 @@ public class GNSSKalmanEpochEstimator {
         }
 
         // 5. Set-up measurement matrix using (9.163)
-        final Matrix hMatrix = new Matrix(2 * numberOfMeasurements, GNSSKalmanState.NUM_PARAMETERS);
+        final Matrix hMatrix = new Matrix(2 * numberOfMeasurements, GNSSEstimation.NUM_PARAMETERS);
         for (int j1 = 0, j2 = numberOfMeasurements; j1 < numberOfMeasurements; j1++, j2++) {
             for (int i1 = 0, i2 = 3; i1 < CoordinateTransformation.ROWS; i1++, i2++) {
                 final double value = -uAseT.getElementAt(j1, i1);
@@ -263,10 +263,10 @@ public class GNSSKalmanEpochEstimator {
         updatedState.fromMatrix(xEstPropagated);
 
         // 10. Update state estimation error covariance matrix using (3.25)
-        if (updatedCovariance.getRows() != GNSSKalmanState.NUM_PARAMETERS ||
-                updatedCovariance.getColumns() != GNSSKalmanState.NUM_PARAMETERS) {
-            updatedCovariance.resize(GNSSKalmanState.NUM_PARAMETERS,
-                    GNSSKalmanState.NUM_PARAMETERS);
+        if (updatedCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
+                updatedCovariance.getColumns() != GNSSEstimation.NUM_PARAMETERS) {
+            updatedCovariance.resize(GNSSEstimation.NUM_PARAMETERS,
+                    GNSSEstimation.NUM_PARAMETERS);
         }
         Matrix.identity(updatedCovariance);
         kMatrix.multiply(hMatrix);

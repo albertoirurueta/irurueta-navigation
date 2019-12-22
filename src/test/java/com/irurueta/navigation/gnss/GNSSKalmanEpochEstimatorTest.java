@@ -147,13 +147,13 @@ public class GNSSKalmanEpochEstimatorTest {
                         vx, vy, vz));
             }
 
-            final GNSSKalmanState previousState = new GNSSKalmanState(
+            final GNSSEstimation previousState = new GNSSEstimation(
                     userEcefFrame.getX(), userEcefFrame.getY(), userEcefFrame.getZ(),
                     userEcefFrame.getVx(), userEcefFrame.getVy(), userEcefFrame.getVz(),
                     CLOCK_OFFSET, CLOCK_DRIFT);
 
             final Matrix previousCovariance = Matrix.identity(
-                    GNSSKalmanState.NUM_PARAMETERS, GNSSKalmanState.NUM_PARAMETERS);
+                    GNSSEstimation.NUM_PARAMETERS, GNSSEstimation.NUM_PARAMETERS);
 
             final double initialPositionUncertainty = randomizer.nextDouble(
                     MIN_CONFIG_VALUE, MAX_CONFIG_VALUE);
@@ -180,17 +180,17 @@ public class GNSSKalmanEpochEstimatorTest {
                     accelerationPSD, clockFrequencyPSD,
                     clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
-            final GNSSKalmanState updatedState = new GNSSKalmanState();
-            final Matrix updatedCovariance = new Matrix(GNSSKalmanState.NUM_PARAMETERS,
-                    GNSSKalmanState.NUM_PARAMETERS);
+            final GNSSEstimation updatedState = new GNSSEstimation();
+            final Matrix updatedCovariance = new Matrix(GNSSEstimation.NUM_PARAMETERS,
+                    GNSSEstimation.NUM_PARAMETERS);
 
             GNSSKalmanEpochEstimator.estimate(measurements, TIME_INTERVAL_SECONDS,
                     previousState, previousCovariance, config, updatedState,
                     updatedCovariance);
 
-            final GNSSKalmanState updatedState2 = new GNSSKalmanState();
-            final Matrix updatedCovariance2 = new Matrix(GNSSKalmanState.NUM_PARAMETERS,
-                    GNSSKalmanState.NUM_PARAMETERS);
+            final GNSSEstimation updatedState2 = new GNSSEstimation();
+            final Matrix updatedCovariance2 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
+                    GNSSEstimation.NUM_PARAMETERS);
             estimate(measurements, previousState,
                     previousCovariance, config, updatedState2, updatedCovariance2);
 
@@ -212,10 +212,10 @@ public class GNSSKalmanEpochEstimatorTest {
     }
 
     private void estimate(final List<GNSSMeasurement> measurements,
-                          final GNSSKalmanState previousState,
+                          final GNSSEstimation previousState,
                           final Matrix previousCovariance,
                           final GNSSKalmanConfig config,
-                          final GNSSKalmanState updatedState,
+                          final GNSSEstimation updatedState,
                           final Matrix updatedCovariance) throws AlgebraException {
 
         // 1. Determine transition matrix using (9.147) and (9.150)

@@ -41,6 +41,7 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
     private static final double MAX_TIME_SECONDS = 10.0;
 
     private static final double ABSOLUTE_ERROR = 1e-8;
+    private static final double LARGE_ABSOLUTE_ERROR = 1e-6;
 
     @Test
     public void testConstants() {
@@ -108,8 +109,15 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
         SatelliteECEFPositionAndVelocityGenerator.generateSatellitesPositionAndVelocity(
                 time, config, result3);
 
-        assertEquals(result1, result2);
-        assertEquals(result1, result3);
+        int j = 0;
+        for (final ECEFPositionAndVelocity posVel2 : result2) {
+            final ECEFPositionAndVelocity posVel1 = result1.get(j);
+
+            assertTrue(posVel1.equals(posVel2, LARGE_ABSOLUTE_ERROR));
+            j++;
+        }
+
+        assertEquals(result2, result3);
     }
 
     @Test
@@ -166,7 +174,7 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
 
             final ECEFPositionAndVelocity result3 = computeSatellitePositionAndVelocity(time, config, j);
 
-            assertTrue(result1.equals(result3, ABSOLUTE_ERROR));
+            assertTrue(result1.equals(result3, LARGE_ABSOLUTE_ERROR));
             assertTrue(result2.equals(result3, ABSOLUTE_ERROR));
         }
     }
