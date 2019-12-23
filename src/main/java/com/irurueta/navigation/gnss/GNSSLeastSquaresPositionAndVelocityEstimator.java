@@ -472,7 +472,8 @@ public class GNSSLeastSquaresPositionAndVelocityEstimator {
             throw new LockedException();
         }
 
-        mPriorPositionAndVelocity = priorEstimation.getPositionAndVelocity();
+        mPriorPositionAndVelocity = priorEstimation != null ?
+                priorEstimation.getPositionAndVelocity() : null;
     }
 
     /**

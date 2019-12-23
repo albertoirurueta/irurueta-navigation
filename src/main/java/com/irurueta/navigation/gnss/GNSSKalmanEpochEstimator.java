@@ -47,6 +47,18 @@ public class GNSSKalmanEpochEstimator {
      */
     private static final int MATRIX_SIZE = 8;
 
+    /**
+     * Estimates the update of Kalman filter state and covariance matrix for a single epoch.
+     *
+     * @param measurements        satellite measurements data.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous GNSS estimates and Kalman filter error
+     *                            covariance matrix.
+     * @param config              system configuration (usually obtained through calibration).
+     * @param result instance where updated Kalman filter state will be stored.
+     * @throws IllegalArgumentException if provided previous covariance matrix is not 8x8.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
     public static void estimate(final Collection<GNSSMeasurement> measurements,
                                 final double propagationInterval,
                                 final GNSSKalmanState previousState,
@@ -71,9 +83,10 @@ public class GNSSKalmanEpochEstimator {
      * @param previousEstimation  previous GNSS estimates.
      * @param previousCovariance  previous Kalman filter error covariance matrix.
      * @param config              system configuration (usually obtained through calibration).
-     * @param updatedEstimation   instance where updated Kalman filter state will be stored after executing this method.
+     * @param updatedEstimation   instance where updated GNSS estimate will be stored after executing this method.
      * @param updatedCovariance   instance where updated Kalman filter error covariance matrix will be stored.
      * @throws IllegalArgumentException if provided previous covariance matrix is not 8x8.
+     * @throws AlgebraException if there are numerical instabilities.
      */
     public static void estimate(final Collection<GNSSMeasurement> measurements, final double propagationInterval,
                                 final GNSSEstimation previousEstimation, final Matrix previousCovariance,

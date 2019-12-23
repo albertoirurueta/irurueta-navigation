@@ -356,6 +356,12 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
 
         // check
         assertEquals(estimator.getPriorPositionAndVelocity(), priorPositionAndVelocity);
+
+
+        estimator.setPriorPositionAndVelocityFromEstimation(null);
+
+        // check
+        assertNull(estimator.getPriorPositionAndVelocity());
     }
 
     @Test
@@ -748,6 +754,18 @@ public class GNSSLeastSquaresPositionAndVelocityEstimatorTest implements
             estimator.setListener(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.setConvergenceThreshold(0.0);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        }
+        try {
+            estimator.estimate(null);
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
+            fail("LockedException expected but not thrown");
         }
     }
 
