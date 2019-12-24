@@ -19,27 +19,27 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.WrongSizeException;
 
 /**
- * Initializes the loosely coupled INS/GNSS Kalman filter error covariance
+ * Initializes the tightly coupled INS/GNSS extended Kalman filter error covariance
  * matrix.
  * This implementation is based on the equations defined in "Principles of GNSS, Inertial, and Multisensor
  * Integrated Navigation Systems, Second Edition" and on the companion software available at:
- * https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_LC_P_matrix.m
+ * https://github.com/ymjdz/MATLAB-Codes/blob/master/Initialize_TC_P_matrix.m
  */
-public class INSLooselyCoupledKalmanInitializer {
+public class INSTightlyCoupledKalmanInitializer {
 
     /**
      * Number of parameters of the Kalman filter.
      */
-    public static final int NUM_PARAMS = 15;
+    public static final int NUM_PARAMS = 17;
 
     /**
-     * Initializes INS/GNS loosely coupled Kalman filter error covariance matrix.
+     * Initializes INS/GNS tightly coupled Kalman filter error covariance matrix.
      *
      * @param config Kalman filter configuration.
      * @param result instance where resulting initialized error covariance matrix
-     *               will be stored. Matrix must be 15x15, otherwise it will be resized.
+     *               will be stored. Matrix must be 17x17, otherwise it will be resized.
      */
-    public static void initialize(final INSLooselyCoupledKalmanConfig config,
+    public static void initialize(final INSTightlyCoupledKalmanConfig config,
                                   final Matrix result) {
         if (result.getRows() != NUM_PARAMS || result.getColumns() != NUM_PARAMS) {
             try {
@@ -54,12 +54,16 @@ public class INSLooselyCoupledKalmanInitializer {
         final double initPosUnc = config.getInitialPositionUncertainty();
         final double initBaUnc = config.getInitialAccelerationBiasUncertainty();
         final double initBgUnc = config.getInitialGyroscopeBiasUncertainty();
+        final double initClockOffset = config.getInitialClockOffsetUncertainty();
+        final double initClockDrift = config.getInitialClockDriftUncertainty();
 
         final double initAttUnc2 = initAttUnc * initAttUnc;
         final double initVelUnc2 = initVelUnc * initVelUnc;
         final double initPosUnc2 = initPosUnc * initPosUnc;
         final double initBaUnc2 = initBaUnc * initBaUnc;
         final double initBgUnc2 = initBgUnc * initBgUnc;
+        final double initClockOffset2 = initClockOffset * initClockOffset;
+        final double initClockDrift2 = initClockDrift * initClockDrift;
 
         result.initialize(0.0);
 
@@ -78,15 +82,17 @@ public class INSLooselyCoupledKalmanInitializer {
         for (int i = 12; i < 15; i++) {
             result.setElementAt(i, i, initBgUnc2);
         }
+        result.setElementAt(15, 15, initClockOffset2);
+        result.setElementAt(16, 16, initClockDrift2);
     }
 
     /**
-     * Initializes INS/GNSS loosely coupled Kalman filter error covariance matrix.
+     * Initializes INS/GNS tightly coupled Kalman filter error covariance matrix.
      *
      * @param config Kalman filter configuration.
      * @return initialized error covariance matrix.
      */
-    public static Matrix initialize(final INSLooselyCoupledKalmanConfig config) {
+    public static Matrix initialize(final INSTightlyCoupledKalmanConfig config) {
         Matrix result = null;
         try {
             result = new Matrix(NUM_PARAMS, NUM_PARAMS);
