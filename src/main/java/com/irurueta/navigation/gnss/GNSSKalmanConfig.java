@@ -641,13 +641,10 @@ public class GNSSKalmanConfig implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof GNSSKalmanConfig)) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
