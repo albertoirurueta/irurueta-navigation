@@ -24,6 +24,8 @@ import com.irurueta.navigation.frames.NEDFrame;
 import com.irurueta.navigation.frames.converters.NEDtoECEFFrameConverter;
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.statistics.UniformRandomizer;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeUnit;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -179,36 +181,51 @@ public class GNSSKalmanEpochEstimatorTest {
                     accelerationPSD, clockFrequencyPSD,
                     clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
-            final GNSSEstimation updatedEstimation = new GNSSEstimation();
-            final Matrix updatedCovariance = new Matrix(GNSSEstimation.NUM_PARAMETERS,
+            final GNSSEstimation updatedEstimation1 = new GNSSEstimation();
+            final Matrix updatedCovariance1 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
                     GNSSEstimation.NUM_PARAMETERS);
 
             GNSSKalmanEpochEstimator.estimate(measurements, TIME_INTERVAL_SECONDS,
-                    previousEstimation, previousCovariance, config, updatedEstimation,
-                    updatedCovariance);
+                    previousEstimation, previousCovariance, config, updatedEstimation1,
+                    updatedCovariance1);
 
             final GNSSEstimation updatedEstimation2 = new GNSSEstimation();
             final Matrix updatedCovariance2 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
                     GNSSEstimation.NUM_PARAMETERS);
+
+            final Time propagationInterval = new Time(TIME_INTERVAL_SECONDS,
+                    TimeUnit.SECOND);
+
+            GNSSKalmanEpochEstimator.estimate(measurements, propagationInterval,
+                    previousEstimation, previousCovariance, config, updatedEstimation2,
+                    updatedCovariance2);
+
+
+            final GNSSEstimation updatedEstimation3 = new GNSSEstimation();
+            final Matrix updatedCovariance3 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
+                    GNSSEstimation.NUM_PARAMETERS);
             estimate(measurements, previousEstimation,
-                    previousCovariance, config, updatedEstimation2, updatedCovariance2);
+                    previousCovariance, config, updatedEstimation3, updatedCovariance3);
 
-            assertNotNull(updatedEstimation);
+            assertNotNull(updatedEstimation1);
 
-            assertEquals(updatedEstimation.getX(), updatedEstimation2.getX(), ABSOLUTE_ERROR);
-            assertEquals(updatedEstimation.getY(), updatedEstimation2.getY(), ABSOLUTE_ERROR);
-            assertEquals(updatedEstimation.getZ(), updatedEstimation2.getZ(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getX(), updatedEstimation3.getX(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getY(), updatedEstimation3.getY(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getZ(), updatedEstimation3.getZ(), ABSOLUTE_ERROR);
 
-            assertEquals(updatedEstimation.getVx(), updatedEstimation2.getVx(), ABSOLUTE_ERROR);
-            assertEquals(updatedEstimation.getVy(), updatedEstimation2.getVy(), ABSOLUTE_ERROR);
-            assertEquals(updatedEstimation.getVz(), updatedEstimation2.getVz(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getVx(), updatedEstimation3.getVx(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getVy(), updatedEstimation3.getVy(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getVz(), updatedEstimation3.getVz(), ABSOLUTE_ERROR);
 
-            assertEquals(updatedEstimation.getClockOffset(),
-                    updatedEstimation2.getClockOffset(), ABSOLUTE_ERROR);
-            assertEquals(updatedEstimation.getClockDrift(),
-                    updatedEstimation2.getClockDrift(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getClockOffset(),
+                    updatedEstimation3.getClockOffset(), ABSOLUTE_ERROR);
+            assertEquals(updatedEstimation1.getClockDrift(),
+                    updatedEstimation3.getClockDrift(), ABSOLUTE_ERROR);
 
-            assertTrue(updatedCovariance.equals(updatedCovariance2, ABSOLUTE_ERROR));
+            assertTrue(updatedCovariance1.equals(updatedCovariance3, ABSOLUTE_ERROR));
+
+            assertEquals(updatedEstimation1, updatedEstimation2);
+            assertEquals(updatedCovariance1, updatedCovariance2);
         }
     }
 
@@ -327,13 +344,27 @@ public class GNSSKalmanEpochEstimatorTest {
                     accelerationPSD, clockFrequencyPSD,
                     clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
-            final GNSSKalmanState updatedState = new GNSSKalmanState();
+            final GNSSKalmanState updatedState1 = new GNSSKalmanState();
 
             GNSSKalmanEpochEstimator.estimate(measurements, TIME_INTERVAL_SECONDS,
-                    previousState, config, updatedState);
+                    previousState, config, updatedState1);
 
-            final GNSSEstimation updatedEstimation = updatedState.getEstimation();
-            final Matrix updatedCovariance = updatedState.getCovariance();
+            final Time propagationInterval = new Time(TIME_INTERVAL_SECONDS, TimeUnit.SECOND);
+
+            final GNSSKalmanState updatedState2 =
+                    GNSSKalmanEpochEstimator.estimate(measurements, propagationInterval,
+                            previousState, config);
+
+            final GNSSKalmanState updatedState3 = new GNSSKalmanState();
+            GNSSKalmanEpochEstimator.estimate(measurements, propagationInterval,
+                    previousState, config, updatedState3);
+
+            final GNSSKalmanState updatedState4 =
+                    GNSSKalmanEpochEstimator.estimate(measurements,
+                            TIME_INTERVAL_SECONDS, previousState, config);
+
+            final GNSSEstimation updatedEstimation = updatedState1.getEstimation();
+            final Matrix updatedCovariance = updatedState1.getCovariance();
 
             final GNSSEstimation updatedEstimation2 = new GNSSEstimation();
             final Matrix updatedCovariance2 = new Matrix(GNSSEstimation.NUM_PARAMETERS,
@@ -357,6 +388,10 @@ public class GNSSKalmanEpochEstimatorTest {
                     updatedEstimation2.getClockDrift(), ABSOLUTE_ERROR);
 
             assertTrue(updatedCovariance.equals(updatedCovariance2, ABSOLUTE_ERROR));
+
+            assertEquals(updatedState1, updatedState2);
+            assertEquals(updatedState1, updatedState3);
+            assertEquals(updatedState1, updatedState4);
         }
     }
 

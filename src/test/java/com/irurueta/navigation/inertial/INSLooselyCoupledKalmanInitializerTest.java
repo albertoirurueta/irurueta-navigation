@@ -33,7 +33,7 @@ public class INSLooselyCoupledKalmanInitializerTest {
 
     @Test
     public void testInitialize() throws WrongSizeException {
-        final INSLooselyCoupledKalmanConfig config = generateConfig();
+        final INSLooselyCoupledKalmanInitializerConfig config = generateConfig();
 
         final Matrix expected = Matrix.diagonal(new double[] {
                 config.getInitialAttitudeUncertainty() * config.getInitialAttitudeUncertainty(),
@@ -64,7 +64,7 @@ public class INSLooselyCoupledKalmanInitializerTest {
         assertEquals(expected, result3);
     }
 
-    private static INSLooselyCoupledKalmanConfig generateConfig() {
+    private static INSLooselyCoupledKalmanInitializerConfig generateConfig() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double initialAttitudeUncertainty = randomizer.nextDouble(
                 MIN_VALUE, MAX_VALUE);
@@ -76,7 +76,7 @@ public class INSLooselyCoupledKalmanInitializerTest {
                 MIN_VALUE, MAX_VALUE);
         final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
                 MIN_VALUE, MAX_VALUE);
-        return new INSLooselyCoupledKalmanConfig(
+        return new INSLooselyCoupledKalmanInitializerConfig(
                 initialAttitudeUncertainty, initialVelocityUncertainty,
                 initialPositionUncertainty, initialAccelerationBiasUncertainty,
                 initialGyroscopeBiasUncertainty);

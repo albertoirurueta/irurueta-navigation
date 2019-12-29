@@ -20,6 +20,9 @@ import com.irurueta.algebra.Matrix;
 import com.irurueta.algebra.Utils;
 import com.irurueta.navigation.frames.CoordinateTransformation;
 import com.irurueta.navigation.geodesic.Constants;
+import com.irurueta.units.Time;
+import com.irurueta.units.TimeConverter;
+import com.irurueta.units.TimeUnit;
 
 import java.util.Collection;
 
@@ -48,15 +51,114 @@ public class GNSSKalmanEpochEstimator {
     private static final int MATRIX_SIZE = 8;
 
     /**
-     * Estimates the update of Kalman filter state and covariance matrix for a single epoch.
+     * Estimates the update of Kalman filter state and covariance matrix for a single
+     * epoch.
+     *
+     * @param measurements        satellite measurements data.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous GNSS estimates and Kalman filter error
+     *                            covariance matrix.
+     * @param config              system configuration (usually obtained through
+     *                            calibration).
+     * @return new Kalman filter state.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static GNSSKalmanState estimate(
+            final Collection<GNSSMeasurement> measurements,
+            final Time propagationInterval,
+            final GNSSKalmanState previousState,
+            final GNSSKalmanConfig config) throws AlgebraException {
+        return estimate(measurements, convertTime(propagationInterval),
+                previousState, config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state and covariance matrix fo a single
+     * epoch.
+     *
+     * @param measurements        satellite measurements data.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previousGNSS estimates and Kalman filter error
+     *                            covariance matrix.
+     * @param config              system configuration (usually obtained through
+     *                            calibration).
+     * @param result              instance where updated Kalman filter state will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(final Collection<GNSSMeasurement> measurements,
+                                final Time propagationInterval,
+                                final GNSSKalmanState previousState,
+                                final GNSSKalmanConfig config,
+                                final GNSSKalmanState result) throws AlgebraException {
+        estimate(measurements, convertTime(propagationInterval), previousState,
+                config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state and covariance matrix for a single
+     * epoch.
+     *
+     * @param measurements        satellite measurements data.
+     * @param propagationInterval propagation interval.
+     * @param previousEstimation  previousGNSS estimates.
+     * @param previousCovariance  previousKalman filter error covariance matrix.
+     * @param config              system configuration (usually obtained through
+     *                            calibration).
+     * @param updatedEstimation   instance where updated GNSS estimate will be stored
+     *                            after executing this method.
+     * @param updatedCovariance   instance where updated Kalman filter error covariance
+     *                            matrix will be stored.
+     * @throws IllegalArgumentException if provided previous covariance matrix is not
+     *                                  8x8.
+     * @throws AlgebraException         if there are numerical instabilities.
+     */
+    public static void estimate(final Collection<GNSSMeasurement> measurements,
+                                final Time propagationInterval,
+                                final GNSSEstimation previousEstimation,
+                                final Matrix previousCovariance,
+                                final GNSSKalmanConfig config,
+                                final GNSSEstimation updatedEstimation,
+                                final Matrix updatedCovariance) throws AlgebraException {
+        estimate(measurements, convertTime(propagationInterval), previousEstimation,
+                previousCovariance, config, updatedEstimation, updatedCovariance);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state and covariance matrix for a single
+     * epoch.
      *
      * @param measurements        satellite measurements data.
      * @param propagationInterval propagation interval expressed in seconds (s).
      * @param previousState       previous GNSS estimates and Kalman filter error
      *                            covariance matrix.
-     * @param config              system configuration (usually obtained through calibration).
-     * @param result instance where updated Kalman filter state will be stored.
-     * @throws IllegalArgumentException if provided previous covariance matrix is not 8x8.
+     * @param config              system configuration (usually obtained through
+     *                            calibration).
+     * @return new Kalman filter state.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static GNSSKalmanState estimate(
+            final Collection<GNSSMeasurement> measurements,
+            final double propagationInterval,
+            final GNSSKalmanState previousState,
+            final GNSSKalmanConfig config) throws AlgebraException {
+        final GNSSKalmanState result = new GNSSKalmanState();
+        estimate(measurements, propagationInterval, previousState, config, result);
+        return result;
+    }
+
+    /**
+     * Estimates the update of Kalman filter state and covariance matrix for a single
+     * epoch.
+     *
+     * @param measurements        satellite measurements data.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous GNSS estimates and Kalman filter error
+     *                            covariance matrix.
+     * @param config              system configuration (usually obtained through
+     *                            calibration).
+     * @param result              instance where updated Kalman filter state will be
+     *                            stored.
      * @throws AlgebraException if there are numerical instabilities.
      */
     public static void estimate(final Collection<GNSSMeasurement> measurements,
@@ -69,28 +171,37 @@ public class GNSSKalmanEpochEstimator {
                 GNSSEstimation.NUM_PARAMETERS);
 
         estimate(measurements, propagationInterval, previousState.getEstimation(),
-                previousState.getCovariance(), config, resultEstimation, resultCovariance);
+                previousState.getCovariance(), config, resultEstimation,
+                resultCovariance);
 
         result.setEstimation(resultEstimation);
         result.setCovariance(resultCovariance);
     }
 
     /**
-     * Estimates the update of Kalman filter state and covariance matrix for a single epoch.
+     * Estimates the update of Kalman filter state and covariance matrix for a single
+     * epoch.
      *
      * @param measurements        satellite measurements data.
      * @param propagationInterval propagation interval expressed in seconds (s).
      * @param previousEstimation  previous GNSS estimates.
      * @param previousCovariance  previous Kalman filter error covariance matrix.
-     * @param config              system configuration (usually obtained through calibration).
-     * @param updatedEstimation   instance where updated GNSS estimate will be stored after executing this method.
-     * @param updatedCovariance   instance where updated Kalman filter error covariance matrix will be stored.
-     * @throws IllegalArgumentException if provided previous covariance matrix is not 8x8.
-     * @throws AlgebraException if there are numerical instabilities.
+     * @param config              system configuration (usually obtained through
+     *                            calibration).
+     * @param updatedEstimation   instance where updated GNSS estimate will be stored
+     *                            after executing this method.
+     * @param updatedCovariance   instance where updated Kalman filter error covariance
+     *                            matrix will be stored.
+     * @throws IllegalArgumentException if provided previous covariance matrix is not
+     *                                  8x8.
+     * @throws AlgebraException         if there are numerical instabilities.
      */
-    public static void estimate(final Collection<GNSSMeasurement> measurements, final double propagationInterval,
-                                final GNSSEstimation previousEstimation, final Matrix previousCovariance,
-                                final GNSSKalmanConfig config, GNSSEstimation updatedEstimation,
+    public static void estimate(final Collection<GNSSMeasurement> measurements,
+                                final double propagationInterval,
+                                final GNSSEstimation previousEstimation,
+                                final Matrix previousCovariance,
+                                final GNSSKalmanConfig config,
+                                final GNSSEstimation updatedEstimation,
                                 final Matrix updatedCovariance) throws AlgebraException {
 
         if (previousCovariance.getRows() != GNSSEstimation.NUM_PARAMETERS ||
@@ -301,5 +412,16 @@ public class GNSSKalmanEpochEstimator {
         kMatrix.multiply(hMatrix);
         updatedCovariance.subtract(kMatrix);
         updatedCovariance.multiply(pMatrixPropagated);
+    }
+
+    /**
+     * Converts time instance into a value expressed in seconds.
+     *
+     * @param time time instance to be converted.
+     * @return time value expressed in seconds.
+     */
+    private static double convertTime(final Time time) {
+        return TimeConverter.convert(time.getValue().doubleValue(),
+                time.getUnit(), TimeUnit.SECOND);
     }
 }

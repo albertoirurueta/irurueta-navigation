@@ -16,6 +16,7 @@
 package com.irurueta.navigation.frames;
 
 import com.irurueta.geometry.Point3D;
+import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
 import com.irurueta.navigation.inertial.ECEFPosition;
 import com.irurueta.navigation.inertial.ECEFVelocity;
 import com.irurueta.units.Distance;
@@ -291,6 +292,17 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
     /**
      * Constructor.
      *
+     * @param positionAndVelocity position and velocity to be set resolved
+     *                            along ECEF-frame axes.
+     */
+    public ECEFFrame(final ECEFPositionAndVelocity positionAndVelocity) {
+        this();
+        setPositionAndVelocity(positionAndVelocity);
+    }
+
+    /**
+     * Constructor.
+     *
      * @param x cartesian x coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
      *          ECEF-frame axes.
      * @param y cartesian y coordinate of body position expressed in meters (m) with respect ECEF frame, resolved along
@@ -432,6 +444,22 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
                      final CoordinateTransformation c)
             throws InvalidSourceAndDestinationFrameTypeException {
         this(position, velocity);
+        setCoordinateTransformation(c);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param positionAndVelocity position and velocity to be set resolved along
+     *                            ECEF-frame axes.
+     * @param c                   Body to ECEF coordinate transformation matrix to be
+     *                            set.
+     * @throws InvalidSourceAndDestinationFrameTypeException if source or destination frame types are invalid.
+     */
+    public ECEFFrame(final ECEFPositionAndVelocity positionAndVelocity,
+                     final CoordinateTransformation c)
+            throws InvalidSourceAndDestinationFrameTypeException {
+        this(positionAndVelocity);
         setCoordinateTransformation(c);
     }
 
@@ -663,6 +691,41 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
     }
 
     /**
+     * Gets cartesian position and velocity.
+     *
+     * @param result instance where cartesian position and velocity will be stored.
+     */
+    public void getPositionAndVelocity(final ECEFPositionAndVelocity result) {
+        result.setPositionCoordinates(mX, mY, mZ);
+        result.setVelocityCoordinates(mVx, mVy, mVz);
+    }
+
+    /**
+     * Gets cartesian position and velocity.
+     *
+     * @return cartesian position and velocity.
+     */
+    public ECEFPositionAndVelocity getPositionAndVelocity() {
+        return new ECEFPositionAndVelocity(mX, mY, mZ, mVx, mVy, mVz);
+    }
+
+    /**
+     * Sets cartesian position and velocity.
+     *
+     * @param positionAndVelocity cartesian position and velocity.
+     */
+    public void setPositionAndVelocity(
+            final ECEFPositionAndVelocity positionAndVelocity) {
+        mX = positionAndVelocity.getX();
+        mY = positionAndVelocity.getY();
+        mZ = positionAndVelocity.getZ();
+
+        mVx = positionAndVelocity.getVx();
+        mVy = positionAndVelocity.getVy();
+        mVz = positionAndVelocity.getVz();
+    }
+
+    /**
      * Gets coordinate transformation matrix.
      *
      * @return coordinate transformation matrix.
@@ -745,7 +808,7 @@ public class ECEFFrame extends ECIorECEFFrame<ECEFFrame> {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final ECEFFrame result = (ECEFFrame)super.clone();
+        final ECEFFrame result = (ECEFFrame) super.clone();
         copyTo(result);
         return result;
     }

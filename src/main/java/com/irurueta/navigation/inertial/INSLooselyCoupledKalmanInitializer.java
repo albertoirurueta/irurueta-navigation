@@ -39,7 +39,7 @@ public class INSLooselyCoupledKalmanInitializer {
      * @param result instance where resulting initialized error covariance matrix
      *               will be stored. Matrix must be 15x15, otherwise it will be resized.
      */
-    public static void initialize(final INSLooselyCoupledKalmanConfig config,
+    public static void initialize(final INSLooselyCoupledKalmanInitializerConfig config,
                                   final Matrix result) {
         if (result.getRows() != NUM_PARAMS || result.getColumns() != NUM_PARAMS) {
             try {
@@ -86,7 +86,7 @@ public class INSLooselyCoupledKalmanInitializer {
      * @param config Kalman filter configuration.
      * @return initialized error covariance matrix.
      */
-    public static Matrix initialize(final INSLooselyCoupledKalmanConfig config) {
+    public static Matrix initialize(final INSLooselyCoupledKalmanInitializerConfig config) {
         Matrix result = null;
         try {
             result = new Matrix(NUM_PARAMS, NUM_PARAMS);
