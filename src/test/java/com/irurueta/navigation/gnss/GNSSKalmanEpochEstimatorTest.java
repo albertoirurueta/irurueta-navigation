@@ -78,7 +78,7 @@ public class GNSSKalmanEpochEstimatorTest {
                     MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double userLongitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double userheight = randomizer.nextDouble(
+            final double userHeight = randomizer.nextDouble(
                     MIN_HEIGHT_METERS, MAX_HEIGHT_METERS);
 
             final double userVn = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -86,7 +86,7 @@ public class GNSSKalmanEpochEstimatorTest {
             final double userVd = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
             final NEDFrame userNedFrame = new NEDFrame(
-                    userLatitude, userLongitude, userheight, userVn, userVe, userVd);
+                    userLatitude, userLongitude, userHeight, userVn, userVe, userVd);
             final ECEFFrame userEcefFrame = NEDtoECEFFrameConverter
                     .convertNEDtoECEFAndReturnNew(userNedFrame);
 
@@ -238,7 +238,7 @@ public class GNSSKalmanEpochEstimatorTest {
                     MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREES));
             final double userLongitude = Math.toRadians(randomizer.nextDouble(
                     MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-            final double userheight = randomizer.nextDouble(
+            final double userHeight = randomizer.nextDouble(
                     MIN_HEIGHT_METERS, MAX_HEIGHT_METERS);
 
             final double userVn = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
@@ -246,7 +246,7 @@ public class GNSSKalmanEpochEstimatorTest {
             final double userVd = randomizer.nextDouble(MIN_SPEED_VALUE, MAX_SPEED_VALUE);
 
             final NEDFrame userNedFrame = new NEDFrame(
-                    userLatitude, userLongitude, userheight, userVn, userVe, userVd);
+                    userLatitude, userLongitude, userHeight, userVn, userVe, userVd);
             final ECEFFrame userEcefFrame = NEDtoECEFFrameConverter
                     .convertNEDtoECEFAndReturnNew(userNedFrame);
 

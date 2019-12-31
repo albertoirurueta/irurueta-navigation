@@ -16,7 +16,10 @@
 package com.irurueta.navigation.inertial;
 
 import com.irurueta.statistics.UniformRandomizer;
-import com.irurueta.units.*;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedUnit;
 import org.junit.Test;
 
 import java.util.Random;
@@ -33,507 +36,215 @@ public class INSTightlyCoupledKalmanConfigTest {
 
     @Test
     public void testConstructor() {
-
         // test empty constructor
         INSTightlyCoupledKalmanConfig config = new INSTightlyCoupledKalmanConfig();
 
         // check default values
-        assertEquals(config.getInitialAttitudeUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                0.0, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                0.0, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(), 0.0, 0.0);
+        assertEquals(config.getGyroNoisePSD(), 0.0, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), 0.0, 0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), 0.0, 0.0);
+        assertEquals(config.getGyroBiasPSD(), 0.0, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
+        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
+        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
+        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
 
 
         // test constructor with values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config = new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                initialVelocityUncertainty, initialPositionUncertainty,
-                initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config = new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD, clockPhasePSD,
+                pseudoRangeSD, rangeRateSD);
 
         // check default values
-        assertEquals(config.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
+        assertEquals(config.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
 
 
-        // test constructor with measurement values
-        final Angle initialAttitudeUncertaintyAngle =
-                new Angle(initialAttitudeUncertainty, AngleUnit.RADIANS);
-        final Speed initialVelocityUncertaintySpeed =
-                new Speed(initialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
-        final Distance initialPositionUncertaintyDistance =
-                new Distance(initialPositionUncertainty, DistanceUnit.METER);
-        final Acceleration initialAccelerationBiasUncertaintyAcceleration =
-                new Acceleration(initialAccelerationBiasUncertainty,
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed initialGyroscopeBiasUncertaintyAngularSpeed =
-                new AngularSpeed(initialGyroscopeBiasUncertainty,
-                        AngularSpeedUnit.RADIANS_PER_SECOND);
-        final Distance initialClockOffsetUncertaintyDistance =
-                new Distance(initialClockOffsetUncertainty, DistanceUnit.METER);
-        final Speed initialClockDriftUncertaintySpeed =
-                new Speed(initialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
-        config = new INSTightlyCoupledKalmanConfig(initialAttitudeUncertaintyAngle,
-                initialVelocityUncertaintySpeed, initialPositionUncertaintyDistance,
-                initialAccelerationBiasUncertaintyAcceleration,
-                initialGyroscopeBiasUncertaintyAngularSpeed,
-                initialClockOffsetUncertaintyDistance,
-                initialClockDriftUncertaintySpeed);
-
-        // check default values
-        assertEquals(config.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-
-
-        // test copy constructor
-        final INSTightlyCoupledKalmanConfig config2 =
-                new INSTightlyCoupledKalmanConfig(config);
-
-        // check default values
-        assertEquals(config2.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config2.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config2.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config2.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config2.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config2.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config2.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-    }
-
-    @Test
-    public void testGetSetInitialAttitudeUncertainty() {
-        final INSTightlyCoupledKalmanConfig config =
-                new INSTightlyCoupledKalmanConfig();
-
-        // check default value
-        assertEquals(config.getInitialAttitudeUncertainty(), 0.0, 0.0);
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialAttitudeUncertainty(initialAttitudeUncertainty);
-
-        // check
-        assertEquals(config.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-    }
-
-    @Test
-    public void testGetSetInitialAttitudeUncertaintyAngle() {
-        final INSTightlyCoupledKalmanConfig config =
-                new INSTightlyCoupledKalmanConfig();
-
-        // check default value
-        final Angle initialAttitudeUncertainty1 =
-                config.getInitialAttitudeUncertaintyAngle();
-
-        assertEquals(initialAttitudeUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialAttitudeUncertainty1.getUnit(),
-                AngleUnit.RADIANS);
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final Angle initialAttitudeUncertainty2 =
-                new Angle(initialAttitudeUncertainty, AngleUnit.RADIANS);
-        config.setInitialAttitudeUncertainty(initialAttitudeUncertainty2);
-
-        // check
-        final Angle initialAttitudeUncertainty3 =
-                config.getInitialAttitudeUncertaintyAngle();
-        final Angle initialAttitudeUncertainty4 = new Angle(0.0,
-                AngleUnit.DEGREES);
-        config.getInitialAttitudeUncertaintyAngle(initialAttitudeUncertainty4);
-
-        assertEquals(initialAttitudeUncertainty2, initialAttitudeUncertainty3);
-        assertEquals(initialAttitudeUncertainty2, initialAttitudeUncertainty4);
-    }
-
-    @Test
-    public void testGetSetInitialVelocityUncertainty() {
-        final INSTightlyCoupledKalmanConfig config =
-                new INSTightlyCoupledKalmanConfig();
-
-        // check default value
-        assertEquals(config.getInitialVelocityUncertainty(), 0.0, 0.0);
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialVelocityUncertainty(initialVelocityUncertainty);
-
-        // check
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-    }
-
-    @Test
-    public void testGetSetInitialVelocityUncertaintySpeed() {
-        final INSTightlyCoupledKalmanConfig config =
-                new INSTightlyCoupledKalmanConfig();
-
-        // check default value
-        final Speed initialVelocityUncertaintySpeed1 =
-                config.getInitialVelocityUncertaintySpeed();
-
-        assertEquals(initialVelocityUncertaintySpeed1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialVelocityUncertaintySpeed1.getUnit(),
+        // test constructor with values
+        final Distance pseudoRangeSDDistance = new Distance(pseudoRangeSD,
+                DistanceUnit.METER);
+        final Speed rangeRateSDSpeed = new Speed(rangeRateSD,
                 SpeedUnit.METERS_PER_SECOND);
 
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final Speed initialVelocityUncertainty2 =
-                new Speed(initialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
-        config.setInitialVelocityUncertainty(initialVelocityUncertainty2);
+        config = new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD, clockPhasePSD,
+                pseudoRangeSDDistance, rangeRateSDSpeed);
 
-        // check
-        final Speed initialVelocityUncertainty3 =
-                config.getInitialVelocityUncertaintySpeed();
-        final Speed initialVelocityUncertainty4 = new Speed(0.0,
-                SpeedUnit.KILOMETERS_PER_HOUR);
-        config.getInitialVelocityUncertaintySpeed(initialVelocityUncertainty4);
-
-        assertEquals(initialVelocityUncertainty2, initialVelocityUncertainty3);
-        assertEquals(initialVelocityUncertainty2, initialVelocityUncertainty4);
+        // check default values
+        assertEquals(config.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
     }
 
     @Test
-    public void testGetSetInitialPositionUncertainty() {
+    public void testGetSetGyroNoisePSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialPositionUncertainty(), 0.0, 0.0);
+        assertEquals(config.getGyroNoisePSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialPositionUncertainty(initialPositionUncertainty);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setGyroNoisePSD(gyroNoisePSD);
 
         // check
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
+        assertEquals(gyroNoisePSD, config.getGyroNoisePSD(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialPositionUncertaintyDistance() {
+    public void testGetSetAccelerometerNoisePSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        final Distance initialPositionUncertainty1 =
-                config.getInitialPositionUncertaintyDistance();
-
-        assertEquals(initialPositionUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialPositionUncertainty1.getUnit(),
-                DistanceUnit.METER);
+        assertEquals(config.getAccelerometerNoisePSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final Distance initialPositionUncertainty2 =
-                new Distance(initialPositionUncertainty, DistanceUnit.METER);
-        config.setInitialPositionUncertainty(initialPositionUncertainty2);
+        final double accelerometerNoisePSD =
+                randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setAccelerometerNoisePSD(accelerometerNoisePSD);
 
         // check
-        final Distance initialPositionUncertainty3 =
-                config.getInitialPositionUncertaintyDistance();
-        final Distance initialPositionUncertainty4 = new Distance(0.0,
-                DistanceUnit.KILOMETER);
-        config.getInitialPositionUncertaintyDistance(initialPositionUncertainty4);
-
-        assertEquals(initialPositionUncertainty2, initialPositionUncertainty3);
-        assertEquals(initialPositionUncertainty2, initialPositionUncertainty4);
+        assertEquals(accelerometerNoisePSD, config.getAccelerometerNoisePSD(),
+                0.0);
     }
 
     @Test
-    public void testGetSetInitialAccelerationBiasUncertainty() {
+    public void testGetSetAccelerometerBiasPSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                0.0, 0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialAccelerationBiasUncertainty(
-                initialAccelerationBiasUncertainty);
+        final double accelerometerBiasPSD =
+                randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setAccelerometerBiasPSD(accelerometerBiasPSD);
 
         // check
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
+        assertEquals(accelerometerBiasPSD, config.getAccelerometerBiasPSD(),
+                0.0);
     }
 
     @Test
-    public void testGetSetInitialAccelerationBiasUncertaintyAcceleration() {
+    public void testGetSetGyroBiasPSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        final Acceleration initialAccelerationBiasUncertainty1 =
-                config.getInitialAccelerationBiasUncertaintyAcceleration();
-
-        assertEquals(initialAccelerationBiasUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialAccelerationBiasUncertainty1.getUnit(),
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(config.getGyroBiasPSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final Acceleration initialAccelerationBiasUncertainty2 =
-                new Acceleration(initialAccelerationBiasUncertainty,
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        config.setInitialAccelerationBiasUncertainty(
-                initialAccelerationBiasUncertainty2);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setGyroBiasPSD(gyroBiasPSD);
 
         // check
-        final Acceleration initialAccelerationBiasUncertainty3 =
-                config.getInitialAccelerationBiasUncertaintyAcceleration();
-        final Acceleration initialAccelerationBiasUncertainty4 =
-                new Acceleration(0.0, AccelerationUnit.FEET_PER_SQUARED_SECOND);
-        config.getInitialAccelerationBiasUncertaintyAcceleration(
-                initialAccelerationBiasUncertainty4);
-
-        assertEquals(initialAccelerationBiasUncertainty2,
-                initialAccelerationBiasUncertainty3);
-        assertEquals(initialAccelerationBiasUncertainty2,
-                initialAccelerationBiasUncertainty4);
+        assertEquals(gyroBiasPSD, config.getGyroBiasPSD(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialGyroscopeBiasUncertainty() {
+    public void testGetSetClockFrequencyPSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                0.0, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialGyroscopeBiasUncertainty(
-                initialGyroscopeBiasUncertainty);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setClockFrequencyPSD(clockFrequencyPSD);
 
         // check
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
+        assertEquals(clockFrequencyPSD, config.getClockFrequencyPSD(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialGyroscopeBiasUncertaintyAngularSpeed() {
+    public void testGetSetClockPhasePSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        final AngularSpeed initialGyroscopeBiasUncertainty1 =
-                config.getInitialGyroscopeBiasUncertaintyAngularSpeed();
-
-        assertEquals(initialGyroscopeBiasUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialGyroscopeBiasUncertainty1.getUnit(),
-                AngularSpeedUnit.RADIANS_PER_SECOND);
+        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final AngularSpeed initialGyroscopeBiasUncertainty2 =
-                new AngularSpeed(initialGyroscopeBiasUncertainty,
-                        AngularSpeedUnit.RADIANS_PER_SECOND);
-        config.setInitialGyroscopeBiasUncertainty(
-                initialGyroscopeBiasUncertainty2);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setClockPhasePSD(clockPhasePSD);
 
         // check
-        final AngularSpeed initialGyroscopeBiasUncertainty3 =
-                config.getInitialGyroscopeBiasUncertaintyAngularSpeed();
-        final AngularSpeed initialGyroscopeBiasUncertainty4 =
-                new AngularSpeed(0.0, AngularSpeedUnit.RADIANS_PER_SECOND);
-        config.getInitialGyroscopeBiasUncertaintyAngularSpeed(
-                initialGyroscopeBiasUncertainty4);
-
-        assertEquals(initialGyroscopeBiasUncertainty2,
-                initialGyroscopeBiasUncertainty3);
-        assertEquals(initialGyroscopeBiasUncertainty2,
-                initialGyroscopeBiasUncertainty4);
+        assertEquals(clockPhasePSD, config.getClockPhasePSD(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialClockOffsetUncertainty() {
+    public void testGetSetPseudoRangeSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                0.0, 0.0);
+        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialClockOffsetUncertainty(initialClockOffsetUncertainty);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setPseudoRangeSD(pseudoRangeSD);
 
         // check
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
+        assertEquals(pseudoRangeSD, config.getPseudoRangeSD(), 0.0);
     }
 
     @Test
-    public void testGetSetInitialClockOffsetUncertaintyDistance() {
+    public void testGetSetRangeRateSD() {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
         // check default value
-        final Distance initialClockOffsetUncertainty1 =
-                config.getInitialClockOffsetUncertaintyDistance();
-
-        assertEquals(initialClockOffsetUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialClockOffsetUncertainty1.getUnit(),
-                DistanceUnit.METER);
+        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
 
         // set new value
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final Distance initialClockOffsetUncertainty2 =
-                new Distance(initialClockOffsetUncertainty, DistanceUnit.METER);
-        config.setInitialClockOffsetUncertainty(initialClockOffsetUncertainty2);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setRangeRateSD(rangeRateSD);
 
         // check
-        final Distance initialClockOffsetUncertainty3 =
-                config.getInitialClockOffsetUncertaintyDistance();
-        final Distance initialClockOffsetUncertainty4 =
-                new Distance(0.0, DistanceUnit.METER);
-        config.getInitialClockOffsetUncertaintyDistance(
-                initialClockOffsetUncertainty4);
-
-        assertEquals(initialClockOffsetUncertainty2,
-                initialClockOffsetUncertainty3);
-        assertEquals(initialClockOffsetUncertainty2,
-                initialClockOffsetUncertainty4);
-    }
-
-    @Test
-    public void testGetSetInitialClockDriftUncertainty() {
-        final INSTightlyCoupledKalmanConfig config =
-                new INSTightlyCoupledKalmanConfig();
-
-        // check default value
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                0.0, 0.0);
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setInitialClockDriftUncertainty(
-                initialClockDriftUncertainty);
-
-        // check
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-    }
-
-    @Test
-    public void testGetSetInitialClockDriftUncertaintySpeed() {
-        final INSTightlyCoupledKalmanConfig config =
-                new INSTightlyCoupledKalmanConfig();
-
-        // check default value
-        final Speed initialClockDriftUncertainty1 =
-                config.getInitialClockDriftUncertaintySpeed();
-
-        assertEquals(initialClockDriftUncertainty1.getValue().doubleValue(),
-                0.0, 0.0);
-        assertEquals(initialClockDriftUncertainty1.getUnit(),
-                SpeedUnit.METERS_PER_SECOND);
-
-        // set new value
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final Speed initialClockDriftUncertainty2 =
-                new Speed(initialClockDriftUncertainty,
-                        SpeedUnit.METERS_PER_SECOND);
-        config.setInitialClockDriftUncertainty(
-                initialClockDriftUncertainty2);
-
-        // check
-        final Speed initialClockDriftUncertainty3 =
-                config.getInitialClockDriftUncertaintySpeed();
-        final Speed initialClockDriftUncertainty4 =
-                new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
-        config.getInitialClockDriftUncertaintySpeed(
-                initialClockDriftUncertainty4);
-
-        assertEquals(initialClockDriftUncertainty2, initialClockDriftUncertainty3);
-        assertEquals(initialClockDriftUncertainty2, initialClockDriftUncertainty4);
+        assertEquals(rangeRateSD, config.getRangeRateSD(), 0.0);
     }
 
     @Test
@@ -541,53 +252,97 @@ public class INSTightlyCoupledKalmanConfigTest {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
-        // check default value
-        assertEquals(config.getInitialAttitudeUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                0.0, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                0.0, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(), 0.0, 0.0);
+        // check default values
+        assertEquals(config.getGyroNoisePSD(), 0.0, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), 0.0, 0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), 0.0, 0.0);
+        assertEquals(config.getGyroBiasPSD(), 0.0, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
+        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
+        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
+        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        config.setValues(initialAttitudeUncertainty,
-                initialVelocityUncertainty, initialPositionUncertainty,
-                initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        config.setValues(gyroNoisePSD, accelerometerNoisePSD,
+                accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                clockPhasePSD, pseudoRangeSD, rangeRateSD);
 
         // check
-        assertEquals(config.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
+        assertEquals(config.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
+    }
+
+    @Test
+    public void testGetSetPseudoRangeSDDistance() {
+        final INSTightlyCoupledKalmanConfig config =
+                new INSTightlyCoupledKalmanConfig();
+
+        // check default value
+        final Distance distance1 = config.getPseudoRangeSDDistance();
+
+        assertEquals(distance1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(distance1.getUnit(), DistanceUnit.METER);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final Distance distance2 = new Distance(pseudoRangeSD, DistanceUnit.METER);
+
+        config.setPseudoRangeSD(distance2);
+
+        // check
+        final Distance distance3 = new Distance(0.0, DistanceUnit.KILOMETER);
+        config.getPseudoRangeSDDistance(distance3);
+        final Distance distance4 = config.getPseudoRangeSDDistance();
+
+        assertEquals(distance2, distance3);
+        assertEquals(distance2, distance4);
+    }
+
+    @Test
+    public void testGetSetRangeRateSDSpeed() {
+        final INSTightlyCoupledKalmanConfig config =
+                new INSTightlyCoupledKalmanConfig();
+
+        // check default value
+        final Speed speed1 = config.getRangeRateSDSpeed();
+
+        assertEquals(speed1.getValue().doubleValue(), 0.0, 0.0);
+        assertEquals(speed1.getUnit(), SpeedUnit.METERS_PER_SECOND);
+
+        // set new value
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final Speed speed2 = new Speed(rangeRateSD, SpeedUnit.METERS_PER_SECOND);
+
+        config.setRangeRateSD(speed2);
+
+        // check
+        final Speed speed3 = new Speed(0.0, SpeedUnit.KILOMETERS_PER_HOUR);
+        config.getRangeRateSDSpeed(speed3);
+        final Speed speed4 = config.getRangeRateSDSpeed();
+
+        assertEquals(speed2, speed3);
+        assertEquals(speed2, speed4);
     }
 
     @Test
@@ -595,208 +350,134 @@ public class INSTightlyCoupledKalmanConfigTest {
         final INSTightlyCoupledKalmanConfig config =
                 new INSTightlyCoupledKalmanConfig();
 
-        // check default value
-        assertEquals(config.getInitialAttitudeUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                0.0, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                0.0, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(), 0.0, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(), 0.0, 0.0);
+        // check default values
+        assertEquals(config.getGyroNoisePSD(), 0.0, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), 0.0, 0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), 0.0, 0.0);
+        assertEquals(config.getGyroBiasPSD(), 0.0, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), 0.0, 0.0);
+        assertEquals(config.getClockPhasePSD(), 0.0, 0.0);
+        assertEquals(config.getPseudoRangeSD(), 0.0, 0.0);
+        assertEquals(config.getRangeRateSD(), 0.0, 0.0);
 
         // set new values
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        final Angle initialAttitudeUncertaintyAngle =
-                new Angle(initialAttitudeUncertainty, AngleUnit.RADIANS);
-        final Speed initialVelocityUncertaintySpeed =
-                new Speed(initialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
-        final Distance initialPositionUncertaintyDistance =
-                new Distance(initialPositionUncertainty, DistanceUnit.METER);
-        final Acceleration initialAccelerationBiasUncertaintyAcceleration =
-                new Acceleration(initialAccelerationBiasUncertainty,
-                        AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        final AngularSpeed initialGyroscopeBiasUncertaintyAngularSpeed =
-                new AngularSpeed(initialGyroscopeBiasUncertainty,
-                        AngularSpeedUnit.RADIANS_PER_SECOND);
-        final Distance initialClockOffsetUncertaintyDistance =
-                new Distance(initialClockOffsetUncertainty, DistanceUnit.METER);
-        final Speed initialClockDriftUncertaintySpeed =
-                new Speed(initialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
+        final Distance pseudoRangeSDDistance = new Distance(pseudoRangeSD,
+                DistanceUnit.METER);
+        final Speed rangeRateSDSpeed = new Speed(rangeRateSD,
+                SpeedUnit.METERS_PER_SECOND);
 
-        config.setValues(initialAttitudeUncertaintyAngle,
-                initialVelocityUncertaintySpeed, initialPositionUncertaintyDistance,
-                initialAccelerationBiasUncertaintyAcceleration,
-                initialGyroscopeBiasUncertaintyAngularSpeed,
-                initialClockOffsetUncertaintyDistance,
-                initialClockDriftUncertaintySpeed);
+        config.setValues(gyroNoisePSD, accelerometerNoisePSD,
+                accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                clockPhasePSD, pseudoRangeSDDistance, rangeRateSDSpeed);
 
         // check
-        assertEquals(config.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
-
-        // check
-        assertEquals(config.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
+        assertEquals(config.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
     }
 
     @Test
     public void testCopyTo() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final INSTightlyCoupledKalmanConfig config1 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                initialVelocityUncertainty, initialPositionUncertainty,
-                initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
+        final INSTightlyCoupledKalmanConfig config1 =
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config2 =
                 new INSTightlyCoupledKalmanConfig();
 
         config1.copyTo(config2);
 
         // check
-        assertEquals(config2.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config2.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config2.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config2.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config2.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config2.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config2.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
+        assertEquals(config2.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config2.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config2.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config2.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config2.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config2.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config2.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config2.getRangeRateSD(), rangeRateSD, 0.0);
     }
 
     @Test
     public void testCopyFrom() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final INSTightlyCoupledKalmanConfig config1 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
+        final INSTightlyCoupledKalmanConfig config1 =
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config2 =
                 new INSTightlyCoupledKalmanConfig();
 
         config2.copyFrom(config1);
 
         // check
-        assertEquals(config2.getInitialAttitudeUncertainty(),
-                initialAttitudeUncertainty, 0.0);
-        assertEquals(config2.getInitialVelocityUncertainty(),
-                initialVelocityUncertainty, 0.0);
-        assertEquals(config2.getInitialPositionUncertainty(),
-                initialPositionUncertainty, 0.0);
-        assertEquals(config2.getInitialAccelerationBiasUncertainty(),
-                initialAccelerationBiasUncertainty, 0.0);
-        assertEquals(config2.getInitialGyroscopeBiasUncertainty(),
-                initialGyroscopeBiasUncertainty, 0.0);
-        assertEquals(config2.getInitialClockOffsetUncertainty(),
-                initialClockOffsetUncertainty, 0.0);
-        assertEquals(config2.getInitialClockDriftUncertainty(),
-                initialClockDriftUncertainty, 0.0);
+        assertEquals(config2.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config2.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config2.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config2.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config2.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config2.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config2.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config2.getRangeRateSD(), rangeRateSD, 0.0);
     }
 
     @Test
     public void testHashCode() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
         final INSTightlyCoupledKalmanConfig config1 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config2 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config3 =
                 new INSTightlyCoupledKalmanConfig();
 
@@ -807,30 +488,23 @@ public class INSTightlyCoupledKalmanConfigTest {
     @Test
     public void testEquals() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
         final INSTightlyCoupledKalmanConfig config1 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config2 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config3 =
                 new INSTightlyCoupledKalmanConfig();
 
@@ -849,30 +523,23 @@ public class INSTightlyCoupledKalmanConfigTest {
     @Test
     public void testEqualsWithThreshold() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
         final INSTightlyCoupledKalmanConfig config1 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config2 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
         final INSTightlyCoupledKalmanConfig config3 =
                 new INSTightlyCoupledKalmanConfig();
 
@@ -885,25 +552,20 @@ public class INSTightlyCoupledKalmanConfigTest {
     @Test
     public void testClone() throws CloneNotSupportedException {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double initialAttitudeUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialVelocityUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialPositionUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialAccelerationBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
+        final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
         final INSTightlyCoupledKalmanConfig config1 =
-                new INSTightlyCoupledKalmanConfig(initialAttitudeUncertainty,
-                        initialVelocityUncertainty, initialPositionUncertainty,
-                        initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                        initialClockOffsetUncertainty, initialClockDriftUncertainty);
+                new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                        accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD,
+                        clockPhasePSD, pseudoRangeSD, rangeRateSD);
+
         final Object config2 = config1.clone();
 
         assertEquals(config1, config2);

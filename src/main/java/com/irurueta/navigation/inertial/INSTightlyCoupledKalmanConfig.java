@@ -15,51 +15,67 @@
  */
 package com.irurueta.navigation.inertial;
 
-import com.irurueta.units.*;
+import com.irurueta.units.Distance;
+import com.irurueta.units.DistanceConverter;
+import com.irurueta.units.DistanceUnit;
+import com.irurueta.units.Speed;
+import com.irurueta.units.SpeedConverter;
+import com.irurueta.units.SpeedUnit;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Contains INS/GNS Tightly Coupled Kalman filter configuration parameters (usually
- * obtained through calibration) to determine the system noise covariance matrix.
+ * Contains configuration parameters (usually obtained through calibration)
+ * for INS/GNSS Loosely Coupled Kalman filter.
  */
 public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
 
     /**
-     * Initial attitude uncertainty per axis expressed in radians (rad).
+     * Gyro noise PSD (Power Spectral Density) expressed in squared radians per
+     * second (rad^2/s).
      */
-    private double mInitialAttitudeUncertainty;
+    private double mGyroNoisePSD;
 
     /**
-     * Initial velocity uncertainty per axis expressed in meters per second (m/s).
+     * Accelerometer noise PSD (Power Spectral Density) expressed in (m^2 * s^-3)
      */
-    private double mInitialVelocityUncertainty;
+    private double mAccelerometerNoisePSD;
 
     /**
-     * Initial position uncertainty per axis expressed in meters (m).
+     * Accelerometer bias random walk PSD (Power Spectral Density) expressed
+     * in (m^2 * s^-5).
      */
-    private double mInitialPositionUncertainty;
+    private double mAccelerometerBiasPSD;
 
     /**
-     * Initial acceleration bias uncertainty expressed in meters per squared second (m/s^2).
+     * Gyro bias random walk PSD (Power Spectral Density) expressed in (rad^2 * s^-3).
      */
-    private double mInitialAccelerationBiasUncertainty;
+    private double mGyroBiasPSD;
 
     /**
-     * Initial gyroscope bias uncertainty expressed in radians per second (rad/s).
+     * Receiver clock frequency-drift PSD (Power Spectral Density) expressed
+     * in (m^2/s^3).
      */
-    private double mInitialGyroscopeBiasUncertainty;
+    private double mClockFrequencyPSD;
 
     /**
-     * Initial clock offset uncertainty per axis expressed in meters (m).
+     * Receiver clock phase-drift PSD (Power Spectral Density) expressed in
+     * squared meters per second (m^2/s).
      */
-    private double mInitialClockOffsetUncertainty;
+    private double mClockPhasePSD;
 
     /**
-     * Initial clock drift uncertainty per axis expressed in meters per second (m/s).
+     * Pseudo-range measurement noise SD (Standard Deviation) expressed in
+     * meters (m).
      */
-    private double mInitialClockDriftUncertainty;
+    private double mPseudoRangeSD;
+
+    /**
+     * Pseudo-range rate measurement noise SD (Standard Deviation) expressed
+     * in meters per second (m/s).
+     */
+    private double mRangeRateSD;
 
     /**
      * Constructor.
@@ -70,485 +86,366 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
     /**
      * Constructor.
      *
-     * @param initialAttitudeUncertainty         initial attitude uncertainty per axis
-     *                                           expressed in radians (rad).
-     * @param initialVelocityUncertainty         initial velocity uncertainty per axis
-     *                                           expressed in meters per second (m/s).
-     * @param initialPositionUncertainty         initial position uncertainty per axis
-     *                                           expressed in meters (m).
-     * @param initialAccelerationBiasUncertainty initial acceleration bias uncertainty
-     *                                           expressed in meters per squared second (m/s^2).
-     * @param initialGyroscopeBiasUncertainty    initial gyroscope bias uncertainty
-     *                                           expressed in radians per second (rad/s).
-     * @param initialClockOffsetUncertainty      initial clock offset uncertainty per axis
-     *                                           expressed in meters (m).
-     * @param initialClockDriftUncertainty       initial clock drift uncertainty per axis
-     *                                           expressed in meters per second (m/s).
+     * @param gyroNoisePSD          gyro noise PSD (Power Spectral Density) expressed
+     *                              in squared radians per second (rad^2/s).
+     * @param accelerometerNoisePSD accelerometer noise PSD (Power Spectral Density)
+     *                              expressed in (m^2 * s^-3).
+     * @param accelerometerBiasPSD  accelerometer bias random walk PSD (Power Spectral
+     *                              Density) expressed in (m^2 * s^-5).
+     * @param gyroBiasPSD           gyro bias random walk PSD (Power Spectral Density)
+     *                              expressed in (rad^2 * s^-3).
+     * @param clockFrequencyPSD     receiver clock frequency-drift PSD (Power Spectral
+     *                              Density) expressed in (m^2/s^3).
+     * @param clockPhasePSD         receiver clock phase-drift PSD (Power Spectral
+     *                              Density) expressed in squared meters per second
+     *                              (m^2/s).
+     * @param pseudoRangeSD         pseudo-range measurement noise SD (Standard
+     *                              Deviation) expressed in meters (m).
+     * @param rangeRateSD           pseudo-range rate measurement noise SD (Standard
+     *                              Deviation) expressed in meters per second (m/s).
      */
-    public INSTightlyCoupledKalmanConfig(final double initialAttitudeUncertainty,
-                                         final double initialVelocityUncertainty,
-                                         final double initialPositionUncertainty,
-                                         final double initialAccelerationBiasUncertainty,
-                                         final double initialGyroscopeBiasUncertainty,
-                                         final double initialClockOffsetUncertainty,
-                                         final double initialClockDriftUncertainty) {
-        setValues(initialAttitudeUncertainty,
-                initialVelocityUncertainty,
-                initialPositionUncertainty,
-                initialAccelerationBiasUncertainty,
-                initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty,
-                initialClockDriftUncertainty);
+    public INSTightlyCoupledKalmanConfig(final double gyroNoisePSD,
+                                         final double accelerometerNoisePSD,
+                                         final double accelerometerBiasPSD,
+                                         final double gyroBiasPSD,
+                                         final double clockFrequencyPSD,
+                                         final double clockPhasePSD,
+                                         final double pseudoRangeSD,
+                                         final double rangeRateSD) {
+        setValues(gyroNoisePSD, accelerometerNoisePSD, accelerometerBiasPSD,
+                gyroBiasPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
+                rangeRateSD);
     }
 
     /**
      * Constructor.
      *
-     * @param initialAttitudeUncertainty         initial attitude uncertainty per axis.
-     * @param initialVelocityUncertainty         initial velocity uncertainty per axis.
-     * @param initialPositionUncertainty         initial position uncertainty per axis.
-     * @param initialAccelerationBiasUncertainty initial acceleration bias uncertainty.
-     * @param initialGyroscopeBiasUncertainty    initial gyroscope bias uncertainty.
-     * @param initialClockOffsetUncertainty      initial clock offset uncertainty per axis.
-     * @param initialClockDriftUncertainty       initial clock drift uncertainty per axis.
+     * @param gyroNoisePSD          gyro noise PSD (Power Spectral Density) expressed
+     *                              in squared radians per second (rad^2/s).
+     * @param accelerometerNoisePSD accelerometer noise PSD (Power Spectral Density)
+     *                              expressed in (m^2 * s^-3).
+     * @param accelerometerBiasPSD  accelereometer bias random walk PSD (Power Spectral
+     *                              Density) expressed in (m^2 * s^-5).
+     * @param gyroBiasPSD           gyro bias random walk PSD (Power Spectral Density)
+     *                              expressed in (rad^2 * s^-3).
+     * @param clockFrequencyPSD     receiver clock frequency-drift PSD (Power Spectral
+     *                              Density) expressed in (m^2/s^3).
+     * @param clockPhasePSD         receiver clock phase-drift PSD (Power Spectral
+     *                              Density) expressed in squared meters per second
+     *                              (m^2/s).
+     * @param pseudoRangeSD         pseudo-range measurement noise SD (Standard
+     *                              Deviation) expressed in meters (m).
+     * @param rangeRateSD           pseudo-range rate measurement noise SD (Standard
+     *                              Deviation) expressed in meters per second (m/s).
      */
-    public INSTightlyCoupledKalmanConfig(final Angle initialAttitudeUncertainty,
-                                         final Speed initialVelocityUncertainty,
-                                         final Distance initialPositionUncertainty,
-                                         final Acceleration initialAccelerationBiasUncertainty,
-                                         final AngularSpeed initialGyroscopeBiasUncertainty,
-                                         final Distance initialClockOffsetUncertainty,
-                                         final Speed initialClockDriftUncertainty) {
-        setValues(initialAttitudeUncertainty,
-                initialVelocityUncertainty,
-                initialPositionUncertainty,
-                initialAccelerationBiasUncertainty,
-                initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty,
-                initialClockDriftUncertainty);
+    public INSTightlyCoupledKalmanConfig(final double gyroNoisePSD,
+                                         final double accelerometerNoisePSD,
+                                         final double accelerometerBiasPSD,
+                                         final double gyroBiasPSD,
+                                         final double clockFrequencyPSD,
+                                         final double clockPhasePSD,
+                                         final Distance pseudoRangeSD,
+                                         final Speed rangeRateSD) {
+        setValues(gyroNoisePSD, accelerometerNoisePSD, accelerometerBiasPSD,
+                gyroBiasPSD, clockFrequencyPSD, clockPhasePSD, pseudoRangeSD,
+                rangeRateSD);
     }
 
     /**
-     * Copy constructor.
+     * Gets gyro noise PSD (Power Spectral Density) expressed in squared radians per
+     * second (rad^2/s).
      *
-     * @param input input instance to copy data from.
+     * @return gyro noise PSD.
      */
-    public INSTightlyCoupledKalmanConfig(final INSTightlyCoupledKalmanConfig input) {
-        copyFrom(input);
+    public double getGyroNoisePSD() {
+        return mGyroNoisePSD;
     }
 
     /**
-     * Gets initial attitude uncertainty per axis expressed in radians (rad).
+     * Sets gyro noise PSD (Power Spectral Density) expressed in squared radians per
+     * second (rad^2/s).
      *
-     * @return initial attitude uncertainty per axis expressed in radians (rad).
+     * @param gyroNoisePSD gyro noise PSD.
      */
-    public double getInitialAttitudeUncertainty() {
-        return mInitialAttitudeUncertainty;
+    public void setGyroNoisePSD(final double gyroNoisePSD) {
+        mGyroNoisePSD = gyroNoisePSD;
     }
 
     /**
-     * Sets initial attitude uncertainty per axis expressed in radians (rad).
+     * Gets accelerometer noise PSD (Power Spectral Density) expressed in (m^2 * s^-3).
      *
-     * @param initialAttitudeUncertainty initial attitude uncertainty per axis expressed
-     *                                   in radians (rad).
+     * @return accelerometer noise PSD.
      */
-    public void setInitialAttitudeUncertainty(final double initialAttitudeUncertainty) {
-        mInitialAttitudeUncertainty = initialAttitudeUncertainty;
+    public double getAccelerometerNoisePSD() {
+        return mAccelerometerNoisePSD;
     }
 
     /**
-     * Gets initial attitude uncertainty per axis.
+     * Sets accelerometer noise PSD (Power Spectral Density) expressed
+     * in (m^2 * se^-3).
      *
-     * @param result instance where initial attitude uncertainty per axis will be stored.
+     * @param accelerometerNoisePSD accelerometer noise PSD.
      */
-    public void getInitialAttitudeUncertaintyAngle(final Angle result) {
-        result.setValue(mInitialAttitudeUncertainty);
-        result.setUnit(AngleUnit.RADIANS);
+    public void setAccelerometerNoisePSD(final double accelerometerNoisePSD) {
+        mAccelerometerNoisePSD = accelerometerNoisePSD;
     }
 
     /**
-     * Gets initial attitude uncertainty per axis.
+     * Gets accelerometer bias random walk PSD (Power Spectral Density) expressed
+     * in (m^2 * s^-5).
      *
-     * @return initial attitude uncertainty per axis.
+     * @return accelerometer bias random walk PSD.
      */
-    public Angle getInitialAttitudeUncertaintyAngle() {
-        return new Angle(mInitialAttitudeUncertainty, AngleUnit.RADIANS);
+    public double getAccelerometerBiasPSD() {
+        return mAccelerometerBiasPSD;
     }
 
     /**
-     * Sets initial attitude uncertainty per axis.
+     * Sets accelerometer bias random walk PSD (Power Spectral Density) expressed
+     * in (m^2 * s^-5).
      *
-     * @param initialAttitudeUncertainty initial attitude uncertainty per axis.
+     * @param accelerometerBiasPSD accelerometer bias random walk PSD.
      */
-    public void setInitialAttitudeUncertainty(final Angle initialAttitudeUncertainty) {
-        mInitialAttitudeUncertainty = AngleConverter.convert(
-                initialAttitudeUncertainty.getValue().doubleValue(),
-                initialAttitudeUncertainty.getUnit(), AngleUnit.RADIANS);
+    public void setAccelerometerBiasPSD(final double accelerometerBiasPSD) {
+        mAccelerometerBiasPSD = accelerometerBiasPSD;
     }
 
     /**
-     * Gets initial velocity uncertainty per axis expressed in meters per second (m/s).
+     * Gets gyro bias random walk PSD (Power Spectral Density) expressed in
+     * (rad^2 * s^-3).
      *
-     * @return initial velocity uncertainty per axis expressed in meters per second (m/s).
+     * @return gyro bias random walk PSD.
      */
-    public double getInitialVelocityUncertainty() {
-        return mInitialVelocityUncertainty;
+    public double getGyroBiasPSD() {
+        return mGyroBiasPSD;
     }
 
     /**
-     * Sets initial velocity uncertainty per axis expressed in meters per second (m/s).
+     * Sets gyro bias random walk PSD (Power Spectral Density) expressed in
+     * (rad^2 * s^-3).
      *
-     * @param initialVelocityUncertainty initial velocity uncertainty per axis expressed
-     *                                   in meters per second (m/s).
+     * @param gyroBiasPSD gyro bias random walk PSD.
      */
-    public void setInitialVelocityUncertainty(final double initialVelocityUncertainty) {
-        mInitialVelocityUncertainty = initialVelocityUncertainty;
+    public void setGyroBiasPSD(final double gyroBiasPSD) {
+        mGyroBiasPSD = gyroBiasPSD;
     }
 
     /**
-     * Gets initial velocity uncertainty per axis.
+     * Gets receiver clock frequency-drift PSD (Power Spectral Density) expressed
+     * in (m^2/s^3).
      *
-     * @param result instance where initial attitude uncertainty per axis will be stored.
+     * @return receiver clock frequency-drift PSD.
      */
-    public void getInitialVelocityUncertaintySpeed(final Speed result) {
-        result.setValue(mInitialVelocityUncertainty);
-        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    public double getClockFrequencyPSD() {
+        return mClockFrequencyPSD;
     }
 
     /**
-     * Gets initial velocity uncertainty per axis.
+     * Sets receiver clock frequency-drift PSD (Power Spectral Density) expressed
+     * in (m^2/s^3).
      *
-     * @return initial velocity uncertainty per axis.
+     * @param clockFrequencyPSD clock frequency-drift PSD.
      */
-    public Speed getInitialVelocityUncertaintySpeed() {
-        return new Speed(mInitialVelocityUncertainty, SpeedUnit.METERS_PER_SECOND);
+    public void setClockFrequencyPSD(final double clockFrequencyPSD) {
+        mClockFrequencyPSD = clockFrequencyPSD;
     }
 
     /**
-     * Sets initial velocity uncertainty per axis.
+     * Gets receiver clock phase-drift PSD (Power Spectral Density) expressed in
+     * squared meters per second (m^2/s).
      *
-     * @param initialVelocityUncertainty initial velocity uncertainty per axis.
+     * @return receiver clock phase-drift PSD.
      */
-    public void setInitialVelocityUncertainty(final Speed initialVelocityUncertainty) {
-        mInitialVelocityUncertainty = SpeedConverter.convert(
-                initialVelocityUncertainty.getValue().doubleValue(),
-                initialVelocityUncertainty.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    public double getClockPhasePSD() {
+        return mClockPhasePSD;
     }
 
     /**
-     * Gets initial position uncertainty per axis expressed in meters (m)
+     * Sets receiver clock phase-drift PSD (Power Spectral Density) expressed in
+     * squared meters per second (m^2/s).
      *
-     * @return initial position uncertainty per axis expressed in meters (m).
+     * @param clockPhasePSD receiver clock phase-drift PSD.
      */
-    public double getInitialPositionUncertainty() {
-        return mInitialPositionUncertainty;
+    public void setClockPhasePSD(final double clockPhasePSD) {
+        mClockPhasePSD = clockPhasePSD;
     }
 
     /**
-     * Sets initial position uncertainty per axis expressed in meters (m)
+     * Gets pseudo-range measurement noise SD (Standard Deviation) expressed in
+     * meters (m).
      *
-     * @param initialPositionUncertainty initial position uncertainty per axis expressed
-     *                                   in meters (m).
+     * @return pseudo-range measurement noise SD.
      */
-    public void setInitialPositionUncertainty(final double initialPositionUncertainty) {
-        mInitialPositionUncertainty = initialPositionUncertainty;
+    public double getPseudoRangeSD() {
+        return mPseudoRangeSD;
     }
 
     /**
-     * Gets initial position uncertainty per axis.
+     * Sets pseudo-range measurement noise SD (Standard Deviation) expressed in
+     * meters (m).
      *
-     * @param result instance where initial position uncertainty per axis will be stored.
+     * @param pseudoRangeSD pseudo-range measurement noise SD.
      */
-    public void getInitialPositionUncertaintyDistance(final Distance result) {
-        result.setValue(mInitialPositionUncertainty);
-        result.setUnit(DistanceUnit.METER);
+    public void setPseudoRangeSD(final double pseudoRangeSD) {
+        mPseudoRangeSD = pseudoRangeSD;
     }
 
     /**
-     * Gets initial position uncertainty per axis.
+     * Gets pseudo-range rate measurement noise SD (Standard Deviation) expressed
+     * in meters per second (m/s).
      *
-     * @return initial position uncertainty per axis.
+     * @return pseudo-range rate measurement noise SD.
      */
-    public Distance getInitialPositionUncertaintyDistance() {
-        return new Distance(mInitialPositionUncertainty, DistanceUnit.METER);
+    public double getRangeRateSD() {
+        return mRangeRateSD;
     }
 
     /**
-     * Sets initial position uncertainty per axis.
+     * Sets pseudo-range rate measurement noise SD (Standard Deviation) expressed
+     * in meters per second (m/s).
      *
-     * @param initialPositionUncertainty initial position uncertainty per axis.
+     * @param rangeRateSD pseudo-range rate measurement noise SD.
      */
-    public void setInitialPositionUncertainty(final Distance initialPositionUncertainty) {
-        mInitialPositionUncertainty = DistanceConverter.convert(
-                initialPositionUncertainty.getValue().doubleValue(),
-                initialPositionUncertainty.getUnit(), DistanceUnit.METER);
-    }
-
-    /**
-     * Gets initial acceleration bias uncertainty expressed in meters per squared second (m/s^2).
-     *
-     * @return initial acceleration bias uncertainty expressed in meters per squared second (m/s^2).
-     */
-    public double getInitialAccelerationBiasUncertainty() {
-        return mInitialAccelerationBiasUncertainty;
-    }
-
-    /**
-     * Sets initial acceleration bias uncertainty expressed in meters per squared second (m/s^2).
-     *
-     * @param initialAccelerationBiasUncertainty initial acceleration bias uncertainty expressed in
-     *                                           meters per squared second (m/s^2).
-     */
-    public void setInitialAccelerationBiasUncertainty(
-            final double initialAccelerationBiasUncertainty) {
-        mInitialAccelerationBiasUncertainty = initialAccelerationBiasUncertainty;
-    }
-
-    /**
-     * Gets initial acceleration bias uncertainty.
-     *
-     * @param result instance where initial acceleration bias uncertainty will be stored.
-     */
-    public void getInitialAccelerationBiasUncertaintyAcceleration(final Acceleration result) {
-        result.setValue(mInitialAccelerationBiasUncertainty);
-        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
-    }
-
-    /**
-     * Gets initial acceleration bias uncertainty.
-     *
-     * @return initial acceleration bias uncertainty.
-     */
-    public Acceleration getInitialAccelerationBiasUncertaintyAcceleration() {
-        return new Acceleration(mInitialAccelerationBiasUncertainty,
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-    }
-
-    /**
-     * Sets initial acceleration bias uncertainty.
-     *
-     * @param initialAccelerationUncertainty initial acceleration bias uncertainty.
-     */
-    public void setInitialAccelerationBiasUncertainty(
-            final Acceleration initialAccelerationUncertainty) {
-        mInitialAccelerationBiasUncertainty = AccelerationConverter.convert(
-                initialAccelerationUncertainty.getValue().doubleValue(),
-                initialAccelerationUncertainty.getUnit(),
-                AccelerationUnit.METERS_PER_SQUARED_SECOND);
-    }
-
-    /**
-     * Gets initial gyroscope bias uncertainty expressed in radians per second (rad/s).
-     *
-     * @return initial gyroscope bias uncertainty expressed in radians per second (rad/s).
-     */
-    public double getInitialGyroscopeBiasUncertainty() {
-        return mInitialGyroscopeBiasUncertainty;
-    }
-
-    /**
-     * Sets initial gyroscope bias uncertainty expressed in radians per second (rad/s).
-     *
-     * @param initialGyroscopeBiasUncertainty initial gyroscope bias uncertainty expressed
-     *                                        in radians per second (rad/s).
-     */
-    public void setInitialGyroscopeBiasUncertainty(
-            final double initialGyroscopeBiasUncertainty) {
-        mInitialGyroscopeBiasUncertainty = initialGyroscopeBiasUncertainty;
-    }
-
-    /**
-     * Gets initial gyroscope bias uncertainty.
-     *
-     * @param result instance where initial gyroscope bias uncertainty will be stored.
-     */
-    public void getInitialGyroscopeBiasUncertaintyAngularSpeed(AngularSpeed result) {
-        result.setValue(mInitialGyroscopeBiasUncertainty);
-        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Gets initial gyroscope bias uncertainty.
-     *
-     * @return initial gyroscope bias uncertainty.
-     */
-    public AngularSpeed getInitialGyroscopeBiasUncertaintyAngularSpeed() {
-        return new AngularSpeed(mInitialGyroscopeBiasUncertainty,
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Sets initial gyroscope bias uncertainty.
-     *
-     * @param initialGyroscopeBiasUncertainty initial gyroscope bias uncertainty.
-     */
-    public void setInitialGyroscopeBiasUncertainty(
-            final AngularSpeed initialGyroscopeBiasUncertainty) {
-        mInitialGyroscopeBiasUncertainty = AngularSpeedConverter.convert(
-                initialGyroscopeBiasUncertainty.getValue().doubleValue(),
-                initialGyroscopeBiasUncertainty.getUnit(),
-                AngularSpeedUnit.RADIANS_PER_SECOND);
-    }
-
-    /**
-     * Gets initial clock offset uncertainty per axis expressed in meters (m).
-     *
-     * @return initial clock offset uncertainty per axis expressed in meters (m).
-     */
-    public double getInitialClockOffsetUncertainty() {
-        return mInitialClockOffsetUncertainty;
-    }
-
-    /**
-     * Sets initial clock offset uncertainty per axis expressed in meters (m).
-     *
-     * @param initialClockOffsetUncertainty initial clock offset uncertainty per
-     *                                      axis expressed in meters (m).
-     */
-    public void setInitialClockOffsetUncertainty(
-            final double initialClockOffsetUncertainty) {
-        mInitialClockOffsetUncertainty = initialClockOffsetUncertainty;
-    }
-
-    /**
-     * Gets initial clock offset uncertainty per axis.
-     *
-     * @param result instance where initial clock offset uncertainty per axis will be stored.
-     */
-    public void getInitialClockOffsetUncertaintyDistance(final Distance result) {
-        result.setValue(mInitialClockOffsetUncertainty);
-        result.setUnit(DistanceUnit.METER);
-    }
-
-    /**
-     * Gets initial clock offset uncertainty per axis.
-     *
-     * @return initial clock offset uncertainty per axis.
-     */
-    public Distance getInitialClockOffsetUncertaintyDistance() {
-        return new Distance(mInitialClockOffsetUncertainty, DistanceUnit.METER);
-    }
-
-    /**
-     * Sets initial clock offset uncertainty per axis.
-     *
-     * @param initialClockOffsetUncertainty initial clock offset uncertainty per axis.
-     */
-    public void setInitialClockOffsetUncertainty(final Distance initialClockOffsetUncertainty) {
-        mInitialClockOffsetUncertainty = DistanceConverter.convert(
-                initialClockOffsetUncertainty.getValue().doubleValue(),
-                initialClockOffsetUncertainty.getUnit(), DistanceUnit.METER);
-    }
-
-    /**
-     * Gets initial clock drift uncertainty per axis expressed in meters per second (m/s).
-     *
-     * @return initial clock drift uncertainty per axis expressed in meters per second (m/s).
-     */
-    public double getInitialClockDriftUncertainty() {
-        return mInitialClockDriftUncertainty;
-    }
-
-    /**
-     * Sets initial clock drift uncertainty per axis expressed in meters per second (m/s).
-     *
-     * @param initialClockDriftUncertainty initial clock drift uncertainty per axis expressed
-     *                                     in meters per second (m/s).
-     */
-    public void setInitialClockDriftUncertainty(
-            final double initialClockDriftUncertainty) {
-        mInitialClockDriftUncertainty = initialClockDriftUncertainty;
-    }
-
-    /**
-     * Gets initial clock drift uncertainty per axis.
-     *
-     * @param result instance where initial clock drift uncertainty per axis will be stored.
-     */
-    public void getInitialClockDriftUncertaintySpeed(final Speed result) {
-        result.setValue(mInitialClockDriftUncertainty);
-        result.setUnit(SpeedUnit.METERS_PER_SECOND);
-    }
-
-    /**
-     * Gets initial clock drift uncertainty per axis.
-     *
-     * @return initial clock drift uncertainty per axis.
-     */
-    public Speed getInitialClockDriftUncertaintySpeed() {
-        return new Speed(mInitialClockDriftUncertainty, SpeedUnit.METERS_PER_SECOND);
-    }
-
-    /**
-     * Sets initial clock drift uncertainty per axis.
-     *
-     * @param initialClockDriftUncertainty initial clock drift uncertainty per axis.
-     */
-    public void setInitialClockDriftUncertainty(final Speed initialClockDriftUncertainty) {
-        mInitialClockDriftUncertainty = SpeedConverter.convert(
-                initialClockDriftUncertainty.getValue().doubleValue(),
-                initialClockDriftUncertainty.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    public void setRangeRateSD(final double rangeRateSD) {
+        mRangeRateSD = rangeRateSD;
     }
 
     /**
      * Sets configuration parameters.
      *
-     * @param initialAttitudeUncertainty         initial attitude uncertainty per axis
-     *                                           expressed in radians (rad).
-     * @param initialVelocityUncertainty         initial velocity uncertainty per axis
-     *                                           expressed in meters per second (m/s).
-     * @param initialPositionUncertainty         initial position uncertainty per axis
-     *                                           expressed in meters (m).
-     * @param initialAccelerationBiasUncertainty initial acceleration bias uncertainty
-     *                                           expressed in meters per squared second (m/s^2).
-     * @param initialGyroscopeBiasUncertainty    initial gyroscope bias uncertainty
-     *                                           expressed in radians per second (rad/s).
-     * @param initialClockOffsetUncertainty      initial clock offset uncertainty per axis
-     *                                           expressed in meters (m).
-     * @param initialClockDriftUncertainty       initial clock drift uncertainty per axis
-     *                                           expressed in meters per second (m/s).
+     * @param gyroNoisePSD          gyro noise PSD (Power Spectral Density) expressed
+     *                              in squared radians per second (rad^2/s).
+     * @param accelerometerNoisePSD accelerometer noise PSD (Power Spectral Density)
+     *                              expressed in (m^2 * s^-3).
+     * @param accelerometerBiasPSD  accelerometer bias random walk PSD (Power Spectral
+     *                              Density) expressed in (m^2 * s^-5).
+     * @param gyroBiasPSD           gyro bias random walk PSD (Power Spectral Density)
+     *                              expressed in (rad^2 * s^-3).
+     * @param clockFrequencyPSD     receiver clock frequency-drift PSD (Power Spectral
+     *                              Density) expressed in (m^2/s^3).
+     * @param clockPhasePSD         receiver clock phase-drift PSD (Power Spectral
+     *                              Density) expressed in squared meters per second
+     *                              (m^2/s).
+     * @param pseudoRangeSD         pseudo-range measurement noise SD (Standard
+     *                              Deviation) expressed in meters (m).
+     * @param rangeRateSD           pseudo-range rate measurement noise SD (Standard
+     *                              Deviation) expressed in meters per second (m/s).
      */
-    public void setValues(final double initialAttitudeUncertainty,
-                          final double initialVelocityUncertainty,
-                          final double initialPositionUncertainty,
-                          final double initialAccelerationBiasUncertainty,
-                          final double initialGyroscopeBiasUncertainty,
-                          final double initialClockOffsetUncertainty,
-                          final double initialClockDriftUncertainty) {
-        mInitialAttitudeUncertainty = initialAttitudeUncertainty;
-        mInitialVelocityUncertainty = initialVelocityUncertainty;
-        mInitialPositionUncertainty = initialPositionUncertainty;
-        mInitialAccelerationBiasUncertainty = initialAccelerationBiasUncertainty;
-        mInitialGyroscopeBiasUncertainty = initialGyroscopeBiasUncertainty;
-        mInitialClockOffsetUncertainty = initialClockOffsetUncertainty;
-        mInitialClockDriftUncertainty = initialClockDriftUncertainty;
+    public void setValues(final double gyroNoisePSD,
+                          final double accelerometerNoisePSD,
+                          final double accelerometerBiasPSD,
+                          final double gyroBiasPSD,
+                          final double clockFrequencyPSD,
+                          final double clockPhasePSD,
+                          final double pseudoRangeSD,
+                          final double rangeRateSD) {
+        mGyroNoisePSD = gyroNoisePSD;
+        mAccelerometerNoisePSD = accelerometerNoisePSD;
+        mAccelerometerBiasPSD = accelerometerBiasPSD;
+        mGyroBiasPSD = gyroBiasPSD;
+        mClockFrequencyPSD = clockFrequencyPSD;
+        mClockPhasePSD = clockPhasePSD;
+        mPseudoRangeSD = pseudoRangeSD;
+        mRangeRateSD = rangeRateSD;
+    }
+
+    /**
+     * Gets pseudo-range measurement noise SD (Standard Deviation).
+     *
+     * @param result instance where pseudo-range measurement noise SD will be stored.
+     */
+    public void getPseudoRangeSDDistance(final Distance result) {
+        result.setValue(mPseudoRangeSD);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets pseudo-range measurement noise SD (Standard Deviation).
+     *
+     * @return pseudo-range measurement noise SD.
+     */
+    public Distance getPseudoRangeSDDistance() {
+        return new Distance(mPseudoRangeSD, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets pseudo-range measurement noise SD (Standard Deviation).
+     *
+     * @param pseudoRangeSD pseudo-range measurement noise SD.
+     */
+    public void setPseudoRangeSD(final Distance pseudoRangeSD) {
+        mPseudoRangeSD = DistanceConverter.convert(
+                pseudoRangeSD.getValue().doubleValue(),
+                pseudoRangeSD.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Gets pseudo-range rate measurement noise SD (Standard Deviation).
+     *
+     * @param result instance where pseudo-range rate measurement noise SD will be
+     *               stored.
+     */
+    public void getRangeRateSDSpeed(final Speed result) {
+        result.setValue(mRangeRateSD);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets pseudo-range rate measurement noise SD (Standard Deviation).
+     *
+     * @return pseudo-range rate measurement noise SD.
+     */
+    public Speed getRangeRateSDSpeed() {
+        return new Speed(mRangeRateSD, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets pseudo-range rate measurement noise SD (Standard Deviation).
+     *
+     * @param rangeRateSD pseudo-range rate measurement noise SD.
+     */
+    public void setRangeRateSD(final Speed rangeRateSD) {
+        mRangeRateSD = SpeedConverter.convert(rangeRateSD.getValue().doubleValue(),
+                rangeRateSD.getUnit(), SpeedUnit.METERS_PER_SECOND);
     }
 
     /**
      * Sets configuration parameters.
      *
-     * @param initialAttitudeUncertainty         initial attitude uncertainty per axis.
-     * @param initialVelocityUncertainty         initial velocity uncertainty per axis.
-     * @param initialPositionUncertainty         initial position uncertainty per axis.
-     * @param initialAccelerationBiasUncertainty initial acceleration bias uncertainty.
-     * @param initialGyroscopeBiasUncertainty    initial gyroscope bias uncertainty.
-     * @param initialClockOffsetUncertainty      initial clock offset uncertainty per axis.
-     * @param initialClockDriftUncertainty       initial clock drift uncertainty per axis.
+     * @param gyroNoisePSD          gyro noise PSD (Power Spectral Density) expressed
+     *                              in squared radians per second (rad^2/s).
+     * @param accelerometerNoisePSD accelerometer noise PSD (Power Spectral Density)
+     *                              expressed in (m^2 * s^-3).
+     * @param accelerometerBiasPSD  accelerometer bias random walk PSD (Power Spectral
+     *                              Density) expressed in (m^2 * s^-5).
+     * @param gyroBiasPSD           gyro bias random walk PSD (Power Spectral Density)
+     *                              expressed in (rad^2 * s^-3).
+     * @param clockFrequencyPSD     receiver clock frequency-drift PSD (Power Spectral
+     *                              Density) expressed in (m^2/s^3).
+     * @param clockPhasePSD         receiver clock phase-drift PSD (Power Spectral
+     *                              Density) expressed in squared meters per second
+     *                              (m^2/s).
+     * @param pseudoRangeSD         pseudo-range measurement noise SD (Standard
+     *                              Deviation) expressed in meters (m).
+     * @param rangeRateSD           pseudo-range rate measurement noise SD (Standard
+     *                              Deviation) expressed in meters per second (m/s).
      */
-    public void setValues(final Angle initialAttitudeUncertainty,
-                          final Speed initialVelocityUncertainty,
-                          final Distance initialPositionUncertainty,
-                          final Acceleration initialAccelerationBiasUncertainty,
-                          final AngularSpeed initialGyroscopeBiasUncertainty,
-                          final Distance initialClockOffsetUncertainty,
-                          final Speed initialClockDriftUncertainty) {
-        setInitialAttitudeUncertainty(initialAttitudeUncertainty);
-        setInitialVelocityUncertainty(initialVelocityUncertainty);
-        setInitialPositionUncertainty(initialPositionUncertainty);
-        setInitialAccelerationBiasUncertainty(initialAccelerationBiasUncertainty);
-        setInitialGyroscopeBiasUncertainty(initialGyroscopeBiasUncertainty);
-        setInitialClockOffsetUncertainty(initialClockOffsetUncertainty);
-        setInitialClockDriftUncertainty(initialClockDriftUncertainty);
+    public void setValues(final double gyroNoisePSD,
+                          final double accelerometerNoisePSD,
+                          final double accelerometerBiasPSD,
+                          final double gyroBiasPSD,
+                          final double clockFrequencyPSD,
+                          final double clockPhasePSD,
+                          final Distance pseudoRangeSD,
+                          final Speed rangeRateSD) {
+        mGyroNoisePSD = gyroNoisePSD;
+        mAccelerometerNoisePSD = accelerometerNoisePSD;
+        mAccelerometerBiasPSD = accelerometerBiasPSD;
+        mGyroBiasPSD = gyroBiasPSD;
+        mClockFrequencyPSD = clockFrequencyPSD;
+        mClockPhasePSD = clockPhasePSD;
+        setPseudoRangeSD(pseudoRangeSD);
+        setRangeRateSD(rangeRateSD);
     }
 
     /**
@@ -557,13 +454,14 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
      * @param output destination instance where data will be copied to.
      */
     public void copyTo(final INSTightlyCoupledKalmanConfig output) {
-        output.mInitialAttitudeUncertainty = mInitialAttitudeUncertainty;
-        output.mInitialVelocityUncertainty = mInitialVelocityUncertainty;
-        output.mInitialPositionUncertainty = mInitialPositionUncertainty;
-        output.mInitialAccelerationBiasUncertainty = mInitialAccelerationBiasUncertainty;
-        output.mInitialGyroscopeBiasUncertainty = mInitialGyroscopeBiasUncertainty;
-        output.mInitialClockOffsetUncertainty = mInitialClockOffsetUncertainty;
-        output.mInitialClockDriftUncertainty = mInitialClockDriftUncertainty;
+        output.mGyroNoisePSD = mGyroNoisePSD;
+        output.mAccelerometerNoisePSD = mAccelerometerNoisePSD;
+        output.mAccelerometerBiasPSD = mAccelerometerBiasPSD;
+        output.mGyroBiasPSD = mGyroBiasPSD;
+        output.mClockFrequencyPSD = mClockFrequencyPSD;
+        output.mClockPhasePSD = mClockPhasePSD;
+        output.mPseudoRangeSD = mPseudoRangeSD;
+        output.mRangeRateSD = mRangeRateSD;
     }
 
     /**
@@ -572,13 +470,14 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
      * @param input instance to copy data from.
      */
     public void copyFrom(final INSTightlyCoupledKalmanConfig input) {
-        mInitialAttitudeUncertainty = input.mInitialAttitudeUncertainty;
-        mInitialVelocityUncertainty = input.mInitialVelocityUncertainty;
-        mInitialPositionUncertainty = input.mInitialPositionUncertainty;
-        mInitialAccelerationBiasUncertainty = input.mInitialAccelerationBiasUncertainty;
-        mInitialGyroscopeBiasUncertainty = input.mInitialGyroscopeBiasUncertainty;
-        mInitialClockOffsetUncertainty = input.mInitialClockOffsetUncertainty;
-        mInitialClockDriftUncertainty = input.mInitialClockDriftUncertainty;
+        mGyroNoisePSD = input.mGyroNoisePSD;
+        mAccelerometerNoisePSD = input.mAccelerometerNoisePSD;
+        mAccelerometerBiasPSD = input.mAccelerometerBiasPSD;
+        mGyroBiasPSD = input.mGyroBiasPSD;
+        mClockFrequencyPSD = input.mClockFrequencyPSD;
+        mClockPhasePSD = input.mClockPhasePSD;
+        mPseudoRangeSD = input.mPseudoRangeSD;
+        mRangeRateSD = input.mRangeRateSD;
     }
 
     /**
@@ -589,17 +488,17 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(mInitialAttitudeUncertainty, mInitialVelocityUncertainty,
-                mInitialPositionUncertainty, mInitialAccelerationBiasUncertainty,
-                mInitialGyroscopeBiasUncertainty, mInitialClockOffsetUncertainty,
-                mInitialClockDriftUncertainty);
+        return Objects.hash(mGyroNoisePSD, mAccelerometerNoisePSD,
+                mAccelerometerBiasPSD, mGyroBiasPSD, mClockFrequencyPSD,
+                mClockPhasePSD, mPseudoRangeSD, mRangeRateSD);
     }
 
     /**
-     * Checks if provided instance has exactly the same contents as this instance.
+     * Checks if provided object is a INSTightlyCoupledKalmanConfig having exactly
+     * the same contents as this instance.
      *
-     * @param obj instance to be compared.
-     * @return true if both instances are considered to be equal, false otherwise.
+     * @param obj Object to be compared.
+     * @return true if both objects are considered to be equal, false otherwise.
      */
     @Override
     public boolean equals(Object obj) {
@@ -609,7 +508,7 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        INSTightlyCoupledKalmanConfig other = (INSTightlyCoupledKalmanConfig) obj;
+        final INSTightlyCoupledKalmanConfig other = (INSTightlyCoupledKalmanConfig) obj;
         return equals(other);
     }
 
@@ -619,7 +518,7 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(INSTightlyCoupledKalmanConfig other) {
+    public boolean equals(final INSTightlyCoupledKalmanConfig other) {
         return equals(other, 0.0);
     }
 
@@ -632,18 +531,20 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(INSTightlyCoupledKalmanConfig other, final double threshold) {
+    public boolean equals(final INSTightlyCoupledKalmanConfig other,
+                          final double threshold) {
         if (other == null) {
             return false;
         }
 
-        return Math.abs(mInitialAttitudeUncertainty - other.mInitialAttitudeUncertainty) <= threshold
-                && Math.abs(mInitialVelocityUncertainty - other.mInitialVelocityUncertainty) <= threshold
-                && Math.abs(mInitialPositionUncertainty - other.mInitialPositionUncertainty) <= threshold
-                && Math.abs(mInitialAccelerationBiasUncertainty - other.mInitialAccelerationBiasUncertainty) <= threshold
-                && Math.abs(mInitialGyroscopeBiasUncertainty - other.mInitialGyroscopeBiasUncertainty) <= threshold
-                && Math.abs(mInitialClockOffsetUncertainty - other.mInitialClockOffsetUncertainty) <= threshold
-                && Math.abs(mInitialClockDriftUncertainty - other.mInitialClockDriftUncertainty) <= threshold;
+        return Math.abs(mGyroNoisePSD - other.mGyroNoisePSD) <= threshold
+                && Math.abs(mAccelerometerNoisePSD - other.mAccelerometerNoisePSD) <= threshold
+                && Math.abs(mAccelerometerBiasPSD - other.mAccelerometerBiasPSD) <= threshold
+                && Math.abs(mGyroBiasPSD - other.mGyroBiasPSD) <= threshold
+                && Math.abs(mClockFrequencyPSD - other.mClockFrequencyPSD) <= threshold
+                && Math.abs(mClockPhasePSD - other.mClockPhasePSD) <= threshold
+                && Math.abs(mPseudoRangeSD - other.mPseudoRangeSD) <= threshold
+                && Math.abs(mRangeRateSD - other.mRangeRateSD) <= threshold;
     }
 
     /**
@@ -654,7 +555,8 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final INSTightlyCoupledKalmanConfig result = (INSTightlyCoupledKalmanConfig) super.clone();
+        final INSTightlyCoupledKalmanConfig result =
+                (INSTightlyCoupledKalmanConfig) super.clone();
         copyTo(result);
         return result;
     }

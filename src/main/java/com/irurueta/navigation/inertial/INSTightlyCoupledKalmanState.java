@@ -30,14 +30,14 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Kalman filter state for loosely coupled INS/GNSS extended kalman filter.
+ * Kalman filter state for tightly coupled INS/GNSS extended Kalman filter.
  */
-public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
+public class INSTightlyCoupledKalmanState implements Serializable, Cloneable {
 
     /**
      * Number of parameters of the Kalman filter.
      */
-    public static final int NUM_PARAMS = 15;
+    public static final int NUM_PARAMS = 17;
 
     /**
      * Estimated body to ECEF coordinate transformation matrix.
@@ -111,6 +111,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
     private double mGyroBiasZ;
 
     /**
+     * Estimated receiver clock offset expressed in meters (m).
+     */
+    private double mReceiverClockOffset;
+
+    /**
+     * Estimated receiver clock drift expressed in meters per second (m/s).
+     */
+    private double mReceiverClockDrift;
+
+    /**
      * Estimated Kalman filter error covariance matrix.
      */
     private Matrix mCovariance;
@@ -118,7 +128,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
     /**
      * Constructor.
      */
-    public INSLooselyCoupledKalmanState() {
+    public INSTightlyCoupledKalmanState() {
     }
 
     /**
@@ -149,11 +159,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                                                 expressed in radians per second (rad/s).
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis and
      *                                                 expressed in radians per second (rad/s).
+     * @param receiverClockOffset                      estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift                       estimated receiver clock drift expressed in meters per
+     *                                                 second (m/s).
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final double vx, final double vy, final double vz,
             final double x, final double y, final double z,
@@ -163,41 +176,48 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setVelocityCoordinates(vx, vy, vz);
         setPositionCoordinates(x, y, z);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param c                 body to ECEF coordinate transformation.
-     * @param vx                estimated ECEF user velocity resolved around x axis.
-     * @param vy                estimated ECEF user velocity resolved around y axis.
-     * @param vz                estimated ECEF user velocity resolved around z axis.
-     * @param x                 x coordinate of estimated ECEF user position.
-     * @param y                 y coordinate of estimated ECEF user position.
-     * @param z                 z coordinate of estimated ECEF user position.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis and
-     *                          expressed in radians per second (rad/s).
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param c                   body to ECEF coordinate transformation.
+     * @param vx                  estimated ECEF user velocity resolved around x axis.
+     * @param vy                  estimated ECEF user velocity resolved around y axis.
+     * @param vz                  estimated ECEF user velocity resolved around z axis.
+     * @param x                   x coordinate of estimated ECEF user position.
+     * @param y                   y coordinate of estimated ECEF user position.
+     * @param z                   z coordinate of estimated ECEF user position.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis and
+     *                            expressed in radians per second (rad/s).
+     * @param receiverClockOffset estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift  estimated receiver clock drift expressed in meters per
+     *                            second (m/s).
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final Speed vx, final Speed vy, final Speed vz,
             final Distance x, final Distance y, final Distance z,
@@ -207,39 +227,46 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setVelocityCoordinates(vx, vy, vz);
         setPositionCoordinates(x, y, z);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param c                 body to ECEF coordinate transformation.
-     * @param vx                estimated ECEF user velocity resolved around x axis.
-     * @param vy                estimated ECEF user velocity resolved around y axis.
-     * @param vz                estimated ECEF user velocity resolved around z axis.
-     * @param position          estimated ECEF user position.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis and
-     *                          expressed in radians per second (rad/s).
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param c                   body to ECEF coordinate transformation.
+     * @param vx                  estimated ECEF user velocity resolved around x axis.
+     * @param vy                  estimated ECEF user velocity resolved around y axis.
+     * @param vz                  estimated ECEF user velocity resolved around z axis.
+     * @param position            estimated ECEF user position.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis and
+     *                            expressed in radians per second (rad/s).
+     * @param receiverClockOffset estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift  estimated receiver clock drift expressed in meters per
+     *                            second (m/s).
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final Speed vx, final Speed vy, final Speed vz,
             final Point3D position,
@@ -249,37 +276,44 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setVelocityCoordinates(vx, vy, vz);
         setPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param c                 body to ECEF coordinate transformation.
-     * @param velocity          estimated ECEF user velocity.
-     * @param position          estimated ECEF user position.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis and
-     *                          expressed in radians per second (rad/s).
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param c                   body to ECEF coordinate transformation.
+     * @param velocity            estimated ECEF user velocity.
+     * @param position            estimated ECEF user position.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis and
+     *                            expressed in radians per second (rad/s).
+     * @param receiverClockOffset estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift  estimated receiver clock drift expressed in meters per
+     *                            second (m/s).
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final ECEFVelocity velocity,
             final ECEFPosition position,
@@ -289,12 +323,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setEcefVelocity(velocity);
         setEcefPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -315,10 +353,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                            expressed in radians per second (rad/s).
      * @param gyroBiasZ           estimated gyroscope bias resolved around z axis and
      *                            expressed in radians per second (rad/s).
+     * @param receiverClockOffset estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift  estimated receiver clock drift expressed in meters per
+     *                            second (m/s).
      * @param covariance          estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final ECEFPositionAndVelocity positionAndVelocity,
             final double accelerationBiasX,
@@ -327,34 +368,41 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setPositionAndVelocity(positionAndVelocity);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param frame             estimated user ECEF frame.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis and
-     *                          expressed in meters per squared second (m/s^2).
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis and
-     *                          expressed in radians per second (rad/s).
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis and
-     *                          expressed in radians per second (rad/s).
-     * @param covariance        estimated Kalman filter error covariance .
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param frame               estimated user ECEF frame.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis and
+     *                            expressed in meters per squared second (m/s^2).
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis and
+     *                            expressed in radians per second (rad/s).
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis and
+     *                            expressed in radians per second (rad/s).
+     * @param receiverClockOffset estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift  estimated receiver clock drift expressed in meters per
+     *                            second (m/s).
+     * @param covariance          estimated Kalman filter error covariance .
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final ECEFFrame frame,
             final double accelerationBiasX,
             final double accelerationBiasY,
@@ -362,33 +410,39 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setFrame(frame);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param c                 body to ECEF coordinate transformation.
-     * @param vx                estimated ECEF user velocity resolved around x axis.
-     * @param vy                estimated ECEF user velocity resolved around y axis.
-     * @param vz                estimated ECEF user velocity resolved around z axis.
-     * @param x                 x coordinate of estimated ECEF user position.
-     * @param y                 y coordinate of estimated ECEF user position.
-     * @param z                 z coordinate of estimated ECEF user position.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis.
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis.
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis.
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis.
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis.
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis.
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param c                   body to ECEF coordinate transformation.
+     * @param vx                  estimated ECEF user velocity resolved around x axis.
+     * @param vy                  estimated ECEF user velocity resolved around y axis.
+     * @param vz                  estimated ECEF user velocity resolved around z axis.
+     * @param x                   x coordinate of estimated ECEF user position.
+     * @param y                   y coordinate of estimated ECEF user position.
+     * @param z                   z coordinate of estimated ECEF user position.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis.
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis.
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis.
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis.
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis.
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset estimated receiver clock offset.
+     * @param receiverClockDrift  estimated receiver clock drift.
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final Speed vx, final Speed vy, final Speed vz,
             final Distance x, final Distance y, final Distance z,
@@ -398,33 +452,39 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setVelocityCoordinates(vx, vy, vz);
         setPositionCoordinates(x, y, z);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param c                 body to ECEF coordinate transformation.
-     * @param vx                estimated ECEF user velocity resolved around x axis.
-     * @param vy                estimated ECEF user velocity resolved around y axis.
-     * @param vz                estimated ECEF user velocity resolved around z axis.
-     * @param position          estimated ECEF user position expressed in meters (m).
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis.
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis.
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis.
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis.
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis.
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis.
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param c                   body to ECEF coordinate transformation.
+     * @param vx                  estimated ECEF user velocity resolved around x axis.
+     * @param vy                  estimated ECEF user velocity resolved around y axis.
+     * @param vz                  estimated ECEF user velocity resolved around z axis.
+     * @param position            estimated ECEF user position expressed in meters (m).
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis.
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis.
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis.
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis.
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis.
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset estimated receiver clock offset.
+     * @param receiverClockDrift  estimated receiver clock drift.
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final Speed vx, final Speed vy, final Speed vz,
             final Point3D position,
@@ -434,31 +494,37 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setVelocityCoordinates(vx, vy, vz);
         setPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param c                 body to ECEF coordinate transformation.
-     * @param velocity          estimated ECEF user velocity.
-     * @param position          estimated ECEF user position.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis.
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis.
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis.
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis.
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis.
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis.
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param c                   body to ECEF coordinate transformation.
+     * @param velocity            estimated ECEF user velocity.
+     * @param position            estimated ECEF user position.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis.
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis.
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis.
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis.
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis.
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset estimated receiver clock offset.
+     * @param receiverClockDrift  estimated receiver clock drift.
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final ECEFVelocity velocity,
             final ECEFPosition position,
@@ -468,12 +534,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setEcefVelocity(velocity);
         setEcefPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -488,10 +558,12 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @param gyroBiasX           estimated gyroscope bias resolved around x axis.
      * @param gyroBiasY           estimated gyroscope bias resolved around y axis.
      * @param gyroBiasZ           estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset estimated receiver clock offset.
+     * @param receiverClockDrift  estimated receiver clock drift.
      * @param covariance          estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final CoordinateTransformation c,
             final ECEFPositionAndVelocity positionAndVelocity,
             final Acceleration accelerationBiasX,
@@ -500,28 +572,34 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setC(c);
         setPositionAndVelocity(positionAndVelocity);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
     /**
      * Constructor.
      *
-     * @param frame             estimated user ECEF frame.
-     * @param accelerationBiasX estimated accelerometer bias resolved around x axis.
-     * @param accelerationBiasY estimated accelerometer bias resolved around y axis.
-     * @param accelerationBiasZ estimated accelerometer bias resolved around z axis.
-     * @param gyroBiasX         estimated gyroscope bias resolved around x axis.
-     * @param gyroBiasY         estimated gyroscope bias resolved around y axis.
-     * @param gyroBiasZ         estimated gyroscope bias resolved around z axis.
-     * @param covariance        estimated Kalman filter error covariance matrix.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @param frame               estimated user ECEF frame.
+     * @param accelerationBiasX   estimated accelerometer bias resolved around x axis.
+     * @param accelerationBiasY   estimated accelerometer bias resolved around y axis.
+     * @param accelerationBiasZ   estimated accelerometer bias resolved around z axis.
+     * @param gyroBiasX           estimated gyroscope bias resolved around x axis.
+     * @param gyroBiasY           estimated gyroscope bias resolved around y axis.
+     * @param gyroBiasZ           estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset estimated receiver clock offset.
+     * @param receiverClockDrift  estimated receiver clock drift.
+     * @param covariance          estimated Kalman filter error covariance matrix.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final ECEFFrame frame,
             final Acceleration accelerationBiasX,
             final Acceleration accelerationBiasY,
@@ -529,10 +607,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setFrame(frame);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -558,11 +640,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                                                 expressed in radians per second (rad/s).
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis and
      *                                                 expressed in radians per second (rad/s).
+     * @param receiverClockOffset                      estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift                       estimated receiver clock drift expressed in meters per
+     *                                                 second (m/s).
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final Speed vx, final Speed vy, final Speed vz,
             final Distance x, final Distance y, final Distance z,
@@ -572,12 +657,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setVelocityCoordinates(vx, vy, vz);
         setPositionCoordinates(x, y, z);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -601,11 +690,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                                                 expressed in radians per second (rad/s).
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis and
      *                                                 expressed in radians per second (rad/s).
+     * @param receiverClockOffset                      estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift                       estimated receiver clock drift expressed in meters per
+     *                                                 second (m/s).
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final Speed vx, final Speed vy, final Speed vz,
             final Point3D position,
@@ -615,12 +707,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setVelocityCoordinates(vx, vy, vz);
         setPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -642,11 +738,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                                                 expressed in radians per second (rad/s).
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis and
      *                                                 expressed in radians per second (rad/s).
+     * @param receiverClockOffset                      estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift                       estimated receiver clock drift expressed in meters per
+     *                                                 second (m/s).
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final ECEFVelocity velocity,
             final ECEFPosition position,
@@ -656,12 +755,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setEcefVelocity(velocity);
         setEcefPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -682,11 +785,14 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *                                                 expressed in radians per second (rad/s).
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis and
      *                                                 expressed in radians per second (rad/s).
+     * @param receiverClockOffset                      estimated receiver clock offset expressed in meters (m).
+     * @param receiverClockDrift                       estimated receiver clock drift expressed in meters per
+     *                                                 second (m/s).
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final ECEFPositionAndVelocity positionAndVelocity,
             final double accelerationBiasX,
@@ -695,11 +801,15 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final double gyroBiasX,
             final double gyroBiasY,
             final double gyroBiasZ,
+            final double receiverClockOffset,
+            final double receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setPositionAndVelocity(positionAndVelocity);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -719,11 +829,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @param gyroBiasX                                estimated gyroscope bias resolved around x axis.
      * @param gyroBiasY                                estimated gyroscope bias resolved around y axis.
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset                      estimated receiver clock offset.
+     * @param receiverClockDrift                       estimated receiver clock drift.
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final Speed vx, final Speed vy, final Speed vz,
             final Distance x, final Distance y, final Distance z,
@@ -733,12 +845,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setVelocityCoordinates(vx, vy, vz);
         setPositionCoordinates(x, y, z);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -756,11 +872,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @param gyroBiasX                                estimated gyroscope bias resolved around x axis.
      * @param gyroBiasY                                estimated gyroscope bias resolved around y axis.
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset                      estimated receiver clock offset.
+     * @param receiverClockDrift                       estimated receiver clock drift.
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final Speed vx, final Speed vy, final Speed vz,
             final Point3D position,
@@ -770,12 +888,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setVelocityCoordinates(vx, vy, vz);
         setPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -791,11 +913,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @param gyroBiasX                                estimated gyroscope bias resolved around x axis.
      * @param gyroBiasY                                estimated gyroscope bias resolved around y axis.
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset                      estimated receiver clock offset.
+     * @param receiverClockDrift                       estimated receiver clock drift.
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final ECEFVelocity velocity,
             final ECEFPosition position,
@@ -805,12 +929,16 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setEcefVelocity(velocity);
         setEcefPosition(position);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -825,11 +953,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @param gyroBiasX                                estimated gyroscope bias resolved around x axis.
      * @param gyroBiasY                                estimated gyroscope bias resolved around y axis.
      * @param gyroBiasZ                                estimated gyroscope bias resolved around z axis.
+     * @param receiverClockOffset                      estimated receiver clock offset.
+     * @param receiverClockDrift                       estimated receiver clock drift.
      * @param covariance                               estimated Kalman filter error covariance matrix.
      * @throws IllegalArgumentException if provided body to ECEF coordinate transformation matrix is not 3x3
-     *                                  or if provided covariance matrix is not 15x15.
+     *                                  or if provided covariance matrix is not 17x17.
      */
-    public INSLooselyCoupledKalmanState(
+    public INSTightlyCoupledKalmanState(
             final Matrix bodyToEcefCoordinateTransformationMatrix,
             final ECEFPositionAndVelocity positionAndVelocity,
             final Acceleration accelerationBiasX,
@@ -838,11 +968,15 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
             final AngularSpeed gyroBiasX,
             final AngularSpeed gyroBiasY,
             final AngularSpeed gyroBiasZ,
+            final Distance receiverClockOffset,
+            final Speed receiverClockDrift,
             final Matrix covariance) {
         setBodyToEcefCoordinateTransformationMatrix(bodyToEcefCoordinateTransformationMatrix);
         setPositionAndVelocity(positionAndVelocity);
         setAccelerationBiasCoordinates(accelerationBiasX, accelerationBiasY, accelerationBiasZ);
         setGyroBiasCoordinates(gyroBiasX, gyroBiasY, gyroBiasZ);
+        setReceiverClockOffset(receiverClockOffset);
+        setReceiverClockDrift(receiverClockDrift);
         setCovariance(covariance);
     }
 
@@ -851,7 +985,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *
      * @param input input instance to copy data from.
      */
-    public INSLooselyCoupledKalmanState(final INSLooselyCoupledKalmanState input) {
+    public INSTightlyCoupledKalmanState(final INSTightlyCoupledKalmanState input) {
         copyFrom(input);
     }
 
@@ -1186,6 +1320,44 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
     }
 
     /**
+     * Gets estimated receiver clock offset expressed in meters (m).
+     *
+     * @return estimated receiver clock offset expressed in meters (m).
+     */
+    public double getReceiverClockOffset() {
+        return mReceiverClockOffset;
+    }
+
+    /**
+     * Sets estimated receiver clock offset expressed in meters (m).
+     *
+     * @param receiverClockOffset estimated receiver clock offset expressed
+     *                            in meters (m).
+     */
+    public void setReceiverClockOffset(final double receiverClockOffset) {
+        mReceiverClockOffset = receiverClockOffset;
+    }
+
+    /**
+     * Gets estimated receiver clock drift expressed in meters per second (m/s).
+     *
+     * @return estimated receiver clock drift expressed in meters per second (m/s).
+     */
+    public double getReceiverClockDrift() {
+        return mReceiverClockDrift;
+    }
+
+    /**
+     * Sets estimated receiver clock drift expressed in meters per second (m/s).
+     *
+     * @param receiverClockDrift estimated receiver clock drift expressed in
+     *                           meters per second (m/s).
+     */
+    public void setReceiverClockDrift(final double receiverClockDrift) {
+        mReceiverClockDrift = receiverClockDrift;
+    }
+
+    /**
      * Gets Kalman filter error covariance matrix.
      *
      * @param result instance where result data will be copied to.
@@ -1213,7 +1385,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * Sets Kalman filter error covariance matrix.
      *
      * @param covariance Kalman filter error covariance matrix to be set.
-     * @throws IllegalArgumentException if provided covariance matrix is not 15x15.
+     * @throws IllegalArgumentException if provided covariance matrix is not 17x17.
      */
     public void setCovariance(final Matrix covariance) {
         if (covariance.getRows() != NUM_PARAMS ||
@@ -1298,7 +1470,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *
      * @param c body to ECEF coordinate transformation to be set.
      * @throws IllegalArgumentException if provided coordinate transformation is
-     * not null and is not a body to ECEF transformation.
+     *                                  not null and is not a body to ECEF transformation.
      */
     public void setC(final CoordinateTransformation c) {
         if (c == null) {
@@ -1937,11 +2109,71 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
     }
 
     /**
+     * Gets estimated receiver clock offset.
+     *
+     * @param result instance where estimated receiver clock offset will be stored.
+     */
+    public void getReceiverClockOffsetAsDistance(final Distance result) {
+        result.setValue(mReceiverClockOffset);
+        result.setUnit(DistanceUnit.METER);
+    }
+
+    /**
+     * Gets estimated receiver clock offset.
+     *
+     * @return estimated receiver clock offset.
+     */
+    public Distance getReceiverClockOffsetAsDistance() {
+        return new Distance(mReceiverClockOffset, DistanceUnit.METER);
+    }
+
+    /**
+     * Sets estimated receiver clock offset.
+     *
+     * @param receiverClockOffset estimated receiver clock offset.
+     */
+    public void setReceiverClockOffset(final Distance receiverClockOffset) {
+        mReceiverClockOffset = DistanceConverter.convert(
+                receiverClockOffset.getValue().doubleValue(),
+                receiverClockOffset.getUnit(), DistanceUnit.METER);
+    }
+
+    /**
+     * Gets estimated receiver clock drift.
+     *
+     * @param result instance where estimated receiver clock drift will be stored.
+     */
+    public void getReceiverClockDriftAsSpeed(final Speed result) {
+        result.setValue(mReceiverClockDrift);
+        result.setUnit(SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets estimated receiver clock drift.
+     *
+     * @return estimated receiver clock drift.
+     */
+    public Speed getReceiverClockDriftAsSpeed() {
+        return new Speed(mReceiverClockDrift, SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Sets estimated receiver clock drift.
+     *
+     * @param receiverClockDrift estimated receiver clock drift.
+     */
+    public void setReceiverClockDrift(final Speed receiverClockDrift) {
+        mReceiverClockDrift = SpeedConverter.convert(
+                receiverClockDrift.getValue().doubleValue(),
+                receiverClockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
      * Copies this instance data into provided instance.
      *
      * @param output destination instance where data will be copied to.
      */
-    public void copyTo(final INSLooselyCoupledKalmanState output) {
+    public void copyTo(final INSTightlyCoupledKalmanState output) {
         output.copyFrom(this);
     }
 
@@ -1950,7 +2182,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      *
      * @param input instance to copy data from.
      */
-    public void copyFrom(final INSLooselyCoupledKalmanState input) {
+    public void copyFrom(final INSTightlyCoupledKalmanState input) {
         // copy coordinate transformation matrix
         if (input.mBodyToEcefCoordinateTransformationMatrix == null) {
             mBodyToEcefCoordinateTransformationMatrix = null;
@@ -1980,6 +2212,9 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
         mGyroBiasY = input.mGyroBiasY;
         mGyroBiasZ = input.mGyroBiasZ;
 
+        mReceiverClockOffset = input.mReceiverClockOffset;
+        mReceiverClockDrift = input.mReceiverClockDrift;
+
         // copy covariance
         if (input.mCovariance == null) {
             mCovariance = null;
@@ -2003,11 +2238,12 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
         return Objects.hash(mBodyToEcefCoordinateTransformationMatrix,
                 mVx, mVy, mVz, mX, mY, mZ,
                 mAccelerationBiasX, mAccelerationBiasY, mAccelerationBiasZ,
-                mGyroBiasX, mGyroBiasY, mGyroBiasZ, mCovariance);
+                mGyroBiasX, mGyroBiasY, mGyroBiasZ,
+                mReceiverClockOffset, mReceiverClockDrift, mCovariance);
     }
 
     /**
-     * Checks if provided object is a INSLooselyCoupledKalmanState having exactly the same
+     * Checks if provided object is a INSTightlyCoupledKalmanState having exactly the same
      * contents as this instance.
      *
      * @param obj Object to be compared.
@@ -2021,7 +2257,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        INSLooselyCoupledKalmanState other = (INSLooselyCoupledKalmanState) obj;
+        INSTightlyCoupledKalmanState other = (INSTightlyCoupledKalmanState) obj;
         return equals(other);
     }
 
@@ -2031,7 +2267,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @param other instance to be compared.
      * @return true if both instances are considered to be equal, false otherwise.
      */
-    public boolean equals(final INSLooselyCoupledKalmanState other) {
+    public boolean equals(final INSTightlyCoupledKalmanState other) {
         return equals(other, 0.0);
     }
 
@@ -2044,7 +2280,7 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      * @return true if both instances are considered to be equal (up to provided threshold),
      * false otherwise.
      */
-    public boolean equals(final INSLooselyCoupledKalmanState other,
+    public boolean equals(final INSTightlyCoupledKalmanState other,
                           final double threshold) {
         if (other == null) {
             return false;
@@ -2062,6 +2298,8 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
                 && Math.abs(mGyroBiasX - other.mGyroBiasX) <= threshold
                 && Math.abs(mGyroBiasY - other.mGyroBiasY) <= threshold
                 && Math.abs(mGyroBiasZ - other.mGyroBiasZ) <= threshold
+                && Math.abs(mReceiverClockOffset - other.mReceiverClockOffset) <= threshold
+                && Math.abs(mReceiverClockDrift - other.mReceiverClockDrift) <= threshold
                 && other.mBodyToEcefCoordinateTransformationMatrix != null &&
                 other.mBodyToEcefCoordinateTransformationMatrix.equals(mBodyToEcefCoordinateTransformationMatrix,
                         threshold)
@@ -2076,8 +2314,8 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final INSLooselyCoupledKalmanState result =
-                (INSLooselyCoupledKalmanState) super.clone();
+        final INSTightlyCoupledKalmanState result =
+                (INSTightlyCoupledKalmanState) super.clone();
         copyTo(result);
         return result;
     }

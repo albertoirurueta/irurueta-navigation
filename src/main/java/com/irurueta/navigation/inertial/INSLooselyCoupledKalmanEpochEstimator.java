@@ -23,6 +23,9 @@ import com.irurueta.navigation.frames.converters.ECEFtoNEDPositionVelocityConver
 import com.irurueta.navigation.geodesic.Constants;
 import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
 import com.irurueta.navigation.inertial.estimators.ECEFGravityEstimator;
+import com.irurueta.units.Angle;
+import com.irurueta.units.AngleConverter;
+import com.irurueta.units.AngleUnit;
 import com.irurueta.units.Time;
 import com.irurueta.units.TimeConverter;
 import com.irurueta.units.TimeUnit;
@@ -255,7 +258,7 @@ public class INSLooselyCoupledKalmanEpochEstimator {
     }
 
     /**
-     * Estimated the update of Kalman filter state for a single epoch.
+     * Estimates the update of Kalman filter state for a single epoch.
      *
      * @param userPosition        ECEF user position.
      * @param userVelocity        ECEF user velocity.
@@ -272,7 +275,7 @@ public class INSLooselyCoupledKalmanEpochEstimator {
      *                            second (m/s^2).
      * @param previousLatitude    previous latitude solution expressed in radians (rad).
      * @param config              Loosely Coupled Kalman filter configuration.
-     * @return new state of Kalman filter
+     * @return new state of Kalman filter.
      * @throws AlgebraException if there are numerical instabilities.
      */
     public static INSLooselyCoupledKalmanState estimate(
@@ -2465,6 +2468,1055 @@ public class INSLooselyCoupledKalmanEpochEstimator {
     }
 
     /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, bodyKinematics, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, fx, fy, fz, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        GNSS estimated ECEF user position.
+     * @param userVelocity        GNSS estimated ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval,
+                previousState, fx, fy, fz, convertAngle(previousLatitude),
+                config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagaion interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, bodyKinematics, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state of a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state of a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, fx, fy, fz, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state of a single epoch.
+     *
+     * @param userPosition        ECEF user position.
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPosition userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param x                   ECEF x coordinate of user position expressed in
+     *                            meters (m).
+     * @param y                   ECEF y coordinate of user position expressed in
+     *                            meters (m).
+     * @param z                   ECEF z coordinate of user position expressed in
+     *                            meters (m).
+     * @param vx                  ECEF x coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vy                  ECEF y coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param vz                  ECEF z coordinate of user velocity expressed in
+     *                            meters per second (m/s).
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final double x, final double y, final double z,
+            final double vx, final double vy, final double vz,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(x, y, z, vx, vy, vz, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, bodyKinematics, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution expressed in radians (rad).
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, fx, fy, fz, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, bodyKinematics, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimtes the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(userPosition, userVelocity, propagationInterval,
+                previousState, fx, fy, fz, convertAngle(previousLatitude),
+                config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param userPosition        ECEF user position expressed in meters (m).
+     * @param userVelocity        ECEF user velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final Point3D userPosition,
+            final ECEFVelocity userVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(userPosition, userVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(positionAndVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(positionAndVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config,
+                result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(positionAndVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval expressed in seconds (s).
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final double propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(positionAndVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(positionAndVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param bodyKinematics      body kinematics containing measured specific force
+     *                            resolved along body frame axes.
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final BodyKinematics bodyKinematics,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(positionAndVelocity, propagationInterval, previousState,
+                bodyKinematics, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @return new state of Kalman filter.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static INSLooselyCoupledKalmanState estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config) throws AlgebraException {
+        return estimate(positionAndVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config);
+    }
+
+    /**
+     * Estimates the update of Kalman filter state for a single epoch.
+     *
+     * @param positionAndVelocity ECEF user position and velocity.
+     * @param propagationInterval propagation interval.
+     * @param previousState       previous Kalman filter state.
+     * @param fx                  measured specific force resolved along body frame
+     *                            x-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fy                  measured specific force resolved along body frame
+     *                            y-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param fz                  measured specific force resolved along body frame
+     *                            z-axis and expressed in meters per squared
+     *                            second (m/s^2).
+     * @param previousLatitude    previous latitude solution.
+     * @param config              Loosely Coupled Kalman filter configuration.
+     * @param result              instance where new state of Kalman filter will be
+     *                            stored.
+     * @throws AlgebraException if there are numerical instabilities.
+     */
+    public static void estimate(
+            final ECEFPositionAndVelocity positionAndVelocity,
+            final Time propagationInterval,
+            final INSLooselyCoupledKalmanState previousState,
+            final double fx, final double fy, final double fz,
+            final Angle previousLatitude,
+            final INSLooselyCoupledKalmanConfig config,
+            final INSLooselyCoupledKalmanState result) throws AlgebraException {
+        estimate(positionAndVelocity, propagationInterval, previousState,
+                fx, fy, fz, convertAngle(previousLatitude), config, result);
+    }
+
+    /**
      * Converts time instance into a value expressed in seconds.
      *
      * @param time time instance to be converted.
@@ -2473,5 +3525,16 @@ public class INSLooselyCoupledKalmanEpochEstimator {
     private static double convertTime(final Time time) {
         return TimeConverter.convert(time.getValue().doubleValue(),
                 time.getUnit(), TimeUnit.SECOND);
+    }
+
+    /**
+     * Converts angle instance into a value expressed in radians.
+     *
+     * @param angle angle instance to be converted.
+     * @return angle value expressed in radians.
+     */
+    private static double convertAngle(final Angle angle) {
+        return AngleConverter.convert(angle.getValue().doubleValue(),
+                angle.getUnit(), AngleUnit.RADIANS);
     }
 }

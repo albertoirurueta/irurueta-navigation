@@ -39,7 +39,7 @@ public class INSTightlyCoupledKalmanInitializer {
      * @param result instance where resulting initialized error covariance matrix
      *               will be stored. Matrix must be 17x17, otherwise it will be resized.
      */
-    public static void initialize(final INSTightlyCoupledKalmanConfig config,
+    public static void initialize(final INSTightlyCoupledKalmanInitializerConfig config,
                                   final Matrix result) {
         if (result.getRows() != NUM_PARAMS || result.getColumns() != NUM_PARAMS) {
             try {
@@ -92,7 +92,7 @@ public class INSTightlyCoupledKalmanInitializer {
      * @param config Kalman filter configuration.
      * @return initialized error covariance matrix.
      */
-    public static Matrix initialize(final INSTightlyCoupledKalmanConfig config) {
+    public static Matrix initialize(final INSTightlyCoupledKalmanInitializerConfig config) {
         Matrix result = null;
         try {
             result = new Matrix(NUM_PARAMS, NUM_PARAMS);

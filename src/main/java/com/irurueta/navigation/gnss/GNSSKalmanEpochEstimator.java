@@ -295,9 +295,13 @@ public class GNSSKalmanEpochEstimator {
         int j = 0;
         for (final GNSSMeasurement measurement : measurements) {
             // Predict approx range
-            final double deltaX = measurement.getX() - xEstPropagated.getElementAtIndex(0);
-            final double deltaY = measurement.getY() - xEstPropagated.getElementAtIndex(1);
-            final double deltaZ = measurement.getZ() - xEstPropagated.getElementAtIndex(2);
+            final double measX = measurement.getX();
+            final double measY = measurement.getY();
+            final double measZ = measurement.getZ();
+
+            final double deltaX = measX - xEstPropagated.getElementAtIndex(0);
+            final double deltaY = measY - xEstPropagated.getElementAtIndex(1);
+            final double deltaZ = measZ - xEstPropagated.getElementAtIndex(2);
             final double approxRange = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
 
             // Calculate frame rotation during signal transit time using (8.36)
@@ -306,12 +310,12 @@ public class GNSSKalmanEpochEstimator {
             cei.setElementAt(1, 0, -ceiValue);
 
             // Predict pseudo-range using (9.165)
-            satellitePosition.setElementAtIndex(0, measurement.getX());
-            satellitePosition.setElementAtIndex(1, measurement.getY());
-            satellitePosition.setElementAtIndex(2, measurement.getZ());
+            satellitePosition.setElementAtIndex(0, measX);
+            satellitePosition.setElementAtIndex(1, measY);
+            satellitePosition.setElementAtIndex(2, measZ);
 
             cei.multiply(satellitePosition, deltaR);
-            for (int i = 0; i < deltaR.getRows(); i++) {
+            for (int i = 0; i < CoordinateTransformation.ROWS; i++) {
                 deltaR.setElementAtIndex(i, deltaR.getElementAtIndex(i)
                         - xEstPropagated.getElementAtIndex(i));
             }
@@ -321,7 +325,7 @@ public class GNSSKalmanEpochEstimator {
                     + xEstPropagated.getElementAtIndex(6));
 
             // Predict line of sight
-            for (int i = 0; i < deltaR.getRows(); i++) {
+            for (int i = 0; i < CoordinateTransformation.ROWS; i++) {
                 uAseT.setElementAt(j, i, deltaR.getElementAtIndex(i) / range);
             }
 
@@ -341,7 +345,7 @@ public class GNSSKalmanEpochEstimator {
 
             uAseT.getSubmatrix(j, 0, j, 2, tmp7);
 
-            double rangeRate = Utils.dotProduct(tmp7, tmp5);
+            final double rangeRate = Utils.dotProduct(tmp7, tmp5);
 
             predMeas.setElementAt(j, 1,
                     rangeRate + xEstPropagated.getElementAtIndex(7));
@@ -350,16 +354,16 @@ public class GNSSKalmanEpochEstimator {
         }
 
         // 5. Set-up measurement matrix using (9.163)
-        final Matrix hMatrix = new Matrix(2 * numberOfMeasurements, GNSSEstimation.NUM_PARAMETERS);
+        final Matrix h = new Matrix(2 * numberOfMeasurements, GNSSEstimation.NUM_PARAMETERS);
         for (int j1 = 0, j2 = numberOfMeasurements; j1 < numberOfMeasurements; j1++, j2++) {
             for (int i1 = 0, i2 = 3; i1 < CoordinateTransformation.ROWS; i1++, i2++) {
                 final double value = -uAseT.getElementAt(j1, i1);
 
-                hMatrix.setElementAt(j1, i1, value);
-                hMatrix.setElementAt(j2, i2, value);
+                h.setElementAt(j1, i1, value);
+                h.setElementAt(j2, i2, value);
             }
-            hMatrix.setElementAt(j1, 6, 1.0);
-            hMatrix.setElementAt(j2, 7, 1.0);
+            h.setElementAt(j1, 6, 1.0);
+            h.setElementAt(j2, 7, 1.0);
         }
 
         // 6. Set-up measurement noise covariance matrix assuming all measurements are independent
@@ -368,20 +372,20 @@ public class GNSSKalmanEpochEstimator {
         final double pseudoRangeSD2 = pseudoRangeSD * pseudoRangeSD;
         final double rangeRateSD = config.getRangeRateSD();
         final double rangeRateSD2 = rangeRateSD * rangeRateSD;
-        final Matrix rMatrix = new Matrix(2 * numberOfMeasurements, 2 * numberOfMeasurements);
+        final Matrix r = new Matrix(2 * numberOfMeasurements, 2 * numberOfMeasurements);
         for (int i1 = 0, i2 = numberOfMeasurements; i1 < numberOfMeasurements; i1++, i2++) {
-            rMatrix.setElementAt(i1, i1, pseudoRangeSD2);
-            rMatrix.setElementAt(i2, i2, rangeRateSD2);
+            r.setElementAt(i1, i1, pseudoRangeSD2);
+            r.setElementAt(i2, i2, rangeRateSD2);
         }
 
         // 7. Calculate Kalman gain using (3.21)
-        final Matrix hMatrixTransposed = hMatrix.transposeAndReturnNew();
-        final Matrix tmp8 = hMatrix.multiplyAndReturnNew(
-                pMatrixPropagated.multiplyAndReturnNew(hMatrixTransposed));
-        tmp8.add(rMatrix);
+        final Matrix hTransposed = h.transposeAndReturnNew();
+        final Matrix tmp8 = h.multiplyAndReturnNew(
+                pMatrixPropagated.multiplyAndReturnNew(hTransposed));
+        tmp8.add(r);
         final Matrix tmp9 = Utils.inverse(tmp8);
-        final Matrix kMatrix = pMatrixPropagated.multiplyAndReturnNew(hMatrixTransposed);
-        kMatrix.multiply(tmp9);
+        final Matrix k = pMatrixPropagated.multiplyAndReturnNew(hTransposed);
+        k.multiply(tmp9);
 
         // 8. Formulate measurement innovations using (3.88)
         final Matrix deltaZ = new Matrix(2 * numberOfMeasurements, 1);
@@ -397,7 +401,7 @@ public class GNSSKalmanEpochEstimator {
         }
 
         // 9. Update state estimates using (3.24)
-        xEstPropagated.add(kMatrix.multiplyAndReturnNew(deltaZ));
+        xEstPropagated.add(k.multiplyAndReturnNew(deltaZ));
 
         // xEstPropagated now contains updated state
         updatedEstimation.fromMatrix(xEstPropagated);
@@ -409,8 +413,8 @@ public class GNSSKalmanEpochEstimator {
                     GNSSEstimation.NUM_PARAMETERS);
         }
         Matrix.identity(updatedCovariance);
-        kMatrix.multiply(hMatrix);
-        updatedCovariance.subtract(kMatrix);
+        k.multiply(h);
+        updatedCovariance.subtract(k);
         updatedCovariance.multiply(pMatrixPropagated);
     }
 
