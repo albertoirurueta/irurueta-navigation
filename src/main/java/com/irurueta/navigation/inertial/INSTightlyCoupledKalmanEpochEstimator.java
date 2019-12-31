@@ -290,6 +290,7 @@ public class INSTightlyCoupledKalmanEpochEstimator {
 
             // Calculate frame rotation during signal transit time using (8.36)
             final double ceiValue = EARTH_ROTATION_RATE * approxRange / SPEED_OF_LIGHT;
+            Matrix.identity(cei);
             cei.setElementAt(0, 1, ceiValue);
             cei.setElementAt(1, 0, -ceiValue);
 
@@ -340,11 +341,11 @@ public class INSTightlyCoupledKalmanEpochEstimator {
         // 5. Set-up measurement matrix using (14.126)
         final Matrix h = new Matrix(2 * numberOfMeasurements, INSTightlyCoupledKalmanState.NUM_PARAMS);
         for (int j1 = 0, j2 = numberOfMeasurements; j1 < numberOfMeasurements; j1++, j2++) {
-            for (int i1 = 0, i2 = 3; i1 < CoordinateTransformation.ROWS; i1++, i2++) {
+            for (int i1 = 0, i2 = 6, i3 = 3; i1 < CoordinateTransformation.ROWS; i1++, i2++, i3++) {
                 final double value = uAseT.getElementAt(j1, i1);
 
-                h.setElementAt(j1, i1, value);
-                h.setElementAt(j2, i2, value);
+                h.setElementAt(j1, i2, value);
+                h.setElementAt(j2, i3, value);
             }
             h.setElementAt(j1, 15, 1.0);
             h.setElementAt(j2, 16, 1.0);

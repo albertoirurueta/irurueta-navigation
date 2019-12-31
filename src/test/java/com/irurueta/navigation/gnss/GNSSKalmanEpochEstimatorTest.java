@@ -404,10 +404,10 @@ public class GNSSKalmanEpochEstimatorTest {
 
         // 1. Determine transition matrix using (9.147) and (9.150)
         final Matrix phiMatrix = Matrix.identity(8, 8);
-        phiMatrix.setElementAt(0, 3, GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS);
-        phiMatrix.setElementAt(1, 4, GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS);
-        phiMatrix.setElementAt(2, 5, GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS);
-        phiMatrix.setElementAt(6, 7, GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS);
+        phiMatrix.setElementAt(0, 3, TIME_INTERVAL_SECONDS);
+        phiMatrix.setElementAt(1, 4, TIME_INTERVAL_SECONDS);
+        phiMatrix.setElementAt(2, 5, TIME_INTERVAL_SECONDS);
+        phiMatrix.setElementAt(6, 7, TIME_INTERVAL_SECONDS);
 
         // 2. Determine system noise covariance matrix using (9.152)
         final Matrix qMatrix = new Matrix(8, 8);
@@ -415,31 +415,31 @@ public class GNSSKalmanEpochEstimatorTest {
                 2, 2,
                 Matrix.identity(3, 3)
                         .multiplyByScalarAndReturnNew(config.getAccelerationPSD()
-                                * Math.pow(GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS, 3.0) / 3.0));
+                                * Math.pow(TIME_INTERVAL_SECONDS, 3.0) / 3.0));
         qMatrix.setSubmatrix(0, 3,
                 2, 5,
                 Matrix.identity(3, 3)
                         .multiplyByScalarAndReturnNew(config.getAccelerationPSD()
-                                * Math.pow(GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS, 2.0) / 2.0));
+                                * Math.pow(TIME_INTERVAL_SECONDS, 2.0) / 2.0));
         qMatrix.setSubmatrix(3, 0,
                 5, 2,
                 Matrix.identity(3, 3)
                         .multiplyByScalarAndReturnNew(config.getAccelerationPSD()
-                                * Math.pow(GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS, 2.0) / 2.0));
+                                * Math.pow(TIME_INTERVAL_SECONDS, 2.0) / 2.0));
         qMatrix.setSubmatrix(3, 3,
                 5, 5,
                 Matrix.identity(3, 3)
                         .multiplyByScalarAndReturnNew(config.getAccelerationPSD()
-                                * GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                                * TIME_INTERVAL_SECONDS));
         qMatrix.setElementAt(6, 6, config.getClockFrequencyPSD()
-                * Math.pow(GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS, 3.0) / 3.0
-                + config.getClockPhasePSD() * GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS);
+                * Math.pow(TIME_INTERVAL_SECONDS, 3.0) / 3.0
+                + config.getClockPhasePSD() * TIME_INTERVAL_SECONDS);
         qMatrix.setElementAt(6, 7, config.getClockFrequencyPSD()
-                * Math.pow(GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS, 2.0) / 2.0);
+                * Math.pow(TIME_INTERVAL_SECONDS, 2.0) / 2.0);
         qMatrix.setElementAt(7, 6, config.getClockFrequencyPSD()
-                * Math.pow(GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS, 2.0) / 2.0);
+                * Math.pow(TIME_INTERVAL_SECONDS, 2.0) / 2.0);
         qMatrix.setElementAt(7, 7, config.getClockFrequencyPSD()
-                * GNSSKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS);
+                * TIME_INTERVAL_SECONDS);
 
         // 3. Propagate state estimates using (3.14)
         final Matrix xEstOld = previousEstimation.asMatrix();

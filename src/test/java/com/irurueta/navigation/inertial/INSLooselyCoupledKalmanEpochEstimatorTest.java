@@ -714,27 +714,27 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
                 phiMatrix.getSubmatrix(0, 0,
                         2, 2).subtractAndReturnNew(
                                 omegaIe.multiplyByScalarAndReturnNew(
-                                        INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS)));
+                                        TIME_INTERVAL_SECONDS)));
 
         final Matrix estCbeOld = previousState.getBodyToEcefCoordinateTransformationMatrix();
         phiMatrix.setSubmatrix(0, 12,
                 2, 14,
                 estCbeOld.multiplyByScalarAndReturnNew(
-                        INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                        TIME_INTERVAL_SECONDS));
 
         final Matrix measFibb = Matrix.newFromArray(new double[]{fx, fy, fz});
         phiMatrix.setSubmatrix(3, 0,
                 5, 2,
                 Utils.skewMatrix(estCbeOld.multiplyAndReturnNew(measFibb))
                         .multiplyByScalarAndReturnNew(
-                                -INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                                -TIME_INTERVAL_SECONDS));
 
         phiMatrix.setSubmatrix(3, 3,
                 5, 5,
                 phiMatrix.getSubmatrix(3, 3,
                         5, 5).subtractAndReturnNew(
                                 omegaIe.multiplyByScalarAndReturnNew(
-                                        2.0 * INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS)));
+                                        2.0 * TIME_INTERVAL_SECONDS)));
 
         final double sinPrevLat = Math.sin(previousLatitude);
         final double cosPrevLat = Math.cos(previousLatitude);
@@ -757,7 +757,7 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
         final Matrix estRebeOld = Matrix.newFromArray(new double[]{prevX, prevY, prevZ});
 
         final Matrix gScaled = g.multiplyByScalarAndReturnNew(
-                -2.0 * INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS / geocentricRadius);
+                -2.0 * TIME_INTERVAL_SECONDS / geocentricRadius);
         final Matrix estRebeOldTrans = estRebeOld.transposeAndReturnNew();
         final double previousPositionNorm = Math.sqrt(prevX * prevX +
                 prevY * prevY + prevZ * prevZ);
@@ -770,12 +770,12 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
         phiMatrix.setSubmatrix(3, 9,
                 5, 11,
                 estCbeOld.multiplyByScalarAndReturnNew(
-                        INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                        TIME_INTERVAL_SECONDS));
 
         phiMatrix.setSubmatrix(6, 3,
                 8, 5,
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
-                        INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                        TIME_INTERVAL_SECONDS));
 
         // 2. Determine approximate system noise covariance matrix using (14.82)
         final Matrix qPrimeMatrix = new Matrix(15, 15);
@@ -783,22 +783,22 @@ public class INSLooselyCoupledKalmanEpochEstimatorTest {
                 2, 2,
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         config.getGyroNoisePSD()
-                                * INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                                * TIME_INTERVAL_SECONDS));
         qPrimeMatrix.setSubmatrix(3, 3,
                 5, 5,
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         config.getAccelerometerNoisePSD()
-                                * INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                                * TIME_INTERVAL_SECONDS));
         qPrimeMatrix.setSubmatrix(9, 9,
                 11, 11,
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         config.getAccelerometerBiasPSD()
-                                * INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                                * TIME_INTERVAL_SECONDS));
         qPrimeMatrix.setSubmatrix(12, 12,
                 14, 14,
                 Matrix.identity(3, 3).multiplyByScalarAndReturnNew(
                         config.getGyroBiasPSD()
-                                * INSLooselyCoupledKalmanEpochEstimatorTest.TIME_INTERVAL_SECONDS));
+                                * TIME_INTERVAL_SECONDS));
 
         // 3. Propagate state estimates using (3.14) noting that all states are zero
         final Matrix xEstPropagated = new Matrix(15, 1);
