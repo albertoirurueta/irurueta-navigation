@@ -24,6 +24,7 @@ import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
+import com.irurueta.navigation.gnss.GNSSEstimation;
 import com.irurueta.units.*;
 
 import java.io.Serializable;
@@ -2166,6 +2167,46 @@ public class INSTightlyCoupledKalmanState implements Serializable, Cloneable {
         mReceiverClockDrift = SpeedConverter.convert(
                 receiverClockDrift.getValue().doubleValue(),
                 receiverClockDrift.getUnit(), SpeedUnit.METERS_PER_SECOND);
+    }
+
+    /**
+     * Gets GNSS estimation from data contained into this instance.
+     *
+     * @param result instance where GNSS estimation data will be stored.
+     */
+    public void getGNSSEstimation(final GNSSEstimation result) {
+        result.setPositionCoordinates(mX, mY, mZ);
+        result.setVelocityCoordinates(mVx, mVy, mVz);
+        result.setClockOffset(mReceiverClockOffset);
+        result.setClockDrift(mReceiverClockDrift);
+    }
+
+    /**
+     * Gets GNSS estimation from data contained into this instance.
+     *
+     * @return a new GNSS estimation instance.
+     */
+    public GNSSEstimation getGNSSEstimation() {
+        return new GNSSEstimation(mX, mY, mZ, mVx, mVy, mVz, mReceiverClockOffset,
+                mReceiverClockDrift);
+    }
+
+    /**
+     * Sets GNSS estimation data into this instance.
+     *
+     * @param gnssEstimation GNSS estimation data to be set.
+     */
+    public void setGNSSEstimation(final GNSSEstimation gnssEstimation) {
+        mX = gnssEstimation.getX();
+        mY = gnssEstimation.getY();
+        mZ = gnssEstimation.getZ();
+
+        mVx = gnssEstimation.getVx();
+        mVy = gnssEstimation.getVy();
+        mVz = gnssEstimation.getVz();
+
+        mReceiverClockOffset = gnssEstimation.getClockOffset();
+        mReceiverClockDrift = gnssEstimation.getClockDrift();
     }
 
     /**

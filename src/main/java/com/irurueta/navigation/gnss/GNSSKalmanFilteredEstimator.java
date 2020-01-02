@@ -24,6 +24,7 @@ import com.irurueta.units.TimeUnit;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Calculates position, velocity, clock offset and clock drift using an
@@ -47,7 +48,8 @@ public class GNSSKalmanFilteredEstimator {
     private GNSSKalmanFilteredEstimatorListener mListener;
 
     /**
-     * Minimum epoch interval between consecutive propagations or measurements.
+     * Minimum epoch interval expressed in seconds (s) between consecutive
+     * propagations or measurements.
      * Attempting to propagate results using Kalman filter or updating measurements when
      * intervals are lass than this value, will be ignored.
      */
@@ -105,8 +107,8 @@ public class GNSSKalmanFilteredEstimator {
     /**
      * Constructor.
      *
-     * @param epochInterval minimum epoch interval between consecutive propagations or
-     *                      measurements.
+     * @param epochInterval minimum epoch interval expressed in seconds (s) between
+     *                      consecutive propagations or measurements.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public GNSSKalmanFilteredEstimator(final double epochInterval) {
@@ -132,8 +134,8 @@ public class GNSSKalmanFilteredEstimator {
      *
      * @param config        GNSS Kalman filter configuration parameters (usually
      *                      obtained through calibration).
-     * @param epochInterval minimum epoch interval between consecutive propagations or
-     *                      measurements.
+     * @param epochInterval minimum epoch interval expressed in seconds (s) between
+     *                      consecutive propagations or measurements.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config,
@@ -159,8 +161,8 @@ public class GNSSKalmanFilteredEstimator {
     /**
      * Constructor.
      *
-     * @param epochInterval minimum epoch interval between consecutive propagations or
-     *                      measurements.
+     * @param epochInterval minimum epoch interval expressed in seconds (s) between
+     *                      consecutive propagations or measurements.
      * @param listener      listener to notify events raised by this instance.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
@@ -176,13 +178,72 @@ public class GNSSKalmanFilteredEstimator {
      *
      * @param config        GNSS Kalman filter configuration parameters (usually obtained
      *                      through calibration).
-     * @param epochInterval minimum epoch interval between consecutive propagations or
-     *                      measurements.
+     * @param epochInterval minimum epoch interval expressed in seconds (s) between
+     *                      consecutive propagations or measurements.
      * @param listener      listener to notify events raised by this instance.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
     public GNSSKalmanFilteredEstimator(
             final GNSSKalmanConfig config, final double epochInterval,
+            final GNSSKalmanFilteredEstimatorListener listener) {
+        this(config, epochInterval);
+        mListener = listener;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param epochInterval minimum epoch interval between consecutive
+     *                      propagations or measurements.
+     * @throws IllegalArgumentException if provided epoch interval is negative.
+     */
+    public GNSSKalmanFilteredEstimator(final Time epochInterval) {
+        this(TimeConverter.convert(epochInterval.getValue().doubleValue(),
+                epochInterval.getUnit(), TimeUnit.SECOND));
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param config        GNSS Kalman filter configuration parameters (usually
+     *                      obtained through calibration).
+     * @param epochInterval minimum epoch interval between consecutive propagations
+     *                      or measurements.
+     * @throws IllegalArgumentException if provided epoch interval is negative.
+     */
+    public GNSSKalmanFilteredEstimator(final GNSSKalmanConfig config,
+                                       final Time epochInterval) {
+        this(config, TimeConverter.convert(epochInterval.getValue().doubleValue(),
+                epochInterval.getUnit(), TimeUnit.SECOND));
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param epochInterval minimum epoch interval between consecutive propagations
+     *                      or measurements.
+     * @param listener      listener to notify events raised by this instance.
+     * @throws IllegalArgumentException if provided epoch interval is negative.
+     */
+    public GNSSKalmanFilteredEstimator(
+            final Time epochInterval,
+            final GNSSKalmanFilteredEstimatorListener listener) {
+        this(epochInterval);
+        mListener = listener;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param config        GNSS Kalman filter configuration parameters (usually
+     *                      obtained through calibration).
+     * @param epochInterval minimum epoch interval between consecutive propagations
+     *                      or measurements.
+     * @param listener      listener to notify events raised by this instance.
+     * @throws IllegalArgumentException if provided epoch interval is negative.
+     */
+    public GNSSKalmanFilteredEstimator(
+            final GNSSKalmanConfig config, final Time epochInterval,
             final GNSSKalmanFilteredEstimatorListener listener) {
         this(config, epochInterval);
         mListener = listener;
@@ -213,8 +274,8 @@ public class GNSSKalmanFilteredEstimator {
     }
 
     /**
-     * Gets minimum epoch interval between consecutive propagations or measurements
-     * expressed in seconds.
+     * Gets minimum epoch interval expressed in seconds (s) between consecutive
+     * propagations or measurements expressed in seconds.
      * Attempting to propagate results using Kalman filter or updating measurements
      * when intervals are less than this value, will be ignored.
      *
@@ -226,13 +287,13 @@ public class GNSSKalmanFilteredEstimator {
     }
 
     /**
-     * Sets minimum epoch interval between consecutive propagations or measurements
-     * expressed in seconds.
+     * Sets minimum epoch interval expressed in seconds (s) between consecutive
+     * propagations or measurements expressed in seconds.
      * Attempting to propagate results using Kalman filter or updating measurements
      * when intervals are less than this value, will be ignored.
      *
-     * @param epochInterval minimum epoch interval between consecutive propagations
-     *                      or measurements.
+     * @param epochInterval minimum epoch interval expressed in seconds (s) between
+     *                      consecutive propagations or measurements.
      * @throws LockedException          if this estimator is already running.
      * @throws IllegalArgumentException if provided epoch interval is negative.
      */
@@ -336,8 +397,15 @@ public class GNSSKalmanFilteredEstimator {
      * @return last updated GNSS measurements of a collection of satellites.
      */
     public Collection<GNSSMeasurement> getMeasurements() {
-        return mMeasurements != null ?
-                new ArrayList<>(mMeasurements) : null;
+        if (mMeasurements == null) {
+            return null;
+        }
+
+        final List<GNSSMeasurement> result = new ArrayList<>();
+        for (GNSSMeasurement measurement : mMeasurements) {
+            result.add(new GNSSMeasurement(measurement));
+        }
+        return result;
     }
 
     /**
@@ -380,7 +448,7 @@ public class GNSSKalmanFilteredEstimator {
     }
 
     /**
-     * Gets current Kalman filter state containing current GNSS estimatino along with
+     * Gets current Kalman filter state containing current GNSS estimation along with
      * Kalman filter covariance error matrix.
      * This method does not update result instance if no state is available.
      *
@@ -460,7 +528,7 @@ public class GNSSKalmanFilteredEstimator {
     /**
      * Updates GNSS measurements of this estimator when new satellite measurements
      * are available.
-     * Call to this method will be ignored if interval between provided timestamp
+     * Calls to this method will be ignored if interval between provided timestamp
      * and last timestamp when Kalman filter was updated is less than epoch interval.
      *
      * @param measurements GNSS measurements to be updated.
@@ -475,7 +543,8 @@ public class GNSSKalmanFilteredEstimator {
             final Collection<GNSSMeasurement> measurements, final Time timestamp)
             throws LockedException, NotReadyException, GNSSException {
         return updateMeasurements(measurements, TimeConverter.convert(
-                timestamp.getValue().doubleValue(), timestamp.getUnit(), TimeUnit.SECOND));
+                timestamp.getValue().doubleValue(), timestamp.getUnit(),
+                TimeUnit.SECOND));
     }
 
     /**
@@ -530,12 +599,11 @@ public class GNSSKalmanFilteredEstimator {
                 mListener.onUpdateEnd(this);
             }
 
-            mRunning = false;
-
-            propagate(timestamp);
         } finally {
             mRunning = false;
         }
+
+        propagate(timestamp);
 
         return true;
     }

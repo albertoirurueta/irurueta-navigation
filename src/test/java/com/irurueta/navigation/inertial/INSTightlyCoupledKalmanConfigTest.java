@@ -97,6 +97,22 @@ public class INSTightlyCoupledKalmanConfigTest {
         assertEquals(config.getClockPhasePSD(), clockPhasePSD, 0.0);
         assertEquals(config.getPseudoRangeSD(), pseudoRangeSD, 0.0);
         assertEquals(config.getRangeRateSD(), rangeRateSD, 0.0);
+
+
+        // test copy constructor
+        final INSTightlyCoupledKalmanConfig config2 =
+                new INSTightlyCoupledKalmanConfig(config);
+
+        // check default values
+        assertEquals(config2.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config2.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config2.getAccelerometerBiasPSD(), accelerometerBiasPSD, 0.0);
+        assertEquals(config2.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config2.getClockFrequencyPSD(), clockFrequencyPSD, 0.0);
+        assertEquals(config2.getClockPhasePSD(), clockPhasePSD, 0.0);
+        assertEquals(config2.getPseudoRangeSD(), pseudoRangeSD, 0.0);
+        assertEquals(config2.getRangeRateSD(), rangeRateSD, 0.0);
     }
 
     @Test

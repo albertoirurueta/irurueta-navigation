@@ -25,6 +25,7 @@ import com.irurueta.navigation.frames.ECEFFrame;
 import com.irurueta.navigation.frames.FrameType;
 import com.irurueta.navigation.frames.InvalidSourceAndDestinationFrameTypeException;
 import com.irurueta.navigation.gnss.ECEFPositionAndVelocity;
+import com.irurueta.navigation.gnss.GNSSEstimation;
 import com.irurueta.statistics.UniformRandomizer;
 import com.irurueta.units.Acceleration;
 import com.irurueta.units.AccelerationUnit;
@@ -2145,6 +2146,50 @@ public class INSTightlyCoupledKalmanStateTest {
 
         assertEquals(clockDrift2, clockDrift3);
         assertEquals(clockDrift2, clockDrift4);
+    }
+
+    @Test
+    public void testGetSetGNSSEstimation() {
+        final INSTightlyCoupledKalmanState state = new INSTightlyCoupledKalmanState();
+
+        // check default value
+        final GNSSEstimation estimation1 = state.getGNSSEstimation();
+
+        assertEquals(estimation1.getX(), 0.0, 0.0);
+        assertEquals(estimation1.getY(), 0.0, 0.0);
+        assertEquals(estimation1.getZ(), 0.0, 0.0);
+
+        assertEquals(estimation1.getVx(), 0.0, 0.0);
+        assertEquals(estimation1.getVy(), 0.0, 0.0);
+        assertEquals(estimation1.getVz(), 0.0, 0.0);
+
+        assertEquals(estimation1.getClockOffset(), 0.0, 0.0);
+        assertEquals(estimation1.getClockDrift(), 0.0, 0.0);
+
+        // set new values
+        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final double x = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double y = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double z = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final double vx = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double vy = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double vz = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final double receiverClockOffset = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double receiverClockDrift = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+
+        final GNSSEstimation estimation2 = new GNSSEstimation(x, y, z, vx, vy, vz,
+                receiverClockOffset, receiverClockDrift);
+        state.setGNSSEstimation(estimation2);
+
+        // check
+        final GNSSEstimation estimation3 = new GNSSEstimation();
+        state.getGNSSEstimation(estimation3);
+        final GNSSEstimation estimation4 = state.getGNSSEstimation();
+
+        assertEquals(estimation2, estimation3);
+        assertEquals(estimation2, estimation4);
     }
 
     @Test

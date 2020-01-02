@@ -152,6 +152,15 @@ public class INSTightlyCoupledKalmanConfig implements Serializable, Cloneable {
     }
 
     /**
+     * Copy constructor.
+     *
+     * @param input input instance to copy data from.
+     */
+    public INSTightlyCoupledKalmanConfig(final INSTightlyCoupledKalmanConfig input) {
+        copyFrom(input);
+    }
+
+    /**
      * Gets gyro noise PSD (Power Spectral Density) expressed in squared radians per
      * second (rad^2/s).
      *

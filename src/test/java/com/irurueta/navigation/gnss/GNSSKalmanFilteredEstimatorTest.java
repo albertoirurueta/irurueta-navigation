@@ -289,6 +289,106 @@ public class GNSSKalmanFilteredEstimatorTest implements GNSSKalmanFilteredEstima
         assertNull(estimator.getLastStateTimestampAsTime());
         assertFalse(estimator.isRunning());
         assertFalse(estimator.isPropagateReady());
+
+
+        // test constructor with epoch interval time
+        epochIntervalTime = new Time(epochInterval, TimeUnit.SECOND);
+        estimator = new GNSSKalmanFilteredEstimator(epochIntervalTime);
+
+        // check default values
+        assertNull(estimator.getListener());
+        assertEquals(estimator.getEpochInterval(), epochInterval, 0.0);
+        estimator.getEpochIntervalAsTime(epochIntervalTime);
+        assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
+        assertEquals(estimator.getEpochIntervalAsTime(),
+                new Time(epochInterval, TimeUnit.SECOND));
+        assertFalse(estimator.getConfig(config2));
+        assertNull(estimator.getConfig());
+        assertNull(estimator.getMeasurements());
+        assertNull(estimator.getEstimation());
+        assertFalse(estimator.getEstimation(null));
+        assertNull(estimator.getState());
+        assertFalse(estimator.getState(null));
+        assertNull(estimator.getLastStateTimestamp());
+        assertFalse(estimator.getLastStateTimestampAsTime(lastStateTimestamp));
+        assertNull(estimator.getLastStateTimestampAsTime());
+        assertFalse(estimator.isRunning());
+        assertFalse(estimator.isPropagateReady());
+
+
+        // test constructor with config en epoch interval time
+        estimator = new GNSSKalmanFilteredEstimator(config, epochIntervalTime);
+
+        // check default values
+        assertNull(estimator.getListener());
+        assertEquals(estimator.getEpochInterval(), epochInterval, 0.0);
+        estimator.getEpochIntervalAsTime(epochIntervalTime);
+        assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
+        assertEquals(estimator.getEpochIntervalAsTime(),
+                new Time(epochInterval, TimeUnit.SECOND));
+        assertTrue(estimator.getConfig(config2));
+        assertEquals(config, config2);
+        assertEquals(config, estimator.getConfig());
+        assertNull(estimator.getMeasurements());
+        assertNull(estimator.getEstimation());
+        assertFalse(estimator.getEstimation(null));
+        assertNull(estimator.getState());
+        assertFalse(estimator.getState(null));
+        assertNull(estimator.getLastStateTimestamp());
+        assertFalse(estimator.getLastStateTimestampAsTime(lastStateTimestamp));
+        assertNull(estimator.getLastStateTimestampAsTime());
+        assertFalse(estimator.isRunning());
+        assertFalse(estimator.isPropagateReady());
+
+
+        // test cons constructor with epoch interval time and listener
+        estimator = new GNSSKalmanFilteredEstimator(epochIntervalTime, this);
+
+        // check default values
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getEpochInterval(), epochInterval, 0.0);
+        estimator.getEpochIntervalAsTime(epochIntervalTime);
+        assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
+        assertEquals(estimator.getEpochIntervalAsTime(),
+                new Time(epochInterval, TimeUnit.SECOND));
+        assertFalse(estimator.getConfig(config2));
+        assertNull(estimator.getConfig());
+        assertNull(estimator.getMeasurements());
+        assertNull(estimator.getEstimation());
+        assertFalse(estimator.getEstimation(null));
+        assertNull(estimator.getState());
+        assertFalse(estimator.getState(null));
+        assertNull(estimator.getLastStateTimestamp());
+        assertFalse(estimator.getLastStateTimestampAsTime(lastStateTimestamp));
+        assertNull(estimator.getLastStateTimestampAsTime());
+        assertFalse(estimator.isRunning());
+        assertFalse(estimator.isPropagateReady());
+
+
+        // test constructor with config, epoch interval time and listener
+        estimator = new GNSSKalmanFilteredEstimator(config, epochIntervalTime,
+                this);
+
+        // check default values
+        assertSame(estimator.getListener(), this);
+        assertEquals(estimator.getEpochInterval(), epochInterval, 0.0);
+        estimator.getEpochIntervalAsTime(epochIntervalTime);
+        assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
+        assertEquals(estimator.getEpochIntervalAsTime(),
+                new Time(epochInterval, TimeUnit.SECOND));
+        assertTrue(estimator.getConfig(config2));
+        assertEquals(config, config2);
+        assertEquals(config, estimator.getConfig());
+        assertNull(estimator.getMeasurements());
+        assertNull(estimator.getEstimation());
+        assertFalse(estimator.getEstimation(null));
+        assertNull(estimator.getState());
+        assertFalse(estimator.getState(null));
+        assertNull(estimator.getLastStateTimestamp());
+        assertFalse(estimator.getLastStateTimestampAsTime(lastStateTimestamp));
+        assertNull(estimator.getLastStateTimestampAsTime());
+        assertFalse(estimator.isRunning());
+        assertFalse(estimator.isPropagateReady());
     }
 
     @Test
@@ -1013,31 +1113,31 @@ public class GNSSKalmanFilteredEstimatorTest implements GNSSKalmanFilteredEstima
     }
 
     @Override
-    public void onUpdateStart(GNSSKalmanFilteredEstimator estimator) {
+    public void onUpdateStart(final GNSSKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mUpdateStart++;
     }
 
     @Override
-    public void onUpdateEnd(GNSSKalmanFilteredEstimator estimator) {
+    public void onUpdateEnd(final GNSSKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mUpdateEnd++;
     }
 
     @Override
-    public void onPropagateStart(GNSSKalmanFilteredEstimator estimator) {
+    public void onPropagateStart(final GNSSKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mPropagateStart++;
     }
 
     @Override
-    public void onPropagateEnd(GNSSKalmanFilteredEstimator estimator) {
+    public void onPropagateEnd(final GNSSKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mPropagateEnd++;
     }
 
     @Override
-    public void onReset(GNSSKalmanFilteredEstimator estimator) {
+    public void onReset(final GNSSKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mReset++;
     }
@@ -1072,7 +1172,7 @@ public class GNSSKalmanFilteredEstimatorTest implements GNSSKalmanFilteredEstima
             estimator.updateMeasurements(null, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
         try {
@@ -1080,21 +1180,21 @@ public class GNSSKalmanFilteredEstimatorTest implements GNSSKalmanFilteredEstima
                     new Time(0.0, TimeUnit.SECOND));
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
         try {
             estimator.propagate(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
         try {
             estimator.propagate(new Time(0.0, TimeUnit.SECOND));
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
         try {

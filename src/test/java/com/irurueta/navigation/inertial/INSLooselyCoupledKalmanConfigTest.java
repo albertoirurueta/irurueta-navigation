@@ -91,6 +91,21 @@ public class INSLooselyCoupledKalmanConfigTest {
         assertEquals(config.getGyroBiasPSD(), gyroBiasPSD, 0.0);
         assertEquals(config.getPositionNoiseSD(), positionNoiseSD, 0.0);
         assertEquals(config.getVelocityNoiseSD(), velocityNoiseSD, 0.0);
+
+
+        // test copy constructor
+        final INSLooselyCoupledKalmanConfig config2 =
+                new INSLooselyCoupledKalmanConfig(config);
+
+        // check default values
+        assertEquals(config2.getGyroNoisePSD(), gyroNoisePSD, 0.0);
+        assertEquals(config2.getAccelerometerNoisePSD(), accelerometerNoisePSD,
+                0.0);
+        assertEquals(config2.getAccelerometerBiasPSD(), accelerometerBiasPSD,
+                0.0);
+        assertEquals(config2.getGyroBiasPSD(), gyroBiasPSD, 0.0);
+        assertEquals(config2.getPositionNoiseSD(), positionNoiseSD, 0.0);
+        assertEquals(config2.getVelocityNoiseSD(), velocityNoiseSD, 0.0);
     }
 
     @Test
