@@ -126,6 +126,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -162,6 +164,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -197,6 +201,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -239,6 +245,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -274,6 +282,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -319,6 +329,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -352,6 +364,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -397,6 +411,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -440,6 +456,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -475,6 +493,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -519,6 +539,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -564,6 +586,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -621,6 +645,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -670,6 +696,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -718,6 +746,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -773,6 +803,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -823,6 +855,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -881,6 +915,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -929,6 +965,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -987,6 +1025,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1044,6 +1084,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1103,6 +1145,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1160,6 +1204,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1186,7 +1232,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         try {
             estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, c, this);
-            fail("IllegalArgumentException expected bu tnot thrown");
+            fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
@@ -1219,6 +1265,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1276,6 +1324,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1313,6 +1363,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1348,6 +1400,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1393,6 +1447,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1430,6 +1486,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1477,6 +1535,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1512,6 +1572,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1559,6 +1621,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1604,6 +1668,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1651,6 +1717,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1696,6 +1764,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1716,6 +1786,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(estimator);
+
 
         // test constructor 36
         estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
@@ -1742,6 +1813,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1791,6 +1864,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1842,6 +1917,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1892,6 +1969,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -1951,6 +2030,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2002,6 +2083,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2062,6 +2145,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2112,6 +2197,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2172,6 +2259,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2230,6 +2319,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2290,6 +2381,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2348,6 +2441,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2408,6 +2503,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getMeasurements());
         assertNull(estimator.getKinematics());
         assertFalse(estimator.getKinematics(null));
+        assertNull(estimator.getCorrectedKinematics());
+        assertFalse(estimator.getCorrectedKinematics(null));
         assertNull(estimator.getEstimation());
         assertFalse(estimator.getEstimation(null));
         assertNull(estimator.getState());
@@ -2735,6 +2832,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(timeSeconds, TimeUnit.SECOND));
             assertNull(estimator.getKinematics());
+            assertNull(estimator.getCorrectedKinematics());
             assertEquals(estimator.getCoordinateTransformation(),
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
@@ -2922,6 +3020,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             BodyKinematics kinematics2 = new BodyKinematics();
             assertTrue(estimator.getKinematics(kinematics2));
             assertEquals(kinematics, kinematics2);
+            assertNotNull(estimator.getCorrectedKinematics());
+            assertTrue(estimator.getCorrectedKinematics(new BodyKinematics()));
             assertEquals(estimator.getCoordinateTransformation(),
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
@@ -2957,6 +3057,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(2.0 * timeSeconds, TimeUnit.SECOND));
             assertEquals(kinematics, estimator.getKinematics());
+            assertNotNull(estimator.getCorrectedKinematics());
             assertEquals(estimator.getCoordinateTransformation(),
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
@@ -3140,6 +3241,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(null));
             assertEquals(estimator.getCoordinateTransformation(), c);
             CoordinateTransformation c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
@@ -3163,6 +3266,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(timeSeconds, TimeUnit.SECOND));
             assertNull(estimator.getKinematics());
+            assertNull(estimator.getCorrectedKinematics());
             assertEquals(estimator.getCoordinateTransformation(), c);
             c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
@@ -3340,6 +3444,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             BodyKinematics kinematics2 = new BodyKinematics();
             assertTrue(estimator.getKinematics(kinematics2));
             assertEquals(kinematics, kinematics2);
+            assertNotNull(estimator.getCorrectedKinematics());
+            assertTrue(estimator.getCorrectedKinematics(new BodyKinematics()));
             assertEquals(estimator.getCoordinateTransformation(), c);
             CoordinateTransformation c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
@@ -3372,6 +3478,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(2.0 * timeSeconds, TimeUnit.SECOND));
             assertEquals(kinematics, estimator.getKinematics());
+            assertNotNull(estimator.getCorrectedKinematics());
             assertEquals(estimator.getCoordinateTransformation(), c);
             c2 = new CoordinateTransformation(
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME,
@@ -3555,6 +3662,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(null));
             assertNull(estimator.getCoordinateTransformation());
             assertFalse(estimator.getCoordinateTransformation(null));
 
@@ -3577,6 +3686,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(2.0 * timeSeconds, TimeUnit.SECOND));
             assertEquals(kinematics, estimator.getKinematics());
+            assertNotNull(estimator.getCorrectedKinematics());
             assertEquals(estimator.getCoordinateTransformation(),
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
@@ -3766,6 +3876,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(null));
             assertNull(estimator.getCoordinateTransformation());
             assertFalse(estimator.getCoordinateTransformation(null));
 
@@ -3797,6 +3909,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(2.0 * timeSeconds, TimeUnit.SECOND));
             assertEquals(kinematics, estimator.getKinematics());
+            assertNotNull(estimator.getCorrectedKinematics());
 
             final GNSSEstimation estimation1 = estimator.getEstimation();
             assertNotNull(estimation1);
@@ -3977,6 +4090,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(new BodyKinematics()));
             assertNull(estimator.getCoordinateTransformation());
             assertFalse(estimator.getCoordinateTransformation(null));
 
@@ -4008,6 +4123,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(2.0 * timeSeconds, TimeUnit.SECOND));
             assertEquals(kinematics, estimator.getKinematics());
+            assertNotNull(estimator.getCorrectedKinematics());
 
             final GNSSEstimation estimation1 = estimator.getEstimation();
             assertNotNull(estimation1);
@@ -4188,6 +4304,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(null));
             assertNull(estimator.getCoordinateTransformation());
             assertFalse(estimator.getCoordinateTransformation(null));
 
@@ -4406,6 +4524,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(null));
             assertNull(estimator.getCoordinateTransformation());
             assertFalse(estimator.getCoordinateTransformation(null));
 
@@ -4655,6 +4775,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.getState(null));
             assertNull(estimator.getKinematics());
             assertFalse(estimator.getKinematics(null));
+            assertNull(estimator.getCorrectedKinematics());
+            assertFalse(estimator.getCorrectedKinematics(null));
             assertNull(estimator.getCoordinateTransformation());
             assertFalse(estimator.getCoordinateTransformation(null));
 
@@ -4674,6 +4796,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertTrue(estimator.getLastStateTimestampAsTime(timestamp));
             assertEquals(timestamp, new Time(timeSeconds, TimeUnit.SECOND));
             assertNull(estimator.getKinematics());
+            assertNull(estimator.getCorrectedKinematics());
             assertEquals(estimator.getCoordinateTransformation(),
                     new CoordinateTransformation(FrameType.BODY_FRAME,
                             FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME));
@@ -4857,7 +4980,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             estimator.updateMeasurements(null, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
-        } catch (Exception e) {
+        } catch (final Exception e) {
             fail("LockedException expected but not thrown");
         }
         try {
