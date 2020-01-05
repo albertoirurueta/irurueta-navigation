@@ -1467,9 +1467,11 @@ public class INSLooselyCoupledKalmanFilteredEstimator {
                 mListener.onUpdateStart(this);
             }
 
-            correctKinematics(kinematics);
-            ECEFInertialNavigator.navigateECEF(propagationInterval, mFrame,
-                    mCorrectedKinematics, mFrame);
+            if (kinematics != null) {
+                correctKinematics(kinematics);
+                ECEFInertialNavigator.navigateECEF(propagationInterval, mFrame,
+                        mCorrectedKinematics, mFrame);
+            }
 
             mKinematics = kinematics;
 
@@ -1659,12 +1661,12 @@ public class INSLooselyCoupledKalmanFilteredEstimator {
         final double gyroBiasY;
         final double gyroBiasZ;
         if (mState != null) {
-            accelBiasX = mState.getAccelerationBiasX();
-            accelBiasY = mState.getAccelerationBiasY();
-            accelBiasZ = mState.getAccelerationBiasZ();
-            gyroBiasX = mState.getGyroBiasX();
-            gyroBiasY = mState.getGyroBiasY();
-            gyroBiasZ = mState.getGyroBiasZ();
+            accelBiasX = getValueOrZero(mState.getAccelerationBiasX());
+            accelBiasY = getValueOrZero(mState.getAccelerationBiasY());
+            accelBiasZ = getValueOrZero(mState.getAccelerationBiasZ());
+            gyroBiasX = getValueOrZero(mState.getGyroBiasX());
+            gyroBiasY = getValueOrZero(mState.getGyroBiasY());
+            gyroBiasZ = getValueOrZero(mState.getGyroBiasZ());
         } else {
             accelBiasX = 0.0;
             accelBiasY = 0.0;
@@ -1687,5 +1689,19 @@ public class INSLooselyCoupledKalmanFilteredEstimator {
                 angularRateX - gyroBiasX,
                 angularRateY - gyroBiasY,
                 angularRateZ - gyroBiasZ);
+    }
+
+    /**
+     * Returns provided value if not infinity and not NaN.
+     *
+     * @param value value to be returned.
+     * @return value or 0.0.
+     */
+    private double getValueOrZero(final double value) {
+        if (Double.isNaN(value) || Double.isInfinite(value)) {
+            return 0.0;
+        } else {
+            return value;
+        }
     }
 }

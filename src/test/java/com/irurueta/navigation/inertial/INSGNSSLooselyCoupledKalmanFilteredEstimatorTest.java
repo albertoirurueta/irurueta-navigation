@@ -43,9 +43,10 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
-public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
-        INSGNSSTightlyCoupledKalmanFilteredEstimatorListener {
+public class INSGNSSLooselyCoupledKalmanFilteredEstimatorTest implements
+        INSGNSSLooselyCoupledKalmanFilteredEstimatorListener {
 
     private static final double MIN_VALUE = 1e-4;
     private static final double MAX_VALUE = 1e-3;
@@ -106,8 +107,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             throws InvalidSourceAndDestinationFrameTypeException {
 
         // test constructor 1
-        INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         // check default values
         assertNull(estimator.getListener());
@@ -141,8 +142,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 2
-        final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig);
+        final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig);
 
         // check default values
         assertNull(estimator.getListener());
@@ -152,8 +153,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        INSTightlyCoupledKalmanConfig kalmanConfig2 =
-                new INSTightlyCoupledKalmanConfig();
+        INSLooselyCoupledKalmanConfig kalmanConfig2 =
+                new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
@@ -182,7 +183,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double epochInterval = randomizer.nextDouble(
                 MIN_EPOCH_INTERVAL, MAX_EPOCH_INTERVAL);
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval);
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval);
 
         // check default values
         assertNull(estimator.getListener());
@@ -217,7 +218,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -226,7 +227,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 4
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(this);
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(this);
 
         // check default values
         assertSame(estimator.getListener(), this);
@@ -260,7 +261,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 5
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval);
 
         // check default values
@@ -271,7 +272,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
@@ -298,7 +299,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -307,7 +308,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 6
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 this);
 
         // check default values
@@ -318,7 +319,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
@@ -344,7 +345,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 7
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                 this);
 
         // check default values
@@ -380,7 +381,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -389,7 +390,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 8
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, this);
 
         // check default values
@@ -400,7 +401,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
@@ -427,7 +428,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -437,7 +438,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // test constructor 9
         epochIntervalTime = new Time(epochInterval, TimeUnit.SECOND);
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochIntervalTime);
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochIntervalTime);
 
         // check default values
         assertNull(estimator.getListener());
@@ -471,7 +472,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 10
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 kalmanConfig, epochIntervalTime);
 
         // check default values
@@ -482,7 +483,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
@@ -510,7 +511,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         final Time wrongEpochIntervalTime = new Time(-epochInterval, TimeUnit.SECOND);
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     wrongEpochIntervalTime);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -519,7 +520,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 11
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochIntervalTime, this);
 
         // check default values
@@ -555,7 +556,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -564,7 +565,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 12
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 kalmanConfig, epochIntervalTime, this);
 
         // check default values
@@ -575,7 +576,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
@@ -602,7 +603,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     wrongEpochIntervalTime, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -622,7 +623,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 roll, pitch, yaw, FrameType.BODY_FRAME,
                 FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(c);
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(c);
 
         // check default values
         assertNull(estimator.getListener());
@@ -661,7 +662,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -671,7 +672,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 14
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 kalmanConfig, c);
 
         // check default values
@@ -682,7 +683,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertEquals(estimator.getCoordinateTransformation(), c);
@@ -712,7 +713,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -722,7 +723,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 15
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochInterval, c);
 
         // check default values
@@ -762,7 +763,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -771,7 +772,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -780,7 +781,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 16
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(c, this);
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(c, this);
 
         // check default values
         assertSame(estimator.getListener(), this);
@@ -819,7 +820,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -829,7 +830,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 17
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, c);
 
         // check default values
@@ -840,7 +841,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -871,7 +872,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochInterval,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -881,7 +882,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -890,7 +891,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 18
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 c, this);
 
         // check default values
@@ -901,7 +902,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertEquals(estimator.getCoordinateTransformation(), c);
@@ -931,7 +932,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -941,7 +942,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 19
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                 c, this);
 
         // check default values
@@ -981,7 +982,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -990,7 +991,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(-epochInterval,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(-epochInterval,
                     c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -999,7 +1000,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 20
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, c, this);
 
         // check default values
@@ -1010,7 +1011,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -1041,7 +1042,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochInterval,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -1051,7 +1052,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1060,7 +1061,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 21
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochIntervalTime, c);
 
         // check default values
@@ -1100,7 +1101,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     epochIntervalTime,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -1110,7 +1111,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1119,7 +1120,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 22
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochIntervalTime, c);
 
         // check default values
@@ -1130,7 +1131,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -1161,7 +1162,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochIntervalTime,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -1171,7 +1172,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, wrongEpochIntervalTime, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1180,7 +1181,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 23
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochIntervalTime,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochIntervalTime,
                 c, this);
 
         // check default values
@@ -1220,7 +1221,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     epochIntervalTime,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -1230,7 +1231,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1239,7 +1240,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 24
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochIntervalTime, c, this);
 
         // check default values
@@ -1250,7 +1251,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -1281,7 +1282,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochIntervalTime,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -1291,7 +1292,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, wrongEpochIntervalTime, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1300,9 +1301,9 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 25
-        final INSTightlyCoupledKalmanInitializerConfig initialConfig =
+        final INSLooselyCoupledKalmanInitializerConfig initialConfig =
                 generateInitConfig();
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(initialConfig);
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(initialConfig);
 
         // check default values
         assertNull(estimator.getListener());
@@ -1316,8 +1317,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        INSTightlyCoupledKalmanInitializerConfig initialConfig2 =
-                new INSTightlyCoupledKalmanInitializerConfig();
+        INSLooselyCoupledKalmanInitializerConfig initialConfig2 =
+                new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1339,7 +1340,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 26
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 initialConfig);
 
         // check default values
@@ -1350,13 +1351,13 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1378,7 +1379,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 27
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                 initialConfig);
 
         // check default values
@@ -1393,7 +1394,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1416,7 +1417,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval, initialConfig);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1425,7 +1426,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 28
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(initialConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(initialConfig,
                 this);
 
         // check default values
@@ -1440,7 +1441,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1462,7 +1463,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 29
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, initialConfig);
 
         // check default values
@@ -1473,13 +1474,13 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1502,7 +1503,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, initialConfig);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1511,7 +1512,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 30
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 initialConfig, this);
 
         // check default values
@@ -1522,13 +1523,13 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1550,7 +1551,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 31
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                 initialConfig, this);
 
         // check default values
@@ -1565,7 +1566,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1588,7 +1589,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval, initialConfig, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1597,7 +1598,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 32
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, initialConfig, this);
 
         // check default values
@@ -1608,13 +1609,13 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1637,7 +1638,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, initialConfig, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1646,7 +1647,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 33
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochIntervalTime, initialConfig);
 
         // check default values
@@ -1661,7 +1662,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1684,7 +1685,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, initialConfig);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1693,7 +1694,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 34
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochIntervalTime, initialConfig);
 
         // check default values
@@ -1704,13 +1705,13 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1733,7 +1734,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     wrongEpochIntervalTime, initialConfig);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1742,7 +1743,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 35
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochIntervalTime, initialConfig, this);
 
         // check default values
@@ -1757,7 +1758,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertNull(estimator.getConfig());
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1780,7 +1781,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, initialConfig, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1789,7 +1790,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 36
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochIntervalTime, initialConfig, this);
 
         // check default values
@@ -1800,13 +1801,13 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertNull(estimator.getCoordinateTransformation());
         assertFalse(estimator.getCoordinateTransformation(null));
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertSame(estimator.getInitialConfig(), initialConfig);
@@ -1829,7 +1830,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force IllegalArgumentException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     wrongEpochIntervalTime, initialConfig, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -1838,7 +1839,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 37
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(initialConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(initialConfig,
                 c);
 
         // check default values
@@ -1857,7 +1858,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertEquals(estimator.getInitialConfig(), initialConfig);
@@ -1880,7 +1881,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(initialConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -1890,7 +1891,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 38
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 initialConfig, c);
 
         // check default values
@@ -1901,7 +1902,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertEquals(estimator.getCoordinateTransformation(), c);
@@ -1910,7 +1911,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertEquals(estimator.getInitialConfig(), initialConfig);
@@ -1933,7 +1934,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -1944,7 +1945,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 39
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                 initialConfig, c);
 
         // check default values
@@ -1963,7 +1964,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -1985,7 +1986,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                     initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -1995,7 +1996,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval, initialConfig, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2004,7 +2005,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 40
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(initialConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(initialConfig,
                 c, this);
 
         // check default values
@@ -2023,7 +2024,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertEquals(estimator.getInitialConfig(), initialConfig);
@@ -2046,7 +2047,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(initialConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -2056,7 +2057,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 41
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, initialConfig, c);
 
         // check default values
@@ -2067,7 +2068,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -2077,7 +2078,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2099,7 +2100,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochInterval, initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -2109,7 +2110,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, initialConfig, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2118,7 +2119,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 42
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 initialConfig, c, this);
 
         // check default values
@@ -2129,7 +2130,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(0.0, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(0.0, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(estimator.getConfig(), kalmanConfig);
         assertEquals(estimator.getCoordinateTransformation(), c);
@@ -2138,7 +2139,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(initialConfig, initialConfig2);
         assertEquals(estimator.getInitialConfig(), initialConfig);
@@ -2161,7 +2162,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -2172,7 +2173,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 43
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                 initialConfig, c, this);
 
         // check default values
@@ -2191,7 +2192,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2213,7 +2214,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(epochInterval,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(epochInterval,
                     initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -2223,7 +2224,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     -epochInterval, initialConfig, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2232,7 +2233,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 44
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochInterval, initialConfig, c, this);
 
         // check default values
@@ -2243,7 +2244,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -2253,7 +2254,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2275,7 +2276,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochInterval, initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -2285,7 +2286,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     -epochInterval, initialConfig, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2294,7 +2295,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 45
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochIntervalTime, initialConfig, c);
 
         // check default values
@@ -2313,7 +2314,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2335,7 +2336,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     epochIntervalTime, initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -2345,7 +2346,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, initialConfig, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2354,7 +2355,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 46
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochIntervalTime, initialConfig, c);
 
         // check default values
@@ -2365,7 +2366,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -2375,7 +2376,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2397,7 +2398,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochIntervalTime, initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME));
@@ -2407,7 +2408,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     wrongEpochIntervalTime, initialConfig, c);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2416,7 +2417,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 47
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                 epochIntervalTime, initialConfig, c, this);
 
         // check default values
@@ -2435,7 +2436,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2457,7 +2458,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     epochIntervalTime, initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -2467,7 +2468,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     wrongEpochIntervalTime, initialConfig, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2476,7 +2477,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
 
         // test constructor 48
-        estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                 epochIntervalTime, initialConfig, c, this);
 
         // check default values
@@ -2487,7 +2488,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         assertEquals(epochIntervalTime, new Time(epochInterval, TimeUnit.SECOND));
         assertEquals(estimator.getEpochIntervalAsTime(),
                 new Time(epochInterval, TimeUnit.SECOND));
-        kalmanConfig2 = new INSTightlyCoupledKalmanConfig();
+        kalmanConfig2 = new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(kalmanConfig2));
         assertEquals(kalmanConfig, kalmanConfig2);
         assertEquals(kalmanConfig, estimator.getConfig());
@@ -2497,7 +2498,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 FrameType.LOCAL_NAVIGATION_FRAME);
         assertTrue(estimator.getCoordinateTransformation(c2));
         assertEquals(c, c2);
-        initialConfig2 = new INSTightlyCoupledKalmanInitializerConfig();
+        initialConfig2 = new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(initialConfig2));
         assertEquals(estimator.getInitialConfig(), initialConfig);
         assertNull(estimator.getMeasurements());
@@ -2519,7 +2520,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         // Force InvalidSourceAndDestinationFrameTypeException
         estimator = null;
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(
                     kalmanConfig, epochIntervalTime, initialConfig,
                     new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), this);
@@ -2529,7 +2530,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
         // Force IllegalArgumentException
         try {
-            estimator = new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            estimator = new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                     wrongEpochIntervalTime, initialConfig, c, this);
             fail("IllegalArgumentException expected but not thrown");
         } catch (final IllegalArgumentException ignore) {
@@ -2539,8 +2540,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
     @Test
     public void testGetSetListener() throws LockedException {
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         // check default value
         assertNull(estimator.getListener());
@@ -2554,8 +2555,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
     @Test
     public void testGetSetEpochInterval() throws LockedException {
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         // check default value
         assertEquals(estimator.getEpochInterval(), 0.0, 0.0);
@@ -2576,8 +2577,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
     @Test
     public void testGetSetEpochIntervalAsTime() throws LockedException {
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         final Time epochInterval1 = estimator.getEpochIntervalAsTime();
 
@@ -2599,22 +2600,22 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
     @Test
     public void testGetSetConfig() throws LockedException {
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         // check default value
         assertNull(estimator.getConfig());
         assertFalse(estimator.getConfig(null));
 
         // set new value
-        final INSTightlyCoupledKalmanConfig config1 = generateKalmanConfig();
+        final INSLooselyCoupledKalmanConfig config1 = generateKalmanConfig();
         estimator.setConfig(config1);
 
         // check
-        final INSTightlyCoupledKalmanConfig config2 =
-                new INSTightlyCoupledKalmanConfig();
+        final INSLooselyCoupledKalmanConfig config2 =
+                new INSLooselyCoupledKalmanConfig();
         assertTrue(estimator.getConfig(config2));
-        final INSTightlyCoupledKalmanConfig config3 = estimator.getConfig();
+        final INSLooselyCoupledKalmanConfig config3 = estimator.getConfig();
 
         assertEquals(config1, config2);
         assertEquals(config1, config3);
@@ -2623,8 +2624,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
     @Test
     public void testGetSetCoordinateTransformation()
             throws InvalidSourceAndDestinationFrameTypeException, LockedException {
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         // check default value
         assertNull(estimator.getCoordinateTransformation());
@@ -2665,23 +2666,23 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
     @Test
     public void testGetSetInitialConfig() throws LockedException {
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator();
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator();
 
         // check default value
         assertNull(estimator.getInitialConfig());
         assertFalse(estimator.getInitialConfig(null));
 
         // set new value
-        final INSTightlyCoupledKalmanInitializerConfig config1 =
+        final INSLooselyCoupledKalmanInitializerConfig config1 =
                 generateInitConfig();
         estimator.setInitialConfig(config1);
 
         // check
-        final INSTightlyCoupledKalmanInitializerConfig config2 =
-                new INSTightlyCoupledKalmanInitializerConfig();
+        final INSLooselyCoupledKalmanInitializerConfig config2 =
+                new INSLooselyCoupledKalmanInitializerConfig();
         assertTrue(estimator.getInitialConfig(config2));
-        final INSTightlyCoupledKalmanInitializerConfig config3 =
+        final INSLooselyCoupledKalmanInitializerConfig config3 =
                 estimator.getInitialConfig();
 
         assertEquals(config1, config2);
@@ -2691,17 +2692,17 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
     @Test
     public void testIsUpdateMeasurementsReady() {
         //noinspection ConstantConditions
-        assertFalse(INSGNSSTightlyCoupledKalmanFilteredEstimator
+        assertFalse(INSGNSSLooselyCoupledKalmanFilteredEstimator
                 .isUpdateMeasurementsReady(null));
 
         final List<GNSSMeasurement> measurements = new ArrayList<>();
-        assertFalse(INSGNSSTightlyCoupledKalmanFilteredEstimator
+        assertFalse(INSGNSSLooselyCoupledKalmanFilteredEstimator
                 .isUpdateMeasurementsReady(measurements));
 
         for (int i = 0; i < GNSSLeastSquaresPositionAndVelocityEstimator.MIN_MEASUREMENTS; i++) {
             measurements.add(new GNSSMeasurement());
         }
-        assertTrue(INSGNSSTightlyCoupledKalmanFilteredEstimator
+        assertTrue(INSGNSSLooselyCoupledKalmanFilteredEstimator
                 .isUpdateMeasurementsReady(measurements));
     }
 
@@ -2792,11 +2793,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -2851,16 +2852,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -2896,7 +2895,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.isRunning());
             assertEquals(estimator.getLastStateTimestamp(), timeSeconds, 0.0);
             final GNSSEstimation estimation3 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state3 = estimator.getState();
+            final INSLooselyCoupledKalmanState state3 = estimator.getState();
 
             assertEquals(estimation1, estimation3);
             assertEquals(state1, state3);
@@ -3002,11 +3001,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             final BodyKinematics kinematics = new BodyKinematics();
@@ -3076,16 +3075,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -3220,11 +3217,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                     roll, pitch, yaw, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, c, this);
 
             reset();
@@ -3282,16 +3279,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -3426,11 +3421,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                     roll, pitch, yaw, FrameType.BODY_FRAME,
                     FrameType.EARTH_CENTERED_EARTH_FIXED_FRAME);
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, c, this);
 
             final BodyKinematics kinematics = new BodyKinematics();
@@ -3494,16 +3489,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -3543,11 +3536,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
     public void testUpdateMeasurementsWhenNotReadyThrowsNotReadyException()
             throws LockedException, NotReadyException, INSGNSSException {
 
-        final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-        final INSTightlyCoupledKalmanInitializerConfig initConfig =
+        final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+        final INSLooselyCoupledKalmanInitializerConfig initConfig =
                 generateInitConfig();
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                         initConfig);
 
         estimator.updateMeasurements(Collections.<GNSSMeasurement>emptyList(),
@@ -3641,11 +3634,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -3705,16 +3698,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -3749,7 +3740,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.isRunning());
             assertEquals(estimator.getLastStateTimestamp(), 2.0 * timeSeconds, 0.0);
             final GNSSEstimation estimation3 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state3 = estimator.getState();
+            final INSLooselyCoupledKalmanState state3 = estimator.getState();
 
             assertEquals(estimation1, estimation3);
             assertEquals(state1, state3);
@@ -3855,11 +3846,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -3919,16 +3910,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -3963,7 +3952,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.isRunning());
             assertEquals(estimator.getLastStateTimestamp(), 2.0 * timeSeconds, 0.0);
             final GNSSEstimation estimation3 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state3 = estimator.getState();
+            final INSLooselyCoupledKalmanState state3 = estimator.getState();
 
             assertEquals(estimation1, estimation3);
             assertEquals(state1, state3);
@@ -4069,11 +4058,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -4133,16 +4122,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -4177,7 +4164,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.isRunning());
             assertEquals(estimator.getLastStateTimestamp(), 2.0 * timeSeconds, 0.0);
             final GNSSEstimation estimation3 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state3 = estimator.getState();
+            final INSLooselyCoupledKalmanState state3 = estimator.getState();
 
             assertEquals(estimation1, estimation3);
             assertEquals(state1, state3);
@@ -4283,11 +4270,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -4352,16 +4339,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -4397,7 +4382,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertFalse(estimator.isRunning());
             assertEquals(estimator.getLastStateTimestamp(), 2.0 * timeSeconds, 0.0);
             final GNSSEstimation estimation3 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state3 = estimator.getState();
+            final INSLooselyCoupledKalmanState state3 = estimator.getState();
 
             assertEquals(estimation1, estimation3);
             assertEquals(state1, state3);
@@ -4503,11 +4488,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -4546,16 +4531,14 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
             assertEquals(estimation1, estimation2);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
 
-            final INSTightlyCoupledKalmanState state2 =
-                    new INSTightlyCoupledKalmanState();
+            final INSLooselyCoupledKalmanState state2 =
+                    new INSLooselyCoupledKalmanState();
             assertTrue(estimator.getState(state2));
 
             assertEquals(state1, state2);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition1 = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity1 = estimation1.getEcefVelocity();
@@ -4591,9 +4574,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertEquals(estimator.getLastStateTimestamp(), 2.0 * timeSeconds,
                     0.0);
             final GNSSEstimation estimation3 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state3 = estimator.getState();
-
-            assertEquals(estimation3, state3.getGNSSEstimation());
+            final INSLooselyCoupledKalmanState state3 = estimator.getState();
 
             final ECEFPosition estimatedPosition3 = estimation3.getEcefPosition();
             final ECEFVelocity estimatedVelocity3 = estimation3.getEcefVelocity();
@@ -4636,7 +4617,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertEquals(estimator.getLastStateTimestamp(), 2.0 * timeSeconds,
                     0.0);
             final GNSSEstimation estimation4 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state4 = estimator.getState();
+            final INSLooselyCoupledKalmanState state4 = estimator.getState();
 
             assertEquals(estimation3, estimation4);
             assertEquals(state3, state4);
@@ -4657,12 +4638,12 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
 
     @Test
     public void testPropagateWhenNotReadyReturnsFalse() throws LockedException, INSGNSSException {
-        final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-        final INSTightlyCoupledKalmanInitializerConfig initConfig =
+        final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+        final INSLooselyCoupledKalmanInitializerConfig initConfig =
                 generateInitConfig();
 
-        final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+        final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                         initConfig);
 
         assertFalse(estimator.propagate(0.0));
@@ -4754,11 +4735,11 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 continue;
             }
 
-            final INSTightlyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
-            final INSTightlyCoupledKalmanInitializerConfig initConfig =
+            final INSLooselyCoupledKalmanConfig kalmanConfig = generateKalmanConfig();
+            final INSLooselyCoupledKalmanInitializerConfig initConfig =
                     generateInitConfig();
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator =
-                    new INSGNSSTightlyCoupledKalmanFilteredEstimator(kalmanConfig,
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator =
+                    new INSGNSSLooselyCoupledKalmanFilteredEstimator(kalmanConfig,
                             initConfig, this);
 
             reset();
@@ -4810,10 +4791,8 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             final GNSSEstimation estimation1 = estimator.getEstimation();
             assertNotNull(estimation1);
 
-            final INSTightlyCoupledKalmanState state1 = estimator.getState();
+            final INSLooselyCoupledKalmanState state1 = estimator.getState();
             assertNotNull(state1);
-
-            assertEquals(estimation1, state1.getGNSSEstimation());
 
             final ECEFPosition estimatedPosition = estimation1.getEcefPosition();
             final ECEFVelocity estimatedVelocity = estimation1.getEcefVelocity();
@@ -4863,7 +4842,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
             assertEquals(estimator.getMeasurements(), measurements);
             assertEquals(estimator.getLastStateTimestamp(), timeSeconds, 0.0);
             final GNSSEstimation estimation2 = estimator.getEstimation();
-            final INSTightlyCoupledKalmanState state2 = estimator.getState();
+            final INSLooselyCoupledKalmanState state2 = estimator.getState();
 
             assertEquals(estimation1, estimation2);
             assertEquals(state1, state2);
@@ -4880,53 +4859,52 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         }
 
         assertTrue(numValid > 0);
-
     }
 
     @Override
     public void onUpdateGNSSMeasurementsStart(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mUpdateGNSSMeasurementsStart++;
     }
 
     @Override
     public void onUpdateGNSSMeasurementsEnd(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mUpdateGNSSMeasurementsEnd++;
     }
 
     @Override
     public void onUpdateBodyKinematicsStart(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mUpdateBodyKinematicsStart++;
     }
 
     @Override
     public void onUpdateBodyKinematicsEnd(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mUpdateBodyKinematicsEnd++;
     }
 
     @Override
     public void onPropagateStart(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mPropagateStart++;
     }
 
     @Override
     public void onPropagateEnd(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mPropagateEnd++;
     }
 
     @Override
-    public void onReset(final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+    public void onReset(final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         checkLocked(estimator);
         mReset++;
     }
@@ -4942,7 +4920,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
     }
 
     private void checkLocked(
-            final INSGNSSTightlyCoupledKalmanFilteredEstimator estimator) {
+            final INSGNSSLooselyCoupledKalmanFilteredEstimator estimator) {
         assertTrue(estimator.isRunning());
         try {
             estimator.setListener(null);
@@ -5027,7 +5005,7 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
         }
     }
 
-    private static INSTightlyCoupledKalmanInitializerConfig generateInitConfig() {
+    private static INSLooselyCoupledKalmanInitializerConfig generateInitConfig() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double initialAttitudeUncertainty = randomizer.nextDouble(
                 MIN_VALUE, MAX_VALUE);
@@ -5039,31 +5017,24 @@ public class INSGNSSTightlyCoupledKalmanFilteredEstimatorTest implements
                 MIN_VALUE, MAX_VALUE);
         final double initialGyroscopeBiasUncertainty = randomizer.nextDouble(
                 MIN_VALUE, MAX_VALUE);
-        final double initialClockOffsetUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
-        final double initialClockDriftUncertainty = randomizer.nextDouble(
-                MIN_VALUE, MAX_VALUE);
 
-        return new INSTightlyCoupledKalmanInitializerConfig(initialAttitudeUncertainty,
-                initialVelocityUncertainty, initialPositionUncertainty,
-                initialAccelerationBiasUncertainty, initialGyroscopeBiasUncertainty,
-                initialClockOffsetUncertainty, initialClockDriftUncertainty);
+        return new INSLooselyCoupledKalmanInitializerConfig(
+                initialAttitudeUncertainty, initialVelocityUncertainty,
+                initialPositionUncertainty, initialAccelerationBiasUncertainty,
+                initialGyroscopeBiasUncertainty);
     }
 
-    private static INSTightlyCoupledKalmanConfig generateKalmanConfig() {
+    private static INSLooselyCoupledKalmanConfig generateKalmanConfig() {
         final UniformRandomizer randomizer = new UniformRandomizer(new Random());
         final double gyroNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerometerNoisePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double accelerometerBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
         final double gyroBiasPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double clockFrequencyPSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double clockPhasePSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double pseudoRangeSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
-        final double rangeRateSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double positionNoiseSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
+        final double velocityNoiseSD = randomizer.nextDouble(MIN_VALUE, MAX_VALUE);
 
-        return new INSTightlyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
-                accelerometerBiasPSD, gyroBiasPSD, clockFrequencyPSD, clockPhasePSD,
-                pseudoRangeSD, rangeRateSD);
+        return new INSLooselyCoupledKalmanConfig(gyroNoisePSD, accelerometerNoisePSD,
+                accelerometerBiasPSD, gyroBiasPSD, positionNoiseSD, velocityNoiseSD);
     }
 
     private static GNSSConfig generateConfig() {
