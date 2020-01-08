@@ -244,17 +244,7 @@ public class CoordinateTransformation implements Serializable, Cloneable {
             throw new IllegalArgumentException();
         }
 
-        try {
-            //TODO: use Rotation3D.isValidRotationMatrix when geometry library is updated
-            // instead of Utils.isOrthogonal and checking determinant (note that size must also
-            // be checked anyways)
-            return matrix.getRows() == Rotation3D.INHOM_COORDS
-                    && matrix.getColumns() == Rotation3D.INHOM_COORDS
-                    && Utils.isOrthogonal(matrix, threshold) &&
-                    Math.abs(Math.abs(Utils.det(matrix)) - 1.0) < threshold;
-        } catch (final AlgebraException e) {
-            return false;
-        }
+        return Rotation3D.isValidRotationMatrix(matrix, threshold);
     }
 
     /**
