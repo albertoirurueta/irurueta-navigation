@@ -603,7 +603,8 @@ public class BodyKinematicsGeneratorTest {
         final IMUErrors errors = new IMUErrors(ba, bg, ma, mg, gg, accelNoiseRootPSD,
                 gyroNoiseRootPSD, accelQuantLevel, gyroQuantLevel);
 
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+        final Random random = new Random();
+        final UniformRandomizer randomizer = new UniformRandomizer(random);
 
         final double fx = randomizer.nextDouble(MIN_ACCELEROMETER_VALUE,
                 MAX_ACCELEROMETER_VALUE);
@@ -617,7 +618,6 @@ public class BodyKinematicsGeneratorTest {
 
         final BodyKinematics trueKinematics = new BodyKinematics(fx, fy, fz,
                 omegaX, omegaY, omegaZ);
-        final Random random = new Random();
 
         final BodyKinematics result = new BodyKinematics();
         double avgFx = 0.0;
@@ -845,15 +845,4 @@ public class BodyKinematicsGeneratorTest {
     private double getGyroQuantLevel() {
         return 2e-4;
     }
-
-    /*private double quantize(final double value, final double quantLevel,
-                            final double residual) {
-        return quantLevel * Math.round((value + residual) / quantLevel);
-
-        result = quantLevel * round((value + residual) / quantLeve)l
-
-            result / quantLevel = round ((value + residual) / quantLevel)
-                    result / quantLevel * quantLevel = value + residual
-                            value = result - residual
-    }*/
 }
