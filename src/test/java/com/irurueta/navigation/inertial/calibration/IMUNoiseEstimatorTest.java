@@ -64,6 +64,10 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
                 AngularSpeedUnit.RADIANS_PER_SECOND);
         final BodyKinematics kinematics1 = new BodyKinematics();
         final BodyKinematics kinematics2 = new BodyKinematics();
+        final Time time1 = new Time(IMUNoiseEstimator.DEFAULT_TIME_INTERVAL_SECONDS,
+                TimeUnit.SECOND);
+        final Time time2 = new Time(0.0, TimeUnit.SECOND);
+
 
         // test constructor 1
         IMUNoiseEstimator estimator = new IMUNoiseEstimator();
@@ -72,6 +76,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), IMUNoiseEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
                 IMUNoiseEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -167,6 +174,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), IMUNoiseEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
                 IMUNoiseEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -262,6 +272,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), 1);
         assertEquals(estimator.getTimeInterval(),
                 IMUNoiseEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -366,6 +379,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), 1);
         assertEquals(estimator.getTimeInterval(),
                 IMUNoiseEstimator.DEFAULT_TIME_INTERVAL_SECONDS, 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -469,6 +485,10 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         // check default values
         assertEquals(estimator.getTotalSamples(), IMUNoiseEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(), 1.0, 0.0);
+        time1.setValue(1.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -574,6 +594,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), IMUNoiseEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
                 timeInterval.getValue().doubleValue(), 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), timeInterval);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(timeInterval, time2);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -677,6 +700,10 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         // check default values
         assertEquals(estimator.getTotalSamples(), IMUNoiseEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(), 1.0, 0.0);
+        time1.setValue(1.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -781,6 +808,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), IMUNoiseEstimator.DEFAULT_TOTAL_SAMPLES);
         assertEquals(estimator.getTimeInterval(),
                 timeInterval.getValue().doubleValue(), 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), timeInterval);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(timeInterval, time2);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -885,6 +915,10 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         // check default values
         assertEquals(estimator.getTotalSamples(), 2);
         assertEquals(estimator.getTimeInterval(), 1.0, 0.0);
+        time1.setValue(1.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -994,6 +1028,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), 2);
         assertEquals(estimator.getTimeInterval(), timeInterval.getValue().doubleValue(),
                 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), timeInterval);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(timeInterval, time2);
         assertNull(estimator.getListener());
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -1104,6 +1141,10 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         // check default values
         assertEquals(estimator.getTotalSamples(), 2);
         assertEquals(estimator.getTimeInterval(), 1.0, 0.0);
+        time1.setValue(1.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), time1);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(time1, time2);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -1215,6 +1256,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getTotalSamples(), 2);
         assertEquals(estimator.getTimeInterval(), timeInterval.getValue().doubleValue(),
                 0.0);
+        assertEquals(estimator.getTimeIntervalAsTime(), timeInterval);
+        estimator.getTimeIntervalAsTime(time2);
+        assertEquals(timeInterval, time2);
         assertSame(estimator.getListener(), this);
         assertNull(estimator.getLastBodyKinematics());
         assertFalse(estimator.getLastBodyKinematics(null));
@@ -1779,7 +1823,9 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
 
     @Override
     public void onBodyKinematicsAdded(final IMUNoiseEstimator estimator) {
-        checkLocked(estimator);
+        if (mBodyKinematicsAdded == 0) {
+            checkLocked(estimator);
+        }
         mBodyKinematicsAdded++;
     }
 

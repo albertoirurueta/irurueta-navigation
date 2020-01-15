@@ -442,9 +442,9 @@ public class IMUNoiseEstimator {
     }
 
     /**
-     * Gets last provided body kinematics values.
+     * Gets last provided body kinematics values or null if not available.
      *
-     * @return last provided body kinematics values.
+     * @return last provided body kinematics values or null.
      */
     public BodyKinematics getLastBodyKinematics() {
         return mLastBodyKinematics != null ?

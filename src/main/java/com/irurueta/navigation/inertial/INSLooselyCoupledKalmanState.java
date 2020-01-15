@@ -112,6 +112,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
 
     /**
      * Estimated Kalman filter error covariance matrix.
+     * Notice that covariance is expressed in terms of ECEF coordinates.
+     * If accuracy of position, attitude or velocity needs to be expressed in terms
+     * of NED coordinates, their respective submatrices of this covariance matrix
+     * must be rotated, taking into account the Jacobian of the matrix transformation
+     * relating both coordinates, the covariance can be expressed following the law
+     * of propagation of uncertainties (https://en.wikipedia.org/wiki/Propagation_of_uncertainty)
+     * as: cov(f(x)) = J*cov(x)*J'.
      */
     private Matrix mCovariance;
 
@@ -1187,6 +1194,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
 
     /**
      * Gets Kalman filter error covariance matrix.
+     * Notice that covariance is expressed in terms of ECEF coordinates.
+     * If accuracy of position, attitude or velocity needs to be expressed in terms
+     * of NED coordinates, their respective submatrices of this covariance matrix
+     * must be rotated, taking into account the Jacobian of the matrix transformation
+     * relating both coordinates, the covariance can be expressed following the law
+     * of propagation of uncertainties (https://en.wikipedia.org/wiki/Propagation_of_uncertainty)
+     * as: cov(f(x)) = J*cov(x)*J'.
      *
      * @param result instance where result data will be copied to.
      * @return true if result data has been copied, false otherwise.
@@ -1202,6 +1216,13 @@ public class INSLooselyCoupledKalmanState implements Serializable, Cloneable {
 
     /**
      * Gets Kalman filter error covariance matrix.
+     * Notice that covariance is expressed in terms of ECEF coordinates.
+     * If accuracy of position, attitude or velocity needs to be expressed in terms
+     * of NED coordinates, their respective submatrices of this covariance matrix
+     * must be rotated, taking into account the Jacobian of the matrix transformation
+     * relating both coordinates, the covariance can be expressed following the law
+     * of propagation of uncertainties (https://en.wikipedia.org/wiki/Propagation_of_uncertainty)
+     * as: cov(f(x)) = J*cov(x)*J'.
      *
      * @return Kalman filter error covariance matrix.
      */
