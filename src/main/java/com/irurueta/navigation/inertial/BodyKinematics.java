@@ -869,7 +869,7 @@ public class BodyKinematics implements Serializable, Cloneable {
     }
 
     /**
-     * Checks if provided object is a NEDKinematics instance having exactly the same contents
+     * Checks if provided object is a BodyKinematics instance having exactly the same contents
      * as this instance.
      *
      * @param obj object to be compared.
@@ -877,13 +877,10 @@ public class BodyKinematics implements Serializable, Cloneable {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof BodyKinematics)) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
 
@@ -899,7 +896,7 @@ public class BodyKinematics implements Serializable, Cloneable {
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        final BodyKinematics result = (BodyKinematics)super.clone();
+        final BodyKinematics result = (BodyKinematics) super.clone();
         copyTo(result);
         return result;
     }

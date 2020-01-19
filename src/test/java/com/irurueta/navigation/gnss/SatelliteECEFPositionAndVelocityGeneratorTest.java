@@ -42,6 +42,7 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
 
     private static final double ABSOLUTE_ERROR = 1e-8;
     private static final double LARGE_ABSOLUTE_ERROR = 1e-6;
+    private static final double VERY_LARGE_ABSOLUTE_ERROR = 1e-5;
 
     @Test
     public void testConstants() {
@@ -113,7 +114,7 @@ public class SatelliteECEFPositionAndVelocityGeneratorTest {
         for (final ECEFPositionAndVelocity posVel2 : result2) {
             final ECEFPositionAndVelocity posVel1 = result1.get(j);
 
-            assertTrue(posVel1.equals(posVel2, LARGE_ABSOLUTE_ERROR));
+            assertTrue(posVel1.equals(posVel2, VERY_LARGE_ABSOLUTE_ERROR));
             j++;
         }
 

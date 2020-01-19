@@ -101,7 +101,7 @@ public class IMUErrors implements Serializable, Cloneable {
      *          [0     0    sz ]
      * </pre>
      * Values of this matrix are unitless.
-     * By default it is the 3x3 identity matrix.
+     * By default it is the 3x3 zero matrix.
      */
     private Matrix mAccelerometerScaleFactorAndCrossCouplingErrors;
 
@@ -143,7 +143,7 @@ public class IMUErrors implements Serializable, Cloneable {
      *          [0     0    sz ]
      * </pre>
      * Values of this matrix are unitless.
-     * By default it is the 3x3 identity matrix.
+     * By default it is the 3x3 zero matrix.
      */
     private Matrix mGyroScaleFactorAndCrossCouplingErrors;
 
