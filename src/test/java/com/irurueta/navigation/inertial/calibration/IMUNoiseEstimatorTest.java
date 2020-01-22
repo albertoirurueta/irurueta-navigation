@@ -125,6 +125,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -142,6 +148,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -223,6 +234,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -240,6 +257,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -321,6 +343,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -338,6 +366,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -428,6 +461,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -445,6 +484,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -535,6 +579,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -552,6 +602,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -643,6 +698,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -660,6 +721,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -750,6 +816,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -767,6 +839,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -857,6 +934,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -874,6 +957,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -965,6 +1053,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -982,6 +1076,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1077,6 +1176,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1094,6 +1199,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1191,6 +1301,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1208,6 +1324,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1305,6 +1426,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1322,6 +1449,11 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1685,6 +1817,12 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         final double stdOmegaY = estimator.getStandardDeviationAngularRateY();
         final double stdOmegaZ = estimator.getStandardDeviationAngularRateZ();
 
+        final double avgStdF = (stdFx + stdFy + stdFz) / 3.0;
+        final double avgStdOmega = (stdOmegaX + stdOmegaY + stdOmegaZ) / 3.0;
+
+        assertEquals(avgStdF, estimator.getAverageAccelerometerStandardDeviation(), 0.0);
+        assertEquals(avgStdOmega, estimator.getAverageGyroscopeStandardDeviation(), 0.0);
+
         assertEquals(stdFx, Math.sqrt(varFx), 0.0);
         assertEquals(stdFy, Math.sqrt(varFy), 0.0);
         assertEquals(stdFz, Math.sqrt(varFz), 0.0);
@@ -1716,6 +1854,16 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(stdFz1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
         assertEquals(stdFz1, stdFz2);
 
+        final Acceleration avgF1 = estimator
+                .getAverageAccelerometerStandardDeviationAsAcceleration();
+        final Acceleration avgF2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(avgF2);
+
+        assertEquals(avgF1.getValue().doubleValue(), avgStdF, 0.0);
+        assertEquals(avgF1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(avgF1, avgF2);
+
         final AngularSpeed stdOmegaX1 = estimator
                 .getStandardDeviationAngularRateXAsAngularSpeed();
         final AngularSpeed stdOmegaX2 = new AngularSpeed(0.0,
@@ -1742,6 +1890,16 @@ public class IMUNoiseEstimatorTest implements IMUNoiseEstimatorListener {
         assertEquals(stdOmegaZ1.getValue().doubleValue(), stdOmegaZ, 0.0);
         assertEquals(stdOmegaZ1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
         assertEquals(stdOmegaZ1, stdOmegaZ2);
+
+        final AngularSpeed avgAngularRate1 = estimator
+                .getAverageGyroscopeStandardDeviationAsAngularSpeed();
+        final AngularSpeed avgAngularRate2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(avgAngularRate2);
+
+        assertEquals(avgAngularRate1.getValue().doubleValue(), avgStdOmega, 0.0);
+        assertEquals(avgAngularRate1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        assertEquals(avgAngularRate1, avgAngularRate2);
 
         final BodyKinematics stdKinematics = new BodyKinematics(stdFx, stdFy, stdFz,
                 stdOmegaX, stdOmegaY, stdOmegaZ);

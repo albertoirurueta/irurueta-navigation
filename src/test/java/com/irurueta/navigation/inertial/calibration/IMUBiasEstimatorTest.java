@@ -193,6 +193,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -210,6 +216,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -374,6 +385,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -391,6 +408,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -559,6 +581,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -576,6 +604,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -734,6 +767,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -751,6 +790,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -910,6 +954,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -927,6 +977,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1094,6 +1149,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1111,6 +1172,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1277,6 +1343,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -1297,6 +1368,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
@@ -1484,6 +1561,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1501,6 +1584,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1665,6 +1753,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1682,6 +1776,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -1852,6 +1951,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -1869,6 +1974,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -2028,6 +2138,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -2045,6 +2161,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -2205,6 +2326,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -2222,6 +2349,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -2369,6 +2501,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -2389,6 +2526,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
@@ -2577,6 +2720,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -2597,6 +2745,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
@@ -2789,6 +2943,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -2806,6 +2966,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -2961,6 +3126,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -2981,6 +3151,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
@@ -3179,6 +3355,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -3196,6 +3378,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -3368,6 +3555,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -3385,6 +3578,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -3558,6 +3756,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -3575,6 +3779,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -3735,6 +3944,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -3755,6 +3969,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
@@ -3951,6 +4171,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -3971,6 +4196,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
@@ -4169,6 +4400,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -4186,6 +4423,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -4363,6 +4605,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -4380,6 +4628,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -4560,6 +4813,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -4577,6 +4836,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -4749,6 +5013,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -4766,6 +5036,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -4939,6 +5214,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -4956,6 +5237,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -5137,6 +5423,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -5154,6 +5446,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -5334,6 +5631,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -5354,6 +5656,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
@@ -5553,6 +5861,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -5570,6 +5884,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -5746,6 +6065,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -5763,6 +6088,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -5942,6 +6272,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -5959,6 +6295,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -6129,6 +6470,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -6146,6 +6493,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -6316,6 +6668,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -6333,6 +6691,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -6505,6 +6868,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -6522,6 +6891,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -6702,6 +7076,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -6719,6 +7099,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -6757,7 +7142,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         try {
             estimator = new IMUBiasEstimator(nedPosition1,
                     new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME), timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
         } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
@@ -6917,6 +7302,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -6934,6 +7325,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -7039,7 +7435,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval,this);
+        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval, this);
 
         // check default values
         assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
@@ -7113,6 +7509,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -7130,6 +7532,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -7304,6 +7711,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -7321,6 +7734,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -7499,6 +7917,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -7516,6 +7940,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -7686,6 +8115,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -7703,6 +8138,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -7854,6 +8294,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -7874,6 +8319,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
@@ -8071,6 +8522,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -8088,6 +8545,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -8287,6 +8749,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -8304,6 +8772,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -8486,6 +8959,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -8503,6 +8982,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -8686,6 +9170,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -8703,6 +9193,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -8889,6 +9384,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -8906,6 +9407,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -9085,6 +9591,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -9102,6 +9614,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -9283,6 +9800,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -9300,6 +9823,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -9488,6 +10016,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -9505,6 +10039,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -9543,7 +10082,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         try {
             estimator = new IMUBiasEstimator(nedPosition1,
                     new CoordinateTransformation(
-                    FrameType.LOCAL_NAVIGATION_FRAME,
+                            FrameType.LOCAL_NAVIGATION_FRAME,
                             FrameType.LOCAL_NAVIGATION_FRAME),
                     totalSamples, timeInterval);
             fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
@@ -9694,6 +10233,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
             estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
             estimator.getBiasesAsBodyKinematics(kinematics2);
             assertEquals(kinematics1, kinematics2);
@@ -9727,6 +10271,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateYAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateZ(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
@@ -9922,6 +10472,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -9939,6 +10495,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -10124,6 +10685,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -10141,6 +10708,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -10331,6 +10903,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -10348,6 +10926,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -10527,6 +11110,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -10544,6 +11133,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -10703,6 +11297,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getBiasAngularRateZAsAngularSpeed(), angularSpeed1);
         estimator.getBiasAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getBiasesAsBodyKinematics(), kinematics1);
         estimator.getBiasesAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -10723,6 +11322,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFz(), 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
@@ -10929,6 +11534,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -10946,6 +11557,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -11155,6 +11771,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -11172,6 +11794,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -11360,6 +11987,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -11377,6 +12010,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -11554,6 +12192,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -11571,6 +12215,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -11751,6 +12400,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -11768,6 +12423,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -11939,6 +12599,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -11956,6 +12622,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -12128,6 +12799,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -12145,6 +12822,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -12325,6 +13007,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -12342,6 +13030,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -12542,6 +13235,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -12559,6 +13258,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -12665,7 +13369,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
 
         // test constructor
-        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval,this);
+        IMUBiasEstimator estimator = new IMUBiasEstimator(timeInterval, this);
 
         // check default values
         assertEquals(estimator.getTotalSamples(), IMUBiasEstimator.DEFAULT_TOTAL_SAMPLES);
@@ -12740,6 +13444,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -12757,6 +13467,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -12933,6 +13648,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -12950,6 +13671,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -13129,6 +13855,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -13146,6 +13878,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -13317,6 +14054,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -13334,6 +14077,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -13506,6 +14254,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -13523,6 +14277,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -13703,6 +14462,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -13720,6 +14485,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -13920,6 +14690,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -13937,6 +14713,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -14138,6 +14919,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
         assertEquals(kinematics1, kinematics2);
@@ -14322,6 +15114,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -14339,6 +15137,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -14527,6 +15330,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -14544,6 +15353,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -14724,6 +15538,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -14741,6 +15561,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -14922,6 +15747,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -14939,6 +15770,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -15128,6 +15964,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -15145,6 +15987,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -15356,6 +16203,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -15373,6 +16226,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -15563,6 +16421,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -15580,6 +16444,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -15765,6 +16634,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -15782,6 +16657,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -15973,6 +16853,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -15990,6 +16876,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -16171,6 +17062,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -16188,6 +17085,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -16369,6 +17271,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -16386,6 +17294,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -16576,6 +17489,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
         estimator.getStandardDeviationFzAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                0.0);
+        assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                acceleration1);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+        assertEquals(acceleration1, acceleration2);
         assertEquals(estimator.getStandardDeviationAngularRateX(),
                 0.0, 0.0);
         assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -16593,6 +17512,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                 angularSpeed1);
         estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+        assertEquals(angularSpeed1, angularSpeed2);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+        assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                angularSpeed1);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
         assertEquals(angularSpeed1, angularSpeed2);
         assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
         estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -16804,6 +17728,12 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationFzAsAcceleration(), acceleration1);
             estimator.getStandardDeviationFzAsAcceleration(acceleration2);
             assertEquals(acceleration1, acceleration2);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviation(), 0.0,
+                    0.0);
+            assertEquals(estimator.getAverageAccelerometerStandardDeviationAsAcceleration(),
+                    acceleration1);
+            estimator.getAverageAccelerometerStandardDeviationAsAcceleration(acceleration2);
+            assertEquals(acceleration1, acceleration2);
             assertEquals(estimator.getStandardDeviationAngularRateX(),
                     0.0, 0.0);
             assertEquals(estimator.getStandardDeviationAngularRateXAsAngularSpeed(),
@@ -16821,6 +17751,11 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
             assertEquals(estimator.getStandardDeviationAngularRateZAsAngularSpeed(),
                     angularSpeed1);
             estimator.getStandardDeviationAngularRateZAsAngularSpeed(angularSpeed2);
+            assertEquals(angularSpeed1, angularSpeed2);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviation(), 0.0, 0.0);
+            assertEquals(estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(),
+                    angularSpeed1);
+            estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(angularSpeed2);
             assertEquals(angularSpeed1, angularSpeed2);
             assertEquals(estimator.getStandardDeviationsAsBodyKinematics(), kinematics1);
             estimator.getStandardDeviationsAsBodyKinematics(kinematics2);
@@ -17379,7 +18314,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertTrue(estimator.getNedPosition().equals(new NEDPosition(),
                 ABSOLUTE_ERROR));
         assertTrue(estimator.getNedC().equals(new CoordinateTransformation(
-                FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME),
+                        FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME),
                 ABSOLUTE_ERROR));
 
         // set new values
@@ -18553,7 +19488,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
     public void testGetAccelerometerBias() throws WrongSizeException {
         final IMUBiasEstimator estimator = new IMUBiasEstimator();
 
-        final Matrix accelerometerBias1 = new Matrix(3,1);
+        final Matrix accelerometerBias1 = new Matrix(3, 1);
         final Matrix accelerometerBias2 = estimator.getAccelerometerBias();
         final Matrix accelerometerBias3 = new Matrix(3, 1);
         estimator.getAccelerometerBias(accelerometerBias3);
@@ -18798,6 +19733,15 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         final double standardDeviationAngularRateZ = estimator
                 .getStandardDeviationAngularRateZ();
 
+        final double avgStdF = (standardDeviationFx + standardDeviationFy
+                + standardDeviationFz) / 3.0;
+        final double avgStdAngularRate = (standardDeviationAngularRateX
+                + standardDeviationAngularRateY + standardDeviationAngularRateZ) / 3.0;
+
+        assertEquals(avgStdF, estimator.getAverageAccelerometerStandardDeviation(), 0.0);
+        assertEquals(avgStdAngularRate, estimator.getAverageGyroscopeStandardDeviation(),
+                0.0);
+
         assertEquals(Math.sqrt(varianceFx), standardDeviationFx, 0.0);
         assertEquals(Math.sqrt(varianceFy), standardDeviationFy, 0.0);
         assertEquals(Math.sqrt(varianceFz), standardDeviationFz, 0.0);
@@ -18841,6 +19785,16 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(standardDeviationFz1, standardDeviationFz2);
         assertEquals(standardDeviationFz1, standardDeviationFz3);
 
+        final Acceleration avgF1 = estimator
+                .getAverageAccelerometerStandardDeviationAsAcceleration();
+        final Acceleration avgF2 = new Acceleration(0.0,
+                AccelerationUnit.FEET_PER_SQUARED_SECOND);
+        estimator.getAverageAccelerometerStandardDeviationAsAcceleration(avgF2);
+
+        assertEquals(avgF1.getValue().doubleValue(), avgStdF, 0.0);
+        assertEquals(avgF1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        assertEquals(avgF1, avgF2);
+
         final AngularSpeed standardDeviationAngularRateX1 = new AngularSpeed(
                 standardDeviationAngularRateX, AngularSpeedUnit.RADIANS_PER_SECOND);
         final AngularSpeed standardDeviationAngularRateX2 = estimator
@@ -18876,6 +19830,17 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
 
         assertEquals(standardDeviationAngularRateZ1, standardDeviationAngularRateZ2);
         assertEquals(standardDeviationAngularRateZ1, standardDeviationAngularRateZ3);
+
+        final AngularSpeed avgAngularRate1 = estimator
+                .getAverageGyroscopeStandardDeviationAsAngularSpeed();
+        final AngularSpeed avgAngularRate2 = new AngularSpeed(0.0,
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+        estimator.getAverageGyroscopeStandardDeviationAsAngularSpeed(avgAngularRate2);
+
+        assertEquals(avgAngularRate1.getValue().doubleValue(), avgStdAngularRate,
+                0.0);
+        assertEquals(avgAngularRate1.getUnit(), AngularSpeedUnit.RADIANS_PER_SECOND);
+        assertEquals(avgAngularRate1, avgAngularRate2);
 
         final BodyKinematics standardDeviationKinematics1 = estimator
                 .getStandardDeviationsAsBodyKinematics();
@@ -18960,7 +19925,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
                 GYRO_NOISE_ROOT_PSD_ERROR);
 
         final Matrix accelerometerBias1 = Matrix.newFromArray(new double[]{
-                biasFx, biasFy, biasFz });
+                biasFx, biasFy, biasFz});
         final Matrix accelerometerBias2 = estimator.getAccelerometerBias();
         final Matrix accelerometerBias3 = new Matrix(3, 1);
         estimator.getAccelerometerBias(accelerometerBias3);
@@ -18969,7 +19934,7 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(accelerometerBias1, accelerometerBias3);
 
         final Matrix gyroBias1 = Matrix.newFromArray(new double[]{
-                biasAngularRateX, biasAngularRateY, biasAngularRateZ });
+                biasAngularRateX, biasAngularRateY, biasAngularRateZ});
         final Matrix gyroBias2 = estimator.getGyroBias();
         final Matrix gyroBias3 = new Matrix(3, 1);
         estimator.getGyroBias(gyroBias3);

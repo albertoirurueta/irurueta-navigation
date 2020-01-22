@@ -42,15 +42,15 @@ import com.irurueta.units.TimeUnit;
 /**
  * This class estimates IMU accelerometer and gyroscope biases and noise PSD's by
  * averaging all provided samples when body position and orientation is known.
- *
+ * <p>
  * This estimator must be used when the body where the IMU is attached remains static
  * on the same position with zero velocity while capturing data.
- *
+ * <p>
  * To compute PSD's, this estimator assumes that IMU samples are obtained at a constant
  * provided rate equal to {@link #getTimeInterval()} seconds.
  * If not available, IMU sampling rate average can be estimated using
  * {@link IMUTimeIntervalEstimator}.
- *
+ * <p>
  * Notice that in order to compute accelerometer and gyroscope biases, body position
  * and orientation must be known to account for gravity and Earth rotation effects.
  * If only noise PSD's levels are required {@link IMUNoiseEstimator} can be used
@@ -3504,6 +3504,40 @@ public class IMUBiasEstimator {
     }
 
     /**
+     * Gets average of estimated standard deviation of accelerometer sensed specific
+     * force for all coordinates expressed in meters per squared second (m/s^2).
+     *
+     * @return average of estimated standard deviation of accelerometer.
+     */
+    public double getAverageAccelerometerStandardDeviation() {
+        return (getStandardDeviationFx() + getStandardDeviationFy()
+                + getStandardDeviationFz()) / 3.0;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of accelerometer sensed specific
+     * force for all coordinates.
+     *
+     * @return average of estimated standard deviation of accelerometer.
+     */
+    public Acceleration getAverageAccelerometerStandardDeviationAsAcceleration() {
+        return new Acceleration(getAverageAccelerometerStandardDeviation(),
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
+     * Gets average of estimated standard deviation of accelerometer sensed specific
+     * force for all coordinates.
+     *
+     * @param result instance where result data will be copied to.
+     */
+    public void getAverageAccelerometerStandardDeviationAsAcceleration(
+            final Acceleration result) {
+        result.setValue(getAverageAccelerometerStandardDeviation());
+        result.setUnit(AccelerationUnit.METERS_PER_SQUARED_SECOND);
+    }
+
+    /**
      * Gets estimated standard deviation of x coordinate of gyroscope sensed angular
      * rate expressed in (rad/s).
      *
@@ -3602,6 +3636,39 @@ public class IMUBiasEstimator {
     public void getStandardDeviationAngularRateZAsAngularSpeed(
             final AngularSpeed result) {
         result.setValue(getStandardDeviationAngularRateZ());
+        result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope sensed angular rate
+     * for all coordinates expressed in radians per second (rad/s).
+     *
+     * @return average of estimated standard deviation of gyroscope.
+     */
+    public double getAverageGyroscopeStandardDeviation() {
+        return (getStandardDeviationAngularRateX() + getStandardDeviationAngularRateY()
+                + getStandardDeviationAngularRateZ()) / 3.0;
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope sensed angular rate
+     * for all coordinates.
+     *
+     * @return average of estimated standard deviation of gyroscope.
+     */
+    public AngularSpeed getAverageGyroscopeStandardDeviationAsAngularSpeed() {
+        return new AngularSpeed(getAverageGyroscopeStandardDeviation(),
+                AngularSpeedUnit.RADIANS_PER_SECOND);
+    }
+
+    /**
+     * Gets average of estimated standard deviation of gyroscope sensed angular rate
+     * for all coordinates.
+     *
+     * @param result instance where result data will be copied to.
+     */
+    public void getAverageGyroscopeStandardDeviationAsAngularSpeed(final AngularSpeed result) {
+        result.setValue(getAverageGyroscopeStandardDeviation());
         result.setUnit(AngularSpeedUnit.RADIANS_PER_SECOND);
     }
 

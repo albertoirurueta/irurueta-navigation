@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Alberto Irurueta Carro (alberto@irurueta.com)
+ * Copyright (C) 2020 Alberto Irurueta Carro (alberto@irurueta.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -663,7 +663,7 @@ public class FrameBodyKinematics implements Serializable, Cloneable {
     }
 
     /**
-     * Checks if provided object is a KnownFrameKinematics instance having exactly the same
+     * Checks if provided object is a FrameBodyKinematics instance having exactly the same
      * contents as this instance.
      *
      * @param obj object to be compared.
