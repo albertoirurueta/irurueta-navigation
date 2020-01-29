@@ -2324,64 +2324,71 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibratorTest impl
     }
 
     private void checkLocked(
-            final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator estimator) {
-        assertTrue(estimator.isRunning());
+            final KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator calibrator) {
+        assertTrue(calibrator.isRunning());
         try {
-            estimator.setMeasurements(null);
+            calibrator.setMeasurements(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setCommonAxisUsed(true);
+            calibrator.setCommonAxisUsed(true);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setListener(this);
+            calibrator.setListener(this);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasX(0.0);
+            calibrator.setBiasX(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasY(0.0);
+            calibrator.setBiasY(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasZ(0.0);
+            calibrator.setBiasZ(0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         final Acceleration acceleration = new Acceleration(
                 0.0, AccelerationUnit.METERS_PER_SQUARED_SECOND);
         try {
-            estimator.setBiasX(acceleration);
+            calibrator.setBiasX(acceleration);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasY(acceleration);
+            calibrator.setBiasY(acceleration);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasZ(acceleration);
+            calibrator.setBiasZ(acceleration);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasCoordinates(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setBiasCoordinates(acceleration, acceleration, acceleration);
+            calibrator.setBiasCoordinates(acceleration, acceleration, acceleration);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.calibrate();
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
+            fail("LockedException expected but not thrown");
         }
     }
 

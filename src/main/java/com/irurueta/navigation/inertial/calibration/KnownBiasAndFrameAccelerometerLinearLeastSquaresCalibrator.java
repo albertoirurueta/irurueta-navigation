@@ -182,7 +182,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator {
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param listener listener to handle events raised by this calibrator.
      */
@@ -1368,7 +1368,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator {
      * @param acceleration acceleration instance to be converted.
      * @return converted value.
      */
-    private double convertAcceleration(final Acceleration acceleration) {
+    private static double convertAcceleration(final Acceleration acceleration) {
         return AccelerationConverter.convert(acceleration.getValue().doubleValue(),
                 acceleration.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
     }

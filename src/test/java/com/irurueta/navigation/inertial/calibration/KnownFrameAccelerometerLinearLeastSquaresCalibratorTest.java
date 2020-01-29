@@ -1158,22 +1158,29 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibratorTest implements
         mCalibrateEnd = 0;
     }
 
-    private void checkLocked(KnownFrameAccelerometerLinearLeastSquaresCalibrator estimator) {
-        assertTrue(estimator.isRunning());
+    private void checkLocked(KnownFrameAccelerometerLinearLeastSquaresCalibrator calibrator) {
+        assertTrue(calibrator.isRunning());
         try {
-            estimator.setMeasurements(null);
+            calibrator.setMeasurements(null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setCommonAxisUsed(true);
+            calibrator.setCommonAxisUsed(true);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            estimator.setListener(this);
+            calibrator.setListener(this);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
+        }
+        try {
+            calibrator.calibrate();
+            fail("LockedException expected but not thrown");
+        } catch (final LockedException ignore) {
+        } catch (final Exception e) {
+            fail("LockedException expected but not thrown");
         }
     }
 
