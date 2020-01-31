@@ -16,9 +16,23 @@
 package com.irurueta.navigation.inertial.calibration;
 
 /**
- * Contains listener for accelerometer least squares calibrators when
+ * Contains listener for accelerometer calibrators when
  * frame (position, velocity and orientation) is known for all measurements.
+ * @param <T> a calibrator type.
  */
-public interface KnownFrameAccelerometerNonLinearLeastSquaresCalibratorListener extends
-        KnownFrameAccelerometerCalibratorListener<KnownFrameAccelerometerNonLinearLeastSquaresCalibrator> {
+public interface KnownFrameAccelerometerCalibratorListener<T extends KnownFrameAccelerometerCalibrator<?, ?>> {
+
+    /**
+     * Called when calibration starts.
+     *
+     * @param calibrator calibrator that raised the event.
+     */
+    void onCalibrateStart(final T calibrator);
+
+    /**
+     * Called when calibration ends.
+     *
+     * @param calibrator calibrator that raised the event.
+     */
+    void onCalibrateEnd(final T calibrator);
 }

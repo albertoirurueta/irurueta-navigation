@@ -54,7 +54,9 @@ import java.util.Collection;
  * - ftrue is ground-trush specific force.
  * - w is measurement noise.
  */
-public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
+public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
+        KnownFrameAccelerometerCalibrator<FrameBodyKinematics,
+                KnownFrameAccelerometerLinearLeastSquaresCalibratorListener> {
 
     /**
      * Indicates whether by default a common z-axis is assumed for both the accelerometer
@@ -194,7 +196,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @param measurements collection of body kinematics measurements taken at
      *                     different frames (positions, orientations and velocities).
-     * @param listener listener to handle events raised by this calibrator.
+     * @param listener     listener to handle events raised by this calibrator.
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
             final Collection<FrameBodyKinematics> measurements,
@@ -219,7 +221,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param listener listener to handle events raised by this calibrator.
+     * @param listener       listener to handle events raised by this calibrator.
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
             final boolean commonAxisUsed,
@@ -250,7 +252,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *                       different frames (positions, orientations and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
-     * @param listener listener to handle events raised by this calibrator.
+     * @param listener       listener to handle events raised by this calibrator.
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
             final Collection<FrameBodyKinematics> measurements,
@@ -276,6 +278,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @return a collection of body kinematics measurements taken at different
      * frames (positions, orientations and velocities).
      */
+    @Override
     public Collection<FrameBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
@@ -297,6 +300,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *                     frames (positions, orientations and velocities).
      * @throws LockedException if estimator is currently running.
      */
+    @Override
     public void setMeasurements(final Collection<FrameBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
@@ -313,6 +317,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
      */
+    @Override
     public boolean isCommonAxisUsed() {
         return mCommonAxisUsed;
     }
@@ -326,6 +331,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *                       and gyroscope, false otherwise.
      * @throws LockedException if estimator is currently running.
      */
+    @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
         if (mRunning) {
             throw new LockedException();
@@ -339,6 +345,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return listener to handle events raised by this estimator.
      */
+    @Override
     public KnownFrameAccelerometerLinearLeastSquaresCalibratorListener getListener() {
         return mListener;
     }
@@ -349,6 +356,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @param listener listener to handle events raised by this estimator.
      * @throws LockedException if estimator is currently running.
      */
+    @Override
     public void setListener(
             final KnownFrameAccelerometerLinearLeastSquaresCalibratorListener listener)
             throws LockedException {
@@ -364,6 +372,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return true if estimator is ready, false otherwise.
      */
+    @Override
     public boolean isReady() {
         return mMeasurements != null
                 && mMeasurements.size() >= MINIMUM_MEASUREMENTS;
@@ -374,6 +383,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return true if estimator is running, false otherwise.
      */
+    @Override
     public boolean isRunning() {
         return mRunning;
     }
@@ -386,6 +396,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @throws NotReadyException    if estimator is not ready.
      * @throws CalibrationException if estimation fails for numerical reasons.
      */
+    @Override
     public void calibrate() throws LockedException, NotReadyException, CalibrationException {
         if (mRunning) {
             throw new LockedException();
@@ -425,6 +436,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return array containing x,y,z components of estimated accelerometer biases.
      */
+    @Override
     public double[] getEstimatedBiases() {
         return mEstimatedBiases;
     }
@@ -437,6 +449,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @return true if result instance was updated, false otherwise (when estimation
      * is not yet available).
      */
+    @Override
     public boolean getEstimatedBiases(final double[] result) {
         if (mEstimatedBiases != null) {
             System.arraycopy(mEstimatedBiases, 0, result,
@@ -454,6 +467,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @return column matrix containing x,y,z components of estimated accelerometer
      * biases
      */
+    @Override
     public Matrix getEstimatedBiasesAsMatrix() {
         return mEstimatedBiases != null ? Matrix.newFromArray(mEstimatedBiases) : null;
     }
@@ -466,6 +480,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @return true if result was updated, false otherwise.
      * @throws WrongSizeException if provided result instance has invalid size.
      */
+    @Override
     public boolean getEstimatedBiasesAsMatrix(final Matrix result)
             throws WrongSizeException {
         if (mEstimatedBiases != null) {
@@ -482,6 +497,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return x coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasFx() {
         return mEstimatedBiases != null ? mEstimatedBiases[0] : null;
     }
@@ -492,6 +508,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return y coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasFy() {
         return mEstimatedBiases != null ? mEstimatedBiases[1] : null;
     }
@@ -502,6 +519,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return z coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Double getEstimatedBiasFz() {
         return mEstimatedBiases != null ? mEstimatedBiases[2] : null;
     }
@@ -511,6 +529,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return x coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Acceleration getEstimatedBiasFxAsAcceleration() {
         return mEstimatedBiases != null ?
                 new Acceleration(mEstimatedBiases[0],
@@ -523,6 +542,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasFxAsAcceleration(final Acceleration result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[0]);
@@ -538,6 +558,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return y coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Acceleration getEstimatedBiasFyAsAcceleration() {
         return mEstimatedBiases != null ?
                 new Acceleration(mEstimatedBiases[1],
@@ -550,6 +571,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasFyAsAcceleration(final Acceleration result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[1]);
@@ -565,6 +587,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return z coordinate of estimated accelerometer bias or null if not available.
      */
+    @Override
     public Acceleration getEstimatedBiasFzAsAcceleration() {
         return mEstimatedBiases != null ?
                 new Acceleration(mEstimatedBiases[2],
@@ -577,6 +600,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @param result instance where result will be stored.
      * @return true if result was updated, false if estimation is not available.
      */
+    @Override
     public boolean getEstimatedBiasFzAsAcceleration(final Acceleration result) {
         if (mEstimatedBiases != null) {
             result.setValue(mEstimatedBiases[2]);
@@ -629,6 +653,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      * @return estimated accelerometer scale factors and cross coupling errors, or null
      * if not available.
      */
+    @Override
     public Matrix getEstimatedMa() {
         return mEstimatedMa;
     }
@@ -638,6 +663,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated x-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 0) : null;
@@ -648,6 +674,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated y-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 1) : null;
@@ -658,6 +685,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated z-axis scale factor or null if not available.
      */
+    @Override
     public Double getEstimatedSz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 2) : null;
@@ -668,6 +696,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated x-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 1) : null;
@@ -678,6 +707,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated x-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMxz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(0, 2) : null;
@@ -688,6 +718,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated y-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 0) : null;
@@ -698,6 +729,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated y-z cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMyz() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(1, 2) : null;
@@ -708,6 +740,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated z-x cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzx() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 0) : null;
@@ -718,6 +751,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
      *
      * @return estimated z-y cross-coupling error or null if not available.
      */
+    @Override
     public Double getEstimatedMzy() {
         return mEstimatedMa != null ?
                 mEstimatedMa.getElementAt(2, 1) : null;
@@ -973,9 +1007,9 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator {
     /**
      * Fills scale factor and cross coupling error matrix with estimated values.
      *
-     * @param sx x scale factor
-     * @param sy y scale factor
-     * @param sz z scale factor
+     * @param sx  x scale factor
+     * @param sy  y scale factor
+     * @param sz  z scale factor
      * @param mxy x-y cross coupling
      * @param mxz x-z cross coupling
      * @param myx y-x cross coupling

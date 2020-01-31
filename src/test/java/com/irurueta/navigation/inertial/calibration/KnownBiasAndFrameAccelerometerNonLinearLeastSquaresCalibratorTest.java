@@ -7185,7 +7185,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator.setBias(biasX, biasY, biasZ);
+        calibrator.setBiasCoordinates(biasX, biasY, biasZ);
 
         // check
         assertEquals(biasX, calibrator.getBiasX(), 0.0);
@@ -7212,7 +7212,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         final Acceleration biasZ = new Acceleration(ba.getElementAtIndex(2),
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
 
-        calibrator.setBias(biasX, biasY, biasZ);
+        calibrator.setBiasCoordinates(biasX, biasY, biasZ);
 
         // check
         assertEquals(biasX, calibrator.getBiasXAsAcceleration());
@@ -8316,12 +8316,12 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibratorTest i
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(0.0, 0.0, 0.0);
+            calibrator.setBiasCoordinates(0.0, 0.0, 0.0);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
         try {
-            calibrator.setBias(null, null, null);
+            calibrator.setBiasCoordinates(null, null, null);
             fail("LockedException expected but not thrown");
         } catch (final LockedException ignore) {
         }
