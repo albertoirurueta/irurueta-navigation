@@ -98,7 +98,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * typically constant at horizontal orientation while the phone remains on a
      * flat surface.
      */
-    private Collection<FrameBodyKinematics> mMeasurements;
+    private Collection<? extends FrameBodyKinematics> mMeasurements;
 
     /**
      * This flag indicates whether z-axis is assumed to be common for accelerometer
@@ -187,7 +187,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      *                     different frames (positions, orientations and velocities).
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
-            final Collection<FrameBodyKinematics> measurements) {
+            final Collection<? extends FrameBodyKinematics> measurements) {
         mMeasurements = measurements;
     }
 
@@ -199,7 +199,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * @param listener     listener to handle events raised by this calibrator.
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
-            final Collection<FrameBodyKinematics> measurements,
+            final Collection<? extends FrameBodyKinematics> measurements,
             final KnownFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
         this(measurements);
         mListener = listener;
@@ -239,7 +239,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      *                       accelerometer and gyroscope.
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
-            final Collection<FrameBodyKinematics> measurements,
+            final Collection<? extends FrameBodyKinematics> measurements,
             final boolean commonAxisUsed) {
         this(measurements);
         mCommonAxisUsed = commonAxisUsed;
@@ -255,7 +255,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * @param listener       listener to handle events raised by this calibrator.
      */
     public KnownFrameAccelerometerLinearLeastSquaresCalibrator(
-            final Collection<FrameBodyKinematics> measurements,
+            final Collection<? extends FrameBodyKinematics> measurements,
             final boolean commonAxisUsed,
             final KnownFrameAccelerometerLinearLeastSquaresCalibratorListener listener) {
         this(measurements, commonAxisUsed);
@@ -279,7 +279,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * frames (positions, orientations and velocities).
      */
     @Override
-    public Collection<FrameBodyKinematics> getMeasurements() {
+    public Collection<? extends FrameBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
 
@@ -301,7 +301,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * @throws LockedException if estimator is currently running.
      */
     @Override
-    public void setMeasurements(final Collection<FrameBodyKinematics> measurements)
+    public void setMeasurements(final Collection<? extends FrameBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();
