@@ -913,6 +913,13 @@ public class MSACRobustKnownFrameAccelerometerCalibratorTest implements
 
         // check
         assertEquals(calibrator.getThreshold(), 0.1, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setThreshold(0.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test

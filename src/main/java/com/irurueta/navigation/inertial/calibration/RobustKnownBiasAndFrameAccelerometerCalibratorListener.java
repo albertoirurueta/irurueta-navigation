@@ -17,23 +17,24 @@ package com.irurueta.navigation.inertial.calibration;
 
 /**
  * Contains listener for robust accelerometer calibrators when
- * frame (position, velocity and orientation) is known for all measurements.
+ * frame (position, velocity and orientation) and bios is known for all
+ * measurements.
  */
-public interface RobustKnownFrameAccelerometerCalibratorListener {
+public interface RobustKnownBiasAndFrameAccelerometerCalibratorListener {
 
     /**
      * Called when calibration starts.
      *
      * @param calibrator calibrator that raised the event.
      */
-    void onCalibrateStart(final RobustKnownFrameAccelerometerCalibrator calibrator);
+    void onCalibrateStart(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator);
 
     /**
      * Called when calibration ends.
      *
      * @param calibrator calibrator that raised the event.
      */
-    void onCalibrateEnd(final RobustKnownFrameAccelerometerCalibrator calibrator);
+    void onCalibrateEnd(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator);
 
     /**
      * Called when calibrator iterates to refine a possible solution.
@@ -41,7 +42,8 @@ public interface RobustKnownFrameAccelerometerCalibratorListener {
      * @param calibrator calibrator raising the event.
      * @param iteration  current iteration.
      */
-    void onCalibrateNextIteration(final RobustKnownFrameAccelerometerCalibrator calibrator, final int iteration);
+    void onCalibrateNextIteration(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator,
+                                  final int iteration);
 
     /**
      * Called when calibration progress changes significantly.
@@ -49,5 +51,6 @@ public interface RobustKnownFrameAccelerometerCalibratorListener {
      * @param calibrator calibrator raising the event.
      * @param progress   progress of calibration expressed as a value between 0.0 and 1.0.
      */
-    void onCalibrateProgressChange(final RobustKnownFrameAccelerometerCalibrator calibrator, final float progress);
+    void onCalibrateProgressChange(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator,
+                                   final float progress);
 }

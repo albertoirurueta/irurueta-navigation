@@ -1032,6 +1032,15 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
 
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(new double[1]);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+
 
         // test constructor with quality scores and listener
         calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
@@ -1137,6 +1146,16 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(new double[1],
+                    this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
 
 
         // test constructor with quality scores and measurements
@@ -1244,6 +1263,16 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
 
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
+                    new double[1], measurements);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+
 
         // test constructor with quality scores, measurements and listener
         calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(qualityScores,
@@ -1349,6 +1378,16 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
+                    new double[1], measurements, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
 
 
         // test constructor with quality scores and common axis used
@@ -1456,6 +1495,15 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
 
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
+                    new double[1], true);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
 
         // test constructor with quality scores, common axis used and listener
         calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(qualityScores,
@@ -1561,6 +1609,16 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
+                    new double[1], true, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
 
 
         // test constructor with quality scores, measurements and common axis used
@@ -1668,6 +1726,16 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
 
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
+                    new double[1], measurements, true);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
+
 
         // test constructor with quality scores, measurements, common axis used and
         // listener
@@ -1774,6 +1842,16 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+
+        // Force IllegalArgumentException
+        calibrator = null;
+        try {
+            calibrator = new PROSACRobustKnownFrameAccelerometerCalibrator(
+                    new double[1], measurements, true, this);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
+        assertNull(calibrator);
     }
 
     @Test
@@ -1791,6 +1869,13 @@ public class PROSACRobustKnownFrameAccelerometerCalibratorTest implements
 
         // check
         assertEquals(calibrator.getThreshold(), 0.1, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setThreshold(0.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test

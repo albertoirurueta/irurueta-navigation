@@ -284,7 +284,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibrator extends
             throw new NotReadyException();
         }
 
-        RANSACRobustEstimator<PreliminaryResult> innerEstimator =
+        final RANSACRobustEstimator<PreliminaryResult> innerEstimator =
                 new RANSACRobustEstimator<>(new RANSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
@@ -360,7 +360,7 @@ public class RANSACRobustKnownFrameAccelerometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            PreliminaryResult preliminaryResult = innerEstimator.estimate();
+            final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
             attemptRefine(preliminaryResult);

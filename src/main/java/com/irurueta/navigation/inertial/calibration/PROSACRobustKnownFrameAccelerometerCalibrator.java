@@ -199,6 +199,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param qualityScores quality scores corresponding to each provided
      *                      measurement. The larger the score value the better
      *                      the quality of the sample.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores) {
@@ -213,6 +215,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      the quality of the sample.
      * @param listener listener to be notified of events such as when estimation
      *                 starts, ends or its progress significantly changes.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores,
@@ -230,6 +234,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param measurements list of body kinematics measurements with standard
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores,
@@ -248,6 +254,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                     deviations taken at different frames (positions, orientations
      *                     and velocities).
      * @param listener     listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores,
@@ -265,6 +273,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                      the quality of the sample.
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(final double[] qualityScores,
                                                          final boolean commonAxisUsed) {
@@ -281,6 +291,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores,
@@ -301,6 +313,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      *                       and velocities).
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores,
@@ -322,6 +336,8 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @param commonAxisUsed indicates whether z-axis is assumed to be common for
      *                       accelerometer and gyroscope.
      * @param listener       listener to handle events raised by this calibrator.
+     * @throws IllegalArgumentException if provided quality scores length
+     *                                  is smaller than 4 samples.
      */
     public PROSACRobustKnownFrameAccelerometerCalibrator(
             final double[] qualityScores,
@@ -468,7 +484,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
             throw new NotReadyException();
         }
 
-        PROSACRobustEstimator<PreliminaryResult> innerEstimator =
+        final PROSACRobustEstimator<PreliminaryResult> innerEstimator =
                 new PROSACRobustEstimator<>(new PROSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double[] getQualityScores() {
@@ -549,7 +565,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            PreliminaryResult preliminaryResult = innerEstimator.estimate();
+            final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
             attemptRefine(preliminaryResult);
@@ -584,7 +600,7 @@ public class PROSACRobustKnownFrameAccelerometerCalibrator extends
      * @throws IllegalArgumentException if provided quality scores length
      *                                  is smaller than 3 samples.
      */
-    private void internalSetQualityScores(double[] qualityScores) {
+    private void internalSetQualityScores(final double[] qualityScores) {
         if (qualityScores == null ||
                 qualityScores.length < MINIMUM_MEASUREMENTS) {
             throw new IllegalArgumentException();

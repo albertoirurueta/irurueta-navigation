@@ -99,7 +99,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      * typically constant at horizontal orientation while the phone remains on a
      * flat surface.
      */
-    private Collection<FrameBodyKinematics> mMeasurements;
+    private Collection<? extends FrameBodyKinematics> mMeasurements;
 
     /**
      * This flag indicates whether z-axis is assumed to be common for accelerometer
@@ -598,7 +598,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      * frames (positions, orientations and velocities).
      */
     @Override
-    public Collection<FrameBodyKinematics> getMeasurements() {
+    public Collection<? extends FrameBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
 
@@ -620,7 +620,7 @@ public class KnownBiasAndFrameAccelerometerLinearLeastSquaresCalibrator implemen
      * @throws LockedException if estimator is currently running.
      */
     @Override
-    public void setMeasurements(final Collection<FrameBodyKinematics> measurements)
+    public void setMeasurements(final Collection<? extends FrameBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();

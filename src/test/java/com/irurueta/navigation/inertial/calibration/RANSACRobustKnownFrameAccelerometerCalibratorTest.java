@@ -944,6 +944,13 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
 
         // check
         assertEquals(calibrator.getThreshold(), 0.1, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setThreshold(0.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
@@ -1360,8 +1367,43 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
     }
 
     @Test
-    public void testGetSetInitialCrossCouplingErrors() throws WrongSizeException,
-            LockedException {
+    public void testGetSetInitialCrossCouplingErrors()
+            throws WrongSizeException, LockedException {
+        final RANSACRobustKnownFrameAccelerometerCalibrator calibrator =
+                new RANSACRobustKnownFrameAccelerometerCalibrator();
+
+        // check default values
+        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
+        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
+
+        // set new values
+        final Matrix ma = generateMaGeneral();
+        final double initialMxy = ma.getElementAt(0, 1);
+        final double initialMxz = ma.getElementAt(0, 2);
+        final double initialMyx = ma.getElementAt(1, 0);
+        final double initialMyz = ma.getElementAt(1, 2);
+        final double initialMzx = ma.getElementAt(2, 0);
+        final double initialMzy = ma.getElementAt(2, 1);
+
+        calibrator.setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,
+                initialMyz, initialMzx, initialMzy);
+
+        // check
+        assertEquals(calibrator.getInitialMxy(), initialMxy, 0.0);
+        assertEquals(calibrator.getInitialMxz(), initialMxz, 0.0);
+        assertEquals(calibrator.getInitialMyx(), initialMyx, 0.0);
+        assertEquals(calibrator.getInitialMyz(), initialMyz, 0.0);
+        assertEquals(calibrator.getInitialMzx(), initialMzx, 0.0);
+        assertEquals(calibrator.getInitialMzy(), initialMzy, 0.0);
+    }
+
+    @Test
+    public void testSetInitialScalingFactorsAndCrossCouplingErrors()
+            throws WrongSizeException, LockedException {
         final RANSACRobustKnownFrameAccelerometerCalibrator calibrator =
                 new RANSACRobustKnownFrameAccelerometerCalibrator();
 
@@ -1396,41 +1438,6 @@ public class RANSACRobustKnownFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialSx(), initialSx, 0.0);
         assertEquals(calibrator.getInitialSy(), initialSy, 0.0);
         assertEquals(calibrator.getInitialSz(), initialSz, 0.0);
-        assertEquals(calibrator.getInitialMxy(), initialMxy, 0.0);
-        assertEquals(calibrator.getInitialMxz(), initialMxz, 0.0);
-        assertEquals(calibrator.getInitialMyx(), initialMyx, 0.0);
-        assertEquals(calibrator.getInitialMyz(), initialMyz, 0.0);
-        assertEquals(calibrator.getInitialMzx(), initialMzx, 0.0);
-        assertEquals(calibrator.getInitialMzy(), initialMzy, 0.0);
-    }
-
-    @Test
-    public void testSetInitialScalingFactorsAndCrossCouplingErrors()
-            throws WrongSizeException, LockedException {
-        final RANSACRobustKnownFrameAccelerometerCalibrator calibrator =
-                new RANSACRobustKnownFrameAccelerometerCalibrator();
-
-        // check default values
-        assertEquals(calibrator.getInitialMxy(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMxz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
-        assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-
-        // set new values
-        final Matrix ma = generateMaGeneral();
-        final double initialMxy = ma.getElementAt(0, 1);
-        final double initialMxz = ma.getElementAt(0, 2);
-        final double initialMyx = ma.getElementAt(1, 0);
-        final double initialMyz = ma.getElementAt(1, 2);
-        final double initialMzx = ma.getElementAt(2, 0);
-        final double initialMzy = ma.getElementAt(2, 1);
-
-        calibrator.setInitialCrossCouplingErrors(initialMxy, initialMxz, initialMyx,
-                initialMyz, initialMzx, initialMzy);
-
-        // check
         assertEquals(calibrator.getInitialMxy(), initialMxy, 0.0);
         assertEquals(calibrator.getInitialMxz(), initialMxz, 0.0);
         assertEquals(calibrator.getInitialMyx(), initialMyx, 0.0);

@@ -47,7 +47,7 @@ public interface KnownBiasAndFrameAccelerometerCalibrator<T extends FrameBodyKin
      * @return a collection of body kinematics measurements taken at different
      * frames (positions, orientations and velocities).
      */
-    Collection<T> getMeasurements();
+    Collection<? extends T> getMeasurements();
 
     /**
      * Sets a collection of body kinematics measurements taken at different
@@ -66,7 +66,7 @@ public interface KnownBiasAndFrameAccelerometerCalibrator<T extends FrameBodyKin
      *                     frames (positions, orientations and velocities).
      * @throws LockedException if estimator is currently running.
      */
-    void setMeasurements(final Collection<T> measurements) throws LockedException;
+    void setMeasurements(final Collection<? extends T> measurements) throws LockedException;
 
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and

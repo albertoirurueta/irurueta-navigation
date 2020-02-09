@@ -211,7 +211,7 @@ public class MSACRobustKnownFrameAccelerometerCalibrator extends
             throw new NotReadyException();
         }
 
-        MSACRobustEstimator<PreliminaryResult> innerEstimator =
+        final MSACRobustEstimator<PreliminaryResult> innerEstimator =
                 new MSACRobustEstimator<>(new MSACRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public double getThreshold() {
@@ -283,7 +283,7 @@ public class MSACRobustKnownFrameAccelerometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            PreliminaryResult preliminaryResult = innerEstimator.estimate();
+            final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
             attemptRefine(preliminaryResult);

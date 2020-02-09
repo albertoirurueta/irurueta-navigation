@@ -161,6 +161,54 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
     protected List<StandardDeviationFrameBodyKinematics> mMeasurements;
 
     /**
+     * Listener to be notified of events such as when calibration starts, ends or its
+     * progress significantly changes.
+     */
+    protected RobustKnownFrameAccelerometerCalibratorListener mListener;
+
+    /**
+     * Indicates whether estimator is running.
+     */
+    protected boolean mRunning;
+
+    /**
+     * Amount of progress variation before notifying a progress change during calibration.
+     */
+    protected float mProgressDelta = DEFAULT_PROGRESS_DELTA;
+
+    /**
+     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
+     * to 100%). The amount of confidence indicates the probability that the estimated
+     * result is correct. Usually this value will be close to 1.0, but not exactly 1.0.
+     */
+    protected double mConfidence = DEFAULT_CONFIDENCE;
+
+    /**
+     * Maximum allowed number of iterations. When the maximum number of iterations is
+     * exceeded, result will not be available, however an approximate result will be
+     * available for retrieval.
+     */
+    protected int mMaxIterations = DEFAULT_MAX_ITERATIONS;
+
+    /**
+     * Data related to inliers found after calibration.
+     */
+    protected InliersData mInliersData;
+
+    /**
+     * Indicates whether result must be refined using a non linear calibrator over
+     * found inliers.
+     * If true, inliers will be computed and kept in any implementation regardless of the
+     * settings.
+     */
+    protected boolean mRefineResult = DEFAULT_REFINE_RESULT;
+
+    /**
+     * Size of subsets to be checked during robust estimation.
+     */
+    protected int mPreliminarySubsetSize = MINIMUM_MEASUREMENTS;
+
+    /**
      * This flag indicates whether z-axis is assumed to be common for accelerometer
      * and gyroscope.
      * When enabled, this eliminates 3 variables from Ma matrix.
@@ -168,91 +216,85 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
     private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
 
     /**
-     * Listener to be notified of events such as when calibration starts, ends or its
-     * progress significantly changes.
-     */
-    protected RobustKnownFrameAccelerometerCalibratorListener mListener;
-
-    /**
      * Initial x-coordinate of accelerometer bias to be used to find a solution.
      * This is expressed in meters per squared second (m/s^2).
      */
-    protected double mInitialBiasX;
+    private double mInitialBiasX;
 
     /**
      * Initial y-coordinate of accelerometer bias to be used to find a solution.
      * This is expressed in meters per squared second (m/s^2).
      */
-    protected double mInitialBiasY;
+    private double mInitialBiasY;
 
     /**
      * Initial z-coordinate of accelerometer bias to be used to find a solution.
      * This is expressed in meters per squared second (m/s^2).
      */
-    protected double mInitialBiasZ;
+    private double mInitialBiasZ;
 
     /**
      * Initial x scaling factor.
      */
-    protected double mInitialSx;
+    private double mInitialSx;
 
     /**
      * Initial y scaling factor.
      */
-    protected double mInitialSy;
+    private double mInitialSy;
 
     /**
      * Initial z scaling factor.
      */
-    protected double mInitialSz;
+    private double mInitialSz;
 
     /**
      * Initial x-y cross coupling error.
      */
-    protected double mInitialMxy;
+    private double mInitialMxy;
 
     /**
      * Initial x-z cross coupling error.
      */
-    protected double mInitialMxz;
+    private double mInitialMxz;
 
     /**
      * Initial y-x cross coupling error.
      */
-    protected double mInitialMyx;
+    private double mInitialMyx;
 
     /**
      * Initial y-z cross coupling error.
      */
-    protected double mInitialMyz;
+    private double mInitialMyz;
 
     /**
      * Initial z-x cross coupling error.
      */
-    protected double mInitialMzx;
+    private double mInitialMzx;
 
     /**
      * Initial z-y cross coupling error.
      */
-    protected double mInitialMzy;
+    private double mInitialMzy;
 
     /**
      * Indicates whether a linear calibrator is used or not for preliminary
      * solutions.
      */
-    protected boolean mUseLinearCalibrator = DEFAULT_USE_LINEAR_CALIBRATOR;
+    private boolean mUseLinearCalibrator = DEFAULT_USE_LINEAR_CALIBRATOR;
 
     /**
      * Indicates whether preliminary solutions must be refined after an initial linear solution
      * is found.
      */
-    protected boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;
+    private boolean mRefinePreliminarySolutions = DEFAULT_REFINE_PRELIMINARY_SOLUTIONS;
 
     /**
      * Estimated accelerometer biases for each IMU axis expressed in meter per squared
      * second (m/s^2).
      */
-    protected double[] mEstimatedBiases;
+    private double[] mEstimatedBiases;
 
     /**
      * Estimated accelerometer scale factors and cross coupling errors.
@@ -293,61 +335,19 @@ public abstract class RobustKnownFrameAccelerometerCalibrator {
      * </pre>
      * Values of this matrix are unitless.
      */
-    protected Matrix mEstimatedMa;
-
-    /**
-     * Indicates whether estimator is running.
-     */
-    protected boolean mRunning;
-
-    /**
-     * Amount of progress variation before notifying a progress change during calibration.
-     */
-    protected float mProgressDelta = DEFAULT_PROGRESS_DELTA;
-
-    /**
-     * Amount of confidence expressed as a value between 0.0 and 1.0 (which is equivalent
-     * to 100%). The amount of confidence indicates the probability that the estimated
-     * result is correct. Usually this value will be close to 1.0, but not exactly 1.0.
-     */
-    protected double mConfidence = DEFAULT_CONFIDENCE;
-
-    /**
-     * Maximum allowed number of iterations. When the maximum number of iterations is
-     * exceeded, result will not be available, however an approximate result will be
-     * available for retrieval.
-     */
-    protected int mMaxIterations = DEFAULT_MAX_ITERATIONS;
-
-    /**
-     * Data related to inliers found after calibration.
-     */
-    protected InliersData mInliersData;
-
-    /**
-     * Indicates whether result must be refined using a non linear calibrator over
-     * found inliers.
-     * If true, inliers will be computed and kept in any implementation regardless of the
-     * settings.
-     */
-    protected boolean mRefineResult = DEFAULT_REFINE_RESULT;
+    private Matrix mEstimatedMa;
 
     /**
      * Indicates whether covariance must be kept after refining result.
      * This setting is only taken into account if result is refined.
      */
-    protected boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;
+    private boolean mKeepCovariance = DEFAULT_KEEP_COVARIANCE;
 
     /**
      * Estimated covariance of estimated position.
      * This is only available when result has been refined and covariance is kept.
      */
-    protected Matrix mEstimatedCovariance;
-
-    /**
-     * Size of subsets to be checked during robust estimation.
-     */
-    protected int mPreliminarySubsetSize = MINIMUM_MEASUREMENTS;
+    private Matrix mEstimatedCovariance;
 
     /**
      * A linear least squares calibrator.

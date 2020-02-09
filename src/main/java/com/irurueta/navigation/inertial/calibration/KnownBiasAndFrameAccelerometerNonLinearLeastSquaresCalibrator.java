@@ -165,7 +165,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
      * typically constant at horizontal orientation while the phone remains on a
      * flat surface.
      */
-    private Collection<StandardDeviationFrameBodyKinematics> mMeasurements;
+    private Collection<? extends StandardDeviationFrameBodyKinematics> mMeasurements;
 
     /**
      * This flag indicates whether z-axis is assumed to be common for accelerometer
@@ -2574,7 +2574,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
      * frames (positions, orientations and velocities).
      */
     @Override
-    public Collection<StandardDeviationFrameBodyKinematics> getMeasurements() {
+    public Collection<? extends StandardDeviationFrameBodyKinematics> getMeasurements() {
         return mMeasurements;
     }
 
@@ -2598,7 +2598,7 @@ public class KnownBiasAndFrameAccelerometerNonLinearLeastSquaresCalibrator imple
      */
     @Override
     public void setMeasurements(
-            final Collection<StandardDeviationFrameBodyKinematics> measurements)
+            final Collection<? extends StandardDeviationFrameBodyKinematics> measurements)
             throws LockedException {
         if (mRunning) {
             throw new LockedException();

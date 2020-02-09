@@ -263,7 +263,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
             throw new NotReadyException();
         }
 
-        LMedSRobustEstimator<PreliminaryResult> innerEstimator =
+        final LMedSRobustEstimator<PreliminaryResult> innerEstimator =
                 new LMedSRobustEstimator<>(new LMedSRobustEstimatorListener<PreliminaryResult>() {
                     @Override
                     public int getTotalSamples() {
@@ -330,7 +330,7 @@ public class LMedSRobustKnownFrameAccelerometerCalibrator extends
             innerEstimator.setConfidence(mConfidence);
             innerEstimator.setMaxIterations(mMaxIterations);
             innerEstimator.setProgressDelta(mProgressDelta);
-            PreliminaryResult preliminaryResult = innerEstimator.estimate();
+            final PreliminaryResult preliminaryResult = innerEstimator.estimate();
             mInliersData = innerEstimator.getInliersData();
 
             attemptRefine(preliminaryResult);

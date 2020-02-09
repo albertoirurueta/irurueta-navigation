@@ -908,6 +908,13 @@ public class LMedSRobustKnownFrameAccelerometerCalibratorTest implements
 
         // check
         assertEquals(calibrator.getStopThreshold(), 0.1, 0.0);
+
+        // Force IllegalArgumentException
+        try {
+            calibrator.setStopThreshold(0.0);
+            fail("IllegalArgumentException expected but not thrown");
+        } catch (final IllegalArgumentException ignore) {
+        }
     }
 
     @Test
