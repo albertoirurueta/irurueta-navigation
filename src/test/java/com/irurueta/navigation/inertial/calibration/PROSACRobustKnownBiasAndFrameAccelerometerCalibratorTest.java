@@ -369,7 +369,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 Collections.emptyList();
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, this);
+                        measurements, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -757,7 +757,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 Collections.emptyList();
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, true, this);
+                        measurements, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -1264,7 +1264,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasX, biasY, biasZ, true);
+                        biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -1365,7 +1365,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasX, biasY, biasZ, true, this);
+                        biasX, biasY, biasZ, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -1468,7 +1468,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasX, biasY, biasZ, true);
+                        measurements, biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -1571,8 +1571,8 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasX, biasY, biasZ, true,
-                this);
+                        measurements, biasX, biasY, biasZ, true,
+                        this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -1678,7 +1678,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz);
+                        bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -1784,7 +1784,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz, this);
+                        bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2002,7 +2002,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, bax, bay, baz, this);
+                        measurements, bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2109,7 +2109,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz, true);
+                        bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2217,7 +2217,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz, true, this);
+                        bax, bay, baz, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2326,7 +2326,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         final PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, bax, bay, baz, true);
+                        measurements, bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2649,7 +2649,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray, this);
+                        biasArray, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2877,7 +2877,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray, this);
+                        measurements, biasArray, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -2989,7 +2989,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray, true);
+                        biasArray, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3032,7 +3032,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3101,7 +3101,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray, true, this);
+                        biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3144,7 +3144,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3215,7 +3215,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray, true);
+                        measurements, biasArray, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3258,7 +3258,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3329,7 +3329,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray, true, this);
+                        measurements, biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3372,7 +3372,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3481,7 +3481,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3597,7 +3597,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3673,7 +3673,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, ba);
+                        measurements, ba);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3716,7 +3716,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3792,7 +3792,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, ba, this);
+                        measurements, ba, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3835,7 +3835,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -3910,7 +3910,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
-                true);
+                        true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -3953,7 +3953,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -4027,7 +4027,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
-                true, this);
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4070,7 +4070,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -4146,7 +4146,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
-                true);
+                        true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4189,7 +4189,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -4265,7 +4265,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
-                true, this);
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4308,7 +4308,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -4382,7 +4382,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements);
+                        qualityScores, measurements);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4493,7 +4493,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, this);
+                        qualityScores, measurements, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4604,7 +4604,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, true);
+                        qualityScores, measurements, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4715,7 +4715,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, true, this);
+                        qualityScores, measurements, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4828,7 +4828,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ);
+                        qualityScores, biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4871,7 +4871,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -4941,7 +4941,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ, this);
+                        qualityScores, biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -4984,7 +4984,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5056,7 +5056,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ);
+                        qualityScores, measurements, biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5099,7 +5099,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5171,7 +5171,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ, this);
+                        qualityScores, measurements, biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5214,7 +5214,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5284,7 +5284,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ, true);
+                        qualityScores, biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5327,7 +5327,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5397,7 +5397,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasX, biasY, biasZ, true, this);
+                        qualityScores, biasX, biasY, biasZ, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5440,7 +5440,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5512,7 +5512,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ, true);
+                        qualityScores, measurements, biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5555,7 +5555,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5627,8 +5627,8 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasX, biasY, biasZ, true,
-                this);
+                        qualityScores, measurements, biasX, biasY, biasZ, true,
+                        this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5671,7 +5671,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5748,7 +5748,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz);
+                        qualityScores, bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5791,7 +5791,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5867,7 +5867,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz, this);
+                        qualityScores, bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -5910,7 +5910,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -5988,7 +5988,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz);
+                        qualityScores, measurements, bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6031,7 +6031,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6109,7 +6109,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz, this);
+                        qualityScores, measurements, bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6152,7 +6152,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6229,7 +6229,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz, true);
+                        qualityScores, bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6272,7 +6272,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6349,7 +6349,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, bax, bay, baz, true, this);
+                        qualityScores, bax, bay, baz, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6392,7 +6392,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6471,7 +6471,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz, true);
+                        qualityScores, measurements, bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6514,7 +6514,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6593,8 +6593,8 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, bax, bay, baz,
-                true, this);
+                        qualityScores, measurements, bax, bay, baz,
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6637,7 +6637,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6709,7 +6709,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray);
+                        qualityScores, biasArray);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6752,7 +6752,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6839,7 +6839,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray, this);
+                        qualityScores, biasArray, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -6882,7 +6882,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -6961,7 +6961,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray);
+                        qualityScores, measurements, biasArray);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7004,7 +7004,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7083,7 +7083,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray, this);
+                        qualityScores, measurements, biasArray, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7126,7 +7126,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7203,7 +7203,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray, true);
+                        qualityScores, biasArray, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7246,7 +7246,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7323,7 +7323,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, biasArray, true, this);
+                        qualityScores, biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7366,7 +7366,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7446,7 +7446,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray, true);
+                        qualityScores, measurements, biasArray, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7489,7 +7489,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7569,7 +7569,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, biasArray, true, this);
+                        qualityScores, measurements, biasArray, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7612,7 +7612,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7690,7 +7690,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba);
+                        qualityScores, ba);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7733,7 +7733,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7815,7 +7815,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba, this);
+                        qualityScores, ba, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7858,7 +7858,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -7942,7 +7942,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba);
+                        qualityScores, measurements, ba);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -7985,7 +7985,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -8069,7 +8069,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba, this);
+                        qualityScores, measurements, ba, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -8112,7 +8112,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -8196,7 +8196,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba, true);
+                        qualityScores, ba, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -8239,7 +8239,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -8323,7 +8323,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, ba, true, this);
+                        qualityScores, ba, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -8366,7 +8366,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -8453,7 +8453,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba, true);
+                        qualityScores, measurements, ba, true);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -8496,7 +8496,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
@@ -8582,7 +8582,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
 
         PROSACRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROSACRobustKnownBiasAndFrameAccelerometerCalibrator(
-                qualityScores, measurements, ba, true, this);
+                        qualityScores, measurements, ba, true, this);
 
         // check default values
         assertEquals(calibrator.getThreshold(),
@@ -8625,7 +8625,7 @@ public class PROSACRobustKnownBiasAndFrameAccelerometerCalibratorTest implements
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        final double[] bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
         final double[] bias2 = new double[3];
         calibrator.getBias(bias2);

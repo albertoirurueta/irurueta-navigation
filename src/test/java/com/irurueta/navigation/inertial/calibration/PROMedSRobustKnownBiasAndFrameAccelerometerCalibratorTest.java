@@ -76,9 +76,9 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
     private int mCalibrateProgressChange;
 
     @Test
-    public void testConstructor() throws WrongSizeException {
+    public void testConstructor1() throws WrongSizeException {
         // test empty constructor
-        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
                 new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator();
 
         // check default values
@@ -164,10 +164,13 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor2() throws WrongSizeException {
         // test constructor with listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(this);
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -176,10 +179,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -206,19 +209,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -252,13 +255,16 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor3() throws WrongSizeException {
         // test constructor with measurements
         final List<StandardDeviationFrameBodyKinematics> measurements =
                 Collections.emptyList();
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements);
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -267,10 +273,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -297,19 +303,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -343,11 +349,16 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor4() throws WrongSizeException {
         // test constructor with measurements and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, this);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -356,10 +367,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -386,19 +397,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -432,11 +443,14 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor5() throws WrongSizeException {
         // test constructor with common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                true);
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -445,10 +459,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -475,19 +489,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -521,11 +535,14 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor6() throws WrongSizeException {
         // test constructor with common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                true, this);
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -534,10 +551,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -564,19 +581,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -610,11 +627,17 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor7() throws WrongSizeException {
         // test constructor with measurements and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, true);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -623,10 +646,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -653,19 +676,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -699,11 +722,17 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor8() throws WrongSizeException {
         // test constructor with measurements and common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, true, this);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -712,10 +741,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -742,19 +771,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -788,16 +817,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor9() throws WrongSizeException {
         // test constructor with bias coordinates
         final Matrix ba = generateBa();
         final double biasX = ba.getElementAtIndex(0);
         final double biasY = ba.getElementAtIndex(1);
         final double biasZ = ba.getElementAtIndex(2);
 
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasX, biasY, biasZ);
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -806,10 +838,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -836,19 +868,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -882,11 +914,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor10() throws WrongSizeException {
         // test constructor with bias coordinates and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasX, biasY, biasZ, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -895,10 +935,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -925,19 +965,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -971,11 +1011,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor11() throws WrongSizeException {
         // test constructor with measurements and bias coordinates
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasX, biasY, biasZ);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, biasX, biasY, biasZ);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -984,10 +1034,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1014,19 +1064,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -1060,11 +1110,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor12() throws WrongSizeException {
         // test constructor with measurements, bias coordinates and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasX, biasY, biasZ, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, biasX, biasY, biasZ, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1073,10 +1133,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1103,19 +1163,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -1149,11 +1209,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor13() throws WrongSizeException {
         // test constructor with bias coordinates and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasX, biasY, biasZ, true);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1162,10 +1230,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1192,19 +1260,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -1238,11 +1306,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor14() throws WrongSizeException {
         // test constructor with bias coordinates, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasX, biasY, biasZ, true, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        biasX, biasY, biasZ, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1251,10 +1327,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1281,19 +1357,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -1327,11 +1403,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor15() throws WrongSizeException {
         // test constructor with measurements, bias coordinates and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasX, biasY, biasZ, true);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, biasX, biasY, biasZ, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1340,10 +1426,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1370,19 +1456,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -1416,12 +1502,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor16() throws WrongSizeException {
         // test constructor with measurements, bias coordinates and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasX, biasY, biasZ, true,
-                this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, biasX, biasY, biasZ, true,
+                        this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1430,10 +1526,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1460,19 +1556,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -1506,17 +1602,24 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor17() throws WrongSizeException {
         // test constructor with bias coordinates as acceleration
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
         final Acceleration bax = new Acceleration(biasX,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration bay = new Acceleration(biasY,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
         final Acceleration baz = new Acceleration(biasZ,
                 AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz);
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1525,10 +1628,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1555,19 +1658,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -1601,11 +1704,25 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor18() throws WrongSizeException {
         // test constructor with bias coordinates as acceleration and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1614,10 +1731,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1644,19 +1761,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -1690,11 +1807,27 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor19() throws WrongSizeException {
         // test constructor with measurements and bias coordinates as acceleration
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, bax, bay, baz);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, bax, bay, baz);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1703,10 +1836,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1733,19 +1866,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -1779,11 +1912,27 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor20() throws WrongSizeException {
         // test constructor with measurements, bias coordinates as acceleration and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, bax, bay, baz, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, bax, bay, baz, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1792,10 +1941,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1822,19 +1971,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -1868,11 +2017,25 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor21() throws WrongSizeException {
         // test constructor with bias coordinates as acceleration and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz, true);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1881,10 +2044,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -1911,19 +2074,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -1957,12 +2120,26 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor22() throws WrongSizeException {
         // test constructor with bias coordinates as acceleration, common axis used
         // and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                bax, bay, baz, true, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        bax, bay, baz, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -1971,10 +2148,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2001,19 +2178,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -2047,11 +2224,27 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor23() throws WrongSizeException {
         // test constructor with measurements, bias coordinates as acceleration and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, bax, bay, baz, true);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, bax, bay, baz, true);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2060,10 +2253,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2090,19 +2283,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -2136,11 +2329,27 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor24() throws WrongSizeException {
         // test constructor with measurements, bias coordinates as acceleration and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, bax, bay, baz, true, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        final PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, bax, bay, baz, true, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2149,10 +2358,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2179,19 +2388,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -2225,12 +2434,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertNull(calibrator.getEstimatedCovariance());
         assertEquals(calibrator.getPreliminarySubsetSize(),
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS);
+    }
 
-
+    @Test
+    public void testConstructor25() throws WrongSizeException {
         // test constructor with bias array
+        final Matrix ba = generateBa();
         final double[] biasArray = ba.getBuffer();
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray);
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        biasArray);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2239,10 +2456,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2269,19 +2486,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -2325,11 +2542,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor26() throws WrongSizeException {
         // test constructor with bias array and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                biasArray, this);
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        biasArray, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2338,10 +2564,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2368,19 +2594,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -2424,11 +2650,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor27() throws WrongSizeException {
         // test constructor with measurements and bias array
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
-                measurements, biasArray);
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+                        measurements, biasArray);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -2437,10 +2674,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2467,19 +2704,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -2523,10 +2760,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor28() throws WrongSizeException {
         // test constructor with measurements, bias array and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 measurements, biasArray, this);
 
         // check default values
@@ -2536,10 +2784,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2566,19 +2814,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -2622,10 +2870,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor29() throws WrongSizeException {
         // test constructor with bias array and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 biasArray, true);
 
         // check default values
@@ -2635,10 +2892,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2665,19 +2922,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -2721,10 +2978,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor30() throws WrongSizeException {
         // test constructor with bias array, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 biasArray, true, this);
 
         // check default values
@@ -2734,10 +3000,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2764,19 +3030,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -2820,10 +3086,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor31() throws WrongSizeException {
         // test constructor with measurements, bias array and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 measurements, biasArray, true);
 
         // check default values
@@ -2833,10 +3110,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2863,19 +3140,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -2919,10 +3196,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor32() throws WrongSizeException {
         // test constructor with measurements, bias array and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 measurements, biasArray, true, this);
 
         // check default values
@@ -2932,10 +3220,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -2962,19 +3250,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -3018,10 +3306,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor33() throws WrongSizeException {
         // test constructor with bias matrix
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3030,10 +3326,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3060,19 +3356,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -3123,9 +3419,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         }
         assertNull(calibrator);
 
+    }
 
+    @Test
+    public void testConstructor34() throws WrongSizeException {
         // test constructor with bias matrix and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba, this);
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba, this);
 
         // check default values
         assertEquals(calibrator.getStopThreshold(),
@@ -3134,10 +3439,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3164,19 +3469,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -3226,10 +3531,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor35() throws WrongSizeException {
         // test constructor with measurements and bias matrix
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 measurements, ba);
 
         // check default values
@@ -3239,10 +3554,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3269,19 +3584,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -3331,10 +3646,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor36() throws WrongSizeException {
         // test constructor with measurements, bias matrix and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 measurements, ba, this);
 
         // check default values
@@ -3344,10 +3669,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3374,19 +3699,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -3436,10 +3761,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor37() throws WrongSizeException {
         // test constructor with bias matrix and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
                 true);
 
         // check default values
@@ -3449,10 +3782,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3479,19 +3812,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -3541,10 +3874,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor38() throws WrongSizeException {
         // test constructor with bias matrix, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(ba,
                 true, this);
 
         // check default values
@@ -3554,10 +3895,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3584,19 +3925,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -3646,10 +3987,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor39() throws WrongSizeException {
         // test constructor with measurements, bias matrix and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
                 true);
 
         // check default values
@@ -3659,10 +4010,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3689,19 +4040,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -3752,9 +4103,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         }
         assertNull(calibrator);
 
+    }
 
+    @Test
+    public void testConstructor40() throws WrongSizeException {
         // test constructor with measurements, bias matrix, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(measurements, ba,
                 true, this);
 
         // check default values
@@ -3764,10 +4126,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3794,19 +4156,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -3856,12 +4218,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor41() throws WrongSizeException {
         // test constructor with quality scores and measurements
         final double[] qualityScores = new double[
                 RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements);
 
         // check default values
@@ -3871,10 +4239,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -3901,19 +4269,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -3958,9 +4326,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         }
         assertNull(calibrator);
 
+    }
 
+    @Test
+    public void testConstructor42() throws WrongSizeException {
         // test constructor with quality scores, measurements and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, this);
 
         // check default values
@@ -3970,10 +4347,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4000,19 +4377,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -4056,10 +4433,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor43() throws WrongSizeException {
         // test constructor with quality scores, measurements and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, true);
 
         // check default values
@@ -4069,10 +4454,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4099,19 +4484,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -4155,10 +4540,18 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor44() throws WrongSizeException {
         // test constructor with quality scores, measurements and common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, true, this);
 
         // check default values
@@ -4168,10 +4561,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), 0.0, 0.0);
         assertEquals(calibrator.getBiasY(), 0.0, 0.0);
         assertEquals(calibrator.getBiasZ(), 0.0, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), 0.0, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4198,19 +4591,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[3];
+        final double[] bias1 = new double[3];
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = new Matrix(3, 1);
+        final Matrix biasMatrix1 = new Matrix(3, 1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -4254,10 +4647,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor45() throws WrongSizeException {
         // test constructor with quality scores and bias coordinates
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasX, biasY, biasZ);
 
         // check default values
@@ -4267,10 +4670,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4297,19 +4700,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -4353,10 +4756,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor46() throws WrongSizeException {
         // test constructor with quality scores, bias coordinates and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasX, biasY, biasZ, this);
 
         // check default values
@@ -4366,10 +4779,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4396,19 +4809,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -4453,9 +4866,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         }
         assertNull(calibrator);
 
+    }
 
+    @Test
+    public void testConstructor47() throws WrongSizeException {
         // test constructor with quality scores, measurements and bias coordinates
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasX, biasY, biasZ);
 
         // check default values
@@ -4465,10 +4891,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4495,19 +4921,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -4551,10 +4977,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor48() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias coordinates and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasX, biasY, biasZ, this);
 
         // check default values
@@ -4564,10 +5002,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4594,19 +5032,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -4650,10 +5088,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor49() throws WrongSizeException {
         // test constructor with quality scores, bias coordinates and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasX, biasY, biasZ, true);
 
         // check default values
@@ -4663,10 +5111,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4693,19 +5141,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -4749,10 +5197,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor50() throws WrongSizeException {
         // test constructor with quality scores, bias coordinates, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasX, biasY, biasZ, true, this);
 
         // check default values
@@ -4762,10 +5220,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4792,19 +5250,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -4848,10 +5306,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor51() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias coordinates and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasX, biasY, biasZ, true);
 
         // check default values
@@ -4861,10 +5331,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4891,19 +5361,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -4947,10 +5417,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor52() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias coordinates and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasX, biasY, biasZ, true,
                 this);
 
@@ -4961,10 +5443,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -4991,19 +5473,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -5048,10 +5530,26 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor53() throws WrongSizeException {
         // test constructor with quality scores and bias coordinates as acceleration
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, bax, bay, baz);
 
         // check default values
@@ -5061,10 +5559,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5091,19 +5589,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -5147,10 +5645,26 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor54() throws WrongSizeException {
         // test constructor with quality scores, bias coordinates as acceleration and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, bax, bay, baz, this);
 
         // check default values
@@ -5160,10 +5674,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5190,19 +5704,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -5247,9 +5761,28 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         }
         assertNull(calibrator);
 
+    }
 
+    @Test
+    public void testConstructor55() throws WrongSizeException {
         // test constructor with quality scores, measurements and bias coordinates as acceleration
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, bax, bay, baz);
 
         // check default values
@@ -5259,10 +5792,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5289,19 +5822,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -5345,10 +5878,28 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor56() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias coordinates as acceleration and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, bax, bay, baz, this);
 
         // check default values
@@ -5358,10 +5909,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5388,19 +5939,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -5444,11 +5995,27 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor57() throws WrongSizeException {
         // test constructor with quality scores, bias coordinates as acceleration
         // and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, bax, bay, baz, true);
 
         // check default values
@@ -5458,10 +6025,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5488,19 +6055,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -5544,11 +6111,27 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor58() throws WrongSizeException {
         // test constructor with quality scores, bias coordinates as acceleration,
         // common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, bax, bay, baz, true, this);
 
         // check default values
@@ -5558,10 +6141,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5588,19 +6171,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -5644,11 +6227,29 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor59() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias coordinates as
         // acceleration and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, bax, bay, baz, true);
 
         // check default values
@@ -5658,10 +6259,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5688,19 +6289,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -5744,11 +6345,29 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor60() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias coordinates as
         // acceleration, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final Acceleration bax = new Acceleration(biasX,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration bay = new Acceleration(biasY,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final Acceleration baz = new Acceleration(biasZ,
+                AccelerationUnit.METERS_PER_SQUARED_SECOND);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, bax, bay, baz,
                 true, this);
 
@@ -5759,10 +6378,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5789,19 +6408,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -5845,10 +6464,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor61() throws WrongSizeException {
         // test constructor with quality scores and bias array
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasArray);
 
         // check default values
@@ -5858,10 +6488,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -5888,19 +6518,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -5960,10 +6590,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor62() throws WrongSizeException {
         // test constructor with quality scores, bias array and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasArray, this);
 
         // check default values
@@ -5973,10 +6614,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6003,19 +6644,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -6065,10 +6706,23 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor63() throws WrongSizeException {
         // test constructor with quality scores, measurements and bias array
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasArray);
 
         // check default values
@@ -6078,10 +6732,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6108,19 +6762,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -6171,9 +6825,23 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         }
         assertNull(calibrator);
 
+    }
 
+    @Test
+    public void testConstructor64() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias array and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasArray, this);
 
         // check default values
@@ -6183,10 +6851,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6213,19 +6881,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -6275,10 +6943,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor65() throws WrongSizeException {
         // test constructor with quality scores, bias array and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasArray, true);
 
         // check default values
@@ -6288,10 +6967,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6318,19 +6997,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -6380,10 +7059,21 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor66() throws WrongSizeException {
         // test constructor with quality scores, bias array, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, biasArray, true, this);
 
         // check default values
@@ -6393,10 +7083,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6423,19 +7113,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -6485,11 +7175,24 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor67() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias array and
         // common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasArray, true);
 
         // check default values
@@ -6499,10 +7202,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6529,19 +7232,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -6591,11 +7294,24 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor68() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias array, common axis used
         // and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double[] biasArray = ba.getBuffer();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, biasArray, true, this);
 
         // check default values
@@ -6605,10 +7321,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6635,19 +7351,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -6699,10 +7415,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor69() throws WrongSizeException {
         // test constructor with quality scores and bias matrix
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, ba);
 
         // check default values
@@ -6712,10 +7438,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6742,19 +7468,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -6810,10 +7536,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor70() throws WrongSizeException {
         // test constructor with quality scores, bias matrix and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, ba, this);
 
         // check default values
@@ -6823,10 +7559,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6853,19 +7589,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -6921,10 +7657,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor71() throws WrongSizeException {
         // test constructor with quality scores, measurements and bias matrix
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, ba);
 
         // check default values
@@ -6934,10 +7682,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -6964,19 +7712,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -7032,10 +7780,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor72() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias matrix and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, ba, this);
 
         // check default values
@@ -7045,10 +7805,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -7075,19 +7835,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -7145,10 +7905,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor73() throws WrongSizeException {
         // test constructor with quality scores, bias matrix and common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, ba, true);
 
         // check default values
@@ -7158,10 +7928,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -7188,19 +7958,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -7258,10 +8028,20 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor74() throws WrongSizeException {
         // test constructor with bias matrix, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, ba, true, this);
 
         // check default values
@@ -7271,10 +8051,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -7301,19 +8081,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertNull(calibrator.getMeasurements());
@@ -7371,11 +8151,23 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor75() throws WrongSizeException {
         // test constructor with quality scores, measurements, bias matrix and
         // common axis used
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, ba, true);
 
         // check default values
@@ -7385,10 +8177,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -7415,19 +8207,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -7485,10 +8277,22 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         } catch (final IllegalArgumentException ignore) {
         }
         assertNull(calibrator);
+    }
 
-
+    @Test
+    public void testConstructor76() throws WrongSizeException {
         // test constructor with measurements, bias matrix, common axis used and listener
-        calibrator = new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
+        final double[] qualityScores = new double[
+                RobustKnownBiasAndFrameAccelerometerCalibrator.MINIMUM_MEASUREMENTS];
+        final Matrix ba = generateBa();
+        final double biasX = ba.getElementAtIndex(0);
+        final double biasY = ba.getElementAtIndex(1);
+        final double biasZ = ba.getElementAtIndex(2);
+        final List<StandardDeviationFrameBodyKinematics> measurements =
+                Collections.emptyList();
+
+        PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator calibrator =
+                new PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator(
                 qualityScores, measurements, ba, true, this);
 
         // check default values
@@ -7498,10 +8302,10 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getBiasX(), biasX, 0.0);
         assertEquals(calibrator.getBiasY(), biasY, 0.0);
         assertEquals(calibrator.getBiasZ(), biasZ, 0.0);
-        acceleration1 = calibrator.getBiasXAsAcceleration();
+        Acceleration acceleration1 = calibrator.getBiasXAsAcceleration();
         assertEquals(acceleration1.getValue().doubleValue(), biasX, 0.0);
         assertEquals(acceleration1.getUnit(), AccelerationUnit.METERS_PER_SQUARED_SECOND);
-        acceleration2 = new Acceleration(0.0,
+        Acceleration acceleration2 = new Acceleration(0.0,
                 AccelerationUnit.FEET_PER_SQUARED_SECOND);
         calibrator.getBiasXAsAcceleration(acceleration2);
         assertEquals(acceleration1, acceleration2);
@@ -7528,19 +8332,19 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
         assertEquals(calibrator.getInitialMyz(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzx(), 0.0, 0.0);
         assertEquals(calibrator.getInitialMzy(), 0.0, 0.0);
-        bias1 = new double[] { biasX, biasY, biasZ };
+        final double[] bias1 = new double[]{biasX, biasY, biasZ};
         assertArrayEquals(calibrator.getBias(), bias1, 0.0);
-        bias2 = new double[3];
+        final double[] bias2 = new double[3];
         calibrator.getBias(bias2);
         assertArrayEquals(bias1, bias2, 0.0);
-        biasMatrix1 = Matrix.newFromArray(bias1);
+        final Matrix biasMatrix1 = Matrix.newFromArray(bias1);
         assertEquals(calibrator.getBiasAsMatrix(), biasMatrix1);
-        biasMatrix2 = new Matrix(3, 1);
+        final Matrix biasMatrix2 = new Matrix(3, 1);
         calibrator.getBiasAsMatrix(biasMatrix2);
         assertEquals(biasMatrix1, biasMatrix2);
-        ma1 = new Matrix(3, 3);
+        final Matrix ma1 = new Matrix(3, 3);
         assertEquals(calibrator.getInitialMa(), ma1);
-        ma2 = new Matrix(3, 3);
+        final Matrix ma2 = new Matrix(3, 3);
         calibrator.getInitialMa(ma2);
         assertEquals(ma1, ma2);
         assertSame(calibrator.getMeasurements(), measurements);
@@ -8992,7 +9796,7 @@ public class PROMedSRobustKnownBiasAndFrameAccelerometerCalibratorTest implement
 
         assertTrue(numValid > 0);
     }
-    
+
     @Override
     public void onCalibrateStart(final RobustKnownBiasAndFrameAccelerometerCalibrator calibrator) {
         checkLocked((PROMedSRobustKnownBiasAndFrameAccelerometerCalibrator) calibrator);
