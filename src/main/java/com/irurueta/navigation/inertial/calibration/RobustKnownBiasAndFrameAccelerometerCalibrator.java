@@ -5162,6 +5162,681 @@ public abstract class RobustKnownBiasAndFrameAccelerometerCalibrator {
     }
 
     /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create() {
+        return create(DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements) {
+        return create(measurements, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final boolean commonAxisUsed) {
+        return create(commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed) {
+        return create(measurements, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Createss a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX known x coordinate of accelerometer bias expressed in meters per
+     *              squared second (m/s^2).
+     * @param biasY known y coordinate of accelerometer bias expressed in meters per
+     *              squared second (m/s^2).
+     * @param biasZ known z coordinate of accelerometer bias expressed in meters per
+     *              squared second (m/s^2).
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double biasX, final double biasY, final double biasZ) {
+        return create(biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX    known x coordinate of accelerometer bias expressed in meters per
+     *                 squared second (m/s^2).
+     * @param biasY    known y coordinate of accelerometer bias expressed in meters per
+     *                 squared second (m/s^2).
+     * @param biasZ    known z coordinate of accelerometer bias expressed in meters per
+     *                 squared second (m/s^2).
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of accelerometer bias expressed in meters per
+     *                     squared second (m/s^2).
+     * @param biasY        known y coordinate of accelerometer bias expressed in meters per
+     *                     squared second (m/s^2).
+     * @param biasZ        known z coordinate of accelerometer bias expressed in meters per
+     *                     squared second (m/s^2).
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ) {
+        return create(measurements, biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of accelerometer bias expressed in meters per
+     *                     squared second (m/s^2).
+     * @param biasY        known y coordinate of accelerometer bias expressed in meters per
+     *                     squared second (m/s^2).
+     * @param biasZ        known z coordinate of accelerometer bias expressed in meters per
+     *                     squared second (m/s^2).
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX          known x coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasY          known y coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasZ          known z coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX          known x coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasY          known y coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasZ          known z coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasY          known y coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasZ          known z coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasY          known y coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param biasZ          known z coordinate of accelerometer bias expressed in meters per
+     *                       squared second (m/s^2).
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double biasX, final double biasY, final double biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX known x coordinate of accelerometer bias.
+     * @param biasY known y coordinate of accelerometer bias.
+     * @param biasZ known z coordinate of accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ) {
+        return create(biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX    known x coordinate of accelerometer bias.
+     * @param biasY    known y coordinate of accelerometer bias.
+     * @param biasZ    known z coordinate of accelerometer bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of accelerometer bias.
+     * @param biasY        known y coordinate of accelerometer bias.
+     * @param biasZ        known z coordinate of accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ) {
+        return create(measurements, biasX, biasY, biasZ, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param biasX        known x coordinate of accelerometer bias.
+     * @param biasY        known y coordinate of accelerometer bias.
+     * @param biasZ        known z coordinate of accelerometer bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX          known x coordinate of accelerometer bias.
+     * @param biasY          known y coordinate of accelerometer bias.
+     * @param biasZ          known z coordinate of accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ,
+            final boolean commonAxisUsed) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param biasX          known x coordinate of accelerometer bias.
+     * @param biasY          known y coordinate of accelerometer bias.
+     * @param biasZ          known z coordinate of accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(biasX, biasY, biasZ, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of accelerometer bias.
+     * @param biasY          known y coordinate of accelerometer bias.
+     * @param biasZ          known z coordinate of accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ,
+            final boolean commonAxisUsed) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param biasX          known x coordinate of accelerometer bias.
+     * @param biasY          known y coordinate of accelerometer bias.
+     * @param biasZ          known z coordinate of accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Acceleration biasX, final Acceleration biasY, final Acceleration biasZ,
+            final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, biasX, biasY, biasZ, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias known accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double[] bias) {
+        return create(bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias     known accelerometer bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double[] bias,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias) {
+        return create(measurements, bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known accelerometer bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double[] bias, final boolean commonAxisUsed) {
+        return create(bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(bias, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed) {
+        return create(measurements, bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided array does not have length 3.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final double[] bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, bias, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias known accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(final Matrix bias) {
+        return create(bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias     known accelerometer bias.
+     * @param listener listener to be notified of events such as when estimation
+     *                 starts, ends or its progress significantly changes.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Matrix bias,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known accelerometer bias.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias) {
+        return create(measurements, bias, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements list of body kinematics measurements with standard
+     *                     deviations taken at different frames (positions, orientations
+     *                     and velocities).
+     * @param bias         known accelerometer bias.
+     * @param listener     listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, bias, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Matrix bias, final boolean commonAxisUsed) {
+        return create(bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(bias, commonAxisUsed, listener, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed) {
+        return create(measurements, bias, commonAxisUsed, DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
+     * Creates a robust accelerometer calibrator using default robust method.
+     *
+     * @param measurements   list of body kinematics measurements with standard
+     *                       deviations taken at different frames (positions, orientations
+     *                       and velocities).
+     * @param bias           known accelerometer bias.
+     * @param commonAxisUsed indicates whether z-axis is assumed to be common for
+     *                       accelerometer and gyroscope.
+     * @param listener       listener to handle events raised by this calibrator.
+     * @return a robust accelerometer calibrator.
+     * @throws IllegalArgumentException if provided matrix is not 3x1.
+     */
+    public static RobustKnownBiasAndFrameAccelerometerCalibrator create(
+            final List<StandardDeviationFrameBodyKinematics> measurements,
+            final Matrix bias, final boolean commonAxisUsed,
+            final RobustKnownBiasAndFrameAccelerometerCalibratorListener listener) {
+        return create(measurements, bias, commonAxisUsed, listener,
+                DEFAULT_ROBUST_METHOD);
+    }
+
+    /**
      * Computes error of a preliminary result respect a given measurement.
      *
      * @param measurement   a measurement.
