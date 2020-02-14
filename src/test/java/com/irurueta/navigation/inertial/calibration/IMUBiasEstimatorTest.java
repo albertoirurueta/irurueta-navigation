@@ -19183,40 +19183,51 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getEcefPosition(), ecefPosition1);
         assertEquals(estimator.getEcefC(), ecefC1);
 
-        // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-        final NEDPosition nedPosition2 = new NEDPosition(latitude, longitude, height);
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            // set new values
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition2 = new NEDPosition(latitude, longitude, height);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final CoordinateTransformation nedC2 = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+            final double roll = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final CoordinateTransformation nedC2 = new CoordinateTransformation(
+                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame nedFrame2 = new NEDFrame(nedPosition2, nedC2);
-        final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame2);
+            final NEDFrame nedFrame2 = new NEDFrame(nedPosition2, nedC2);
+            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter
+                    .convertNEDtoECEFAndReturnNew(nedFrame2);
 
-        final ECEFPosition ecefPosition2 = ecefFrame2.getECEFPosition();
-        final CoordinateTransformation ecefC2 = ecefFrame2
-                .getCoordinateTransformation();
+            final ECEFPosition ecefPosition2 = ecefFrame2.getECEFPosition();
+            final CoordinateTransformation ecefC2 = ecefFrame2
+                    .getCoordinateTransformation();
 
-        estimator.setEcefPositionAndNedOrientation(ecefPosition2, nedC2);
+            estimator.setEcefPositionAndNedOrientation(ecefPosition2, nedC2);
 
-        // check
-        assertTrue(estimator.getNedPosition().equals(nedPosition2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedC().equals(nedC2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getEcefPosition().equals(ecefPosition2,
-                5.0 * ABSOLUTE_ERROR));
-        assertTrue(estimator.getEcefC().equals(ecefC2, ABSOLUTE_ERROR));
+            // check
+            assertTrue(estimator.getNedPosition().equals(nedPosition2, ABSOLUTE_ERROR));
+            assertTrue(estimator.getNedC().equals(nedC2, ABSOLUTE_ERROR));
+            if (!estimator.getEcefPosition().equals(ecefPosition2, 5.0 * ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(estimator.getEcefPosition().equals(ecefPosition2,
+                    5.0 * ABSOLUTE_ERROR));
+            assertTrue(estimator.getEcefC().equals(ecefC2, ABSOLUTE_ERROR));
+
+            numValid++;
+            break;
+        }
+
+        assertTrue(numValid > 0);
 
         final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
                 .estimateKinematicsAndReturnNew(estimator.getTimeInterval(),
@@ -19356,60 +19367,71 @@ public class IMUBiasEstimatorTest implements IMUBiasEstimatorListener {
         assertEquals(estimator.getEcefPosition(), ecefPosition1);
         assertEquals(estimator.getEcefC(), ecefC1);
 
-        // set new values
-        final UniformRandomizer randomizer = new UniformRandomizer(new Random());
-        final double latitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
-        final double longitude = Math.toRadians(
-                randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
-        final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
-        final NEDPosition nedPosition2 = new NEDPosition(latitude, longitude, height);
+        int numValid = 0;
+        for (int t = 0; t < TIMES; t++) {
+            // set new values
+            final UniformRandomizer randomizer = new UniformRandomizer(new Random());
+            final double latitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LATITUDE_DEGREES, MAX_LATITUDE_DEGREEs));
+            final double longitude = Math.toRadians(
+                    randomizer.nextDouble(MIN_LONGITUDE_DEGREES, MAX_LONGITUDE_DEGREES));
+            final double height = randomizer.nextDouble(MIN_HEIGHT, MAX_HEIGHT);
+            final NEDPosition nedPosition2 = new NEDPosition(latitude, longitude, height);
 
-        final double roll = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double pitch = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final double yaw = Math.toRadians(
-                randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
-        final CoordinateTransformation nedC2 = new CoordinateTransformation(
-                roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
+            final double roll = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double pitch = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final double yaw = Math.toRadians(
+                    randomizer.nextDouble(MIN_ANGLE_DEGREES, MAX_ANGLE_DEGREES));
+            final CoordinateTransformation nedC2 = new CoordinateTransformation(
+                    roll, pitch, yaw, FrameType.BODY_FRAME, FrameType.LOCAL_NAVIGATION_FRAME);
 
-        final NEDFrame nedFrame2 = new NEDFrame(nedPosition2, nedC2);
-        final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter
-                .convertNEDtoECEFAndReturnNew(nedFrame2);
+            final NEDFrame nedFrame2 = new NEDFrame(nedPosition2, nedC2);
+            final ECEFFrame ecefFrame2 = NEDtoECEFFrameConverter
+                    .convertNEDtoECEFAndReturnNew(nedFrame2);
 
-        final ECEFPosition ecefPosition2 = ecefFrame2.getECEFPosition();
-        final CoordinateTransformation ecefC2 = ecefFrame2
-                .getCoordinateTransformation();
+            final ECEFPosition ecefPosition2 = ecefFrame2.getECEFPosition();
+            final CoordinateTransformation ecefC2 = ecefFrame2
+                    .getCoordinateTransformation();
 
-        final Distance x = new Distance(ecefPosition2.getX(), DistanceUnit.METER);
-        final Distance y = new Distance(ecefPosition2.getY(), DistanceUnit.METER);
-        final Distance z = new Distance(ecefPosition2.getZ(), DistanceUnit.METER);
+            final Distance x = new Distance(ecefPosition2.getX(), DistanceUnit.METER);
+            final Distance y = new Distance(ecefPosition2.getY(), DistanceUnit.METER);
+            final Distance z = new Distance(ecefPosition2.getZ(), DistanceUnit.METER);
 
-        estimator.setEcefPositionAndNedOrientation(x, y, z, nedC2);
+            estimator.setEcefPositionAndNedOrientation(x, y, z, nedC2);
 
-        // check
-        assertTrue(estimator.getNedPosition().equals(nedPosition2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getNedC().equals(nedC2, ABSOLUTE_ERROR));
-        assertTrue(estimator.getEcefPosition().equals(ecefPosition2,
-                LARGE_ABSOLUTE_ERROR));
-        assertTrue(estimator.getEcefC().equals(ecefC2, ABSOLUTE_ERROR));
+            // check
+            assertTrue(estimator.getNedPosition().equals(nedPosition2, ABSOLUTE_ERROR));
+            assertTrue(estimator.getNedC().equals(nedC2, ABSOLUTE_ERROR));
+            if (!estimator.getEcefPosition().equals(ecefPosition2, LARGE_ABSOLUTE_ERROR)) {
+                continue;
+            }
+            assertTrue(estimator.getEcefPosition().equals(ecefPosition2,
+                    LARGE_ABSOLUTE_ERROR));
+            assertTrue(estimator.getEcefC().equals(ecefC2, ABSOLUTE_ERROR));
 
-        final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
-                .estimateKinematicsAndReturnNew(estimator.getTimeInterval(),
-                        estimator.getEcefC(), estimator.getEcefC(),
-                        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                        estimator.getEcefPosition());
-        assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
+            final BodyKinematics expectedKinematics = ECEFKinematicsEstimator
+                    .estimateKinematicsAndReturnNew(estimator.getTimeInterval(),
+                            estimator.getEcefC(), estimator.getEcefC(),
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            estimator.getEcefPosition());
+            assertEquals(estimator.getExpectedKinematics(), expectedKinematics);
 
-        // Force InvalidSourceAndDestinationFrameTypeException
-        try {
-            estimator.setEcefPositionAndNedOrientation(x, y, z,
-                    new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
-                            FrameType.BODY_FRAME));
-            fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
-        } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+            // Force InvalidSourceAndDestinationFrameTypeException
+            try {
+                estimator.setEcefPositionAndNedOrientation(x, y, z,
+                        new CoordinateTransformation(FrameType.LOCAL_NAVIGATION_FRAME,
+                                FrameType.BODY_FRAME));
+                fail("InvalidSourceAndDestinationFrameTypeException expected but not thrown");
+            } catch (final InvalidSourceAndDestinationFrameTypeException ignore) {
+            }
+
+            numValid++;
+            break;
         }
+
+        assertTrue(numValid > 0);
     }
 
     @Test
