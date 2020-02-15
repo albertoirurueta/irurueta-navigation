@@ -20,14 +20,13 @@ import com.irurueta.navigation.LockedException;
 import com.irurueta.navigation.NotReadyException;
 
 /**
- * Interface for accelerometer calibrators.
+ * Interface for gyroscope calibrators.
  */
-public interface AccelerometerCalibrator {
-
+public interface GyroscopeCalibrator {
     /**
      * Indicates whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
+     * When enabled, this eliminates 3 variables from Mg matrix.
      *
      * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
      * false otherwise.
@@ -37,81 +36,80 @@ public interface AccelerometerCalibrator {
     /**
      * Specifies whether z-axis is assumed to be common for accelerometer and
      * gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
+     * When enabled, this eliminates 3 variables from Mg matrix.
      *
      * @param commonAxisUsed true if z-axis is assumed to be common for accelerometer
      *                       and gyroscope, false otherwise.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException;
 
     /**
-     * Indicates whether estimator is ready to start the estimator.
+     * Indicates whether calibrator is ready to start the calibration.
      *
-     * @return true if estimator is ready, false otherwise.
+     * @return true if calibrator is ready, false otherwise.
      */
     boolean isReady();
 
     /**
-     * Indicates whether estimator is currently running or not.
+     * Indicates whether calibrator is currently running or not.
      *
-     * @return true if estimator is running, false otherwise.
+     * @return true if calibrator is running, false otherwise.
      */
     boolean isRunning();
 
     /**
-     * Estimates accelerometer calibration parameters containing scale factors
-     * and cross-coupling errors.
+     * Estimates gyroscope calibration parameters containing bias, scale factors,
+     * cross-coupling errors and g-dependant cross biases.
      *
-     * @throws LockedException      if estimator is currently running.
-     * @throws NotReadyException    if estimator is not ready.
-     * @throws CalibrationException if estimation fails for numerical reasons.
+     * @throws LockedException      if calibrator is currently running.
+     * @throws NotReadyException    if calibrator is not ready.
+     * @throws CalibrationException if calibration fails for numerical reasons.
      */
     void calibrate() throws LockedException, NotReadyException, CalibrationException;
 
     /**
-     * Gets estimated accelerometer scale factors and ross coupling errors.
-     * This is the product of matrix Ta containing cross coupling errors and Ka
+     * Gets estimated gyroscope scale factors and cross coupling errors.
+     * This is the product of matrix Tg containing cross coupling errors and Kg
      * containing scaling factors.
-     * So tat:
+     * So that:
      * <pre>
-     *     Ma = [sx    mxy  mxz] = Ta*Ka
+     *     Mg = [sx    mxy  mxz] = Tg*Kg
      *          [myx   sy   myz]
      *          [mzx   mzy  sz ]
      * </pre>
      * Where:
      * <pre>
-     *     Ka = [sx 0   0 ]
+     *     Kg = [sx 0   0 ]
      *          [0  sy  0 ]
      *          [0  0   sz]
      * </pre>
      * and
      * <pre>
-     *     Ta = [1          -alphaXy    alphaXz ]
+     *     Tg = [1          -alphaXy    alphaXz ]
      *          [alphaYx    1           -alphaYz]
      *          [-alphaZx   alphaZy     1       ]
      * </pre>
      * Hence:
      * <pre>
-     *     Ma = [sx    mxy  mxz] = Ta*Ka =  [sx             -sy * alphaXy   sz * alphaXz ]
+     *     Mg = [sx    mxy  mxz] = Tg*Kg =  [sx             -sy * alphaXy   sz * alphaXz ]
      *          [myx   sy   myz]            [sx * alphaYx   sy              -sz * alphaYz]
      *          [mzx   mzy  sz ]            [-sx * alphaZx  sy * alphaZy    sz           ]
      * </pre>
      * This instance allows any 3x3 matrix however, typically alphaYx, alphaZx and alphaZy
-     * are considered to be zero if the accelerometer z-axis is assumed to be the same
-     * as the body z-axis. When this is assumed, myx = mzx = mzy = 0 and the Ma matrix
+     * are considered to be zero if the gyroscope z-axis is assumed to be the same
+     * as the body z-axis. When this is assumed, myx = mzx = mzy = 0 and the Mg matrix
      * becomes upper diagonal:
      * <pre>
-     *     Ma = [sx    mxy  mxz]
+     *     Mg = [sx    mxy  mxz]
      *          [0     sy   myz]
      *          [0     0    sz ]
      * </pre>
      * Values of this matrix are unitless.
      *
-     * @return estimated accelerometer scale factors and cross coupling errors, or null
-     * if not available.
+     * @return estimated gyroscope scale factors and cross coupling errors.
      */
-    Matrix getEstimatedMa();
+    Matrix getEstimatedMg();
 
     /**
      * Gets estimated x-axis scale factor.
@@ -175,4 +173,12 @@ public interface AccelerometerCalibrator {
      * @return estimated z-y cross-coupling error or null if not available.
      */
     Double getEstimatedMzy();
+
+    /**
+     * Gets estimated G-dependent cross biases introduced on the gyroscope by the
+     * specific forces sensed by the accelerometer.
+     *
+     * @return a 3x3 matrix containing g-dependent cross biases.
+     */
+    Matrix getEstimatedGg();
 }

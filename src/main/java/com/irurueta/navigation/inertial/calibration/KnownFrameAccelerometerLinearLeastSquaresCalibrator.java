@@ -51,8 +51,8 @@ import java.util.Collection;
  * - I is the 3x3 identity matrix.
  * - Ma is the 3x3 matrix containing cross-couplings and scaling factors. Ideally, on
  * a perfect accelerometer, this should be a 3x3 zero matrix.
- * - ftrue is ground-trush specific force.
- * - w is measurement noise.
+ * - ftrue is ground-truth specific force. This is a 3x1 vector.
+ * - w is measurement noise. This is a 3x1 vector.
  */
 public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
         KnownFrameAccelerometerCalibrator<FrameBodyKinematics,
@@ -108,7 +108,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     private boolean mCommonAxisUsed = DEFAULT_USE_COMMON_Z_AXIS;
 
     /**
-     * Listener to handle events raised by this estimator.
+     * Listener to handle events raised by this calibrator.
      */
     private KnownFrameAccelerometerLinearLeastSquaresCalibratorListener mListener;
 
@@ -160,7 +160,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     private Matrix mEstimatedMa;
 
     /**
-     * Indicates whether estimator is running.
+     * Indicates whether calibrator is running.
      */
     private boolean mRunning;
 
@@ -267,7 +267,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * frames (positions, orientations and velocities).
      * If a single device IMU needs to be calibrated, typically all measurements are
      * taken at the same position, with zero velocity and multiple orientations.
-     * However, if we just want to calibrate the a given IMU model (e.g. obtain
+     * However, if we just want to calibrate a given IMU model (e.g. obtain
      * an average and less precise calibration for the IMU of a given phone model),
      * we could take measurements collected throughout the planet at multiple positions
      * while the phone remains static (e.g. while charging), hence each measurement
@@ -298,7 +298,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      *
      * @param measurements collection of body kinematics measurements taken at different
      *                     frames (positions, orientations and velocities).
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     @Override
     public void setMeasurements(final Collection<? extends FrameBodyKinematics> measurements)
@@ -329,7 +329,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      *
      * @param commonAxisUsed true if z-axis is assumed to be common for accelerometer
      *                       and gyroscope, false otherwise.
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     @Override
     public void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException {
@@ -341,9 +341,9 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Gets listener to handle events raised by this estimator.
+     * Gets listener to handle events raised by this calibrator.
      *
-     * @return listener to handle events raised by this estimator.
+     * @return listener to handle events raised by this calibrator.
      */
     @Override
     public KnownFrameAccelerometerLinearLeastSquaresCalibratorListener getListener() {
@@ -351,10 +351,10 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Sets listener to handle events raised by this estimator.
+     * Sets listener to handle events raised by this calibrator.
      *
-     * @param listener listener to handle events raised by this estimator.
-     * @throws LockedException if estimator is currently running.
+     * @param listener listener to handle events raised by this calibrator.
+     * @throws LockedException if calibrator is currently running.
      */
     @Override
     public void setListener(
@@ -368,9 +368,9 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Indicates whether estimator is ready to start the estimator.
+     * Indicates whether calibrator is ready to start the calibration.
      *
-     * @return true if estimator is ready, false otherwise.
+     * @return true if calibrator is ready, false otherwise.
      */
     @Override
     public boolean isReady() {
@@ -379,9 +379,9 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
     }
 
     /**
-     * Indicates whether estimator is currently running or not.
+     * Indicates whether calibrator is currently running or not.
      *
-     * @return true if estimator is running, false otherwise.
+     * @return true if calibrator is running, false otherwise.
      */
     @Override
     public boolean isRunning() {
@@ -392,9 +392,9 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * Estimates accelerometer calibration parameters containing bias, scale factors
      * and cross-coupling errors.
      *
-     * @throws LockedException      if estimator is currently running.
-     * @throws NotReadyException    if estimator is not ready.
-     * @throws CalibrationException if estimation fails for numerical reasons.
+     * @throws LockedException      if calibrator is currently running.
+     * @throws NotReadyException    if calibrator is not ready.
+     * @throws CalibrationException if calibration fails for numerical reasons.
      */
     @Override
     public void calibrate() throws LockedException, NotReadyException, CalibrationException {
@@ -465,7 +465,7 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
      * expressed in meters per squared second (m/s^2).
      *
      * @return column matrix containing x,y,z components of estimated accelerometer
-     * biases
+     * biases.
      */
     @Override
     public Matrix getEstimatedBiasesAsMatrix() {
@@ -886,8 +886,8 @@ public class KnownFrameAccelerometerLinearLeastSquaresCalibrator implements
 
         // Hence:
         //  [fmeasx] = [bx] + ( [1  0   0] + [sx    mxy mxz])   [ftruex]
-        //  [fmeasy] = [by]     [0  1   0]   [myx   sy  myz]    [ftruey]
-        //  [fmeasz] = [bz]     [0  0   1]   [mzx   mzy sz ]    [ftruez]
+        //  [fmeasy]   [by]     [0  1   0]   [myx   sy  myz]    [ftruey]
+        //  [fmeasz]   [bz]     [0  0   1]   [mzx   mzy sz ]    [ftruez]
 
         //  [fmeasx] = [bx] +   [1+sx   mxy     mxz ][ftruex]
         //  [fmeasy]   [by]     [myx    1+sy    myz ][ftruey]

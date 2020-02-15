@@ -64,67 +64,22 @@ public interface KnownFrameAccelerometerCalibrator<T extends FrameBodyKinematics
      *
      * @param measurements collection of body kinematics measurements taken at different
      *                     frames (positions, orientations and velocities).
-     * @throws LockedException if estimator is currently running.
+     * @throws LockedException if calibrator is currently running.
      */
     void setMeasurements(final Collection<? extends T> measurements) throws LockedException;
 
     /**
-     * Indicates whether z-axis is assumed to be common for accelerometer and
-     * gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
+     * Gets listener to handle events raised by this calibrator.
      *
-     * @return true if z-axis is assumed to be common for accelerometer and gyroscope,
-     * false otherwise.
-     */
-    boolean isCommonAxisUsed();
-
-    /**
-     * Specifies whether z-axis is assumed to be common for accelerometer and
-     * gyroscope.
-     * When enabled, this eliminates 3 variables from Ma matrix.
-     *
-     * @param commonAxisUsed true if z-axis is assumed to be common for accelerometer
-     *                       and gyroscope, false otherwise.
-     * @throws LockedException if estimator is currently running.
-     */
-    void setCommonAxisUsed(final boolean commonAxisUsed) throws LockedException;
-
-    /**
-     * Gets listener to handle events raised by this estimator.
-     *
-     * @return listener to handle events raised by this estimator.
+     * @return listener to handle events raised by this calibrator.
      */
     L getListener();
 
     /**
-     * Sets listener to handle events raised by this estimator.
+     * Sets listener to handle events raised by this calibrator.
      *
-     * @param listener listener to handle events raised by this estimator.
+     * @param listener listener to handle events raised by this calibrator.
      * @throws LockedException if estimator is currently running.
      */
     void setListener(final L listener) throws LockedException;
-
-    /**
-     * Indicates whether estimator is ready to start the estimator.
-     *
-     * @return true if estimator is ready, false otherwise.
-     */
-    boolean isReady();
-
-    /**
-     * Indicates whether estimator is currently running or not.
-     *
-     * @return true if estimator is running, false otherwise.
-     */
-    boolean isRunning();
-
-    /**
-     * Estimates accelerometer calibration parameters containing bias, scale factors
-     * and cross-coupling errors.
-     *
-     * @throws LockedException      if estimator is currently running.
-     * @throws NotReadyException    if estimator is not ready.
-     * @throws CalibrationException if estimation fails for numerical reasons.
-     */
-    void calibrate() throws LockedException, NotReadyException, CalibrationException;
 }
