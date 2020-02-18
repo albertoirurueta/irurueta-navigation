@@ -6029,7 +6029,7 @@ public class ThirdOrderNonLinearFingerprintPositionEstimator3DTest
                         accuracy.getConfidence() * 100.0});
 
         assertTrue(avgEstimatedErrorWithInitialPosition >=
-                avgEstimatedErrorWithExactInitialPosition - ERROR);
+                avgEstimatedErrorWithExactInitialPosition - 2.0 * ERROR);
     }
 
     @Test

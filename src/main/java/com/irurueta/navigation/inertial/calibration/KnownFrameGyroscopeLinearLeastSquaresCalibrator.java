@@ -99,7 +99,7 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibrator implements
      * However, if we just want to calibrate a given IMU model (e.g. obtain
      * an average and less precise calibration for the IMU of a given phone model),
      * we could take measurements collected throughout the planet at multiple positions
-     * while the phone remains static (e.g. while carging), hence each measurement
+     * while the phone remains static (e.g. while charging), hence each measurement
      * position will change, velocity will remain zero and orientation will be
      * typically constant at horizontal orientation while the phone remains on a
      * flat surface.

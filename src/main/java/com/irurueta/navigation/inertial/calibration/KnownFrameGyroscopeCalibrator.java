@@ -16,7 +16,6 @@
 package com.irurueta.navigation.inertial.calibration;
 
 import com.irurueta.navigation.LockedException;
-import com.irurueta.navigation.NotReadyException;
 
 import java.util.Collection;
 
@@ -44,7 +43,7 @@ public interface KnownFrameGyroscopeCalibrator<T extends FrameBodyKinematics,
      * @return a collection of body kinematics measurements taken at different
      * frames (positions, orientations and velocities).
      */
-    Collection<? extends FrameBodyKinematics> getMeasurements();
+    Collection<? extends T> getMeasurements();
 
     /**
      * Sets a collection of body kinematics measurements taken at different
@@ -63,7 +62,7 @@ public interface KnownFrameGyroscopeCalibrator<T extends FrameBodyKinematics,
      *                     frames (positions, orientations and velocities).
      * @throws LockedException if calibrator is currently running.
      */
-    void setMeasurements(final Collection<? extends FrameBodyKinematics> measurements)
+    void setMeasurements(final Collection<? extends T> measurements)
             throws LockedException;
 
     /**
