@@ -16,13 +16,13 @@
 package com.irurueta.navigation.inertial.calibration;
 
 /**
- * Contains listener for accelerometer least squares calibrators when
+ * Contains listener for gyroscope least squares calibrators when
  * frame (position, velocity and orientation) and bias is known for all measurements.
  *
  * @param <T> a calibrator type.
  */
-public interface KnownBiasAndFrameAccelerometerCalibratorListener<T
-        extends KnownBiasAndFrameAccelerometerCalibrator<?, ?>> {
+public interface KnownBiasAndFrameGyroscopeCalibratorListener<T
+        extends KnownBiasAndFrameGyroscopeCalibrator<?, ?>> {
 
     /**
      * Called when calibration starts.

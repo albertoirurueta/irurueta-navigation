@@ -506,7 +506,6 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         assertTrue(gg.equals(estimatedGg, ABSOLUTE_ERROR));
 
         assertEstimatedResult(estimatedBg, estimatedMg, estimatedGg, calibrator);
-
     }
 
     @Test
@@ -934,7 +933,7 @@ public class KnownFrameGyroscopeLinearLeastSquaresCalibratorTest implements
         for (int t = 0; t < TIMES; t++) {
             final Matrix ba = generateBa();
             final Matrix bg = generateBg();
-            final Matrix ma = generateMaGeneral();
+            final Matrix ma = generateMaCommonAxis();
             final Matrix mg = generateMg();
             final Matrix gg = generateGg();
             // when using minimum number of measurements we must not add any noise so that
